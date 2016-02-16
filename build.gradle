@@ -1,0 +1,50 @@
+description = 'Colibri - Smart Building Energy Management'
+
+configure([
+		project(':colibri-calimero'), 
+		project(':colibri-commons'),
+		project(':colibri-enocean'),
+		project(':colibri-knx'),
+		project(':colibri-bacnet4j'),
+		project(':colibri-optimization'),
+		project(':colibri-semantics')])
+{
+	apply plugin: 'java'
+	apply plugin: 'maven-publish'
+	apply plugin: 'maven'
+	apply plugin: 'eclipse'
+
+	group = 'at.ac.tuwien.auto.colibri'
+	version = '0.1'
+	
+	repositories()
+	{
+		jcenter()
+		mavenCentral()
+		maven
+		{
+			url 'https://repository.jboss.org/nexus/content/repositories/releases/'
+			url 'https://repository.jboss.org/nexus/content/groups/public/'
+		}
+		flatDir 
+		{ 
+			dirs "../lib/rhino", "../lib/jena"
+		}
+	}
+	
+	sourceSets 
+	{
+    		main 
+			{
+        		java 
+				{
+            			srcDir 'src'
+        		}
+    		}
+	}
+}
+
+ext
+{
+	distLib = file('dist')
+}
