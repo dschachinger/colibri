@@ -22,7 +22,7 @@ In the following figure, a simple test bed is sketched. This test bed consists o
 
 # License
 
-Colibri consists of multiple projects and components that are partly based on existing open source libraries with different licenses. The modified Calimero source code is published under GPLv2 with Classpath Exception. BACnet for Java is open source under GPLv3, and thus the modified source is published under the same license. These subprojects are separately compiled and subsequently linked to the other Colibri subprojects, such as technology connectors, optimization, or semantic core. These Colibri subprojects are published under the [BSD 3-Clause License](http://opensource.org/licenses/BSD-3-Clause).
+Colibri consists of multiple projects and components that are partly based on existing open source libraries with different licenses. The modified Calimero 2.1 source code is published under GPLv2 with Classpath Exception. BACnet for Java is open source under GPLv3, and thus the modified source is published under the same license. These subprojects are separately compiled and subsequently linked to the other Colibri subprojects, such as technology connectors, optimization, or semantic core. These Colibri subprojects are published under the [BSD 3-Clause License](http://opensource.org/licenses/BSD-3-Clause).
 
 # Contact
 
