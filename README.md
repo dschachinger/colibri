@@ -8,9 +8,9 @@ Colibri project was launched in 2016 by the [Automation Systems Group](http://ww
 
 # Google Summer of Code
 
-Colibri is part of the TU Wien project portfolio for Google Summer of Code 2016. If you are interested in applying for one of the proposed [Colibri project ideas](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/ideas.html), please follow the [instructions](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/how-to-apply.html) and write your proposal according to the [TU Wien guidance](https://summerofcode.withgoogle.com/organizations/6221502189928448/).
+Colibri is part of the TU Wien project portfolio for Google Summer of Code 2016. If you are interested in applying for one of the [Colibri project ideas](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/ideas.html), please follow the [instructions](http://www.iue.tuwien.ac.at/cse/index.php/gsoc/2016/how-to-apply.html) and write your proposal according to the [TU Wien guidance](https://summerofcode.withgoogle.com/organizations/6221502189928448/).
 
-In order to demonstrate your algorithmic and programming skills, solve the following two tasks using Java. Upload the source code with your application and write about your solution.
+In order to demonstrate your algorithmic and programming skills, solve at least one of the following two tasks using Java. Upload the source code with your application and write about your solution.
 * https://www.hackerrank.com/challenges/coin-change
 * https://www.hackerrank.com/challenges/java-stack
 
