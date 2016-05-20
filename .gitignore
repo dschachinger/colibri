@@ -4,3 +4,4 @@ bin/
 build/
 .classpath
 .project
+/res/catalog-v001.xml
