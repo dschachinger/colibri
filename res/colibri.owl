@@ -10,23 +10,23 @@
     <!ENTITY geo "http://www.w3.org/2003/01/geo/wgs84_pos" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
     <!ENTITY bonsai "http://lpis.csd.auth.gr/ontologies/bonsai/BOnSAI.owl#" >
-    <!ENTITY colibri "https://github.com/dschachinger/colibri/res/colibri.owl#" >
+    <!ENTITY colibri "https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#" >
 ]>
 
-<rdf:RDF xmlns="https://github.com/dschachinger/colibri/res/colibri.owl#"
-     xml:base="https://github.com/dschachinger/colibri/res/colibri.owl"
+<rdf:RDF xmlns="https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#"
+     xml:base="https://github.com/dschachinger/colibri/blob/master/res/colibri.owl"
      xmlns:bonsai="http://lpis.csd.auth.gr/ontologies/bonsai/BOnSAI.owl#"
      xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
-     xmlns:colibri="https://github.com/dschachinger/colibri/res/colibri.owl#"
+     xmlns:colibri="https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
-    <owl:Ontology rdf:about="https://github.com/dschachinger/colibri/res/colibri.owl">
+    <owl:Ontology rdf:about="https://github.com/dschachinger/colibri/blob/master/res/colibri.owl">
         <rdfs:comment xml:lang="en">This ontology describes the semantic energy management system information model for Colibri. The information stored in the Colibri semantic core is modeled using this ontology.</rdfs:comment>
-        <owl:versionIRI rdf:resource="https://github.com/dschachinger/colibri/res/colibri.owl"/>
+        <owl:versionIRI rdf:resource="https://github.com/dschachinger/colibri/blob/master/res/colibri.owl"/>
     </owl:Ontology>
 
     <!-- 
@@ -40,7 +40,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#consumes -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#consumes -->
 
     <owl:ObjectProperty rdf:about="&colibri;consumes">
         <rdfs:domain rdf:resource="&colibri;Consumer"/>
@@ -49,13 +49,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#contains -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#contains -->
 
     <owl:ObjectProperty rdf:about="&colibri;contains"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#controlsParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#controlsParameter -->
 
     <owl:ObjectProperty rdf:about="&colibri;controlsParameter">
         <rdfs:domain rdf:resource="&colibri;ControlService"/>
@@ -68,7 +68,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#covers -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#covers -->
 
     <owl:ObjectProperty rdf:about="&colibri;covers">
         <owl:inverseOf rdf:resource="&colibri;isCoveredBy"/>
@@ -76,7 +76,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasAmbientMaterial -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasAmbientMaterial -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasAmbientMaterial">
         <rdfs:range rdf:resource="&colibri;Material"/>
@@ -85,7 +85,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasBaseUnit -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasBaseUnit -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasBaseUnit">
         <rdfs:domain rdf:resource="&colibri;Unit"/>
@@ -94,7 +94,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasCity -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasCity -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasCity">
         <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
@@ -104,7 +104,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasCondition -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasCondition -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasCondition">
         <rdfs:range rdf:resource="&colibri;Condition"/>
@@ -112,7 +112,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasConstant -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasConstant -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasConstant">
         <rdfs:range rdf:resource="&colibri;Constant"/>
@@ -120,7 +120,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasControlVariation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasControlVariation -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasControlVariation">
         <rdfs:range rdf:resource="&colibri;ControlVariation"/>
@@ -128,7 +128,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasCurrency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasCurrency -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasCurrency">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -137,7 +137,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasData -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasData">
         <rdfs:range rdf:resource="&colibri;DataService"/>
@@ -145,7 +145,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasDataConfiguration -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasDataConfiguration -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasDataConfiguration">
         <rdfs:range rdf:resource="&colibri;DataConfiguration"/>
@@ -153,7 +153,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasDataValue -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasDataValue -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasDataValue">
         <rdfs:range rdf:resource="&colibri;DataValue"/>
@@ -161,7 +161,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasDomesticCurrency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasDomesticCurrency -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasDomesticCurrency">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -171,7 +171,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasEnergy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasEnergy -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasEnergy">
         <rdfs:range rdf:resource="&colibri;EnergyService"/>
@@ -179,7 +179,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasEnergySource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasEnergySource -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasEnergySource">
         <rdfs:domain rdf:resource="&colibri;EnergyServiceProvider"/>
@@ -188,7 +188,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasEnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasEnergyType -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasEnergyType">
         <rdfs:range rdf:resource="&colibri;EnergyType"/>
@@ -196,7 +196,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasExchangeRate -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasExchangeRate -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasExchangeRate">
         <owl:inverseOf rdf:resource="&colibri;hasDomesticCurrency"/>
@@ -205,7 +205,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasForeignCurrency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasForeignCurrency -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasForeignCurrency">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -215,7 +215,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasGridAction -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasGridAction -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasGridAction">
         <rdfs:range rdf:resource="&colibri;GridAction"/>
@@ -224,7 +224,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasLocation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasLocation -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasLocation">
         <rdfs:range rdf:resource="http://dbpedia.org/ontology/Place"/>
@@ -232,7 +232,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasManufacturer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasManufacturer -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasManufacturer">
         <rdfs:range rdf:resource="&colibri;Manufacturer"/>
@@ -240,7 +240,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasMaterial -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasMaterial -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasMaterial">
         <rdfs:range rdf:resource="&colibri;Material"/>
@@ -248,7 +248,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasMedium -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasMedium -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasMedium">
         <rdfs:range rdf:resource="&colibri;Medium"/>
@@ -256,7 +256,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasOrder -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasOrder -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasOrder">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -265,7 +265,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasOwner -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasOwner -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasOwner">
         <rdfs:range rdf:resource="&colibri;Agent"/>
@@ -273,7 +273,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasParameter -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasParameter">
         <rdfs:range rdf:resource="&colibri;Parameter"/>
@@ -281,7 +281,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasState -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasState -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasState">
         <rdfs:range rdf:resource="&colibri;State"/>
@@ -289,7 +289,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasTechnologyConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasTechnologyConnector -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasTechnologyConnector">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -298,7 +298,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasTechnologyLanguage -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasTechnologyLanguage -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasTechnologyLanguage">
         <rdfs:domain rdf:resource="&colibri;TechnologyConnector"/>
@@ -307,7 +307,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasTechnologyProtocol -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasTechnologyProtocol -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasTechnologyProtocol">
         <rdfs:domain rdf:resource="&colibri;TechnologyConnector"/>
@@ -316,7 +316,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasTrend -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasTrend -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasTrend">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -325,7 +325,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasUnit -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasUnit -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasUnit">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -334,7 +334,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasValue -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasValue -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasValue">
         <rdfs:range rdf:resource="&colibri;Value"/>
@@ -342,7 +342,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#hasVariable -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#hasVariable -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasVariable">
         <rdfs:range rdf:resource="&colibri;Variable"/>
@@ -350,7 +350,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isAbove -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isAbove -->
 
     <owl:ObjectProperty rdf:about="&colibri;isAbove">
         <owl:inverseOf rdf:resource="&colibri;isUnder"/>
@@ -358,7 +358,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isAdjoinedTo -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isAdjoinedTo -->
 
     <owl:ObjectProperty rdf:about="&colibri;isAdjoinedTo">
         <rdf:type rdf:resource="&owl;SymmetricProperty"/>
@@ -366,13 +366,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isBehind -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isBehind -->
 
     <owl:ObjectProperty rdf:about="&colibri;isBehind"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isConnectedTo -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isConnectedTo -->
 
     <owl:ObjectProperty rdf:about="&colibri;isConnectedTo">
         <rdfs:domain rdf:resource="&colibri;GridAgent"/>
@@ -381,7 +381,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isConsumedBy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isConsumedBy -->
 
     <owl:ObjectProperty rdf:about="&colibri;isConsumedBy">
         <owl:inverseOf rdf:resource="&colibri;consumes"/>
@@ -389,13 +389,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isCoveredBy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isCoveredBy -->
 
     <owl:ObjectProperty rdf:about="&colibri;isCoveredBy"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isFollowedBy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isFollowedBy -->
 
     <owl:ObjectProperty rdf:about="&colibri;isFollowedBy">
         <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
@@ -404,7 +404,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isHigherThan -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isHigherThan -->
 
     <owl:ObjectProperty rdf:about="&colibri;isHigherThan">
         <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
@@ -414,7 +414,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isInFrontOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isInFrontOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isInFrontOf">
         <owl:inverseOf rdf:resource="&colibri;isBehind"/>
@@ -422,13 +422,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isLeftOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isLeftOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isLeftOf"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isLowerThan -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isLowerThan -->
 
     <owl:ObjectProperty rdf:about="&colibri;isLowerThan">
         <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
@@ -439,7 +439,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isPartOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isPartOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isPartOf">
         <owl:inverseOf rdf:resource="&colibri;contains"/>
@@ -447,7 +447,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isPrecededBy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isPrecededBy -->
 
     <owl:ObjectProperty rdf:about="&colibri;isPrecededBy">
         <rdf:type rdf:resource="&owl;AsymmetricProperty"/>
@@ -459,7 +459,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isProvidedBy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isProvidedBy -->
 
     <owl:ObjectProperty rdf:about="&colibri;isProvidedBy">
         <owl:inverseOf rdf:resource="&colibri;provides"/>
@@ -467,7 +467,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isRightOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isRightOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isRightOf">
         <owl:inverseOf rdf:resource="&colibri;isLeftOf"/>
@@ -475,7 +475,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyAbove -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyAbove -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyAbove">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -483,7 +483,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyBehind -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyBehind -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyBehind">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -491,7 +491,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyInFrontOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyInFrontOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyInFrontOf">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -500,7 +500,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyLeftOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyLeftOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyLeftOf">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -508,7 +508,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyRightOf -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyRightOf -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyRightOf">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -517,7 +517,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isTransitivelyUnder -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isTransitivelyUnder -->
 
     <owl:ObjectProperty rdf:about="&colibri;isTransitivelyUnder">
         <rdf:type rdf:resource="&owl;TransitiveProperty"/>
@@ -526,13 +526,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#isUnder -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#isUnder -->
 
     <owl:ObjectProperty rdf:about="&colibri;isUnder"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#monitorsParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#monitorsParameter -->
 
     <owl:ObjectProperty rdf:about="&colibri;monitorsParameter">
         <rdfs:domain rdf:resource="&colibri;DataService"/>
@@ -545,7 +545,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#provides -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#provides -->
 
     <owl:ObjectProperty rdf:about="&colibri;provides">
         <rdfs:domain rdf:resource="&colibri;Provider"/>
@@ -565,7 +565,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#altitude -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#altitude -->
 
     <owl:DatatypeProperty rdf:about="&colibri;altitude">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -575,7 +575,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#batteryType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#batteryType -->
 
     <owl:DatatypeProperty rdf:about="&colibri;batteryType">
         <rdfs:comment xml:lang="en">This property is used to describe the type of battery used in an energy storage device.</rdfs:comment>
@@ -584,7 +584,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#connectorAddress -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#connectorAddress -->
 
     <owl:DatatypeProperty rdf:about="&colibri;connectorAddress">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -595,7 +595,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#directQuotation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#directQuotation -->
 
     <owl:DatatypeProperty rdf:about="&colibri;directQuotation">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -606,7 +606,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#formula -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#formula -->
 
     <owl:DatatypeProperty rdf:about="&colibri;formula">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -616,7 +616,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#identifier -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#identifier -->
 
     <owl:DatatypeProperty rdf:about="&colibri;identifier">
         <rdfs:comment xml:lang="en">This property can be used as additional identifier for an individual.</rdfs:comment>
@@ -625,7 +625,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#indirectQuotation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#indirectQuotation -->
 
     <owl:DatatypeProperty rdf:about="&colibri;indirectQuotation">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -636,7 +636,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#latitude -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#latitude -->
 
     <owl:DatatypeProperty rdf:about="&colibri;latitude">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -646,7 +646,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#longitude -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#longitude -->
 
     <owl:DatatypeProperty rdf:about="&colibri;longitude">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -656,7 +656,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#lowerBound -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#lowerBound -->
 
     <owl:DatatypeProperty rdf:about="&colibri;lowerBound">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -666,7 +666,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#name -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#name -->
 
     <owl:DatatypeProperty rdf:about="&colibri;name">
         <rdfs:comment xml:lang="en">This property gives the human readable name of an individual.</rdfs:comment>
@@ -675,7 +675,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#offset -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#offset -->
 
     <owl:DatatypeProperty rdf:about="&colibri;offset">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -686,7 +686,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#orientation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#orientation -->
 
     <owl:DatatypeProperty rdf:about="&colibri;orientation">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -709,7 +709,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#percentage -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#percentage -->
 
     <owl:DatatypeProperty rdf:about="&colibri;percentage">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -731,7 +731,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#power -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#power -->
 
     <owl:DatatypeProperty rdf:about="&colibri;power">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -742,7 +742,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#scaling -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#scaling -->
 
     <owl:DatatypeProperty rdf:about="&colibri;scaling">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -753,7 +753,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#serviceAddress -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#serviceAddress -->
 
     <owl:DatatypeProperty rdf:about="&colibri;serviceAddress">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -763,7 +763,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#street -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#street -->
 
     <owl:DatatypeProperty rdf:about="&colibri;street">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -773,7 +773,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#streetNumber -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#streetNumber -->
 
     <owl:DatatypeProperty rdf:about="&colibri;streetNumber">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -783,7 +783,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#symbol -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#symbol -->
 
     <owl:DatatypeProperty rdf:about="&colibri;symbol">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -793,7 +793,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#upperBound -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#upperBound -->
 
     <owl:DatatypeProperty rdf:about="&colibri;upperBound">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
@@ -803,7 +803,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#value -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#value -->
 
     <owl:DatatypeProperty rdf:about="&colibri;value">
         <rdfs:comment xml:lang="en">This property is used for any type of value.</rdfs:comment>
@@ -890,7 +890,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#AbsoluteState -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#AbsoluteState -->
 
     <owl:Class rdf:about="&colibri;AbsoluteState">
         <rdfs:subClassOf rdf:resource="&colibri;State"/>
@@ -899,7 +899,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Agent -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Agent -->
 
     <owl:Class rdf:about="&colibri;Agent">
         <owl:equivalentClass rdf:resource="http://xmlns.com/foaf/0.1/Agent"/>
@@ -919,7 +919,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#AirPressureParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#AirPressureParameter -->
 
     <owl:Class rdf:about="&colibri;AirPressureParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -927,7 +927,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#AirQualityParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#AirQualityParameter -->
 
     <owl:Class rdf:about="&colibri;AirQualityParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -935,7 +935,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Apartment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Apartment -->
 
     <owl:Class rdf:about="&colibri;Apartment">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingPart"/>
@@ -943,7 +943,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Appliance -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Appliance -->
 
     <owl:Class rdf:about="&colibri;Appliance">
         <rdfs:subClassOf rdf:resource="&colibri;ControllableResource"/>
@@ -951,7 +951,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Attic -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Attic -->
 
     <owl:Class rdf:about="&colibri;Attic">
         <rdfs:subClassOf rdf:resource="&colibri;Floor"/>
@@ -959,7 +959,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#AutomationProtocol -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#AutomationProtocol -->
 
     <owl:Class rdf:about="&colibri;AutomationProtocol">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyProtocol"/>
@@ -967,7 +967,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#AvailabilityParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#AvailabilityParameter -->
 
     <owl:Class rdf:about="&colibri;AvailabilityParameter">
         <rdfs:subClassOf rdf:resource="&colibri;QualityOfServiceParameter"/>
@@ -975,7 +975,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Basement -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Basement -->
 
     <owl:Class rdf:about="&colibri;Basement">
         <rdfs:subClassOf rdf:resource="&colibri;Floor"/>
@@ -983,7 +983,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Bathroom -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Bathroom -->
 
     <owl:Class rdf:about="&colibri;Bathroom">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -991,7 +991,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BrightnessParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BrightnessParameter -->
 
     <owl:Class rdf:about="&colibri;BrightnessParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -999,7 +999,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BrightnessSensor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BrightnessSensor -->
 
     <owl:Class rdf:about="&colibri;BrightnessSensor">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingAutomationDevice"/>
@@ -1007,7 +1007,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BrownGoods -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BrownGoods -->
 
     <owl:Class rdf:about="&colibri;BrownGoods">
         <rdfs:subClassOf rdf:resource="&colibri;Appliance"/>
@@ -1015,7 +1015,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BuidlingData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BuidlingData -->
 
     <owl:Class rdf:about="&colibri;BuidlingData">
         <rdfs:subClassOf rdf:resource="&colibri;DataService"/>
@@ -1023,7 +1023,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Building -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Building -->
 
     <owl:Class rdf:about="&colibri;Building">
         <rdfs:subClassOf rdf:resource="&colibri;Site"/>
@@ -1031,7 +1031,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BuildingAutomationDevice -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BuildingAutomationDevice -->
 
     <owl:Class rdf:about="&colibri;BuildingAutomationDevice">
         <rdfs:subClassOf rdf:resource="&colibri;ControllableResource"/>
@@ -1039,7 +1039,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BuildingPart -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BuildingPart -->
 
     <owl:Class rdf:about="&colibri;BuildingPart">
         <rdfs:subClassOf rdf:resource="&colibri;Zone"/>
@@ -1047,7 +1047,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BuildingResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BuildingResource -->
 
     <owl:Class rdf:about="&colibri;BuildingResource">
         <rdfs:subClassOf>
@@ -1089,7 +1089,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Cabinet -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Cabinet -->
 
     <owl:Class rdf:about="&colibri;Cabinet">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -1097,7 +1097,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#CapacityTolerance -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#CapacityTolerance -->
 
     <owl:Class rdf:about="&colibri;CapacityTolerance">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1105,7 +1105,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ChargingCycles -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ChargingCycles -->
 
     <owl:Class rdf:about="&colibri;ChargingCycles">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1113,7 +1113,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ChargingPower -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ChargingPower -->
 
     <owl:Class rdf:about="&colibri;ChargingPower">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1121,7 +1121,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#CoalFiredPowerPlant -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#CoalFiredPowerPlant -->
 
     <owl:Class rdf:about="&colibri;CoalFiredPowerPlant">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyGenerator"/>
@@ -1129,7 +1129,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#CommercialBuilding -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#CommercialBuilding -->
 
     <owl:Class rdf:about="&colibri;CommercialBuilding">
         <rdfs:subClassOf rdf:resource="&colibri;Building"/>
@@ -1137,7 +1137,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ComplexParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ComplexParameter -->
 
     <owl:Class rdf:about="&colibri;ComplexParameter">
         <rdfs:subClassOf rdf:resource="&colibri;Parameter"/>
@@ -1145,7 +1145,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Condition -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Condition -->
 
     <owl:Class rdf:about="&colibri;Condition">
         <rdfs:subClassOf>
@@ -1165,7 +1165,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Constant -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Constant -->
 
     <owl:Class rdf:about="&colibri;Constant">
         <rdfs:subClassOf>
@@ -1185,7 +1185,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ConstantVariable -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ConstantVariable -->
 
     <owl:Class rdf:about="&colibri;ConstantVariable">
         <rdfs:subClassOf rdf:resource="&colibri;Variable"/>
@@ -1206,7 +1206,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Consumer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Consumer -->
 
     <owl:Class rdf:about="&colibri;Consumer">
         <owl:equivalentClass>
@@ -1219,7 +1219,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ControlService -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ControlService -->
 
     <owl:Class rdf:about="&colibri;ControlService">
         <owl:equivalentClass>
@@ -1285,7 +1285,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ControlServiceConsumer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ControlServiceConsumer -->
 
     <owl:Class rdf:about="&colibri;ControlServiceConsumer">
         <owl:equivalentClass>
@@ -1303,7 +1303,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ControlServiceProvider -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ControlServiceProvider -->
 
     <owl:Class rdf:about="&colibri;ControlServiceProvider">
         <owl:equivalentClass>
@@ -1321,7 +1321,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ControlVariation -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ControlVariation -->
 
     <owl:Class rdf:about="&colibri;ControlVariation">
         <rdfs:subClassOf>
@@ -1359,7 +1359,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ControllableResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ControllableResource -->
 
     <owl:Class rdf:about="&colibri;ControllableResource">
         <owl:equivalentClass>
@@ -1380,7 +1380,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Corridor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Corridor -->
 
     <owl:Class rdf:about="&colibri;Corridor">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -1388,7 +1388,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#CostParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#CostParameter -->
 
     <owl:Class rdf:about="&colibri;CostParameter">
         <rdfs:subClassOf rdf:resource="&colibri;MoneyParameter"/>
@@ -1397,7 +1397,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Currency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Currency -->
 
     <owl:Class rdf:about="&colibri;Currency">
         <rdfs:subClassOf>
@@ -1422,7 +1422,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataConfiguration -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataConfiguration -->
 
     <owl:Class rdf:about="&colibri;DataConfiguration">
         <rdfs:subClassOf>
@@ -1466,7 +1466,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataService -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataService -->
 
     <owl:Class rdf:about="&colibri;DataService">
         <owl:equivalentClass>
@@ -1525,7 +1525,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataServiceConsumer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataServiceConsumer -->
 
     <owl:Class rdf:about="&colibri;DataServiceConsumer">
         <owl:equivalentClass>
@@ -1543,7 +1543,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataServiceProvider -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataServiceProvider -->
 
     <owl:Class rdf:about="&colibri;DataServiceProvider">
         <owl:equivalentClass>
@@ -1561,7 +1561,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataValue -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataValue -->
 
     <owl:Class rdf:about="&colibri;DataValue">
         <rdfs:subClassOf>
@@ -1593,7 +1593,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DataVariable -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DataVariable -->
 
     <owl:Class rdf:about="&colibri;DataVariable">
         <rdfs:subClassOf rdf:resource="&colibri;Variable"/>
@@ -1614,7 +1614,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DemandParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DemandParameter -->
 
     <owl:Class rdf:about="&colibri;DemandParameter">
         <owl:equivalentClass>
@@ -1630,7 +1630,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DischargeDepth -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DischargeDepth -->
 
     <owl:Class rdf:about="&colibri;DischargeDepth">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1638,7 +1638,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DischargeRate -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DischargeRate -->
 
     <owl:Class rdf:about="&colibri;DischargeRate">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1646,7 +1646,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DischargingPower -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DischargingPower -->
 
     <owl:Class rdf:about="&colibri;DischargingPower">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1654,7 +1654,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DiscreteState -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DiscreteState -->
 
     <owl:Class rdf:about="&colibri;DiscreteState">
         <rdfs:subClassOf rdf:resource="&colibri;State"/>
@@ -1681,7 +1681,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DistributionSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DistributionSegment -->
 
     <owl:Class rdf:about="&colibri;DistributionSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -1689,7 +1689,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DistributionSystemOperator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DistributionSystemOperator -->
 
     <owl:Class rdf:about="&colibri;DistributionSystemOperator">
         <rdfs:subClassOf rdf:resource="&colibri;GridOperator"/>
@@ -1697,7 +1697,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Door -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Door -->
 
     <owl:Class rdf:about="&colibri;Door">
         <rdfs:subClassOf rdf:resource="&colibri;Equipment"/>
@@ -1705,7 +1705,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EarningsParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EarningsParameter -->
 
     <owl:Class rdf:about="&colibri;EarningsParameter">
         <rdfs:subClassOf rdf:resource="&colibri;MoneyParameter"/>
@@ -1713,7 +1713,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EastboundDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EastboundDelimiter -->
 
     <owl:Class rdf:about="&colibri;EastboundDelimiter">
         <owl:equivalentClass>
@@ -1744,7 +1744,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Efficiency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Efficiency -->
 
     <owl:Class rdf:about="&colibri;Efficiency">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -1752,7 +1752,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnOceanConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnOceanConnector -->
 
     <owl:Class rdf:about="&colibri;EnOceanConnector">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
@@ -1766,7 +1766,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyConsumerResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyConsumerResource -->
 
     <owl:Class rdf:about="&colibri;EnergyConsumerResource">
         <owl:equivalentClass>
@@ -1782,7 +1782,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyCustomer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyCustomer -->
 
     <owl:Class rdf:about="&colibri;EnergyCustomer">
         <rdfs:subClassOf rdf:resource="&colibri;GridAgent"/>
@@ -1790,7 +1790,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyForecastData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyForecastData -->
 
     <owl:Class rdf:about="&colibri;EnergyForecastData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -1834,7 +1834,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyFunction -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyFunction -->
 
     <owl:Class rdf:about="&colibri;EnergyFunction">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyService"/>
@@ -1862,7 +1862,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyGenerator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyGenerator -->
 
     <owl:Class rdf:about="&colibri;EnergyGenerator">
         <rdfs:subClassOf rdf:resource="&colibri;GridAgent"/>
@@ -1870,7 +1870,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyParameter -->
 
     <owl:Class rdf:about="&colibri;EnergyParameter">
         <rdfs:subClassOf rdf:resource="&colibri;DemandParameter"/>
@@ -1878,7 +1878,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyPoolManager -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyPoolManager -->
 
     <owl:Class rdf:about="&colibri;EnergyPoolManager">
         <rdfs:subClassOf rdf:resource="&colibri;GridAgent"/>
@@ -1886,7 +1886,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyProducerResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyProducerResource -->
 
     <owl:Class rdf:about="&colibri;EnergyProducerResource">
         <owl:equivalentClass>
@@ -1921,7 +1921,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyProfile -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyProfile -->
 
     <owl:Class rdf:about="&colibri;EnergyProfile">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyService"/>
@@ -1935,7 +1935,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyRetailer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyRetailer -->
 
     <owl:Class rdf:about="&colibri;EnergyRetailer">
         <rdfs:subClassOf rdf:resource="&colibri;GridAgent"/>
@@ -1943,7 +1943,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyService -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyService -->
 
     <owl:Class rdf:about="&colibri;EnergyService">
         <owl:equivalentClass>
@@ -1971,7 +1971,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyServiceConsumer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyServiceConsumer -->
 
     <owl:Class rdf:about="&colibri;EnergyServiceConsumer">
         <owl:equivalentClass>
@@ -1989,7 +1989,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyServiceProvider -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyServiceProvider -->
 
     <owl:Class rdf:about="&colibri;EnergyServiceProvider">
         <owl:equivalentClass>
@@ -2019,7 +2019,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergySource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergySource -->
 
     <owl:Class rdf:about="&colibri;EnergySource">
         <rdfs:subClassOf>
@@ -2039,7 +2039,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyStorageResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyStorageResource -->
 
     <owl:Class rdf:about="&colibri;EnergyStorageResource">
         <owl:equivalentClass>
@@ -2105,13 +2105,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnergyType -->
 
     <owl:Class rdf:about="&colibri;EnergyType"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnvironmentalParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnvironmentalParameter -->
 
     <owl:Class rdf:about="&colibri;EnvironmentalParameter">
         <owl:equivalentClass>
@@ -2134,7 +2134,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Equipment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Equipment -->
 
     <owl:Class rdf:about="&colibri;Equipment">
         <rdfs:subClassOf rdf:resource="&colibri;UncontrollableResource"/>
@@ -2142,7 +2142,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ExchangeRate -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ExchangeRate -->
 
     <owl:Class rdf:about="&colibri;ExchangeRate">
         <rdfs:subClassOf>
@@ -2189,7 +2189,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Factory -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Factory -->
 
     <owl:Class rdf:about="&colibri;Factory">
         <rdfs:subClassOf rdf:resource="&colibri;CommercialBuilding"/>
@@ -2197,7 +2197,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#FlexibilityOfferData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#FlexibilityOfferData -->
 
     <owl:Class rdf:about="&colibri;FlexibilityOfferData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -2241,7 +2241,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#FlexibilityOperator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#FlexibilityOperator -->
 
     <owl:Class rdf:about="&colibri;FlexibilityOperator">
         <rdfs:subClassOf rdf:resource="&colibri;GridOperator"/>
@@ -2249,7 +2249,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#FlexibilityOrderData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#FlexibilityOrderData -->
 
     <owl:Class rdf:about="&colibri;FlexibilityOrderData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -2293,7 +2293,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#FlexibilityRequestData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#FlexibilityRequestData -->
 
     <owl:Class rdf:about="&colibri;FlexibilityRequestData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -2337,7 +2337,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Floor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Floor -->
 
     <owl:Class rdf:about="&colibri;Floor">
         <rdfs:subClassOf rdf:resource="&colibri;Zone"/>
@@ -2345,7 +2345,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridAction -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridAction -->
 
     <owl:Class rdf:about="&colibri;GridAction">
         <owl:equivalentClass>
@@ -2360,7 +2360,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridAgent -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridAgent -->
 
     <owl:Class rdf:about="&colibri;GridAgent">
         <rdfs:subClassOf rdf:resource="&colibri;Agent"/>
@@ -2399,7 +2399,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridData -->
 
     <owl:Class rdf:about="&colibri;GridData">
         <rdfs:subClassOf rdf:resource="&colibri;DataService"/>
@@ -2449,7 +2449,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridMessageParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridMessageParameter -->
 
     <owl:Class rdf:about="&colibri;GridMessageParameter">
         <owl:equivalentClass>
@@ -2469,7 +2469,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridNode -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridNode -->
 
     <owl:Class rdf:about="&colibri;GridNode">
         <rdfs:subClassOf>
@@ -2488,7 +2488,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridOperator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridOperator -->
 
     <owl:Class rdf:about="&colibri;GridOperator">
         <rdfs:subClassOf rdf:resource="&colibri;GridAgent"/>
@@ -2496,7 +2496,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridRegulationData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridRegulationData -->
 
     <owl:Class rdf:about="&colibri;GridRegulationData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -2540,7 +2540,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GridSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GridSegment -->
 
     <owl:Class rdf:about="&colibri;GridSegment">
         <rdfs:subClassOf>
@@ -2553,7 +2553,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#GroundFloor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#GroundFloor -->
 
     <owl:Class rdf:about="&colibri;GroundFloor">
         <rdfs:subClassOf rdf:resource="&colibri;Floor"/>
@@ -2561,7 +2561,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Height -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Height -->
 
     <owl:Class rdf:about="&colibri;Height">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -2569,7 +2569,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#HighVoltageSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#HighVoltageSegment -->
 
     <owl:Class rdf:about="&colibri;HighVoltageSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -2577,7 +2577,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Home -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Home -->
 
     <owl:Class rdf:about="&colibri;Home">
         <rdfs:subClassOf rdf:resource="&colibri;ResidentialBuilding"/>
@@ -2585,7 +2585,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#HumidityParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#HumidityParameter -->
 
     <owl:Class rdf:about="&colibri;HumidityParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -2593,7 +2593,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#HumiditySensor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#HumiditySensor -->
 
     <owl:Class rdf:about="&colibri;HumiditySensor">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingAutomationDevice"/>
@@ -2601,7 +2601,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#IndustrialCustomer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#IndustrialCustomer -->
 
     <owl:Class rdf:about="&colibri;IndustrialCustomer">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyCustomer"/>
@@ -2609,7 +2609,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#InformationParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#InformationParameter -->
 
     <owl:Class rdf:about="&colibri;InformationParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -2617,7 +2617,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#InnerDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#InnerDelimiter -->
 
     <owl:Class rdf:about="&colibri;InnerDelimiter">
         <owl:equivalentClass>
@@ -2679,7 +2679,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#InquiryParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#InquiryParameter -->
 
     <owl:Class rdf:about="&colibri;InquiryParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -2687,7 +2687,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#InstructionParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#InstructionParameter -->
 
     <owl:Class rdf:about="&colibri;InstructionParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -2695,7 +2695,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#IntervalState -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#IntervalState -->
 
     <owl:Class rdf:about="&colibri;IntervalState">
         <rdfs:subClassOf rdf:resource="&colibri;State"/>
@@ -2727,7 +2727,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#IrradiationParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#IrradiationParameter -->
 
     <owl:Class rdf:about="&colibri;IrradiationParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -2735,7 +2735,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Kitchen -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Kitchen -->
 
     <owl:Class rdf:about="&colibri;Kitchen">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -2743,7 +2743,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#KnxConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#KnxConnector -->
 
     <owl:Class rdf:about="&colibri;KnxConnector">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
@@ -2757,7 +2757,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#LatencyParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#LatencyParameter -->
 
     <owl:Class rdf:about="&colibri;LatencyParameter">
         <rdfs:subClassOf rdf:resource="&colibri;QualityOfServiceParameter"/>
@@ -2765,7 +2765,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Length -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Length -->
 
     <owl:Class rdf:about="&colibri;Length">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -2773,7 +2773,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#LocalSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#LocalSegment -->
 
     <owl:Class rdf:about="&colibri;LocalSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -2781,7 +2781,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#LowVoltageGridController -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#LowVoltageGridController -->
 
     <owl:Class rdf:about="&colibri;LowVoltageGridController">
         <rdfs:subClassOf rdf:resource="&colibri;GridOperator"/>
@@ -2789,7 +2789,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#LowVoltageSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#LowVoltageSegment -->
 
     <owl:Class rdf:about="&colibri;LowVoltageSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -2797,7 +2797,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Manufacturer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Manufacturer -->
 
     <owl:Class rdf:about="&colibri;Manufacturer">
         <rdfs:subClassOf>
@@ -2816,19 +2816,19 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Material -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Material -->
 
     <owl:Class rdf:about="&colibri;Material"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Medium -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Medium -->
 
     <owl:Class rdf:about="&colibri;Medium"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#MoneyParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#MoneyParameter -->
 
     <owl:Class rdf:about="&colibri;MoneyParameter">
         <owl:equivalentClass>
@@ -2851,7 +2851,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NationalSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NationalSegment -->
 
     <owl:Class rdf:about="&colibri;NationalSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -2859,7 +2859,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NoiseParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NoiseParameter -->
 
     <owl:Class rdf:about="&colibri;NoiseParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -2867,7 +2867,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NominalCapacity -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NominalCapacity -->
 
     <owl:Class rdf:about="&colibri;NominalCapacity">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -2875,7 +2875,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NonRenewableEnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NonRenewableEnergyType -->
 
     <owl:Class rdf:about="&colibri;NonRenewableEnergyType">
         <owl:equivalentClass>
@@ -2893,7 +2893,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NorthboundDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NorthboundDelimiter -->
 
     <owl:Class rdf:about="&colibri;NorthboundDelimiter">
         <owl:equivalentClass>
@@ -2944,7 +2944,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OasisEiConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OasisEiConnector -->
 
     <owl:Class rdf:about="&colibri;OasisEiConnector">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
@@ -2958,7 +2958,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ObixConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ObixConnector -->
 
     <owl:Class rdf:about="&colibri;ObixConnector">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
@@ -2992,7 +2992,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OccupancyParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OccupancyParameter -->
 
     <owl:Class rdf:about="&colibri;OccupancyParameter">
         <rdfs:subClassOf rdf:resource="&colibri;UsageParameter"/>
@@ -3000,7 +3000,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OfferParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OfferParameter -->
 
     <owl:Class rdf:about="&colibri;OfferParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -3008,7 +3008,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Office -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Office -->
 
     <owl:Class rdf:about="&colibri;Office">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -3016,7 +3016,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OfficeBuilding -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OfficeBuilding -->
 
     <owl:Class rdf:about="&colibri;OfficeBuilding">
         <rdfs:subClassOf rdf:resource="&colibri;CommercialBuilding"/>
@@ -3024,7 +3024,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Offices -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Offices -->
 
     <owl:Class rdf:about="&colibri;Offices">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingPart"/>
@@ -3032,7 +3032,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OpenAdrConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OpenAdrConnector -->
 
     <owl:Class rdf:about="&colibri;OpenAdrConnector">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
@@ -3046,7 +3046,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OptionParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OptionParameter -->
 
     <owl:Class rdf:about="&colibri;OptionParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -3054,7 +3054,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OrderParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OrderParameter -->
 
     <owl:Class rdf:about="&colibri;OrderParameter">
         <rdfs:subClassOf rdf:resource="&colibri;GridMessageParameter"/>
@@ -3062,7 +3062,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OuterDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OuterDelimiter -->
 
     <owl:Class rdf:about="&colibri;OuterDelimiter">
         <owl:equivalentClass>
@@ -3099,13 +3099,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Parameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Parameter -->
 
     <owl:Class rdf:about="&colibri;Parameter"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ParameterTrend -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ParameterTrend -->
 
     <owl:Class rdf:about="&colibri;ParameterTrend">
         <owl:equivalentClass>
@@ -3120,7 +3120,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#PowerParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#PowerParameter -->
 
     <owl:Class rdf:about="&colibri;PowerParameter">
         <rdfs:subClassOf rdf:resource="&colibri;DemandParameter"/>
@@ -3128,7 +3128,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#PrecipitationParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#PrecipitationParameter -->
 
     <owl:Class rdf:about="&colibri;PrecipitationParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -3136,7 +3136,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#PriceDistributionData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#PriceDistributionData -->
 
     <owl:Class rdf:about="&colibri;PriceDistributionData">
         <rdfs:subClassOf rdf:resource="&colibri;GridData"/>
@@ -3180,7 +3180,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#PrimaryEnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#PrimaryEnergyType -->
 
     <owl:Class rdf:about="&colibri;PrimaryEnergyType">
         <owl:equivalentClass>
@@ -3196,7 +3196,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#PrivacyParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#PrivacyParameter -->
 
     <owl:Class rdf:about="&colibri;PrivacyParameter">
         <rdfs:subClassOf rdf:resource="&colibri;UsageParameter"/>
@@ -3204,7 +3204,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Provider -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Provider -->
 
     <owl:Class rdf:about="&colibri;Provider">
         <owl:equivalentClass>
@@ -3217,7 +3217,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#QualityOfServiceParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#QualityOfServiceParameter -->
 
     <owl:Class rdf:about="&colibri;QualityOfServiceParameter">
         <owl:equivalentClass>
@@ -3234,7 +3234,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#RegionalSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#RegionalSegment -->
 
     <owl:Class rdf:about="&colibri;RegionalSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -3242,7 +3242,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#RelativeState -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#RelativeState -->
 
     <owl:Class rdf:about="&colibri;RelativeState">
         <rdfs:subClassOf rdf:resource="&colibri;State"/>
@@ -3250,7 +3250,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ReliabilityParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ReliabilityParameter -->
 
     <owl:Class rdf:about="&colibri;ReliabilityParameter">
         <rdfs:subClassOf rdf:resource="&colibri;QualityOfServiceParameter"/>
@@ -3258,7 +3258,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#RenewableEnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#RenewableEnergyType -->
 
     <owl:Class rdf:about="&colibri;RenewableEnergyType">
         <owl:equivalentClass>
@@ -3278,7 +3278,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ResidentialBuilding -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ResidentialBuilding -->
 
     <owl:Class rdf:about="&colibri;ResidentialBuilding">
         <rdfs:subClassOf rdf:resource="&colibri;Building"/>
@@ -3286,7 +3286,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ResidentialCustomer -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ResidentialCustomer -->
 
     <owl:Class rdf:about="&colibri;ResidentialCustomer">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyCustomer"/>
@@ -3294,7 +3294,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Room -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Room -->
 
     <owl:Class rdf:about="&colibri;Room">
         <rdfs:subClassOf rdf:resource="&colibri;Zone"/>
@@ -3302,7 +3302,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#SecondaryEnergyType -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#SecondaryEnergyType -->
 
     <owl:Class rdf:about="&colibri;SecondaryEnergyType">
         <owl:equivalentClass>
@@ -3318,7 +3318,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Service -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Service -->
 
     <owl:Class rdf:about="&colibri;Service">
         <owl:equivalentClass>
@@ -3345,7 +3345,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Shade -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Shade -->
 
     <owl:Class rdf:about="&colibri;Shade">
         <rdfs:subClassOf rdf:resource="&colibri;Equipment"/>
@@ -3353,7 +3353,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ShadingCoefficient -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ShadingCoefficient -->
 
     <owl:Class rdf:about="&colibri;ShadingCoefficient">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -3362,7 +3362,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Shutter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Shutter -->
 
     <owl:Class rdf:about="&colibri;Shutter">
         <rdfs:subClassOf rdf:resource="&colibri;Equipment"/>
@@ -3370,7 +3370,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#SimpleParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#SimpleParameter -->
 
     <owl:Class rdf:about="&colibri;SimpleParameter">
         <rdfs:subClassOf rdf:resource="&colibri;Parameter"/>
@@ -3378,7 +3378,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Site -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Site -->
 
     <owl:Class rdf:about="&colibri;Site">
         <rdfs:subClassOf rdf:resource="&colibri;Zone"/>
@@ -3392,7 +3392,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#SouthboundDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#SouthboundDelimiter -->
 
     <owl:Class rdf:about="&colibri;SouthboundDelimiter">
         <owl:equivalentClass>
@@ -3423,7 +3423,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Stairway -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Stairway -->
 
     <owl:Class rdf:about="&colibri;Stairway">
         <rdfs:subClassOf rdf:resource="&colibri;Room"/>
@@ -3431,7 +3431,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#State -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#State -->
 
     <owl:Class rdf:about="&colibri;State">
         <rdfs:subClassOf>
@@ -3456,7 +3456,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#StateChange -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#StateChange -->
 
     <owl:Class rdf:about="&colibri;StateChange">
         <owl:equivalentClass>
@@ -3471,7 +3471,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#StateParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#StateParameter -->
 
     <owl:Class rdf:about="&colibri;StateParameter">
         <rdfs:subClassOf rdf:resource="&colibri;SimpleParameter"/>
@@ -3491,7 +3491,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#SwitchingActuator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#SwitchingActuator -->
 
     <owl:Class rdf:about="&colibri;SwitchingActuator">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingAutomationDevice"/>
@@ -3499,7 +3499,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TechnologyConnector -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TechnologyConnector -->
 
     <owl:Class rdf:about="&colibri;TechnologyConnector">
         <rdfs:subClassOf>
@@ -3525,19 +3525,19 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TechnologyLanguage -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TechnologyLanguage -->
 
     <owl:Class rdf:about="&colibri;TechnologyLanguage"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TechnologyProtocol -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TechnologyProtocol -->
 
     <owl:Class rdf:about="&colibri;TechnologyProtocol"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TemperatureParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TemperatureParameter -->
 
     <owl:Class rdf:about="&colibri;TemperatureParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -3545,7 +3545,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TemperatureSensor -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TemperatureSensor -->
 
     <owl:Class rdf:about="&colibri;TemperatureSensor">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingAutomationDevice"/>
@@ -3553,7 +3553,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ThermalPermeability -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ThermalPermeability -->
 
     <owl:Class rdf:about="&colibri;ThermalPermeability">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -3561,7 +3561,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TimeParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TimeParameter -->
 
     <owl:Class rdf:about="&colibri;TimeParameter">
         <rdfs:subClassOf rdf:resource="&colibri;SimpleParameter"/>
@@ -3569,7 +3569,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TransmissionSegment -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TransmissionSegment -->
 
     <owl:Class rdf:about="&colibri;TransmissionSegment">
         <rdfs:subClassOf rdf:resource="&colibri;GridSegment"/>
@@ -3577,7 +3577,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#TransmissionSystemOperator -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#TransmissionSystemOperator -->
 
     <owl:Class rdf:about="&colibri;TransmissionSystemOperator">
         <rdfs:subClassOf rdf:resource="&colibri;GridOperator"/>
@@ -3585,7 +3585,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Transparency -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Transparency -->
 
     <owl:Class rdf:about="&colibri;Transparency">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -3593,7 +3593,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#UncontrollableResource -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#UncontrollableResource -->
 
     <owl:Class rdf:about="&colibri;UncontrollableResource">
         <rdfs:subClassOf rdf:resource="&colibri;BuildingResource"/>
@@ -3601,7 +3601,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#UndevelopedArea -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#UndevelopedArea -->
 
     <owl:Class rdf:about="&colibri;UndevelopedArea">
         <rdfs:subClassOf rdf:resource="&colibri;Site"/>
@@ -3609,7 +3609,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Unit -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Unit -->
 
     <owl:Class rdf:about="&colibri;Unit">
         <rdfs:subClassOf>
@@ -3648,7 +3648,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#UnitComponent -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#UnitComponent -->
 
     <owl:Class rdf:about="&colibri;UnitComponent">
         <rdfs:subClassOf>
@@ -3669,7 +3669,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#UsageParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#UsageParameter -->
 
     <owl:Class rdf:about="&colibri;UsageParameter">
         <owl:equivalentClass>
@@ -3685,7 +3685,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Value -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Value -->
 
     <owl:Class rdf:about="&colibri;Value">
         <rdfs:subClassOf>
@@ -3711,7 +3711,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ValueParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ValueParameter -->
 
     <owl:Class rdf:about="&colibri;ValueParameter">
         <rdfs:subClassOf rdf:resource="&colibri;SimpleParameter"/>
@@ -3726,7 +3726,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Variable -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Variable -->
 
     <owl:Class rdf:about="&colibri;Variable">
         <rdfs:subClassOf>
@@ -3739,7 +3739,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WeatherDataProvider -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WeatherDataProvider -->
 
     <owl:Class rdf:about="&colibri;WeatherDataProvider">
         <rdfs:subClassOf rdf:resource="&colibri;WebAgent"/>
@@ -3747,7 +3747,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WebAgent -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WebAgent -->
 
     <owl:Class rdf:about="&colibri;WebAgent">
         <rdfs:subClassOf rdf:resource="&colibri;Agent"/>
@@ -3755,7 +3755,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WebData -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WebData -->
 
     <owl:Class rdf:about="&colibri;WebData">
         <rdfs:subClassOf rdf:resource="&colibri;DataService"/>
@@ -3763,7 +3763,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WebProtocol -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WebProtocol -->
 
     <owl:Class rdf:about="&colibri;WebProtocol">
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyProtocol"/>
@@ -3771,7 +3771,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Weight -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Weight -->
 
     <owl:Class rdf:about="&colibri;Weight">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -3779,7 +3779,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WestboundDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WestboundDelimiter -->
 
     <owl:Class rdf:about="&colibri;WestboundDelimiter">
         <owl:equivalentClass>
@@ -3810,7 +3810,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WhiteGoods -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WhiteGoods -->
 
     <owl:Class rdf:about="&colibri;WhiteGoods">
         <rdfs:subClassOf rdf:resource="&colibri;Appliance"/>
@@ -3818,7 +3818,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Width -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Width -->
 
     <owl:Class rdf:about="&colibri;Width">
         <rdfs:subClassOf rdf:resource="&colibri;Constant"/>
@@ -3826,7 +3826,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WindFarm -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WindFarm -->
 
     <owl:Class rdf:about="&colibri;WindFarm">
         <rdfs:subClassOf rdf:resource="&colibri;EnergyGenerator"/>
@@ -3834,7 +3834,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#WindParameter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#WindParameter -->
 
     <owl:Class rdf:about="&colibri;WindParameter">
         <rdfs:subClassOf rdf:resource="&colibri;EnvironmentalParameter"/>
@@ -3842,7 +3842,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Window -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Window -->
 
     <owl:Class rdf:about="&colibri;Window">
         <rdfs:subClassOf rdf:resource="&colibri;Equipment"/>
@@ -3850,7 +3850,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Zone -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Zone -->
 
     <owl:Class rdf:about="&colibri;Zone">
         <rdfs:subClassOf>
@@ -3899,7 +3899,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ZoneDelimiter -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ZoneDelimiter -->
 
     <owl:Class rdf:about="&colibri;ZoneDelimiter">
         <owl:equivalentClass>
@@ -4003,7 +4003,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#BacnetWs -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#BacnetWs -->
 
     <owl:NamedIndividual rdf:about="&colibri;BacnetWs">
         <rdf:type rdf:resource="&colibri;TechnologyLanguage"/>
@@ -4011,31 +4011,31 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Biofuel -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Biofuel -->
 
     <owl:NamedIndividual rdf:about="&colibri;Biofuel"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Biomass -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Biomass -->
 
     <owl:NamedIndividual rdf:about="&colibri;Biomass"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Buy -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Buy -->
 
     <owl:NamedIndividual rdf:about="&colibri;Buy"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Coal -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Coal -->
 
     <owl:NamedIndividual rdf:about="&colibri;Coal"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Coap -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Coap -->
 
     <owl:NamedIndividual rdf:about="&colibri;Coap">
         <rdf:type rdf:resource="&colibri;WebProtocol"/>
@@ -4043,19 +4043,19 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#DownTrend -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#DownTrend -->
 
     <owl:NamedIndividual rdf:about="&colibri;DownTrend"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Electricity -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Electricity -->
 
     <owl:NamedIndividual rdf:about="&colibri;Electricity"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#EnOcean -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#EnOcean -->
 
     <owl:NamedIndividual rdf:about="&colibri;EnOcean">
         <rdf:type rdf:resource="&colibri;AutomationProtocol"/>
@@ -4063,19 +4063,19 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Geothermal -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Geothermal -->
 
     <owl:NamedIndividual rdf:about="&colibri;Geothermal"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#HigherValue -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#HigherValue -->
 
     <owl:NamedIndividual rdf:about="&colibri;HigherValue"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Http -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Http -->
 
     <owl:NamedIndividual rdf:about="&colibri;Http">
         <rdf:type rdf:resource="&colibri;WebProtocol"/>
@@ -4083,19 +4083,19 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Hydrogen -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Hydrogen -->
 
     <owl:NamedIndividual rdf:about="&colibri;Hydrogen"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Hydropower -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Hydropower -->
 
     <owl:NamedIndividual rdf:about="&colibri;Hydropower"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Knx -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Knx -->
 
     <owl:NamedIndividual rdf:about="&colibri;Knx">
         <rdf:type rdf:resource="&colibri;AutomationProtocol"/>
@@ -4103,25 +4103,25 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#LowerValue -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#LowerValue -->
 
     <owl:NamedIndividual rdf:about="&colibri;LowerValue"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#NaturalGas -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#NaturalGas -->
 
     <owl:NamedIndividual rdf:about="&colibri;NaturalGas"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Nuclear -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Nuclear -->
 
     <owl:NamedIndividual rdf:about="&colibri;Nuclear"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OasisEi -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OasisEi -->
 
     <owl:NamedIndividual rdf:about="&colibri;OasisEi">
         <rdf:type rdf:resource="&colibri;TechnologyLanguage"/>
@@ -4129,7 +4129,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Obix -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Obix -->
 
     <owl:NamedIndividual rdf:about="&colibri;Obix">
         <rdf:type rdf:resource="&colibri;TechnologyLanguage"/>
@@ -4137,13 +4137,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Oil -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Oil -->
 
     <owl:NamedIndividual rdf:about="&colibri;Oil"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OpcUa -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OpcUa -->
 
     <owl:NamedIndividual rdf:about="&colibri;OpcUa">
         <rdf:type rdf:resource="&colibri;TechnologyLanguage"/>
@@ -4151,7 +4151,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#OpenAdr -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#OpenAdr -->
 
     <owl:NamedIndividual rdf:about="&colibri;OpenAdr">
         <rdf:type rdf:resource="&colibri;TechnologyLanguage"/>
@@ -4159,13 +4159,13 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Sell -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Sell -->
 
     <owl:NamedIndividual rdf:about="&colibri;Sell"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Soap -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Soap -->
 
     <owl:NamedIndividual rdf:about="&colibri;Soap">
         <rdf:type rdf:resource="&colibri;WebProtocol"/>
@@ -4173,25 +4173,25 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Solar -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Solar -->
 
     <owl:NamedIndividual rdf:about="&colibri;Solar"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#UpTrend -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#UpTrend -->
 
     <owl:NamedIndividual rdf:about="&colibri;UpTrend"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Wind -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Wind -->
 
     <owl:NamedIndividual rdf:about="&colibri;Wind"/>
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#Xmpp -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#Xmpp -->
 
     <owl:NamedIndividual rdf:about="&colibri;Xmpp">
         <rdf:type rdf:resource="&colibri;WebProtocol"/>
@@ -4199,7 +4199,7 @@
     
 
 
-    <!-- https://github.com/dschachinger/colibri/res/colibri.owl#ZigBee -->
+    <!-- https://github.com/dschachinger/colibri/blob/master/res/colibri.owl#ZigBee -->
 
     <owl:NamedIndividual rdf:about="&colibri;ZigBee">
         <rdf:type rdf:resource="&colibri;AutomationProtocol"/>
