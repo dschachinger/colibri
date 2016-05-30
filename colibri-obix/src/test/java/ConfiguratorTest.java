@@ -52,23 +52,23 @@ public class ConfiguratorTest {
     }
 
     @After
-    public void oneTimeTearDown() {
+    public void tearDown() {
         tempFolder.delete();
     }
 
     @Test(expected = ConfigurationException.class)
-    public void ReadEmptyConfigFile() {
-        conf.getOBIXLobbies(tempFolder.getRoot() + File.separator + "empty.properties");
+    public void readEmptyConfigFile() {
+        conf.getObixLobbiesURIs(tempFolder.getRoot() + File.separator + "empty.properties");
     }
 
     @Test(expected = ConfigurationException.class)
-    public void ReadConfigFileWithNoOBIXLobby() {
-        conf.getOBIXLobbies(tempFolder.getRoot() + File.separator + "wrong.properties");
+    public void readConfigFileWithNoObixLobby() {
+        conf.getObixLobbiesURIs(tempFolder.getRoot() + File.separator + "wrong.properties");
     }
 
     @Test
-    public void ReadOBIXLobbiesSuccessfully() {
-        assertEquals("http://localhost:8080/obix", conf.getOBIXLobbies(tempFolder.getRoot() +File.separator + "test.properties").get(0).getUri());
-        assertEquals("http://test.test.test/obix", conf.getOBIXLobbies(tempFolder.getRoot() +File.separator + "test.properties").get(1).getUri());
+    public void readObixLobbiesSuccessfully() {
+        assertEquals("http://localhost:8080/obix", conf.getObixLobbiesURIs(tempFolder.getRoot() +File.separator + "test.properties").get(0).getUri());
+        assertEquals("http://test.test.test/obix", conf.getObixLobbiesURIs(tempFolder.getRoot() +File.separator + "test.properties").get(1).getUri());
     }
 }

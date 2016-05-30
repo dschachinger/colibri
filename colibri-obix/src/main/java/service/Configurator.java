@@ -1,6 +1,6 @@
 package service;
 import exception.ConfigurationException;
-import model.OBIXLobby;
+import model.ObixLobby;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -9,10 +9,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+/**
+ * This class is used to operate on properties files.
+ */
 public class Configurator {
 
-    public List<OBIXLobby> getOBIXLobbies(String filePath) throws ConfigurationException {
-        List<OBIXLobby> oBIXLobbies = new ArrayList<OBIXLobby>();
+    /**
+     *  This method returns the obix lobbies URIs which are specified in the .properties file of the given path.
+     *
+     * @param filePath                  The path of the .properties file.
+     * @return                          The parsed obix lobby URIs.
+     * @throws ConfigurationException   Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
+     */
+    public List<ObixLobby> getObixLobbiesURIs(String filePath) throws ConfigurationException {
+        List<ObixLobby> oBIXLobbies = new ArrayList<ObixLobby>();
 
         Properties prop = new Properties();
         InputStream input = null;
@@ -24,7 +34,7 @@ public class Configurator {
             int i = 1;
             String uri;
             while((uri = prop.getProperty("oBIXLobby" + i)) != null) {
-                OBIXLobby obixLobby = new OBIXLobby(uri);
+                ObixLobby obixLobby = new ObixLobby(uri);
                 oBIXLobbies.add(obixLobby);
                 i++;
             }
