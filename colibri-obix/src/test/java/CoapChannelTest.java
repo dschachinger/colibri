@@ -1,11 +1,12 @@
 import channel.CoapChannel;
 import channel.ObixChannel;
-import exception.CoapCommunicationException;
+import channel.ObixXmlChannelDecorator;
 import model.ObixLobby;
-import model.ObixObject;
+import obix.Obj;
 import org.eclipse.californium.core.CoapClient;
 import org.hamcrest.CoreMatchers;
 import org.junit.*;
+import static org.junit.Assert.assertTrue;
 
 public class CoapChannelTest {
 
@@ -13,21 +14,18 @@ public class CoapChannelTest {
 
     @Before
     public void setUp() {
-        undecoratedCoapChannel = new CoapChannel();
+        undecoratedCoapChannel = new CoapChannel("localhost", "localhost/obix");
     }
 
     @After
     public void tearDown() {
     }
 
-    @Test(expected = CoapCommunicationException.class)
+    @Test//(expected = CoapCommunicationException.class)
     public void getLobbyWithWrongURI() {
-        undecoratedCoapChannel.getLobby("wrong.wrong.wrong/obix");
-    }
-
-    @Test(expected = CoapCommunicationException.class)
-    public void getWithWrongURI() {
-        undecoratedCoapChannel.get("wrong.wrong.wrong");
+        ObixLobby lobby = undecoratedCoapChannel.getLobby("wrong.wrong.wrong/obix");
+        Obj lobbyObj = ObixXmlChannelDecorator.decode(lobby.getLobbyAsString());
+        assertTrue(lobbyObj.isErr());
     }
 
     /**
@@ -50,7 +48,7 @@ public class CoapChannelTest {
      *
      * The IoTSYS System can be used for this: https://github.com/mjung85/iotsys/
      */
-    @Test
+/*    @Test
     public void getShouldReturnEmptyObjectOnlyWithResponseString() {
         String uri = "localhost/VirtualDevices/virtualIndoorBrightnessSensor";
         CoapClient coapClient = new CoapClient(uri);
@@ -59,4 +57,6 @@ public class CoapChannelTest {
         ObixObject object = undecoratedCoapChannel.get(uri);
         Assert.assertThat(object.getObjectAsString(), CoreMatchers.containsString("virtualIndoorBrightnessSensor"));
     }
+*/
+
 }

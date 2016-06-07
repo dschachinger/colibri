@@ -1,26 +1,26 @@
 package model;
 
+import obix.Obj;
+import obix.Val;
+import obix.contracts.Unit;
+
 public class ObixObject {
 
-    private String uri;
-    private Integer id;
-    private String name;
     /**
-     * This String represents the oBIX Object.
+     * This String represents the oBIX object.
      * For example, the object can be in XML-Format. In this case, the objectAsString variable will be the XML-String
      * which represents the object.
      * The objectAsString variable can be null.
      */
-    private String objectAsString;
+
+    private String objAsString;
+
+    private String uri;
+
+    private Obj obj;
 
     public ObixObject(String uri) {
         this.uri = uri;
-    }
-
-    public ObixObject(String uri, Integer id, String name) {
-        this.uri = uri;
-        this.id = id;
-        this.name = name;
     }
 
     public String getUri() {
@@ -31,27 +31,20 @@ public class ObixObject {
         this.uri = uri;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getObjectAsString() {
-        return objectAsString;
+        return objAsString;
     }
 
-    public void setObjectAsString(String objectAsString) {
-        this.objectAsString = objectAsString;
+    public void setObjectAsString(String objAsString) {
+        this.objAsString = objAsString;
     }
+
+    public Obj getObj() {
+        return obj;
+    }
+
+    public void setObj(Obj obj) {
+        this.obj = obj;
+    }
+
 }

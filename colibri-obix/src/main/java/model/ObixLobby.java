@@ -1,5 +1,8 @@
 package model;
 
+import obix.Obj;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObixLobby {
@@ -10,28 +13,26 @@ public class ObixLobby {
      * which represents the lobby.
      * The lobbyAsString variable can be null.
      */
+
     private String lobbyAsString;
-    private String uri;
-    private List<ObixObject> oBIXObjects;
+
+    private String lobbyUri;
+
+    private List<ObixObject> points;
+
+    private Obj obj;
 
     public ObixLobby(String uri) {
-        this.uri = uri;
+        this.lobbyUri = uri;
+        this.points = new ArrayList<ObixObject>();
     }
 
-    public String getUri() {
-        return uri;
+    public String getLobbyUri() {
+        return lobbyUri;
     }
 
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public List<ObixObject> getoBIXObjects() {
-        return oBIXObjects;
-    }
-
-    public void setoBIXObjects(List<ObixObject> oBIXObjects) {
-        this.oBIXObjects = oBIXObjects;
+    public void setLobbyUri(String uri) {
+        this.lobbyUri = uri;
     }
 
     public String getLobbyAsString() {
@@ -40,5 +41,21 @@ public class ObixLobby {
 
     public void setLobbyAsString(String lobbyAsString) {
         this.lobbyAsString = lobbyAsString;
+    }
+
+    public List<ObixObject> getPoints() {
+        return points;
+    }
+
+    public void setPoints(List<ObixObject> points) {
+        this.points = points;
+    }
+
+    public Obj getObj() {
+        return obj;
+    }
+
+    public void setObj(Obj obj) {
+        this.obj = obj;
     }
 }

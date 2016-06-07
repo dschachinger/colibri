@@ -58,17 +58,17 @@ public class ConfiguratorTest {
 
     @Test(expected = ConfigurationException.class)
     public void readEmptyConfigFile() {
-        conf.getObixLobbiesURIs(tempFolder.getRoot() + File.separator + "empty.properties");
+        conf.getObixCoapChannels(tempFolder.getRoot() + File.separator + "empty.properties");
     }
 
     @Test(expected = ConfigurationException.class)
     public void readConfigFileWithNoObixLobby() {
-        conf.getObixLobbiesURIs(tempFolder.getRoot() + File.separator + "wrong.properties");
+        conf.getObixCoapChannels(tempFolder.getRoot() + File.separator + "wrong.properties");
     }
 
     @Test
     public void readObixLobbiesSuccessfully() {
-        assertEquals("http://localhost:8080/obix", conf.getObixLobbiesURIs(tempFolder.getRoot() +File.separator + "test.properties").get(0).getUri());
-        assertEquals("http://test.test.test/obix", conf.getObixLobbiesURIs(tempFolder.getRoot() +File.separator + "test.properties").get(1).getUri());
+        assertEquals("http://localhost:8080/obix", conf.getObixCoapChannels(tempFolder.getRoot() +File.separator + "test.properties").get(0).getLobbyUri());
+        assertEquals("http://test.test.test/obix", conf.getObixCoapChannels(tempFolder.getRoot() +File.separator + "test.properties").get(1).getLobbyUri());
     }
 }
