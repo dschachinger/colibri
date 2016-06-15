@@ -15,9 +15,38 @@ import java.util.*;
  */
 public class Configurator {
 
+    private ResourceBundle bundle;
+
+    public Configurator() {
+        this.bundle = ResourceBundle.getBundle("config");
+    }
+
+    /**
+     * This method returns the obix lobbies URIs which are specified in the .properties file of the given bundle.
+     *
+     * @return                          The parsed obix lobby URIs.
+     * @throws ConfigurationException   Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
+     */
     public List<ObixChannel> getObixCoapChannels() throws ConfigurationException {
-        ResourceBundle bundle = ResourceBundle.getBundle("config");
-        return getObixCoapChannels(bundle);
+        List<ObixChannel> oBIXchannels = new ArrayList<ObixChannel>();
+        int i = 1;
+        Enumeration<String> keys = bundle.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            if(key.contains("oBIXLobby")) {
+                String uri = bundle.getString(key);
+                String baseUri = uri.substring(0, uri.lastIndexOf("/"));
+
+                ObixChannel channel = new CoapChannel(baseUri, uri, getObservedTypes());
+                oBIXchannels.add(channel);
+            }
+        }
+
+        if (oBIXchannels.size() == 0) {
+            throw new ConfigurationException("No oBIXLobby URI in config file!");
+        }
+
+        return oBIXchannels;
     }
 
     /**
@@ -42,7 +71,7 @@ public class Configurator {
             while ((uri = prop.getProperty("oBIXLobby" + i)) != null) {
                 String baseUri = uri.substring(0, uri.lastIndexOf("/"));
 
-                ObixChannel channel = new CoapChannel(baseUri, uri);
+                ObixChannel channel = new CoapChannel(baseUri, uri, null);
                 oBIXchannels.add(channel);
                 i++;
             }
@@ -66,31 +95,26 @@ public class Configurator {
     }
 
     /**
-     * This method returns the obix lobbies URIs which are specified in the .properties file of the given bundle.
+     * This method returns a list of Strings which represent the types which will be observed from oBIX.
      *
-     * @param bundle                    The bundle of the .properties file.
-     * @return                          The parsed obix lobby URIs.
-     * @throws ConfigurationException   Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
+     * @return                          The list of observed types.
+     * @throws ConfigurationException   Is thrown, if there are no types provided in the parsed .properties file.
      */
-    public List<ObixChannel> getObixCoapChannels(ResourceBundle bundle) throws ConfigurationException {
-        List<ObixChannel> oBIXchannels = new ArrayList<ObixChannel>();
-        int i = 1;
+    private List<String> getObservedTypes() throws ConfigurationException {
+        List<String> observedTypes = new ArrayList<String>();
         Enumeration<String> keys = bundle.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            String uri = bundle.getString(key);
-            String baseUri = uri.substring(0, uri.lastIndexOf("/"));
-
-            ObixChannel channel = new CoapChannel(baseUri, uri);
-            oBIXchannels.add(channel);
+            if(key.contains("observedTypes")) {
+                String[] types = bundle.getString(key).split(", ");
+                Collections.addAll(observedTypes, types);
+            }
         }
 
-        if (oBIXchannels.size() == 0) {
-            throw new ConfigurationException("No oBIXLobby URI in config file!");
+        if (observedTypes.size() == 0) {
+            throw new ConfigurationException("No observed types in config file!");
         }
 
-        return oBIXchannels;
+        return observedTypes;
     }
-
-
 }

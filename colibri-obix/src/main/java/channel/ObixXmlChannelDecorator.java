@@ -3,16 +3,11 @@ package channel;
 import model.ObixLobby;
 import model.ObixObject;
 import obix.Err;
-import obix.Int;
 import obix.Obj;
-import obix.Uri;
+import obix.Val;
 import obix.io.ObixDecoder;
 import obix.xml.XException;
-import org.eclipse.californium.core.CoapClient;
-import org.eclipse.californium.core.coap.CoAP;
 
-import java.lang.reflect.Array;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +23,12 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         ObixLobby lobby = channel.getLobby(uri, APPLICATION_XML);
         Obj root = ObixXmlChannelDecorator.decode(lobby.getLobbyAsString());
         lobby.setObj(root);
+        List<ObixObject> obixObjects = new ArrayList<ObixObject>();
         for(Obj o : root.list()) {
-            List<ObixObject> listOfObjects = new ArrayList<ObixObject>();;
-            lobby.getPoints().addAll(getNeededObixLobbyObjectsrecusively(o.getHref().get(), channel.baseUri, listOfObjects));
+            List<ObixObject> listOfObjects = new ArrayList<ObixObject>();
+            obixObjects.addAll(getNeededObixLobbyObjectsRecusively(o.getHref().get(), channel.baseUri, listOfObjects));
         }
+        lobby.setObixObjects(obixObjects, channel.observedTypes);
         return lobby;
     }
 
@@ -55,18 +52,16 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         return obj;
     }
 
-    private List<ObixObject> getNeededObixLobbyObjectsrecusively(String uri, String baseUri, List<ObixObject> list) {
+    private List<ObixObject> getNeededObixLobbyObjectsRecusively(String uri, String baseUri, List<ObixObject> list) {
         String u = ObixChannel.normalizeUri(uri, baseUri);
         ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
-        if((tempOb.isInt() || tempOb.isReal() || tempOb.isVal()
-                || tempOb.isBool()) && !list.contains(object)) {
-
+        if(channel.getObservedTypes().contains(tempOb.getClass().getName()) && !list.contains(object)) {
             list.add(object);
         }
         for (Obj o : tempOb.list()) {
             if (o.getHref() != null) {
-                return getNeededObixLobbyObjectsrecusively(o.getHref().get(), uri, list);
+                return getNeededObixLobbyObjectsRecusively(o.getHref().get(), uri, list);
             }
         }
         return list;

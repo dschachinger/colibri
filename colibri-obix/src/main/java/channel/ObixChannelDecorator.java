@@ -30,6 +30,14 @@ public abstract class ObixChannelDecorator extends ObixChannel{
         return channel.get(uri, mediaType);
     }
 
+    public ObixObject observe(String uri) {
+        return channel.observe(uri);
+    }
+
+    public ObixObject observe(String uri, int mediaType) {
+        return channel.observe(uri, mediaType);
+    }
+
     public void setLobbyUri(String lobbyUri) {
         channel.setLobbyUri(lobbyUri);
     }

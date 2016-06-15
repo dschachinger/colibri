@@ -11,6 +11,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
 public class CoapXmlChannelTest {
@@ -19,7 +22,12 @@ public class CoapXmlChannelTest {
 
     @Before
     public void setUp() {
-        channel = new ObixXmlChannelDecorator(new CoapChannel("localhost", "localhost/obix"));
+        List<String> observedTypes = new ArrayList<String>();
+        observedTypes.add("obix.Bool");
+        observedTypes.add("obix.Int");
+        observedTypes.add("obix.Real");
+        observedTypes.add("obix.Val");
+        channel = new ObixXmlChannelDecorator(new CoapChannel("localhost", "localhost/obix", observedTypes));
     }
 
     @After
@@ -33,7 +41,7 @@ public class CoapXmlChannelTest {
         org.junit.Assume.assumeTrue(coapClient.ping());
         ObixLobby lobby = channel.getLobby();
         String ret = "";
-        for(ObixObject o : lobby.getPoints()) {
+        for(ObixObject o : lobby.getObixObjects()) {
             System.out.println(o.getObj().getName() + ": " + o.getUri());
             ret += o.getUri();
         }

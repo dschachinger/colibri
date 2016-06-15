@@ -14,7 +14,7 @@ public class CoapChannelTest {
 
     @Before
     public void setUp() {
-        undecoratedCoapChannel = new CoapChannel("localhost", "localhost/obix");
+        undecoratedCoapChannel = new CoapChannel("localhost", "localhost/obix", null);
     }
 
     @After
