@@ -10,6 +10,9 @@ import service.Configurator;
 import sun.nio.ch.ThreadPool;
 
 import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.font.FontRenderContext;
@@ -23,58 +26,49 @@ public class Main extends JPanel {
 
     private ObixChannel channel;
     private JFrame mainFrame;
+    private JPanel valPanel;
     private JPanel namePanel;
     private Map<JCheckBox, ObixObject> checkBoxObixObjectMap = new HashMap<JCheckBox, ObixObject>();
     private ExecutorService executor = Executors.newCachedThreadPool();
+    private ObixLobby lobby;
 
     public Main(ObixChannel channel) {
         this.channel = channel;
+        this.lobby = channel.getLobby(channel.getLobbyUri());
         prepareGUI();
     }
 
     private void prepareGUI() {
-        mainFrame = new JFrame("");
-        mainFrame.setSize(2000, 1500);
-        mainFrame.setLayout(new GridLayout(1, 1));
+        int numRows = lobby.getObixObjects().size() + 1;
+        mainFrame = new JFrame("Connector GUI");
+        mainFrame.setSize(2000, 2000);
+        mainFrame.setLayout(new GridLayout(numRows, 1));
         mainFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
                 System.exit(0);
             }
         });
-
-        namePanel = new JPanel();
-        namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
-        mainFrame.add(namePanel);
     }
 
     private void displayObixData() {
-
-        /*
-            Load the relevant oBIX Objects from the (only) oBIX lobby
-         */
-        ObixLobby lobby = channel.getLobby(channel.getLobbyUri());
-        System.out.println("Relevant Lobby Objects:");
-
-        JLabel header = new JLabel("Check Boxes to observe Objects");
-        Font headerFont = new Font("Courier", Font.BOLD, 40);
-        header.setFont(headerFont);
-        namePanel.add(header);
-
         /*
             Print lobby Data
          */
+        int row = 0;
         for (String s : lobby.getObservedObjectsLists().keySet()) {
             if (!s.equals("all")) {
-                JLabel label = new JLabel(s);
-                Font font = new Font("Courier", Font.BOLD, 25);
-                label.setFont(font);
-                namePanel.add(label);
                 List<ObixObject> objects = lobby.getObservedObjectsLists().get(s);
                 for (ObixObject o : objects) {
-                    JCheckBox tempCheckBox = new JCheckBox(o.getUri() + ": " + "NOT OBSERVED");
+
+                    JCheckBox tempCheckBox = new JCheckBox(o.getUri() + ": " );
                     Font tempF = new Font("Courier", Font.PLAIN, 15);
-                    tempCheckBox.setFont(tempF);
-                    namePanel.add(tempCheckBox);
+                    final JTextField textField = new JTextField("NOT OBSERVED");
+                    textField.setFont(tempF);
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new FlowLayout(0, 0, 0));
+                    panel.add(tempCheckBox);
+                    panel.add(textField);
+                    mainFrame.add(panel);
                     checkBoxObixObjectMap.put(tempCheckBox, o);
                     tempCheckBox.addItemListener(new ItemListener() {
                         public void itemStateChanged(ItemEvent e) {
@@ -82,8 +76,7 @@ public class Main extends JPanel {
                             ObixObject obj = Main.this.getCheckBoxObixObjectMap().get(tempCheckBox);
                             if (e.getStateChange() == ItemEvent.SELECTED) {
                                 obj = channel.observe(obj);
-                                executor.execute(new ObserveThread(tempCheckBox, obj, mainFrame));
-
+                                executor.execute(new ObserveThread(tempCheckBox, textField, obj, mainFrame));
                             } else {
                                 obj.getRelation().proactiveCancel();
                                 synchronized (obj) {
@@ -93,6 +86,7 @@ public class Main extends JPanel {
                         }
                     });
                 }
+                row++;
             }
         }
         mainFrame.setVisible(true);

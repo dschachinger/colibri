@@ -1,24 +1,23 @@
 import model.ObixObject;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ObserveThread implements Runnable {
 
     private JCheckBox checkBox;
     private ObixObject obj;
     private JFrame mainFrame;
+    private JTextField textField;
 
-    public ObserveThread(JCheckBox checkBox, ObixObject obj, JFrame mainFrame) {
+    public ObserveThread(JCheckBox checkBox, JTextField textField, ObixObject obj, JFrame mainFrame) {
         this.checkBox = checkBox;
+        this.textField = textField;
         this.obj = obj;
         this.mainFrame = mainFrame;
     }
 
     public void run() {
-        String str = obj.getUri() + ": ";
-        checkBox.setText(str + obj.getObj().toString());
+        textField.setText(obj.getObj().toString());
         while (checkBox.isSelected()) {
             synchronized (obj) {
                 try {
@@ -27,10 +26,10 @@ public class ObserveThread implements Runnable {
                     e.printStackTrace();
                 }
             }
-            checkBox.setText(str + obj.getObj().toString());
+            textField.setText(obj.getObj().toString());
             mainFrame.setVisible(true);
         }
-        checkBox.setText(str + "NOT OBSERVED");
+        textField.setText("NOT OBSERVED");
         mainFrame.setVisible(true);
     }
 }
