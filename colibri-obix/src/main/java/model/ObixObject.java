@@ -1,8 +1,8 @@
 package model;
 
-import obix.Obj;
-import obix.Val;
+import obix.*;
 import obix.contracts.Unit;
+import org.eclipse.californium.core.CoapObserveRelation;
 
 public class ObixObject {
 
@@ -18,6 +18,8 @@ public class ObixObject {
     private String uri;
 
     private Obj obj;
+
+    private CoapObserveRelation relation;
 
     public ObixObject(String uri) {
         this.uri = uri;
@@ -47,4 +49,11 @@ public class ObixObject {
         this.obj = obj;
     }
 
+    public CoapObserveRelation getRelation() {
+        return relation;
+    }
+
+    public void setRelation(CoapObserveRelation relation) {
+        this.relation = relation;
+    }
 }

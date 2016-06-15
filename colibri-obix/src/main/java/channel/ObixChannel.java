@@ -4,9 +4,7 @@ import model.ObixLobby;
 import model.ObixObject;
 import obix.Obj;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.eclipse.californium.core.coap.MediaTypeRegistry.APPLICATION_XML;
 
@@ -19,6 +17,7 @@ public abstract class ObixChannel {
     protected String baseUri;
     protected String lobbyUri;
     protected List<String> observedTypes;
+    protected Map<String, ObixObject> observedObjects = new HashMap<String, ObixObject>();
 
     public ObixChannel() {
     }
@@ -51,16 +50,16 @@ public abstract class ObixChannel {
     }
 
     /**
-     * Observers data from the oBIX resource with the specified URI.
+     * Observers data from the oBIX resource mapped to the oBIXObject.
      *
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   uri             The URI of the observed oBIX resource.
-     * @return                  The oBIX Object with the specified URI.
+     * @param   obj             The oBIXObject which is observed.
+     * @return                  The observed oBIX Object with.
      */
-     public ObixObject observe(String uri) {
-         return this.observe(uri, APPLICATION_XML);
-     }
+    public ObixObject observe(ObixObject obj) {
+        return this.observe(obj, APPLICATION_XML);
+    }
 
     /**
      * Requests data from the oBIX resource with the specified URI.
@@ -96,15 +95,15 @@ public abstract class ObixChannel {
      public abstract ObixObject get(String uri, int mediaType);
 
     /**
-     * Observers data from the oBIX resource with the specified URI.
+     * Observers data from the oBIX resource mapped to the oBIXObject.
      *
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   uri             The URI of the observed oBIX resource.
+     * @param   obj             The oBIXObject which is observed.
      * @param   mediaType       The requested media type, for example APPLICATION_XML.
-     * @return                  The oBIX Object with the specified URI.
+     * @return                  The observed oBIX Object with.
      */
-    public abstract ObixObject observe(String uri, int mediaType);
+    public abstract ObixObject observe(ObixObject obj, int mediaType);
 
     /**
      * Normalizes the given URI against the CoAP-base URI of the channel
@@ -157,5 +156,9 @@ public abstract class ObixChannel {
 
     public void setObservedTypes(List<String> observedTypes) {
         this.observedTypes = observedTypes;
+    }
+
+    public Map<String, ObixObject> getObservedObjects() {
+        return observedObjects;
     }
 }

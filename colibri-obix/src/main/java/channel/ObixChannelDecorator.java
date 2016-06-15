@@ -2,6 +2,9 @@ package channel;
 
 import model.ObixLobby;
 import model.ObixObject;
+import obix.Obj;
+
+import java.util.Map;
 
 public abstract class ObixChannelDecorator extends ObixChannel{
     protected ObixChannel channel;
@@ -30,12 +33,12 @@ public abstract class ObixChannelDecorator extends ObixChannel{
         return channel.get(uri, mediaType);
     }
 
-    public ObixObject observe(String uri) {
-        return channel.observe(uri);
+    public ObixObject observe(ObixObject obj) {
+        return channel.observe(obj);
     }
 
-    public ObixObject observe(String uri, int mediaType) {
-        return channel.observe(uri, mediaType);
+    public ObixObject observe(ObixObject obj, int mediaType) {
+        return channel.observe(obj, mediaType);
     }
 
     public void setLobbyUri(String lobbyUri) {
@@ -57,5 +60,9 @@ public abstract class ObixChannelDecorator extends ObixChannel{
 
     public String normalizeUri(String uri) {
         return channel.normalizeUri(uri);
+    }
+
+    public Map<String, ObixObject> getObservedObjects() {
+        return channel.getObservedObjects();
     }
 }
