@@ -3,6 +3,7 @@ import channel.ObixChannel;
 import channel.ObixXmlChannelDecorator;
 import model.ObixLobby;
 import model.ObixObject;
+import obix.Int;
 import obix.Obj;
 import org.eclipse.californium.core.CoapClient;
 import org.hamcrest.CoreMatchers;
@@ -56,12 +57,25 @@ public class CoapXmlChannelTest {
         //False, if the coap client is offline
         org.junit.Assume.assumeTrue(coapClient.ping());
         ObixObject object = channel.get("VirtualDevices/sunblindMiddleA/moveDownValue");
-        assertEquals(object.getObj().getName(), "moveDownValue");
-        assertEquals(object.getObj().getHref().get(), "moveDownValue/");
         Assert.assertThat(object.getUri(), CoreMatchers.containsString("moveDownValue"));
         Assert.assertTrue(object.getObj().isBool());
-        Assert.assertTrue(!object.getObj().getBool());
         Assert.assertTrue(object.getObj().isWritable());
+    }
+
+    @Test
+    public void getAndPutObjectShouldReturnObject() {
+        CoapClient coapClient = new CoapClient(channel.getBaseUri());
+        //False, if the coap client is offline
+        org.junit.Assume.assumeTrue(coapClient.ping());
+        ObixObject object = channel.get("VirtualDevices/virtualBrightnessActuator/value");
+        Assert.assertTrue(object.getObj().isInt());
+        Int i = (Int) object.getObj();
+        i.set(77);
+        object.setObj(i);
+        ObixObject newO = channel.put(object);
+        Assert.assertThat(newO.getUri(), CoreMatchers.containsString("virtualBrightnessActuator"));
+        Assert.assertTrue(newO.getObj().isInt());
+        Assert.assertEquals(newO.getObj().getInt(), 77);
     }
 
 }

@@ -25,12 +25,16 @@ public class CoapChannel extends ObixChannel {
         super(baseUri, lobbyUri, observedTypes);
     }
 
-    public ObixLobby getLobby(String uri)  {
+    public ObixLobby getLobby(String uri) {
         return super.getLobby(uri);
     }
 
     public ObixObject get(String uri) {
         return super.get(uri);
+    }
+
+    public ObixObject put(ObixObject obj) {
+        return super.put(obj);
     }
 
     public ObixObject observe(ObixObject obj) {
@@ -49,21 +53,29 @@ public class CoapChannel extends ObixChannel {
         return object;
     }
 
+    public ObixObject put(ObixObject obj, int mediaType) {
+        CoapClient coapClient;
+        coapClient = new CoapClient(CoapChannel.normalizeUri(obj.getUri(), this.baseUri));
+        System.out.println(obj.getObjectAsString());
+        obj.setObjectAsString(coapClient.put(obj.getObjectAsString(), mediaType).getResponseText());
+        return obj;
+    }
+
     public ObixObject observe(ObixObject obj, int mediaType) {
         getObservedObjects().put(obj.getUri(), obj);
-        if(APPLICATION_XML == mediaType) {
+        if (APPLICATION_XML == mediaType) {
             obj.setObjectAsString(this.observeAsXml(obj, mediaType));
         }
         return obj;
     }
 
-    private String getAsString(String uri, int mediaType){
+    private String getAsString(String uri, int mediaType) {
         CoapClient coapClient;
-            coapClient = new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
-            return coapClient.get(mediaType).getResponseText();
+        coapClient = new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
+        return coapClient.get(mediaType).getResponseText();
     }
 
-    private String observeAsXml(ObixObject obj, int mediaType){
+    private String observeAsXml(ObixObject obj, int mediaType) {
         CoapClient coapClient;
         final String uri = obj.getUri();
         coapClient = new CoapClient(CoapChannel.normalizeUri(obj.getUri(), this.baseUri));
@@ -80,6 +92,7 @@ public class CoapChannel extends ObixChannel {
                             o.notify();
                         }
                     }
+
                     public void onError() {
                         System.err.println("OBSERVING FAILED");
                     }

@@ -33,6 +33,14 @@ public abstract class ObixChannelDecorator extends ObixChannel{
         return channel.get(uri, mediaType);
     }
 
+    public ObixObject put(ObixObject obj) {
+        return channel.put(obj);
+    }
+
+    public ObixObject put(ObixObject obj, int mediaType) {
+        return channel.put(obj, mediaType);
+    }
+
     public ObixObject observe(ObixObject obj) {
         return channel.observe(obj);
     }

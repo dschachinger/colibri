@@ -74,6 +74,29 @@ public abstract class ObixChannel {
     }
 
     /**
+     * Modify an oBIX object with a put call.
+     *
+     * NOTE: ONLY XML SUPPORTED SO FAR.
+     *
+     * @param   obj             The oBIX object which is modified.
+     * @return                  The modified oBIX Object.
+     */
+    public ObixObject put(ObixObject obj) {
+        return this.put(obj, APPLICATION_XML);
+    }
+
+    /**
+     * Modify an oBIX object with a put call.
+     *
+     * NOTE: ONLY XML SUPPORTED SO FAR.
+     *
+     * @param   obj             The oBIX object which is modified.
+     * @param   mediaType       The requested media type, for example APPLICATION_XML.
+     * @return                  The modified oBIX Object.
+     */
+    public abstract ObixObject put(ObixObject obj, int mediaType);
+
+    /**
      * Requests the oBIX lobby specified URI.
      * Uses XML as messgae format.
      *

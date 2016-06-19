@@ -6,6 +6,7 @@ import obix.Err;
 import obix.Obj;
 import obix.Val;
 import obix.io.ObixDecoder;
+import obix.io.ObixEncoder;
 import obix.xml.XException;
 
 import java.util.ArrayList;
@@ -40,6 +41,13 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         return object;
     }
 
+    @Override
+    public ObixObject put(ObixObject obj) {
+        obj.setObjectAsString(encode(obj.getObj()));
+        obj.setObj(ObixXmlChannelDecorator.decode(channel.put(obj, APPLICATION_XML).getObjectAsString()));
+        return obj;
+    }
+
     public static Obj decode(String objectAsXml) {
         Obj obj;
         try {
@@ -50,6 +58,10 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
             return new Err("Error parsing xml " + ex.getMessage());
         }
         return obj;
+    }
+
+    public static String encode(Obj obj) {
+        return ObixEncoder.toString(obj);
     }
 
     private List<ObixObject> getNeededObixLobbyObjectsRecusively(String uri, String baseUri, List<ObixObject> list) {

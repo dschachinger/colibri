@@ -27,9 +27,7 @@ public class ObserveThread implements Runnable {
                 }
             }
             textField.setText(obj.getObj().toString());
-            mainFrame.setVisible(true);
         }
         textField.setText("NOT OBSERVED");
-        mainFrame.setVisible(true);
     }
 }
