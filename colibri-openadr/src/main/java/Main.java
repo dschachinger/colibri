@@ -1,9 +1,12 @@
 import OADRHandling.OADR2VEN;
+import OADRMsgInfo.Report;
 import Utils.OADRConInfo;
 import Utils.XMPPConInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -13,7 +16,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String args[]){
         initXMPPConfInfo();
-
+        addExampleReportPossibility();
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
 
@@ -35,17 +38,18 @@ public class Main {
                 case 5:
                     System.out.println("registraionID: " + OADRConInfo.getRegistrationId());
                     break;
+                case 6:
+                    ven.sendExampleOadrRegisterReport();
+                    break;
+                case 7:
+                    ven.sendExampleOadrUpdateReport();
+                    break;
                 default:
                     break loop;
-
             }
         }
 
-        try {
-            Thread.sleep(200000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        ven.terminate();
     }
 
     private static void initXMPPConfInfo(){
@@ -70,5 +74,44 @@ public class Main {
         XMPPConInfo.VENPassword = prop.getProperty("VEN.Password");
         XMPPConInfo.VENServiceName = prop.getProperty("VEN.ServiceName");
         XMPPConInfo.VENRessourceeName = prop.getProperty("VEN.RessourceeName");
+    }
+
+    private static void addExampleReportPossibility(){
+        Report report = new Report();
+
+        report.setReportSpecifierID("RS_12345");
+        report.setReportName("TELEMETRY_USAGE");
+        report.setDurationSec(1800);
+        report.setCreatedDateTime(new Date());
+
+        Report.ReportDescription reportDescription = report.getNewReportDescription();
+
+        reportDescription.setrID("123");
+        reportDescription.setReportType("usage");
+        reportDescription.setReadingType("Direct Read");
+        reportDescription.setMarketContext("http://www.myprogram.com");
+
+        Report.PowerReal powerReal = report.getNewPowerReal();
+        powerReal.setItemDescription("RealPower");
+        powerReal.setItemUnits("W");
+        powerReal.setPowerAttributesAC(true);
+        powerReal.setPowerAttributesHertz(new BigDecimal(50));
+        powerReal.setPowerAttributesVoltage(new BigDecimal(230));
+        powerReal.setSiScaleCode("k");
+
+        reportDescription.setPowerReal(powerReal);
+
+        Report.SamplingRate samplingRate = report.getNewSamplingRate();
+
+        samplingRate.setMinPeriondSec(900);
+        samplingRate.setMaxPeriondSec(900);
+        samplingRate.setOnChange(false);
+
+        reportDescription.setSamplingRate(samplingRate);
+
+        report.getReportDescriptions().add(reportDescription);
+
+        OADRConInfo.addReportPossibility(report);
+
     }
 }

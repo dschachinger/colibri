@@ -35,4 +35,13 @@ public abstract class Channel {
      * @return how to react on this message.
      */
     public abstract OADRMsgObject processPacket(OADRMsgObject obj);
+
+    // only if before a connection had been established
+
+    /**
+     * This method closes the channel.
+     * It is not guaranteed that this channel still works afterwards.
+     * It is only allowed to call this method if the channel was successfully opened beforehand.
+     */
+    public abstract void close();
 }

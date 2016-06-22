@@ -12,8 +12,8 @@ import java.util.Set;
 
 /**
  * Created by georg on 02.06.16.
- * This classes implements a singelton pattern so that only one object can be instantiated.
- * Get the single object with the method getController().
+ * Objects from this class handel the creation of openADR send messages
+ * and the processing of the received messages.
  */
 public class Controller {
     /* This hash map holds the sended messages and
@@ -32,14 +32,14 @@ public class Controller {
         the key is the openADR message type */
     private HashMap<String, CreateSendMsg> createSendMsgMap;
 
-    // the only controller object --> singelton pattern
-    private static Controller controller;
+    private OADRParty party;
 
     /**
-     * This constructor is not visible outsidem due to the singelton pattern.
      * It will initiate a controller object.
      */
-    private Controller(){
+    public Controller(OADRParty party){
+        this.party = party;
+
         // init sendedMsgMap
         sendedMsgMap = new HashMap<>();
 
@@ -56,10 +56,15 @@ public class Controller {
         createSendMsgList.add(new CreateMsg_OADRQueryRegistration());
         createSendMsgList.add(new CreateMsg_OADRRequestEvent());
         createSendMsgList.add(new CreateMsg_OADRCreatedEvent());
+        createSendMsgList.add(new CreateMsg_OADRRegisterReport());
+        createSendMsgList.add(new CreateMsg_OADRUpdateReport());
+
 
         for(CreateSendMsg createSendMsg : createSendMsgList){
             createSendMsgMap.put(createSendMsg.getMsgType(), createSendMsg);
         }
+
+        System.out.println("amount of send: " + createSendMsgMap.keySet().size());
 
         /* init procReceivedMsgMap                                  */
         procReceivedMsgMap = new HashMap<>();
@@ -71,23 +76,18 @@ public class Controller {
         procReceivedMsgList.add(new Process_OADRCanceledPartyRegistration());
         procReceivedMsgList.add(new Process_OADRCancelPartyRegistration());
         procReceivedMsgList.add(new Process_OADRDistributeEvent());
+        procReceivedMsgList.add(new Process_OADRResponse());
+        procReceivedMsgList.add(new Process_OADRCancelReport());
+        procReceivedMsgList.add(new Process_OADRCreateReport());
+        procReceivedMsgList.add(new Process_OADRRegisteredReport());
+        procReceivedMsgList.add(new Process_OADRUpdatedReport());
+        procReceivedMsgList.add(new Process_OADRRegisterReport());
 
         for(ProcessorReceivedMsg processorReceivedMsg : procReceivedMsgList){
             procReceivedMsgMap.put(processorReceivedMsg.getMsgType(), processorReceivedMsg);
         }
 
 
-    }
-
-    /**
-     * Returns the only controller object. If there is none than it creates one.
-     * @return
-     */
-    public static Controller getController(){
-        if(controller == null){
-            controller = new Controller();
-        }
-        return controller;
     }
 
     /**
@@ -108,15 +108,19 @@ public class Controller {
         ProcessorReceivedMsg proc = procReceivedMsgMap.get(recObj.getMsgType());
 
         // extreact information
-        OADRMsgInfo recInfo = proc.extractInfo(recObj);
+        OADRMsgInfo recInfo = proc.extractInfo(recObj, party);
         if(recInfo != null){
             receivedMsgMap.put(recInfo.getMsgType(), recInfo);
         }
 
         // generate reply
         OADRMsgObject respObj= proc.genResponse(recObj);
-        return respObj;
 
+        boolean violate = proc.doRecMsgViolateConstraintsAndUpdateSendMap(recObj,sendedMsgMap);
+        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> received message type " + recObj.getMsgType()+
+                (violate?" VIOLATES ":" does not violates ")+"constraints");
+
+        return respObj;
     }
 
     /**
@@ -127,6 +131,11 @@ public class Controller {
     public OADRMsgObject createSendMsg(OADRMsgInfo info){
         CreateSendMsg createSendMsg = createSendMsgMap.get(info.getMsgType());
         OADRMsgObject sendObj = createSendMsg.genSendMsg(info, receivedMsgMap);
+
+        boolean violate = createSendMsg.doSendMsgViolateMsgOrderAndUpdateRecMap(info,receivedMsgMap);
+        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<< send message type " + info.getMsgType()+
+                (violate?" VIOLATES ":" does not violates ")+"constraints");
+
         if(sendObj.getID() != null){
             sendedMsgMap.put(sendObj.getID(), sendObj);
         }

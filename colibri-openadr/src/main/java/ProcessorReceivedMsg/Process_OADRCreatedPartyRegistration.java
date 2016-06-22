@@ -1,12 +1,12 @@
 package ProcessorReceivedMsg;
 
+import OADRHandling.OADRParty;
 import OADRMsgInfo.*;
 import Utils.OADRConInfo;
 import Utils.OADRMsgObject;
-import com.enernoc.open.oadr2.model.v20b.OadrCreatedPartyRegistration;
-import com.enernoc.open.oadr2.model.v20b.OadrProfiles;
-import com.enernoc.open.oadr2.model.v20b.OadrResponse;
-import com.enernoc.open.oadr2.model.v20b.OadrTransports;
+import com.enernoc.open.oadr2.model.v20b.*;
+
+import java.util.HashMap;
 
 /**
  * Created by georg on 07.06.16.
@@ -30,15 +30,14 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
      * This method returns an MsgInfo_OADRCreatedPartyRegistration object.
      * This object contains all needful information for a engery consumer from an OadrCreatedPartyRegistration message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrCreatedPartyRegistration.
+     * @param party
      * @return  The OADRMsgInfo object contains all needful information for a engery consumer.
      */
     @Override
-    public OADRMsgInfo extractInfo(OADRMsgObject obj) {
+    public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
         OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
         MsgInfo_OADRCreatedPartyRegistration info = new MsgInfo_OADRCreatedPartyRegistration();
 
-        // TODO bei response auf oadrCreatePartyRegistration muss es enthalten sein
-        // bei response auf oadrQueryRegistration nicht
         if(recMsg.getVenID() != null){
             OADRConInfo.setVENId(recMsg.getVenID());
         }
@@ -56,6 +55,45 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
         }
 
         return info;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+
+        OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
+        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
+            return true;
+        }
+
+        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
+        if(!originMsg.getMsgType().equals("oadrCreatePartyRegistration") ||
+                ! originMsg.getMsgType().equals("oadrQueryRegistration")){
+            return true;
+        }
+
+        if(originMsg.getMsgType().equals("oadrCreatePartyRegistration") &&
+                (recMsg.getVenID() == null ||
+                recMsg.getRegistrationID() == null) ){
+            return true;
+        }
+
+        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
+            return true;
+        }
+
+        if(OADRConInfo.getRegistrationId() != null && !recMsg.getRegistrationID().equals(OADRConInfo.getRegistrationId())){
+            return true;
+        }
+
+        sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
+
+        return false;
     }
 
     /**

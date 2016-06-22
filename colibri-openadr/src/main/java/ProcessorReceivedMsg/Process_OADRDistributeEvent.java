@@ -1,14 +1,18 @@
 package ProcessorReceivedMsg;
 
-import OADRMsgInfo.*;
+import OADRHandling.AsyncSendFollowUpMsgWorker;
+import OADRHandling.OADRParty;
+import OADRMsgInfo.Interval;
+import OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import OADRMsgInfo.OADRMsgInfo;
 import Utils.FollowUpMsg;
+import Utils.OADRConInfo;
 import Utils.OADRMsgObject;
 import Utils.TimeDurationConverter;
-import com.enernoc.open.oadr2.model.PayloadFloat;
 import com.enernoc.open.oadr2.model.v20b.OadrDistributeEvent;
 import com.enernoc.open.oadr2.model.v20b.ei.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,18 +28,18 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
      */
     @Override
     public OADRMsgObject genResponse(OADRMsgObject obj) {
-        return new OADRMsgObject("emptyStanze", null, null,
-                new FollowUpMsg(extractInfo(obj), FollowUpMsg.FollowUpMsgType.oadrCreatedEvent));
+        return new OADRMsgObject("emptyStanze", null, null);
     }
 
     /**
      * This method returns an MsgInfo_OADRDistributeEvent object.
      * This object contains all needful information for a engery consumer from an OadrDistributeEvent message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrDistributeEvent.
+     * @param party
      * @return  The OADRMsgInfo object contains all needful information for a engery consumer.
      */
     @Override
-    public OADRMsgInfo extractInfo(OADRMsgObject obj) {
+    public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
         OadrDistributeEvent msg = (OadrDistributeEvent)obj.getMsg();
         MsgInfo_OADRDistributeEvent info = new MsgInfo_OADRDistributeEvent();
 
@@ -66,9 +70,9 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
                 signal.setSignalType(eiEventSignal.getSignalType());
                 signal.setCurrentValue(eiEventSignal.getCurrentValue().getPayloadFloat().getValue());
 
-                List<MsgInfo_OADRDistributeEvent.Interval> info_intervals = signal.getIntervals();
-                for(Interval interval : eiEventSignal.getIntervals().getIntervals()){
-                    MsgInfo_OADRDistributeEvent.Interval info_interval = info.getNewInterval();
+                List<Interval> info_intervals = signal.getIntervals();
+                for(com.enernoc.open.oadr2.model.v20b.ei.Interval interval : eiEventSignal.getIntervals().getIntervals()){
+                    Interval info_interval = new Interval();
                     info_interval.setDurationSec(TimeDurationConverter.xCal2Seconds(interval.getDuration().getDuration().getValue()));
                     // conformance rule 100: The number of signalPayload elements in each interval MUST be equal to 1 and the used types are according to the typ casts
                     info_interval.setSignalValue(((PayloadFloatType)((SignalPayload)interval.getStreamPayloadBases().get(0).getValue()).getPayloadBase().getValue()).getValue());
@@ -83,9 +87,37 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
 
         System.out.println("obj: \n"+info);
 
+        new AsyncSendFollowUpMsgWorker(party, new FollowUpMsg(info, FollowUpMsg.FollowUpMsgType.oadrCreatedEvent)).start();
+
         return info;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+
+        OadrDistributeEvent recMsg = (OadrDistributeEvent)obj.getMsg();
+        if(recMsg.getEiResponse() != null){
+            if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
+                return true;
+            }
+
+            OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
+            if(!originMsg.getMsgType().equals("oadrRequestEvent")){
+                return true;
+            }
+
+            sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
+        }
+
+
+        return false;
+    }
 
     /**
      * {@inheritDoc}

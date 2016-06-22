@@ -41,4 +41,11 @@ public class CreateMsg_OADRQueryRegistration extends CreateSendMsg {
     public String getMsgType() {
         return new MsgInfo_OADRQueryRegistration().getMsgType();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
+        return false;
+    }
 }

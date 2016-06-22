@@ -1,10 +1,12 @@
 package ProcessorReceivedMsg;
 
+import OADRHandling.AsyncSendUpdateReportMsgWorker;
 import OADRHandling.OADRParty;
 import OADRMsgInfo.*;
+import OADRMsgInfo.OADRMsgInfo;
 import Utils.OADRConInfo;
 import Utils.OADRMsgObject;
-import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
+import com.enernoc.open.oadr2.model.v20b.*;
 
 import java.util.HashMap;
 
@@ -12,7 +14,7 @@ import java.util.HashMap;
  * Created by georg on 07.06.16.
  * This class is used to handle the receipt of openADR message type oadrCanceledPartyRegistration.
  */
-public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg {
+public class Process_OADRCancelReport extends ProcessorReceivedMsg {
 
     /**
      * This method generates the proper reply for a openADR message OadrCanceledPartyRegistration.
@@ -22,7 +24,15 @@ public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg 
      */
     @Override
     public OADRMsgObject genResponse(OADRMsgObject obj) {
-        return null;
+        OadrCancelReport recMsg = (OadrCancelReport)obj.getMsg();
+
+
+        OadrCanceledReport response = new OadrCanceledReport();
+        response.setEiResponse(genEiRespone(recMsg.getRequestID()));
+
+
+
+        return new OADRMsgObject("oadrCanceledReport", null, response);
     }
 
     /**
@@ -34,15 +44,16 @@ public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg 
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
-        OadrCanceledPartyRegistration msg = (OadrCanceledPartyRegistration)obj.getMsg();
-        MsgInfo_OADRCanceledPartyRegistration info = new MsgInfo_OADRCanceledPartyRegistration();
+        OadrCancelReport msg = (OadrCancelReport)obj.getMsg();
+        MsgInfo_OADRCancelReport info = new MsgInfo_OADRCancelReport();
 
-        OADRConInfo.setRegistrationId(null);
+        OADRConInfo.deleteUpdateReportMsgWorkers(msg);
 
+        for(String reportRequestID : msg.getReportRequestIDs()){
+            info.getReportRequestIDs().add(reportRequestID);
+        }
+        info.setReportToFollow(msg.isReportToFollow());
 
-        info.setRegistrationID(msg.getRegistrationID());
-
-        // TODO Conformance Rule 407
         return info;
     }
 
@@ -55,25 +66,11 @@ public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg 
             return true;
         }
 
-        OadrCanceledPartyRegistration recMsg = (OadrCanceledPartyRegistration)obj.getMsg();
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
-
-        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-        if(!originMsg.getMsgType().equals("oadrCancelPartyRegistration")){
-            return true;
-        }
+        OadrCancelReport recMsg = (OadrCancelReport)obj.getMsg();
 
         if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
             return true;
         }
-
-        if(OADRConInfo.getRegistrationId() != null && !recMsg.getRegistrationID().equals(OADRConInfo.getRegistrationId())){
-            return true;
-        }
-
-        sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
 
         return false;
     }
@@ -83,6 +80,6 @@ public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg 
      */
     @Override
     public String getMsgType() {
-        return new MsgInfo_OADRCanceledPartyRegistration().getMsgType();
+        return new MsgInfo_OADRCancelReport().getMsgType();
     }
 }

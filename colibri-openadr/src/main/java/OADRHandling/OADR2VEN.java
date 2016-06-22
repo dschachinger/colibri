@@ -3,8 +3,11 @@ package OADRHandling;
 import OADRMsgInfo.*;
 import OADRMsgInfo.OADRMsgInfo;
 import Utils.FollowUpMsg;
+import Utils.OADRConInfo;
 import com.enernoc.open.oadr2.model.v20b.ei.OptTypeType;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -65,6 +68,13 @@ public class OADR2VEN extends OADRParty {
         channel.sendMsg(reply);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void terminate(){
+        channel.close();
+    }
+
     //--------------------------- the following part is only for test purposes ------------------------------------//
 
     public void sendExampleOadrQueryRegistration(){
@@ -85,6 +95,37 @@ public class OADR2VEN extends OADRParty {
     public void sendExampleOadrRequestEvent(){
         MsgInfo_OADRRequestEvent info = new MsgInfo_OADRRequestEvent();
         info.setReplyLimit(new Long(42));
+        channel.sendMsg(info);
+    }
+
+    public void sendExampleOadrRegisterReport(){
+        MsgInfo_OADRRegisterReport info = new MsgInfo_OADRRegisterReport();
+
+        info.getReports().addAll(OADRConInfo.getAllReportPossibilities());
+
+        channel.sendMsg(info);
+    }
+
+    public void sendExampleOadrUpdateReport(){
+        MsgInfo_OADRUpdateReport info = new MsgInfo_OADRUpdateReport();
+
+        Report report = new Report();
+
+        report.setCreatedDateTime(new Date());
+        report.setDurationSec(960);
+        report.setReportName("HISTORY_USAGE");
+        report.setReportRequestID("RR_65432");
+        report.setReportSpecifierID("RS_12345");
+
+        Interval interval = new Interval();
+        interval.setDurationSec(961);
+        interval.setSignalValue(88);
+        interval.setUid("0");
+
+        report.getIntervals().add(interval);
+
+        info.getReports().add(report);
+
         channel.sendMsg(info);
     }
 }

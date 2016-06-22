@@ -1,9 +1,16 @@
 package Utils;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeConstants;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,8 +20,19 @@ import java.util.regex.Pattern;
  */
 public class TimeDurationConverter {
 
+    static private DatatypeFactory datatypeFactory;
+    static{
+        try {
+            datatypeFactory = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * This method returns a Date object. This object is according to the values of the given XCal Date String assigned.
+     * The method expect that the XCal Date String is in UTC timezone.
      * @param icalDate ical Date String
      * @return date object
      */
@@ -22,7 +40,7 @@ public class TimeDurationConverter {
         icalDate = icalDate.replaceAll("\\.\\d*Z", "");
         System.out.println("new string " + icalDate);
         // if fractional seconds needed SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date d = null;
         try {
@@ -33,6 +51,28 @@ public class TimeDurationConverter {
         }
 
         return d;
+    }
+
+
+    /**
+     * This method transforms a given data object into an XMLGregorianCalendar.
+     * The returned time is in UTC timezone
+     * @param date given data object
+     * @return date in XCal Format in UTC
+     */
+    public static XMLGregorianCalendar date2Ical(Date date){
+        // TODO SimpleDateFormat not thread safe
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String dateStr = sdf.format(date);
+        XMLGregorianCalendar xCalendar = null;
+        try {
+            xCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(dateStr);
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+
+        return xCalendar;
     }
 
     /**
@@ -111,6 +151,18 @@ public class TimeDurationConverter {
         }
 
         return returnSeconds;
+    }
+
+    /**
+     * Get a diff between two dates
+     * @param date1 the oldest date
+     * @param date2 the newest date
+     * @param timeUnit the unit in which you want the diff
+     * @return the diff value, in the provided unit
+     */
+    public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
 
 }

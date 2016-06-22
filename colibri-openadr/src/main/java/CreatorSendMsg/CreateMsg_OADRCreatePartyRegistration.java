@@ -57,4 +57,11 @@ public class CreateMsg_OADRCreatePartyRegistration extends CreateSendMsg {
     public String getMsgType() {
         return new MsgInfo_OADRCreatePartyRegistration().getMsgType();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
+        return false;
+    }
 }

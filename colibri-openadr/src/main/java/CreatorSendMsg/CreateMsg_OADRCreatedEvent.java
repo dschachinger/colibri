@@ -77,4 +77,20 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
     public String getMsgType() {
         return new MsgInfo_OADRCreatedEvent().getMsgType();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+
+        if(receivedMsgMap.get("oadrDistributeEvent") == null){
+            return true;
+        }
+        receivedMsgMap.remove("oadrDistributeEvent");
+
+        return false;
+    }
 }

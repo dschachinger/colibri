@@ -67,11 +67,6 @@ public class OADRIQRequestHandler implements IQRequestHandler {
                 responseIQ.setTo(XMPPConInfo.getVTNFullAdrName());
             }
 
-            if(responseObj.getFollowUpMsg() != null) {
-                // start new thread
-                new AsyncSendFollowUpMsgWorker(party, responseObj.getFollowUpMsg()).start();
-            }
-
             return responseIQ;
         } else {
             return null;

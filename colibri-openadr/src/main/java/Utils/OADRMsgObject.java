@@ -12,20 +12,11 @@ public class OADRMsgObject {
     private String ID;
     // openADR message
     Object msg;
-    // It is assinged if this message require a follow up message.
-    FollowUpMsg followUpMsg;
 
     public OADRMsgObject(String msgType, String ID, Object msg) {
         this.msgType = msgType;
         this.ID = ID;
         this.msg = msg;
-    }
-
-    public OADRMsgObject(String msgType, String ID, Object msg, FollowUpMsg followUpMsg) {
-        this.msgType = msgType;
-        this.ID = ID;
-        this.msg = msg;
-        this.followUpMsg = followUpMsg;
     }
 
     public String getMsgType() {
@@ -38,9 +29,5 @@ public class OADRMsgObject {
 
     public Object getMsg() {
         return msg;
-    }
-
-    public FollowUpMsg getFollowUpMsg() {
-        return followUpMsg;
     }
 }

@@ -33,7 +33,6 @@ public class CreateMsg_OADRRequestEvent extends CreateSendMsg {
         EiRequestEvent eiRequestEvent = new EiRequestEvent();
         eiRequestEvent.setReplyLimit(con_info.getReplyLimit());
         eiRequestEvent.setRequestID(reqID);
-        // TODO check if ven is registered ? otherwise the ven id is not in the created message
         eiRequestEvent.setVenID(OADRConInfo.getVENId());
 
         msg.setEiRequestEvent(eiRequestEvent);
@@ -50,5 +49,15 @@ public class CreateMsg_OADRRequestEvent extends CreateSendMsg {
     @Override
     public String getMsgType() {
         return new MsgInfo_OADRRequestEvent().getMsgType();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+        return false;
     }
 }

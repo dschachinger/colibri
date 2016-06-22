@@ -1,13 +1,14 @@
 package ProcessorReceivedMsg;
 
-import OADRMsgInfo.MsgInfo_OADRCreatedPartyRegistration;
+import OADRHandling.AsyncSendFollowUpMsgWorker;
+import OADRHandling.OADRParty;
 import OADRMsgInfo.OADRMsgInfo;
 import Utils.FollowUpMsg;
 import Utils.OADRConInfo;
 import Utils.OADRMsgObject;
 import com.enernoc.open.oadr2.model.v20b.*;
-import com.enernoc.open.oadr2.model.v20b.ei.EiResponse;
-import com.enernoc.open.oadr2.model.v20b.ei.ResponseCode;
+
+import java.util.HashMap;
 
 /**
  * Created by georg on 07.06.16.
@@ -31,19 +32,39 @@ public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
 
         response.setEiResponse(genEiRespone(null));
 
-        return new OADRMsgObject("oadrResponse", null, response,
-                new FollowUpMsg(extractInfo(obj), FollowUpMsg.FollowUpMsgType.oadrCreatePartyRegistration));
+        return new OADRMsgObject("oadrResponse", null, response);
     }
 
     /**
      * This method returns null because a oadrRequestReregistration contains no needful information for a engery consumer.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrRequestReregistration.
+     * @param party
      * @return  null
      */
     @Override
-    public OADRMsgInfo extractInfo(OADRMsgObject obj) {
+    public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
         OadrRequestReregistration msg = (OadrRequestReregistration)obj.getMsg();
+
+        // start new thread
+        new AsyncSendFollowUpMsgWorker(party, new FollowUpMsg(null, FollowUpMsg.FollowUpMsgType.oadrCreatePartyRegistration)).start();
         return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+
+        OadrRequestReregistration recMsg = (OadrRequestReregistration)obj.getMsg();
+        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -24,7 +24,7 @@ public class XMPPChannel extends Channel {
     private AbstractXMPPConnection con;
 
     public XMPPChannel(JAXBManager jaxbManager, OADRParty party){
-        super(Controller.getController(), jaxbManager, party);
+        super(new Controller(party), jaxbManager, party);
 
         SmackConfiguration.DEBUG = true;
 
@@ -44,7 +44,7 @@ public class XMPPChannel extends Channel {
         serviceDiscoveryManager.addFeature(XMLNS.OADR2.getNamespaceURI());
 
         for(String msgTypes : controller.getSupportedReceivedMsgTypes()){
-            System.out.println("supported types: " + msgTypes + " namespace: " + XMLNS.OADR2.getNamespaceURI() );
+            System.out.println("supported types: " + msgTypes + " namespace: " + XMLNS.OADR2.getNamespaceURI() + " long " + XMLNS.OADR2.getPrefix()+":"+msgTypes);
             ProviderManager.addIQProvider(msgTypes, XMLNS.OADR2.getNamespaceURI(), xmppExtensionProvider);
             con.registerIQRequestHandler(
                     new OADRIQRequestHandler(this, XMLNS.OADR2.getPrefix()+":"+msgTypes, XMLNS.OADR2.getNamespaceURI(),
@@ -92,12 +92,29 @@ public class XMPPChannel extends Channel {
     public void sendMsg(OADRMsgInfo sendInfo){
         OADR2IQ oadrIQ = new OADR2IQ(sendInfo.getMsgType(), XMLNS.OADR2.getNamespaceURI());
         oadrIQ.setTo(XMPPConInfo.getVTNFullAdrName());
-        System.out.println("voi gul new iq id: " + oadrIQ.getStanzaId());
+        System.out.println("new iq id: " + oadrIQ.getStanzaId());
         OADRMsgObject sendObj = controller.createSendMsg(sendInfo);
         oadrIQ.init(new OADR2PacketExtension(sendObj.getMsg(), jaxbManager));
 
         try {
             con.sendStanza(oadrIQ);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * This method closes the xmpp channel by setting the XMPP-Status to unavailable and also
+     * inform smack to close the connection.
+     */
+    @Override
+    public void close(){
+        System.out.println("close XMPP connection");
+
+        Presence presence = new Presence(Presence.Type.unavailable);
+        presence.setStatus("Gone eating");
+        try {
+            con.disconnect(presence);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }

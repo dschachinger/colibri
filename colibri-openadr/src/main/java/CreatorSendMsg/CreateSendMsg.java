@@ -1,6 +1,7 @@
 package CreatorSendMsg;
 
 import OADRMsgInfo.OADRMsgInfo;
+import Utils.OADRConInfo;
 import Utils.OADRMsgObject;
 import com.enernoc.open.oadr2.model.v20b.ei.EiResponse;
 import com.enernoc.open.oadr2.model.v20b.ei.ResponseCode;
@@ -29,6 +30,16 @@ public abstract class CreateSendMsg {
      * @return supported messege type
      */
     abstract public String getMsgType();
+
+
+    /**
+     * This method returns if a given send message info object violates openADR constraints
+     * when it will be sended.
+     * @param info given send message info object
+     * @param receivedMsgMap contains all received Messages which are not confirmed with a reply
+     * @return true...It violates constraints, false...It does not violate constraints.
+     */
+    public abstract boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap);
 
     /**
      * This method returns an everything is fine EIResponse Object which contains the

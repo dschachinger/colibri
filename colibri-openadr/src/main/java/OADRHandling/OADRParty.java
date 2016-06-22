@@ -32,4 +32,15 @@ public abstract class OADRParty {
      * @param followUpMsg contains information which message should be transmitted and how the message should look like.
      */
     public abstract void handleFollowUpMsg(FollowUpMsg followUpMsg);
+
+    /**
+     * This method terminates the party.
+     * It is not guaranteed that this party still works afterwards.
+     * It is only allowed to call this method if the party was successfully started beforehand.
+     */
+    public abstract void terminate();
+
+    public Channel getChannel(){
+        return channel;
+    }
 }

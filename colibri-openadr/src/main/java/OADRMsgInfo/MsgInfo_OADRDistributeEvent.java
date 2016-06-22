@@ -44,10 +44,6 @@ public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
         return new Signal();
     }
 
-    public Interval getNewInterval(){
-        return new Interval();
-    }
-
     @Override
     public String toString() {
         return "{\"MsgInfo_OADRDistributeEvent\":{"
@@ -258,37 +254,6 @@ public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
                     + "                        \"signalType\":\"" + signalType + "\"\n"
                     + ",                         \"intervals\":"+"\n" + intervals +"\n"
                     + ",                         \"currentValue\":\"" + currentValue + "\"\n"
-                    + "}}";
-        }
-    }
-
-    public class Interval{
-        // The duration of the state. unit: seconds
-        private long durationSec;
-        // Signal value
-        private float signalValue;
-
-        public long getDurationSec() {
-            return durationSec;
-        }
-
-        public void setDurationSec(long durationSec) {
-            this.durationSec = durationSec;
-        }
-
-        public float getSignalValue() {
-            return signalValue;
-        }
-
-        public void setSignalValue(float signalValue) {
-            this.signalValue = signalValue;
-        }
-
-        @Override
-        public String toString() {
-            return "{\"Interval\":{"
-                    + "                        \"durationSec\":\"" + durationSec + "\"\n"
-                    + ",                         \"signalValue\":\"" + signalValue + "\"\n"
                     + "}}";
         }
     }

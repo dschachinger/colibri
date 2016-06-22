@@ -48,4 +48,14 @@ public class CreateMsg_OADRCancelPartyRegistration extends CreateSendMsg {
     public String getMsgType() {
         return new MsgInfo_OADRCancelPartyRegistration().getMsgType();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
+        if(OADRConInfo.getVENId() == null){
+            return true;
+        }
+        return false;
+    }
 }
