@@ -17,16 +17,18 @@ public class ObserveThread implements Runnable {
     }
 
     public void run() {
-        textField.setText(obj.getObj().toString());
+        textField.setText(obj.toString());
         while (checkBox.isSelected()) {
             synchronized (obj) {
                 try {
                     obj.wait();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("Aborting observation on " + obj.getUri());
+                    obj.getRelation().proactiveCancel();
+                    return;
                 }
             }
-            textField.setText(obj.getObj().toString());
+            textField.setText(obj.toString());
         }
         textField.setText("NOT OBSERVED");
     }

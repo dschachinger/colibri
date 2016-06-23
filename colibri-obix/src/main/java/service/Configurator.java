@@ -35,9 +35,16 @@ public class Configurator {
             String key = keys.nextElement();
             if(key.contains("oBIXLobby")) {
                 String uri = bundle.getString(key);
+                uri = uri.replaceAll("\\s+","");
                 String baseUri = uri.substring(0, uri.lastIndexOf("/"));
-
-                ObixChannel channel = new CoapChannel(baseUri, uri, getObservedTypes());
+                ObixChannel channel;
+                if(uri.contains(",")) {
+                    Integer port = Integer.parseInt(uri.split(",")[1]);
+                    uri = uri.substring(uri.lastIndexOf("/") + 1, uri.lastIndexOf(","));//.substring(0, uri.lastIndexOf(","));
+                    channel = new CoapChannel(baseUri, uri, port, getObservedTypes());
+                } else {
+                    channel = new CoapChannel(baseUri, uri, getObservedTypes());
+                }
                 oBIXchannels.add(channel);
             }
         }

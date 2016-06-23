@@ -3,8 +3,10 @@ package channel;
 import model.ObixLobby;
 import model.ObixObject;
 import obix.Err;
+import obix.Int;
 import obix.Obj;
-import obix.Val;
+import obix.Real;
+import obix.contracts.Unit;
 import obix.io.ObixDecoder;
 import obix.io.ObixEncoder;
 import obix.xml.XException;
@@ -27,9 +29,9 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         List<ObixObject> obixObjects = new ArrayList<ObixObject>();
         for(Obj o : root.list()) {
             List<ObixObject> listOfObjects = new ArrayList<ObixObject>();
-            obixObjects.addAll(getNeededObixLobbyObjectsRecusively(o.getHref().get(), channel.baseUri, listOfObjects));
+            obixObjects.addAll(getNeededObixLobbyObjectsRecursively(o.getHref().get(), channel.baseUri, listOfObjects));
         }
-        lobby.setObixObjects(obixObjects, channel.observedTypes);
+        lobby.setObixObjects(obixObjects);
         return lobby;
     }
 
@@ -38,6 +40,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         ObixObject object = channel.get(uri, APPLICATION_XML);
         object.setUri(uri);
         object.setObj(ObixXmlChannelDecorator.decode(object.getObjectAsString()));
+        object.setUnit(getUnitOfObject(object));
         return object;
     }
 
@@ -64,7 +67,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         return ObixEncoder.toString(obj);
     }
 
-    private List<ObixObject> getNeededObixLobbyObjectsRecusively(String uri, String baseUri, List<ObixObject> list) {
+    private List<ObixObject> getNeededObixLobbyObjectsRecursively(String uri, String baseUri, List<ObixObject> list) {
         String u = ObixChannel.normalizeUri(uri, baseUri);
         ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
@@ -73,9 +76,31 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         }
         for (Obj o : tempOb.list()) {
             if (o.getHref() != null) {
-                return getNeededObixLobbyObjectsRecusively(o.getHref().get(), uri, list);
+                getNeededObixLobbyObjectsRecursively(o.getHref().get(), uri, list);
             }
         }
         return list;
+    }
+
+    private Unit getUnitOfObject(ObixObject object) {
+        String unitUri = null;
+        if(object.getObj().isReal()) {
+            Real real = (Real) object.getObj();
+            if(real.getUnit() != null) {
+                unitUri = channel.normalizeUri(real.getUnit().toString());
+            }
+        } else if(object.getObj().isInt()) {
+            Int i = (Int) object.getObj();
+            if(i.getUnit() != null) {
+                unitUri = channel.normalizeUri(i.getUnit().toString());
+            }
+        }
+        if(unitUri != null) {
+            Obj o = ObixXmlChannelDecorator.decode(channel.get(unitUri, APPLICATION_XML).getObjectAsString());
+            if(!o.isErr()) {
+                return (Unit) o;
+            }
+        }
+        return null;
     }
 }

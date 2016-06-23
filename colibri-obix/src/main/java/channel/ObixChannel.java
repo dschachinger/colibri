@@ -3,6 +3,7 @@ package channel;
 import model.ObixLobby;
 import model.ObixObject;
 import obix.Obj;
+import org.eclipse.californium.core.coap.CoAP;
 
 import java.util.*;
 
@@ -18,6 +19,7 @@ public abstract class ObixChannel {
     protected String lobbyUri;
     protected List<String> observedTypes;
     protected Map<String, ObixObject> observedObjects = new HashMap<String, ObixObject>();
+    protected Integer port;
 
     public ObixChannel() {
     }
@@ -25,6 +27,13 @@ public abstract class ObixChannel {
     public ObixChannel(String baseUri, String lobbyUri, List<String> observedTypes) {
         this.baseUri = baseUri;
         this.lobbyUri = lobbyUri;
+        this.observedTypes = observedTypes;
+    }
+
+    public ObixChannel(String baseUri, String lobbyUri, Integer port, List<String> observedTypes) {
+        this.baseUri = baseUri;
+        this.lobbyUri = lobbyUri;
+        this.port = port;
         this.observedTypes = observedTypes;
     }
 
@@ -137,6 +146,14 @@ public abstract class ObixChannel {
     public abstract String normalizeUri(String uri);
 
     public static String normalizeUri(String uri, String baseUri) {
+        if(uri.contains(":")) {
+            uri = uri.split(":")[1];
+        }
+        if(uri.contains("%") || baseUri.contains("%")) {
+            System.out.println("Please do not use % in URIs when using CoAP. This URI is skipped.");
+            uri = uri.replace("%", "");
+            baseUri = baseUri.replace("%", "");
+        }
         String[] uriPaths = uri.split("/");
         String newUri = baseUri;
         List<String> notUsedPaths = new ArrayList<String>(Arrays.asList(uriPaths));
@@ -183,5 +200,9 @@ public abstract class ObixChannel {
 
     public Map<String, ObixObject> getObservedObjects() {
         return observedObjects;
+    }
+
+    public Integer getPort() {
+        return port;
     }
 }

@@ -1,16 +1,22 @@
 package channel;
 
+import exception.CoapException;
 import model.ObixLobby;
 import model.ObixObject;
+import obix.Err;
 import obix.Obj;
 import obix.Uri;
 import obix.Val;
+import obix.net.Http;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
+import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.network.CoapEndpoint;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.eclipse.californium.core.coap.MediaTypeRegistry.*;
@@ -21,8 +27,15 @@ import static org.eclipse.californium.core.coap.MediaTypeRegistry.*;
  */
 public class CoapChannel extends ObixChannel {
 
+    private final String SCHEME = "coap";
+    private CoapClient coapClient;
+
     public CoapChannel(String baseUri, String lobbyUri, List<String> observedTypes) {
         super(baseUri, lobbyUri, observedTypes);
+    }
+
+    public CoapChannel(String baseUri, String lobbyUri, Integer port, List<String> observedTypes) {
+        super(baseUri, lobbyUri, port, observedTypes);
     }
 
     public ObixLobby getLobby(String uri) {
@@ -41,7 +54,7 @@ public class CoapChannel extends ObixChannel {
         return super.observe(obj);
     }
 
-    public ObixLobby getLobby(String uri, int mediaType) {
+    public ObixLobby getLobby(String uri, int mediaType) throws CoapException {
         ObixLobby lobby = new ObixLobby(uri, getObservedTypes());
         lobby.setLobbyAsString(this.getAsString(uri, mediaType));
         return lobby;
@@ -54,9 +67,7 @@ public class CoapChannel extends ObixChannel {
     }
 
     public ObixObject put(ObixObject obj, int mediaType) {
-        CoapClient coapClient;
-        coapClient = new CoapClient(CoapChannel.normalizeUri(obj.getUri(), this.baseUri));
-        System.out.println(obj.getObjectAsString());
+        coapClient = getCoapClientWithUri(obj.getUri());
         obj.setObjectAsString(coapClient.put(obj.getObjectAsString(), mediaType).getResponseText());
         return obj;
     }
@@ -69,16 +80,17 @@ public class CoapChannel extends ObixChannel {
         return obj;
     }
 
-    private String getAsString(String uri, int mediaType) {
-        CoapClient coapClient;
-        coapClient = new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
+    private String getAsString(String uri, int mediaType) throws CoapException {
+        coapClient = getCoapClientWithUri(uri);
+        if (!coapClient.ping()) {
+            throw new CoapException(Http.SC_BAD_REQUEST);
+        }
         return coapClient.get(mediaType).getResponseText();
     }
 
     private String observeAsXml(ObixObject obj, int mediaType) {
-        CoapClient coapClient;
         final String uri = obj.getUri();
-        coapClient = new CoapClient(CoapChannel.normalizeUri(obj.getUri(), this.baseUri));
+        coapClient = getCoapClientWithUri(obj.getUri());
         String content = "";
         CoapObserveRelation relation = coapClient.observeAndWait(
                 new CoapHandler() {
@@ -118,4 +130,21 @@ public class CoapChannel extends ObixChannel {
         return "coap://" + ObixChannel.normalizeUri(uri, baseUri);
     }
 
+    public static String normalizeUriWithoutBaseUri(String baseUri, String uri) {
+        if (uri.contains(baseUri)) {
+            return uri.split(baseUri + "/")[1];
+        } else {
+            return uri;
+        }
+
+    }
+
+    private CoapClient getCoapClientWithUri(String uri) throws IllegalArgumentException {
+        if (port == null) {
+            this.port = CoAP.DEFAULT_COAP_PORT;
+            return new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
+        } else {
+            return new CoapClient("coap", this.baseUri, this.port, normalizeUriWithoutBaseUri(this.baseUri, uri));
+        }
+    }
 }

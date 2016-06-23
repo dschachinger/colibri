@@ -21,6 +21,8 @@ public class ObixObject {
 
     private CoapObserveRelation relation;
 
+    private Unit unit;
+
     public ObixObject(String uri) {
         this.uri = uri;
     }
@@ -55,5 +57,22 @@ public class ObixObject {
 
     public void setRelation(CoapObserveRelation relation) {
         this.relation = relation;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
+
+    public boolean hasUnit() {
+        return unit != null;
+    }
+
+    @Override
+    public String toString() {
+        return obj.toString();
     }
 }

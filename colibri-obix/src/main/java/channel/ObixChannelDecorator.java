@@ -73,4 +73,8 @@ public abstract class ObixChannelDecorator extends ObixChannel{
     public Map<String, ObixObject> getObservedObjects() {
         return channel.getObservedObjects();
     }
+
+    public Integer getPort() {
+        return channel.getPort();
+    }
 }

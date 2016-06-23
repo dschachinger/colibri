@@ -12,7 +12,7 @@ import obix.Op;
 import obix.Uri;
 
 /**
- * Main class for obix Swing application.
+ * GuiUtility class for obix Swing application.
  *
  * @author    Brian Frank
  * @creation  13 Sept 05

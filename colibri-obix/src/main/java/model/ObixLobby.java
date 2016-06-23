@@ -150,7 +150,7 @@ public class ObixLobby {
         return obixObjects;
     }
 
-    public void setObixObjects(List<ObixObject> obixObjects, List<String> observedObjects) {
+    public void setObixObjects(List<ObixObject> obixObjects) {
         this.obixObjects.clear();
         this.obixObjects.addAll(obixObjects);
         matchObixObjectsToLists();
