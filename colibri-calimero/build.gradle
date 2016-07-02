@@ -1,0 +1,40 @@
+description = "Calimero 2.1 modification for Colibri project"
+
+dependencies 
+{
+	testCompile group: "junit", name: "junit", version: "4.10" 
+}
+
+jar 
+{
+	manifest 
+	{
+		attributes(	"Manifest-Version": "1.0",
+					"Bundle-Name": "Colibri-Calimero",
+					"Bundle-SymbolicName": "ac.at.tuwien.auto.colibri.calimero",
+					"Bundle-Description": "Calimero 2.1 modification for Colibri project",
+					"Bundle-Vendor": "Automation Systems Group, Institute of Computer Aided Automation, TU Wien, www.auto.tuwien.ac.at",
+					"Bundle-Version": "1.0.0",
+					"Bundle-Classpath": ".",
+					"Export-Package": 
+						"tuwien.auto.calimero,"+ 
+						"tuwien.auto.calimero.buffer,"+
+						"tuwien.auto.calimero.buffer.cache,"+
+						"tuwien.auto.calimero.cemi,"+
+						"tuwien.auto.calimero.datapoint,"+
+						"tuwien.auto.calimero.dptxlator,"+
+						"tuwien.auto.calimero.exception,"+
+						"tuwien.auto.calimero.internal,"+
+						"tuwien.auto.calimero.knxnetip,"+
+						"tuwien.auto.calimero.knxnetip.servicetype,"+ 
+						"tuwien.auto.calimero.knxnetip.util,"+
+						"tuwien.auto.calimero.link,"+
+						"tuwien.auto.calimero.link.medium,"+
+						"tuwien.auto.calimero.log,"+
+						"tuwien.auto.calimero.mgmt,"+
+						"tuwien.auto.calimero.process,"+
+						"tuwien.auto.calimero.serial,"+ 
+						"tuwien.auto.calimero.xml,"+
+						"tuwien.auto.calimero.xml.def")
+	}	
+}

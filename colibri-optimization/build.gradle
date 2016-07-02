@@ -1,0 +1,19 @@
+description = 'Optimization bundle for Colibri project'
+
+jar 
+{
+	manifest 
+	{
+		attributes (   
+			"Manifest-Version": "1.0",
+			"Bundle-ManifestVersion": "2",
+			"Bundle-Name": "colibri-optimization",
+			"Bundle-SymbolicName": "colibri-optimization",
+			"Bundle-Version": "1.0.0",
+			"Bundle-Vendor": "Automation Systems Group, Institute of Computer Aided Automation, TU Wien, www.auto.tuwien.ac.at",
+		)
+	}
+}
+
+
+

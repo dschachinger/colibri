@@ -1,0 +1,1 @@
+include 'colibri-calimero', 'colibri-bacnet4j', 'colibri-commons', 'colibri-enocean', 'colibri-knx', 'colibri-optimization', 'colibri-semantics'
