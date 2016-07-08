@@ -1,7 +1,7 @@
-package channel;
+package channel.obix;
 
-import model.ObixLobby;
-import model.ObixObject;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 import obix.Err;
 import obix.Int;
 import obix.Obj;
@@ -68,7 +68,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
     }
 
     private List<ObixObject> getNeededObixLobbyObjectsRecursively(String uri, String baseUri, List<ObixObject> list) {
-        String u = ObixChannel.normalizeUri(uri, baseUri);
+        String u = normalizeUri(uri, baseUri);
         ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
         if(channel.getObservedTypes().contains(tempOb.getClass().getName()) && !list.contains(object)) {
@@ -87,12 +87,12 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         if(object.getObj().isReal()) {
             Real real = (Real) object.getObj();
             if(real.getUnit() != null) {
-                unitUri = channel.normalizeUri(real.getUnit().toString());
+                unitUri = real.getUnit().toString();
             }
         } else if(object.getObj().isInt()) {
             Int i = (Int) object.getObj();
             if(i.getUnit() != null) {
-                unitUri = channel.normalizeUri(i.getUnit().toString());
+                unitUri = i.getUnit().toString();
             }
         }
         if(unitUri != null) {

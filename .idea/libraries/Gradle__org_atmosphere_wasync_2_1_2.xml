@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.atmosphere:wasync:2.1.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.atmosphere/wasync/2.1.2/3086ec4e46b494a4cd60e7c57309ab3ea97f6f45/wasync-2.1.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.atmosphere/wasync/2.1.2/61069e3340d4c6e446896da41a1b5e09c5d66bc8/wasync-2.1.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

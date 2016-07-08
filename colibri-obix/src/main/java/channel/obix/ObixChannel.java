@@ -1,8 +1,7 @@
-package channel;
+package channel.obix;
 
-import model.ObixLobby;
-import model.ObixObject;
-import obix.Obj;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 import org.eclipse.californium.core.coap.CoAP;
 
 import java.util.*;
@@ -28,6 +27,7 @@ public abstract class ObixChannel {
         this.baseUri = baseUri;
         this.lobbyUri = lobbyUri;
         this.observedTypes = observedTypes;
+        this.port = CoAP.DEFAULT_COAP_PORT;
     }
 
     public ObixChannel(String baseUri, String lobbyUri, Integer port, List<String> observedTypes) {
@@ -170,7 +170,7 @@ public abstract class ObixChannel {
     }
 
     /**
-     * Returns the base URI of the oBIX Channel
+     * Returns the base URI of the oBIX Connector
      *
      * @return  The base URI of the oBIX channel.
      */

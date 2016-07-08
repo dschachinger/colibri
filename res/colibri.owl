@@ -310,9 +310,9 @@
     
 
 
-    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#hasTechnologyProtocol -->
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#hasProperty -->
 
-    <owl:ObjectProperty rdf:about="&colibri;hasTechnologyProtocol">
+    <owl:ObjectProperty rdf:about="&colibri;hasProperty">
         <rdfs:domain rdf:resource="&colibri;TechnologyConnector"/>
         <rdfs:range rdf:resource="&colibri;TechnologyProtocol"/>
     </owl:ObjectProperty>
@@ -587,9 +587,9 @@
     
 
 
-    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#connectorAddress -->
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#address -->
 
-    <owl:DatatypeProperty rdf:about="&colibri;connectorAddress">
+    <owl:DatatypeProperty rdf:about="&colibri;address">
         <rdf:type rdf:resource="&owl;FunctionalProperty"/>
         <rdfs:comment xml:lang="en">This property describes the unique technology-dependent address of a technology connector (e.g. its IP address).</rdfs:comment>
         <rdfs:range rdf:resource="&xsd;string"/>
@@ -2746,7 +2746,7 @@
         <rdfs:subClassOf rdf:resource="&colibri;TechnologyConnector"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasTechnologyProtocol"/>
+                <owl:onProperty rdf:resource="&colibri;hasProperty"/>
                 <owl:hasValue rdf:resource="&colibri;Knx"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -2965,15 +2965,15 @@
                     <owl:Class>
                         <owl:unionOf rdf:parseType="Collection">
                             <owl:Restriction>
-                                <owl:onProperty rdf:resource="&colibri;hasTechnologyProtocol"/>
+                                <owl:onProperty rdf:resource="&colibri;hasProperty"/>
                                 <owl:hasValue rdf:resource="&colibri;Coap"/>
                             </owl:Restriction>
                             <owl:Restriction>
-                                <owl:onProperty rdf:resource="&colibri;hasTechnologyProtocol"/>
+                                <owl:onProperty rdf:resource="&colibri;hasProperty"/>
                                 <owl:hasValue rdf:resource="&colibri;Http"/>
                             </owl:Restriction>
                             <owl:Restriction>
-                                <owl:onProperty rdf:resource="&colibri;hasTechnologyProtocol"/>
+                                <owl:onProperty rdf:resource="&colibri;hasProperty"/>
                                 <owl:hasValue rdf:resource="&colibri;Soap"/>
                             </owl:Restriction>
                         </owl:unionOf>
@@ -3501,7 +3501,7 @@
     <owl:Class rdf:about="&colibri;TechnologyConnector">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasTechnologyProtocol"/>
+                <owl:onProperty rdf:resource="&colibri;hasProperty"/>
                 <owl:allValuesFrom rdf:resource="&colibri;TechnologyProtocol"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -3513,7 +3513,7 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;connectorAddress"/>
+                <owl:onProperty rdf:resource="&colibri;address"/>
                 <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
                 <owl:onDataRange rdf:resource="&xsd;string"/>
             </owl:Restriction>

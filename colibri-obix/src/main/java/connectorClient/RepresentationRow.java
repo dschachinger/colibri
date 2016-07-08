@@ -1,4 +1,6 @@
-import model.ObixObject;
+package connectorClient;
+
+import model.obix.ObixObject;
 
 import javax.swing.*;
 
@@ -12,14 +14,20 @@ public class RepresentationRow {
     private JButton getButton;
     private JCheckBox chooseCheckbox;
     private String objectType;
+    private JCheckBox addedAsServiceCheckbox;
+    private JCheckBox observedByColibriCheckBox;
 
-    public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField, ObixObject obixObject, JCheckBox writableCheckbox, JButton getButton) {
+    public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField,
+                             ObixObject obixObject, JCheckBox writableCheckbox, JButton getButton,
+                             JCheckBox addedAsServiceCheckBox, JCheckBox observedByColibriCheckBox) {
         this.uriLabel = uriLabel;
         this.observedCheckBox = observedCheckBox;
         this.valueTextField = valueTextField;
         this.obixObject = obixObject;
         this.writableCheckbox = writableCheckbox;
         this.getButton = getButton;
+        this.addedAsServiceCheckbox = addedAsServiceCheckBox;
+        this.observedByColibriCheckBox = observedByColibriCheckBox;
     }
 
     public RepresentationRow(ObixObject obixObject, JCheckBox chooseCheckbox, String objectType) {
@@ -94,5 +102,21 @@ public class RepresentationRow {
 
     public void setObjectType(String objectType) {
         this.objectType = objectType;
+    }
+
+    public JCheckBox getAddedAsServiceCheckBox() {
+        return addedAsServiceCheckbox;
+    }
+
+    public void setAddedAsServiceCheckBox(JCheckBox addedAsServiceCheckBox) {
+        this.addedAsServiceCheckbox = addedAsServiceCheckBox;
+    }
+
+    public JCheckBox getObservedByColibriCheckBox() {
+        return observedByColibriCheckBox;
+    }
+
+    public void setObservedByColibriCheckBox(JCheckBox observedByColibriCheckBox) {
+        this.observedByColibriCheckBox = observedByColibriCheckBox;
     }
 }

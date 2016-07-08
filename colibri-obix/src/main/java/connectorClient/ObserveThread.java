@@ -1,4 +1,9 @@
-import model.ObixObject;
+package connectorClient;
+
+import channel.colibri.ColibriChannel;
+import channel.message.colibriMessage.ColibriMessage;
+import channel.message.colibriMessage.StatusCode;
+import model.obix.ObixObject;
 
 import javax.swing.*;
 
@@ -6,14 +11,14 @@ public class ObserveThread implements Runnable {
 
     private JCheckBox checkBox;
     private ObixObject obj;
-    private JFrame mainFrame;
     private JTextField textField;
+    private ColibriChannel colibriChannel;
 
-    public ObserveThread(JCheckBox checkBox, JTextField textField, ObixObject obj, JFrame mainFrame) {
+    public ObserveThread(JCheckBox checkBox, JTextField textField, ObixObject obj, ColibriChannel colibriChannel) {
         this.checkBox = checkBox;
         this.textField = textField;
         this.obj = obj;
-        this.mainFrame = mainFrame;
+        this.colibriChannel = colibriChannel;
     }
 
     public void run() {
@@ -29,7 +34,13 @@ public class ObserveThread implements Runnable {
                 }
             }
             textField.setText(obj.toString());
+            //TODO:CHANGE
+            if(obj.getObservedByColibri()) {
+                colibriChannel.send(ColibriMessage.createStatusMessage(StatusCode.OK, "PARAM1: " + obj.getParameter1().getValueAsString() +
+                        "<br>" + "PARAM2: " + obj.getParameter2().getValueAsString()));
+            }
         }
         textField.setText("NOT OBSERVED");
+
     }
 }

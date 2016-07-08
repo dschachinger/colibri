@@ -183,7 +183,7 @@ public class ObixDecoder
     Class cls = Obj.toClass(elemName);
     if (cls == null)
     {
-      System.out.println("WARNING: Unknown element: " + x + " [RepresentationRow " + x.line() + "]");
+      System.out.println("WARNING: Unknown element: " + x + " [connectorClient.RepresentationRow " + x.line() + "]");
       return null;
     }
     

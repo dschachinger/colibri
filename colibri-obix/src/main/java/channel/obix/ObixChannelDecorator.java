@@ -1,8 +1,7 @@
-package channel;
+package channel.obix;
 
-import model.ObixLobby;
-import model.ObixObject;
-import obix.Obj;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 
 import java.util.Map;
 

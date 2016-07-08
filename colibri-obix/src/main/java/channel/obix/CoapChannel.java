@@ -1,25 +1,18 @@
-package channel;
+package channel.obix;
 
 import exception.CoapException;
-import model.ObixLobby;
-import model.ObixObject;
-import obix.Err;
-import obix.Obj;
-import obix.Uri;
-import obix.Val;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 import obix.net.Http;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
-import org.eclipse.californium.core.network.CoapEndpoint;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.eclipse.californium.core.coap.MediaTypeRegistry.*;
+import static org.eclipse.californium.core.coap.MediaTypeRegistry.APPLICATION_XML;
 
 /**
  * This is a plain channel which sends data over CoAP. In order to sufficiently parse the sent and received data,
@@ -140,7 +133,7 @@ public class CoapChannel extends ObixChannel {
     }
 
     private CoapClient getCoapClientWithUri(String uri) throws IllegalArgumentException {
-        if (port == null) {
+        if (port == 5683) {
             this.port = CoAP.DEFAULT_COAP_PORT;
             return new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
         } else {

@@ -1,10 +1,9 @@
-import channel.CoapChannel;
-import channel.ObixChannel;
-import channel.ObixXmlChannelDecorator;
-import model.ObixLobby;
-import model.ObixObject;
+import channel.obix.CoapChannel;
+import channel.obix.ObixChannel;
+import channel.obix.ObixXmlChannelDecorator;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 import obix.Int;
-import obix.Obj;
 import org.eclipse.californium.core.CoapClient;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -15,7 +14,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 
 public class CoapXmlChannelTest {
 

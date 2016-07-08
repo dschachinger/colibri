@@ -1,7 +1,6 @@
-package model;
+package model.obix;
 
-import obix.*;
-import obix.Enum;
+import obix.Obj;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,40 +39,42 @@ public class ObixLobby {
     private Obj obj;
 
     private ObixLobby(List<String> observedObjects) {
-        for(String s : observedObjects) {
-            if(s.equals("obix.Abstime")) {
-                observedObjectsLists.put(s, abstimes);
-            } else if(s.equals("obix.Reltime")) {
-                observedObjectsLists.put(s, reltimes);
-            } else if(s.equals("obix.Bool")) {
-                observedObjectsLists.put(s, bools);
-            } else if(s.equals("obix.Int")) {
-                observedObjectsLists.put(s, ints);
-            } else if(s.equals("obix.Real")) {
-                observedObjectsLists.put(s, reals);
-            } else if(s.equals("obix.Enum")) {
-                observedObjectsLists.put(s, enums);
-            } else if(s.equals("obix.Feed")) {
-                observedObjectsLists.put(s, feeds);
-            } else if(s.equals("obix.List")) {
-                observedObjectsLists.put(s, lists);
-            } else if(s.equals("obix.Op")) {
-                observedObjectsLists.put(s, ops);
-            } else if(s.equals("obix.Ref")) {
-                observedObjectsLists.put(s, refs);
-            } else if(s.equals("obix.Uri")) {
-                observedObjectsLists.put(s, uris);
-            } else if(s.equals("obix.Str")) {
-                observedObjectsLists.put(s, strs);
-            } else if(s.equals("obix.Err")) {
-                observedObjectsLists.put(s, errs);
-            } else if(s.equals("obix.Val")) {
-                observedObjectsLists.put(s, vals);
-            } else {
-                observedObjectsLists.put(s, errs);
+        if(observedObjects != null) {
+            for (String s : observedObjects) {
+                if (s.equals("obix.Abstime")) {
+                    observedObjectsLists.put(s, abstimes);
+                } else if (s.equals("obix.Reltime")) {
+                    observedObjectsLists.put(s, reltimes);
+                } else if (s.equals("obix.Bool")) {
+                    observedObjectsLists.put(s, bools);
+                } else if (s.equals("obix.Int")) {
+                    observedObjectsLists.put(s, ints);
+                } else if (s.equals("obix.Real")) {
+                    observedObjectsLists.put(s, reals);
+                } else if (s.equals("obix.Enum")) {
+                    observedObjectsLists.put(s, enums);
+                } else if (s.equals("obix.Feed")) {
+                    observedObjectsLists.put(s, feeds);
+                } else if (s.equals("obix.List")) {
+                    observedObjectsLists.put(s, lists);
+                } else if (s.equals("obix.Op")) {
+                    observedObjectsLists.put(s, ops);
+                } else if (s.equals("obix.Ref")) {
+                    observedObjectsLists.put(s, refs);
+                } else if (s.equals("obix.Uri")) {
+                    observedObjectsLists.put(s, uris);
+                } else if (s.equals("obix.Str")) {
+                    observedObjectsLists.put(s, strs);
+                } else if (s.equals("obix.Err")) {
+                    observedObjectsLists.put(s, errs);
+                } else if (s.equals("obix.Val")) {
+                    observedObjectsLists.put(s, vals);
+                } else {
+                    observedObjectsLists.put(s, errs);
+                }
             }
+            observedObjectsLists.put("all", obixObjects);
         }
-        observedObjectsLists.put("all", obixObjects);
     }
 
     public ObixLobby(String uri, List<String> observedObjects) {
