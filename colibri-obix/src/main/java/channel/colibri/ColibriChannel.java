@@ -14,6 +14,7 @@ import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;
+import service.TimeDurationConverter;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -287,31 +288,35 @@ public class ColibriChannel {
                     System.out.println(serviceObject.getParameter1().getParameterUri());
                     if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                         if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.getParameter1().setValueUri(content.getValue1().getValue());
+                            serviceObject.setValueParameter1(content.getValue1().getValue());
                             setParam1 = true;
                         }
                     }
                     if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
                         if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.getParameter2().setValueUri(content.getValue1().getValue());
+                            serviceObject.setValueParameter2(TimeDurationConverter.ical2Date(content.getValue2().getValue()));
                             setParam2 = true;
                         }
                     }
                     if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                         if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.getParameter1().setValueUri(content.getValue2().getValue());
+                            serviceObject.setValueParameter1(content.getValue1().getValue());
                             setParam1 = true;
                         }
                     }
                     if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
                         if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.getParameter2().setValueUri(content.getValue2().getValue());
+                            serviceObject.setValueParameter2(TimeDurationConverter.ical2Date(content.getValue2().getValue()));
                             setParam2 = true;
                         }
                     }
                 }
             }
             if (setParam1 && setParam2) {
+                synchronized (serviceObject) {
+                    serviceObject.setSetByColibri(true);
+                    serviceObject.notify();
+                }
                 return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
             } else {
                 return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +

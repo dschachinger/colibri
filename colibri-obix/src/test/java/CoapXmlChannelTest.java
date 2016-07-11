@@ -41,8 +41,7 @@ public class CoapXmlChannelTest {
         ObixLobby lobby = channel.getLobby();
         String ret = "";
         for(ObixObject o : lobby.getObixObjects()) {
-            System.out.println(o.getObj().getName() + ": " + o.getUri());
-            ret += o.getUri();
+            ret += o.getObixUri();
         }
         Assert.assertThat(ret, CoreMatchers.containsString("roomIllumination"));
         Assert.assertThat(ret, CoreMatchers.containsString("tempOutside"));
@@ -55,7 +54,7 @@ public class CoapXmlChannelTest {
         //False, if the coap client is offline
         org.junit.Assume.assumeTrue(coapClient.ping());
         ObixObject object = channel.get("VirtualDevices/sunblindMiddleA/moveDownValue");
-        Assert.assertThat(object.getUri(), CoreMatchers.containsString("moveDownValue"));
+        Assert.assertThat(object.getObixUri(), CoreMatchers.containsString("moveDownValue"));
         Assert.assertTrue(object.getObj().isBool());
         Assert.assertTrue(object.getObj().isWritable());
     }
@@ -71,7 +70,7 @@ public class CoapXmlChannelTest {
         i.set(77);
         object.setObj(i);
         ObixObject newO = channel.put(object);
-        Assert.assertThat(newO.getUri(), CoreMatchers.containsString("virtualBrightnessActuator"));
+        Assert.assertThat(newO.getObixUri(), CoreMatchers.containsString("virtualBrightnessActuator"));
         Assert.assertTrue(newO.getObj().isInt());
         Assert.assertEquals(newO.getObj().getInt(), 77);
     }

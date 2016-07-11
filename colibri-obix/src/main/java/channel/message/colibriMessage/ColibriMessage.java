@@ -173,7 +173,6 @@ public class ColibriMessage {
 
     @Override
     public String toString() {
-        return msgType.getIdentifier() + newLine + header.getMessageHeaderAsString() + newLine + content.getContent() + newLine;
+        return msgType.getIdentifier() + newLine + header.getMessageHeaderAsString() + newLine + content.getContent();
     }
-
 }

@@ -31,12 +31,14 @@ public class GuiUtility {
     private String test = "";
     private JLabel titel;
     private JCheckBox registeredColibriChannelCheckBox;
-    private  UpdateThread updateThread;
+    private UpdateThread updateThread;
+    private List<ObserveThread> observeThreads;
 
     public GuiUtility(Connector connector) {
         this.connector = connector;
         this.obixChannel = connector.getObixChannel();
         this.commandFactory = new CommandFactory();
+        this.observeThreads = new ArrayList<>();
     }
 
     public void runGui() {
@@ -58,6 +60,9 @@ public class GuiUtility {
             @Override
             public void windowClosing(WindowEvent e)
             {
+                for(ObserveThread thread : observeThreads) {
+                    thread.stop();
+                }
                 connector.getColibriChannel().close();
                 executor.shutdownNow();
             }
@@ -237,6 +242,9 @@ public class GuiUtility {
             panel.add(innerPanel);
             representationRows.add(new RepresentationRow(uriLabel, observeObixCheckBox, textField, o, writableCheckBox,
                     getButton, addServiceCheckbox, observedByColibriCheckBox, observeColibriActionsCheckbox));
+            ObserveThread thread = new ObserveThread(observeObixCheckBox, textField, o, connector);
+            executor.execute(thread);
+            observeThreads.add(thread);
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("");
@@ -250,10 +258,10 @@ public class GuiUtility {
                     JTextField finalTextF = textF;
                     ObixObject finalObject = object;
                     if (e.getStateChange() == ItemEvent.SELECTED) {
-                        object = obixChannel.observe(object);
+                        obixChannel.observe(object);
                        // commandFactory.addCommand("observe", () -> finalTextF.setText(finalObject.toString()));
 
-                        executor.execute(new ObserveThread(observeObixCheckBox, textF, object, connector.getColibriChannel()));
+
                     } else {
                         object.getRelation().proactiveCancel();
                        // commandFactory.addCommand("observe", () -> finalTextF.setText("NOT OBSERVED"));
@@ -374,7 +382,7 @@ public class GuiUtility {
                                 object = r.getObixObject();
                             }
                         }
-                        object.setValue(textField.getText());
+                        object.setValueParameter1(textField.getText());
                         textField.setText("");
                         object = obixChannel.put(object);
                         textField.setText(object.toString());

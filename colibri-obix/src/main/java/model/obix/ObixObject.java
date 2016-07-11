@@ -22,13 +22,9 @@ public class ObixObject {
 
     private String obixUri;
     private String colibriBaseUri;
-
     private Obj obj;
-
     private CoapObserveRelation relation;
-
     private Unit unit;
-
     private String serviceUri;
     private String configurationUri;
     private Parameter parameter1;
@@ -37,6 +33,8 @@ public class ObixObject {
     private Boolean observedByColibri;
     private String dataValueUri;
     private Boolean observesColibriActions;
+    private Boolean setByColibri;
+
 
     public ObixObject(String uri) {
         this(uri, CoAP.DEFAULT_COAP_PORT);
@@ -51,6 +49,7 @@ public class ObixObject {
         this.addedAsService = false;
         this.observedByColibri = false;
         this.observesColibriActions = false;
+        this.setByColibri = false;
     }
 
     public String getObixUri() {
@@ -96,7 +95,7 @@ public class ObixObject {
         this.unit = unit;
         if (unit != null) {
             if (unit.getName().equals("celsius")) {
-                parameter1.setParameterUnit("&colibri;degree-celsius");
+                parameter1.setParameterUnit(colibriBaseUri + "degree-celsius");
                 parameter1.setParameterType("&colibri;TemperatureParameter");
             } else if (unit.getName().equals("percent")) {
                 parameter1.setParameterType("&colibri;EnvironmentalParameter");
@@ -219,7 +218,7 @@ public class ObixObject {
         this.observesColibriActions = observesColibriActions;
     }
 
-    public void setValue(String value) {
+    public void setValueParameter1(String value) {
         if (this.getObj().isInt()) {
             Int i = (Int) this.getObj();
             i.set(Long.parseLong(value));
@@ -237,5 +236,21 @@ public class ObixObject {
             r.set(Double.parseDouble(value));
             this.setObj(r);
         }
+    }
+
+    public void setValueParameter2(Date date) {
+        new DateParameter(colibriBaseUri, 2, date);
+    }
+
+    public String getColibriBaseUri() {
+        return colibriBaseUri;
+    }
+
+    public Boolean getSetByColibri() {
+        return setByColibri;
+    }
+
+    public void setSetByColibri(Boolean setByColibri) {
+        this.setByColibri = setByColibri;
     }
 }

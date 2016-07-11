@@ -1,22 +1,19 @@
 package channel;
 
 import channel.colibri.ColibriChannel;
-import channel.message.colibriMessage.ColibriMessage;
 import channel.obix.ObixChannel;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Connector {
     private ObixChannel obixChannel;
     private ColibriChannel colibriChannel;
     private String connectorAddress;
+    private String ipAddress;
 
-
-    public Connector(ObixChannel obixChannel, ColibriChannel colibriChannel, String connectorAddress) {
+    public Connector(ObixChannel obixChannel, ColibriChannel colibriChannel, String connectorAddress, String ipAddress) {
         this.obixChannel = obixChannel;
         this.colibriChannel = colibriChannel;
         this.connectorAddress = connectorAddress;
+        this.ipAddress = ipAddress;
     }
 
     public ObixChannel getObixChannel() {
@@ -43,5 +40,11 @@ public class Connector {
         this.connectorAddress = connectorAddress;
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
 
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
 }

@@ -55,7 +55,7 @@ public class ColibriMessageContentCreator {
         Address address = new Address();
         address.setAddress(obixObject.getObixUri());
         description.setServiceAddress(address);
-        description.setHasDataConfiguration(obixObject.getObixUri() + "/configuration");
+        description.setHasDataConfiguration(obixObject.getConfigurationUri());
         description.setHasTechnologyConnector(new Configurator().getConnectorAddress());
         addServiceMessageContent.addDescription(description);
 
@@ -76,8 +76,8 @@ public class ColibriMessageContentCreator {
             parameter1Description.setHasUnit(parameter1.getParameterUnit());
         }
         if (parameter1.hasBooleanStates() != null) {
-            parameter1Description.addHasStates("&colibri;true");
-            parameter1Description.addHasStates("&colibri;false");
+            parameter1Description.addHasStates(obixObject.getColibriBaseUri() + "true");
+            parameter1Description.addHasStates(obixObject.getColibriBaseUri() + "false");
         }
         addServiceMessageContent.addDescription(parameter1Description);
 
@@ -152,9 +152,9 @@ public class ColibriMessageContentCreator {
         RegisterMessageContent registerMessageContent = new RegisterMessageContent();
         Description description = new Description();
         description.setAbout(connector.getConnectorAddress() + "/" + "tc1");
-        description.addType("&colibri;obixConnector");
+        description.addType("&colibri;ObixConnector");
         Address address = new Address();
-        address.setAddress(connector.getConnectorAddress());
+        address.setAddress(connector.getIpAddress());
         description.setConnectorAddress(address);
         description.setHasTechnologyProtocol("&colibri;obix");
         registerMessageContent.setDescription(description);

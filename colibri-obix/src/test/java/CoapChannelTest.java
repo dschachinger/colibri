@@ -1,7 +1,6 @@
 import channel.obix.CoapChannel;
 import channel.obix.ObixChannel;
 import channel.obix.ObixXmlChannelDecorator;
-import exception.CoapException;
 import model.obix.ObixLobby;
 import obix.Obj;
 import org.eclipse.californium.core.CoapClient;
@@ -24,10 +23,11 @@ public class CoapChannelTest {
     public void tearDown() {
     }
 
-    @Test(expected = CoapException.class)
-    public void getLobbyWithWrongURI() {
+    @Test()
+    public void getLobbyWithWrongURIShouldReturnErr() {
         ObixLobby lobby = undecoratedCoapChannel.getLobby("wrong.wrong.wrong/obix");
         Obj lobbyObj = ObixXmlChannelDecorator.decode(lobby.getLobbyAsString());
+        Assert.assertTrue(lobbyObj.isErr());
     }
 
     /**

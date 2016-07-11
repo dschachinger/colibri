@@ -103,7 +103,7 @@ public class Configurator {
         List<Connector> connectors = new ArrayList<>();
         ColibriChannel colibriChannel = getColibriChannel();
         for(ObixChannel obixChannel : getObixCoapChannels()) {
-            connectors.add(new Connector(obixChannel, colibriChannel, getConnectorAddress()));
+            connectors.add(new Connector(obixChannel, colibriChannel, getConnectorAddress(), getConnectorIPAddress()));
         }
 
         if (connectors.size() == 0) {
@@ -123,6 +123,20 @@ public class Configurator {
             return bundle.getString("connectorAddress");
         }else{
             throw new ConfigurationException("No obix Connector address URI in config file!");
+        }
+    }
+
+    /**
+     * This method returns the IP address of the oBIX Connector in the .properties file of the given bundle.
+     *
+     * @return The parsed IP address of the obix Connector.
+     * @throws ConfigurationException Is thrown, if there is no obix Connector IP address provided in the parsed .properties file.
+     */
+    public String getConnectorIPAddress() throws ConfigurationException {
+        if (bundle.containsKey("connectorIPAddress")){
+            return bundle.getString("connectorIPAddress");
+        }else{
+            throw new ConfigurationException("No obix Connector IP address URI in config file!");
         }
     }
 }

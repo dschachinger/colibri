@@ -85,6 +85,7 @@ public class CoapChannel extends ObixChannel {
         final String uri = obj.getObixUri();
         coapClient = getCoapClientWithUri(obj.getObixUri());
         String content = "";
+        Object notifier = new Object();
         CoapObserveRelation relation = coapClient.observeAndWait(
                 new CoapHandler() {
                     public void onLoad(CoapResponse response) {
@@ -93,6 +94,9 @@ public class CoapChannel extends ObixChannel {
                         o.setObj(ObixXmlChannelDecorator.decode(content));
                         getObservedObjects().remove(uri);
                         getObservedObjects().put(uri, o);
+                        synchronized (notifier) {
+                            notifier.notify();
+                        }
                         synchronized (o) {
                             o.notify();
                         }
@@ -104,9 +108,9 @@ public class CoapChannel extends ObixChannel {
 
                 }, mediaType);
 
-        synchronized (obj) {
+        synchronized (notifier) {
             try {
-                obj.wait();
+                notifier.wait();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -124,10 +128,11 @@ public class CoapChannel extends ObixChannel {
     }
 
     public static String normalizeUriWithoutBaseUri(String baseUri, String uri) {
-        if (uri.contains(baseUri)) {
-            return uri.split(baseUri + "/")[1];
+        String tmp = normalizeUri(uri, baseUri);
+        if (tmp.contains(baseUri)) {
+            return tmp.split(baseUri + "/")[1];
         } else {
-            return uri;
+            return tmp;
         }
 
     }
