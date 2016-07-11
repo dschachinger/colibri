@@ -38,7 +38,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
     @Override
     public ObixObject get(String uri) {
         ObixObject object = channel.get(uri, APPLICATION_XML);
-        object.setUri(uri);
+        object.setObixUri(uri);
         object.setObj(ObixXmlChannelDecorator.decode(object.getObjectAsString()));
         object.setUnit(getUnitOfObject(object));
         return object;

@@ -1,15 +1,12 @@
 package connectorClient;
 
 import channel.Connector;
-import channel.obix.ObixChannel;
 import channel.commandPattern.CommandFactory;
+import channel.message.colibriMessage.ColibriMessage;
+import channel.obix.ObixChannel;
 import exception.CoapException;
 import model.obix.ObixLobby;
 import model.obix.ObixObject;
-import channel.message.colibriMessage.ColibriMessage;
-import obix.Bool;
-import obix.Int;
-import obix.Real;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -84,6 +81,7 @@ public class GuiUtility {
         //Create the panel that contains the "cards".
         cards = new JPanel(new CardLayout());
         JScrollPane scrollPane = new JScrollPane(chooseComponents());
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         scrollPane.setBorder(new EmptyBorder(20, 20, 0, 10));
         cards.add(scrollPane);
 
@@ -125,7 +123,7 @@ public class GuiUtility {
                 header.setFont(headerF);
                 panel.add(header);
                 for (ObixObject o : objects) {
-                    JCheckBox chooseCheckBox = new JCheckBox(o.getUri());
+                    JCheckBox chooseCheckBox = new JCheckBox(o.getObixUri());
                     JPanel innerPanel = new JPanel();
                     innerPanel.setLayout(new FlowLayout(0, 0, 0));
                     innerPanel.add(chooseCheckBox);
@@ -156,6 +154,7 @@ public class GuiUtility {
                 representationRows.clear();
                 cards.removeAll();
                 JScrollPane scrollPane = new JScrollPane(displayObixData(chosenObjects));
+                scrollPane.getVerticalScrollBar().setUnitIncrement(16);
                 scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
                 cards.add(scrollPane);
                 //Display the window.
@@ -191,16 +190,23 @@ public class GuiUtility {
             if(connector.getColibriChannel().getRegistered()) {
                 connector.getColibriChannel().send(ColibriMessage.createAddServiceMessage(o));
             }
-            JLabel uriLabel = new JLabel(o.getUri() + ": ");
-            uriLabel.setFont(new Font("Courier", Font.ITALIC, 20));
+            JLabel uriLabel = new JLabel(o.getObixUri() + ": ");
+            uriLabel.setFont(new Font("Courier", Font.ITALIC, 15));
             final JCheckBox observeObixCheckBox = new JCheckBox("observe Obix Data");
-            final JCheckBox observeColibriCheckBox = new JCheckBox("Colibri observes Data");
+            final JCheckBox observedByColibriCheckBox = new JCheckBox("Colibri observes Data");
+            final JCheckBox observeColibriActionsCheckbox = new JCheckBox("Observe Colibri Actions");
             final JCheckBox writableCheckBox = new JCheckBox("Writable");
             final JCheckBox addServiceCheckbox = new JCheckBox("Service Added to Colibri");
-            observeColibriCheckBox.setEnabled(false);
+            observedByColibriCheckBox.setEnabled(false);
             commandFactory.addCommand(() -> addServiceCheckbox.setSelected(o.getAddedAsService()));
             commandFactory.addCommand(() -> addServiceCheckbox.setEnabled(connector.getColibriChannel().getRegistered()));
-            commandFactory.addCommand(() -> observeColibriCheckBox.setSelected(o.getObservedByColibri()));
+            commandFactory.addCommand(() -> observedByColibriCheckBox.setSelected(o.getObservedByColibri()));
+            if(o.getObj().isWritable()) {
+                commandFactory.addCommand(() -> observeColibriActionsCheckbox.setEnabled(o.getObservedByColibri()));
+                commandFactory.addCommand(() -> observeColibriActionsCheckbox.setSelected(o.getObservesColibriActions()));
+            } else {
+                observeColibriActionsCheckbox.setEnabled(false);
+            }
             final JButton getButton = new JButton("GET");
             JLabel unitLabel = new JLabel();
             if(o.hasUnit()) {
@@ -222,13 +228,15 @@ public class GuiUtility {
             innerPanel.add(uriLabel);
             innerPanel.add(textField);
             innerPanel.add(unitLabel);
+            innerPanel.add(getButton);
             innerPanel.add(writableCheckBox);
             innerPanel.add(observeObixCheckBox);
-            innerPanel.add(observeColibriCheckBox);
-            innerPanel.add(getButton);
+            innerPanel.add(observedByColibriCheckBox);
             innerPanel.add(addServiceCheckbox);
+            innerPanel.add(observeColibriActionsCheckbox);
             panel.add(innerPanel);
-            representationRows.add(new RepresentationRow(uriLabel, observeObixCheckBox, textField, o, writableCheckBox, getButton, addServiceCheckbox, observeColibriCheckBox));
+            representationRows.add(new RepresentationRow(uriLabel, observeObixCheckBox, textField, o, writableCheckBox,
+                    getButton, addServiceCheckbox, observedByColibriCheckBox, observeColibriActionsCheckbox));
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("");
@@ -295,6 +303,26 @@ public class GuiUtility {
                 }
             });
 
+            observeColibriActionsCheckbox.addItemListener(new ItemListener() {
+                public void itemStateChanged(ItemEvent e) {
+                    ObixObject object = new ObixObject("");
+                    for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
+                        if (r.getObserveColibriActionsCheckbox().equals(observeColibriActionsCheckbox)) {
+                            object = r.getObixObject();
+                        }
+                    }
+                    if (e.getStateChange() == ItemEvent.SELECTED) {
+                        if(!object.getObservesColibriActions()) {
+                            connector.getColibriChannel().send(ColibriMessage.createObserveServiceMessage(object));
+                        }
+                    } else {
+                        if(object.getObservesColibriActions()) {
+                            connector.getColibriChannel().send(ColibriMessage.createDetachServiceMessage(object));
+                        }
+                    }
+                }
+            });
+
             getButton.addMouseListener(new MouseListener() {
                 public void mouseClicked(MouseEvent e) {
 
@@ -313,8 +341,11 @@ public class GuiUtility {
                         }
                     }
                     textField.setText("");
-                    object = obixChannel.get(object.getUri());
+                    object = obixChannel.get(object.getObixUri());
                     textF.setText(object.toString());
+                    if(o.getObservedByColibri()) {
+                        connector.getColibriChannel().send(ColibriMessage.createPutMessage(object));
+                    }
                 }
 
                 public void mouseEntered(MouseEvent e) {
@@ -343,23 +374,7 @@ public class GuiUtility {
                                 object = r.getObixObject();
                             }
                         }
-                        if (object.getObj().isInt()) {
-                            Int i = (Int) object.getObj();
-                            i.set(Long.parseLong(textField.getText()));
-                            object.setObj(i);
-                        } else if (object.getObj().isBool()) {
-                            Bool b = (Bool) object.getObj();
-                            if (textField.getText().equals("true")) {
-                                b.set(true);
-                            } else {
-                                b.set(false);
-                            }
-                            object.setObj(b);
-                        } else if (object.getObj().isReal()) {
-                            Real r = (Real) object.getObj();
-                            r.set(Double.parseDouble(textField.getText()));
-                            object.setObj(r);
-                        }
+                        object.setValue(textField.getText());
                         textField.setText("");
                         object = obixChannel.put(object);
                         textField.setText(object.toString());
@@ -368,8 +383,10 @@ public class GuiUtility {
             });
 
         }
-     //   updateThread = new UpdateThread(commandFactory);
-     //   executor.execute(updateThread);
+        JTextField receivedMessagesTextField = new JTextField("Received Messages");
+        panel.add(receivedMessagesTextField);
+        receivedMessagesTextField.setEnabled(false);
+        commandFactory.addCommand(() -> receivedMessagesTextField.setText(connector.getColibriChannel().getLastMessageReceived()));
         return panel;
     }
 

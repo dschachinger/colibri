@@ -3,8 +3,8 @@ package model.obix.parameter;
 public class DoubleParameter extends Parameter {
     private Double value;
 
-    public DoubleParameter(String parameterUri, Double value) {
-        super(parameterUri);
+    public DoubleParameter(String uri, int paramNumber, Double value) {
+        super(uri, paramNumber);
         this.value = value;
     }
 
@@ -21,4 +21,10 @@ public class DoubleParameter extends Parameter {
     public String getValueType() {
         return "&xsd;double";
     }
+
+    @Override
+    public Boolean hasBooleanStates() {
+        return false;
+    }
+
 }

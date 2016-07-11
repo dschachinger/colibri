@@ -1,7 +1,12 @@
 package channel.colibri;
 
 import channel.message.AtmosphereMessage;
-import channel.message.colibriMessage.*;
+import channel.message.colibriMessage.ColibriMessage;
+import channel.message.colibriMessage.ColibriMessageMapper;
+import channel.message.colibriMessage.MessageIdentifier;
+import channel.message.colibriMessage.StatusCode;
+import channel.message.messageObj.ColibriMessageContentCreator;
+import channel.message.messageObj.PutMessageContent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.obix.ObixObject;
 import org.atmosphere.wasync.*;
@@ -10,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +33,8 @@ public class ColibriChannel {
     private Map<String, ColibriMessage> messagesWithoutResponse;
     private Map<String, ObixObject> observeAbleObjectsMap;
     private Map<String, ObixObject> observedObjectsMap;
+    private String lastMessageReceived = "No messages from Colibri SC received.";
+    private Map<String, ObixObject> observedColibriActionsMap;
 
     public ColibriChannel(String connectorName, String host, int port) {
         this.connectorName = connectorName;
@@ -37,6 +45,7 @@ public class ColibriChannel {
         this.messagesWithoutResponse = new HashMap<>();
         this.observeAbleObjectsMap = new HashMap<>();
         this.observedObjectsMap = new HashMap<>();
+        this.observedColibriActionsMap = new HashMap<>();
     }
 
     public void run() throws IOException {
@@ -82,8 +91,12 @@ public class ColibriChannel {
         socket.on("message", new Function<AtmosphereMessage>() {
             public void on(AtmosphereMessage t) {
                 if (!t.getAuthor().equals(connectorName)) {
-
-                   messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                    try {
+                        messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                    } catch (IllegalArgumentException e) {
+                        lastMessageReceived = e.getMessage();
+                    }
+                    lastMessageReceived = t.getMessage();
                 }
             }
         }).on(new Function<Throwable>() {
@@ -111,7 +124,7 @@ public class ColibriChannel {
                 socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
                 this.addMessageWithoutResponse(msg);
                 //TODO: remove this line, only for testing with FAKE
-             //   handleStatusMessagesFAKE(msg);
+                handleStatusMessagesFAKE(msg);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -150,6 +163,8 @@ public class ColibriChannel {
             send(handleDetachMessage(message));
         } else if (message.getMsgType().equals(MessageIdentifier.REM)) {
             send(handleRemoveMessage(message));
+        } else if (message.getMsgType().equals(MessageIdentifier.PUT)) {
+            send(handlePutMessage(message));
         }
 
     }
@@ -173,16 +188,16 @@ public class ColibriChannel {
                     requestMsg.getOptionalObixObject().setAddedAsService(false);
                     observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
                     messagesWithoutResponse.remove(message.getHeader().getRefenceId());
-                } /*
-                 TODO: WHAT TO DO ON OBSERVE?
-                 else if (requestMsg.getMsgType().equals(MessageIdentifier.OBS)) {
-                    requestMsg.getOptionalObixObject().setObservedByColibri(true);
-                    observedObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
+                } else if (requestMsg.getMsgType().equals(MessageIdentifier.OBS)) {
+                    requestMsg.getOptionalObixObject().setObservesColibriActions(true);
+                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    observedColibriActionsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
+                } else if (requestMsg.getMsgType().equals(MessageIdentifier.DET)) {
+                    requestMsg.getOptionalObixObject().setObservesColibriActions(false);
                     messagesWithoutResponse.remove(message.getHeader().getRefenceId());
-                } */ else if (requestMsg.getMsgType().equals(MessageIdentifier.DET)) {
-                    requestMsg.getOptionalObixObject().setObservedByColibri(false);
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    observedColibriActionsMap.remove(requestMsg.getOptionalObixObject().getServiceUri(),
+                            requestMsg.getOptionalObixObject());
                 }
             }
         }
@@ -190,7 +205,7 @@ public class ColibriChannel {
 
     //TODO: ONLY FOR TESTING PURPOSES
 
-    /*
+
     private void handleStatusMessagesFAKE(ColibriMessage requestMsg) {
         if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
             this.registered = true;
@@ -207,23 +222,12 @@ public class ColibriChannel {
             requestMsg.getOptionalObixObject().setAddedAsService(false);
             observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
             messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        } /*
-                 TODO: WHAT TO DO ON OBSERVE?
-                 else if (requestMsg.getMsgType().equals(MessageIdentifier.OBS)) {
-                    requestMsg.getOptionalObixObject().setObservedByColibri(true);
-                    observedObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
-                            requestMsg.getOptionalObixObject());
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
-                } *//* else if (requestMsg.getMsgType().equals(MessageIdentifier.DET)) {
-            requestMsg.getOptionalObixObject().setObservedByColibri(false);
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
         }
     }
-*/
 
 
     private ColibriMessage handleDeregisterMessage(ColibriMessage message) {
-        if (message.getContent().getContentWithoutBreaks().equals(new Configurator().getConnectorAddress())
+        if (message.getContent().getContentWithoutBreaksAndWhiteSpace().equals(new Configurator().getConnectorAddress())
                 && this.getRegistered()) {
             for (ObixObject o : observeAbleObjectsMap.values()) {
                 o.setObservedByColibri(false);
@@ -236,7 +240,7 @@ public class ColibriChannel {
     }
 
     private ColibriMessage handleObserveMessage(ColibriMessage message) {
-        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaks());
+        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
             temp.setObservedByColibri(true);
             observedObjectsMap.put(temp.getServiceUri(), temp);
@@ -246,7 +250,7 @@ public class ColibriChannel {
     }
 
     private ColibriMessage handleDetachMessage(ColibriMessage message) {
-        ObixObject temp = observedObjectsMap.get(message.getContent().getContentWithoutBreaks());
+        ObixObject temp = observedObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
             temp.setObservedByColibri(false);
             observedObjectsMap.remove(temp.getServiceUri());
@@ -256,12 +260,11 @@ public class ColibriChannel {
     }
 
     private void handleAddMessage(ColibriMessage message) {
-        //TODO: What to do?
+        //Nothing to handle for now
     }
 
     private ColibriMessage handleRemoveMessage(ColibriMessage message) {
-        System.out.println(message.getContent());
-        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaks());
+        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
             temp.setObservedByColibri(false);
             temp.setAddedAsService(false);
@@ -270,6 +273,53 @@ public class ColibriChannel {
             return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
         }
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not added and therefore cannot be removed", message.getHeader().getId());
+    }
+
+    private ColibriMessage handlePutMessage(ColibriMessage message) {
+        try {
+            PutMessageContent content = ColibriMessageContentCreator.getPutMessageContent(message);
+            ObixObject serviceObject = observedColibriActionsMap.get(content.getServiceUri());
+            boolean setParam1 = false;
+            boolean setParam2 = false;
+            if (serviceObject != null) {
+                if (content.getDataValueUri().equals(serviceObject.getDataValueUri())) {
+                    System.out.println(content.getValue1HasParameterUri());
+                    System.out.println(serviceObject.getParameter1().getParameterUri());
+                    if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
+                        if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
+                            serviceObject.getParameter1().setValueUri(content.getValue1().getValue());
+                            setParam1 = true;
+                        }
+                    }
+                    if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
+                        if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
+                            serviceObject.getParameter2().setValueUri(content.getValue1().getValue());
+                            setParam2 = true;
+                        }
+                    }
+                    if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
+                        if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
+                            serviceObject.getParameter1().setValueUri(content.getValue2().getValue());
+                            setParam1 = true;
+                        }
+                    }
+                    if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
+                        if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
+                            serviceObject.getParameter2().setValueUri(content.getValue2().getValue());
+                            setParam2 = true;
+                        }
+                    }
+                }
+            }
+            if (setParam1 && setParam2) {
+                return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
+            } else {
+                return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
+                        "Please check if the service address is correct.", message.getHeader().getId());
+            }
+        } catch (JAXBException e) {
+            return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!", message.getHeader().getId());
+        }
     }
 
 
@@ -288,5 +338,13 @@ public class ColibriChannel {
             }
         }
         return false;
+    }
+
+    public String getLastMessageReceived() {
+        return lastMessageReceived;
+    }
+
+    public void setLastMessageReceived(String lastMessageReceived) {
+        this.lastMessageReceived = lastMessageReceived;
     }
 }

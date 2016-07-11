@@ -3,8 +3,8 @@ package model.obix.parameter;
 public class StringParameter extends  Parameter{
     private String value;
 
-    public StringParameter(String parameterUri, String value) {
-        super(parameterUri);
+    public StringParameter(String uri, int paramNumber,  String value) {
+        super(uri, paramNumber);
         this.value = value;
     }
 
@@ -20,5 +20,10 @@ public class StringParameter extends  Parameter{
     @Override
     public String getValueType() {
         return "&xsd;string";
+    }
+
+    @Override
+    public Boolean hasBooleanStates() {
+        return false;
     }
 }

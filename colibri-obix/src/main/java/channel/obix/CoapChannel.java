@@ -54,19 +54,19 @@ public class CoapChannel extends ObixChannel {
     }
 
     public ObixObject get(String uri, int mediaType) {
-        ObixObject object = new ObixObject(uri);
+        ObixObject object = new ObixObject(uri, port);
         object.setObjectAsString(this.getAsString(uri, mediaType));
         return object;
     }
 
     public ObixObject put(ObixObject obj, int mediaType) {
-        coapClient = getCoapClientWithUri(obj.getUri());
+        coapClient = getCoapClientWithUri(obj.getObixUri());
         obj.setObjectAsString(coapClient.put(obj.getObjectAsString(), mediaType).getResponseText());
         return obj;
     }
 
     public ObixObject observe(ObixObject obj, int mediaType) {
-        getObservedObjects().put(obj.getUri(), obj);
+        getObservedObjects().put(obj.getObixUri(), obj);
         if (APPLICATION_XML == mediaType) {
             obj.setObjectAsString(this.observeAsXml(obj, mediaType));
         }
@@ -82,8 +82,8 @@ public class CoapChannel extends ObixChannel {
     }
 
     private String observeAsXml(ObixObject obj, int mediaType) {
-        final String uri = obj.getUri();
-        coapClient = getCoapClientWithUri(obj.getUri());
+        final String uri = obj.getObixUri();
+        coapClient = getCoapClientWithUri(obj.getObixUri());
         String content = "";
         CoapObserveRelation relation = coapClient.observeAndWait(
                 new CoapHandler() {

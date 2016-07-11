@@ -1,13 +1,14 @@
 package model.obix.parameter;
 
 public abstract class Parameter {
-    protected String parameterUri;
-    protected String parameterUnit;
+    private String parameterUri;
+    private String parameterUnit;
     private String parameterType;
+    private String valueUri;
 
-    public Parameter(String parameterUri) {
-        this.parameterUri = parameterUri;
-        this.parameterUnit = "Dimensionless";
+    public Parameter(String uri, int paramNumber) {
+        this.parameterUri = uri + "parameter" + paramNumber;
+        this.valueUri = uri + "value" + paramNumber;
     }
 
     public String getParameterUri() {
@@ -37,4 +38,14 @@ public abstract class Parameter {
     }
 
     public abstract String getValueType();
+
+    public String getValueUri() {
+        return valueUri;
+    }
+
+    public void setValueUri(String valueUri) {
+        this.valueUri = valueUri;
+    }
+
+    public abstract Boolean hasBooleanStates();
 }

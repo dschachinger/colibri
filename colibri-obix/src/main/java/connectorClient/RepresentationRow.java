@@ -16,10 +16,11 @@ public class RepresentationRow {
     private String objectType;
     private JCheckBox addedAsServiceCheckbox;
     private JCheckBox observedByColibriCheckBox;
+    private JCheckBox observeColibriActionsCheckbox;
 
     public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField,
                              ObixObject obixObject, JCheckBox writableCheckbox, JButton getButton,
-                             JCheckBox addedAsServiceCheckBox, JCheckBox observedByColibriCheckBox) {
+                             JCheckBox addedAsServiceCheckBox, JCheckBox observedByColibriCheckBox, JCheckBox observeColibriActionsCheckbox) {
         this.uriLabel = uriLabel;
         this.observedCheckBox = observedCheckBox;
         this.valueTextField = valueTextField;
@@ -28,6 +29,7 @@ public class RepresentationRow {
         this.getButton = getButton;
         this.addedAsServiceCheckbox = addedAsServiceCheckBox;
         this.observedByColibriCheckBox = observedByColibriCheckBox;
+        this.observeColibriActionsCheckbox = observeColibriActionsCheckbox;
     }
 
     public RepresentationRow(ObixObject obixObject, JCheckBox chooseCheckbox, String objectType) {
@@ -118,5 +120,13 @@ public class RepresentationRow {
 
     public void setObservedByColibriCheckBox(JCheckBox observedByColibriCheckBox) {
         this.observedByColibriCheckBox = observedByColibriCheckBox;
+    }
+
+    public JCheckBox getObserveColibriActionsCheckbox() {
+        return observeColibriActionsCheckbox;
+    }
+
+    public void setObserveColibriActionsCheckbox(JCheckBox observeColibriActionsCheckbox) {
+        this.observeColibriActionsCheckbox = observeColibriActionsCheckbox;
     }
 }

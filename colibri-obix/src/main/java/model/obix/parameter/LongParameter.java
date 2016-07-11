@@ -3,8 +3,8 @@ package model.obix.parameter;
 public class LongParameter extends Parameter {
     private Long value;
 
-    public LongParameter(String parameterUri, Long value) {
-        super(parameterUri);
+    public LongParameter(String uri, int paramNumber,  Long value) {
+        super(uri, paramNumber);
         this.value = value;
     }
 
@@ -19,6 +19,11 @@ public class LongParameter extends Parameter {
 
     @Override
     public String getValueType() {
-        return "&xsd;long";
+        return "&xsd;integer";
+    }
+
+    @Override
+    public Boolean hasBooleanStates() {
+        return false;
     }
 }

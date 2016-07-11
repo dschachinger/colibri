@@ -12,7 +12,7 @@ public class Description {
     private List<Type> types;
 
     @XmlElement(name = "hasParameter", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
-    private List<Type> hasParameters;
+    private List<HasProperty> hasParameters;
 
     @XmlAttribute
     private String about;
@@ -38,9 +38,23 @@ public class Description {
     @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
     private HasProperty hasUnit;
 
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    private HasProperty hasDataValue;
+
+    @XmlElement(name = "hasValue", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    private List<HasProperty> hasValues;
+
+    @XmlElement(name = "hasStates", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    private List<HasProperty> hasStates;
+
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    private Value value;
+
     public Description() {
         this.types = new ArrayList<>();
         this.hasParameters = new ArrayList<>();
+        this.hasValues = new ArrayList<>();
+        this.hasStates = new ArrayList<>();
     }
 
     public HasProperty getHasTechnologyProtocol() {
@@ -97,14 +111,14 @@ public class Description {
         this.types.add(type);
     }
 
-    public List<Type> getHasParameters() {
-        return types;
+    public List<HasProperty> getHasParameters() {
+        return hasParameters;
     }
 
     public void addHasParamater(String resource) {
-        Type type = new Type();
-        type.setResource(resource);
-        this.hasParameters.add(type);
+        HasProperty hasParameter = new HasProperty();
+        hasParameter.setResource(resource);
+        this.hasParameters.add(hasParameter);
     }
 
     public void setConnectorAddress(Address connectorAddress) {
@@ -131,5 +145,40 @@ public class Description {
         this.identifier = identifier;
     }
 
+    public HasProperty getHasDataValue() {
+        return hasDataValue;
+    }
 
+    public void setHasDataValue(String hasDataValue) {
+        this.hasDataValue = new HasProperty();
+        this.hasDataValue.setResource(hasDataValue);
+    }
+
+    public List<HasProperty> getHasValues() {
+        return hasValues;
+    }
+
+    public void addHasValue(String resource) {
+        HasProperty hasValue = new HasProperty();
+        hasValue.setResource(resource);
+        this.hasValues.add(hasValue);
+    }
+
+    public List<HasProperty> getHasStates() {
+        return hasStates;
+    }
+
+    public void addHasStates(String resource) {
+        HasProperty hasState = new HasProperty();
+        hasState.setResource(resource);
+        this.hasStates.add(hasState);
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public void setValue(Value value) {
+        this.value = value;
+    }
 }

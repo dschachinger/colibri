@@ -8,16 +8,19 @@ public class DateParameter extends Parameter{
 
     private Date date;
 
-    public DateParameter(String parameterUri, Date date) {
-        super(parameterUri);
-        this.date = date;
-        this.parameterUnit = "&colibri;dateTime";
+    private DateParameter(String uri, int paramNumber) {
+        super(uri, paramNumber);
     }
 
-    public DateParameter(String parameterUri, long dateInMillis) {
-        super(parameterUri);
+    public DateParameter(String uri, int paramNumber, Date date) {
+        this(uri, paramNumber);
+        this.date = date;
+
+    }
+
+    public DateParameter(String uri, int paramNumber, long dateInMillis) {
+        this(uri, paramNumber);
         this.date = new Date(dateInMillis);
-        this.parameterUnit = "&colibri;dateTime";
     }
 
     public Date getDate() {
@@ -36,5 +39,10 @@ public class DateParameter extends Parameter{
     @Override
     public String getValueType() {
         return "&xsd;dateTime";
+    }
+
+    @Override
+    public Boolean hasBooleanStates() {
+        return false;
     }
 }

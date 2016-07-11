@@ -12,9 +12,18 @@ public class ColibriMessageContent {
         this.content = content;
     }
 
-    public String getContentWithoutBreaks() {
+    public String getContentWithoutBreaksAndWhiteSpace() {
         content = content.replaceAll(newLine, "");
         content = content.replaceAll(" ", "");
+        return content;
+    }
+
+    public String getContentWithoutBreaks() {
+        content = content.replaceAll(newLine, "");
+        while(content.contains(" <")) {
+            content = content.replaceAll(" <", "<");
+        }
+        //    content = content.replace("\"", "\\\"");
         return content;
     }
 
@@ -31,3 +40,4 @@ public class ColibriMessageContent {
         return getContent();
     }
 }
+

@@ -2,8 +2,7 @@ package channel.message.colibriMessage;
 
 
 import channel.Connector;
-import channel.message.messageObj.AddServiceMessageContent;
-import channel.message.messageObj.RegisterMessageContent;
+import channel.message.messageObj.ColibriMessageContentCreator;
 import model.obix.ObixObject;
 
 public class ColibriMessage {
@@ -35,7 +34,7 @@ public class ColibriMessage {
     public static ColibriMessage createRegisterMessage(Connector connector) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.REG,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
-                new ColibriMessageContent(new RegisterMessageContent().getRegisterMessageContent(connector)));
+                new ColibriMessageContent(ColibriMessageContentCreator.createRegisterMessageContent(connector)));
         return msg;
     }
 
@@ -61,7 +60,7 @@ public class ColibriMessage {
     public static ColibriMessage createAddServiceMessage(ObixObject object) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.ADD,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
-                new ColibriMessageContent(new AddServiceMessageContent().getAddServiceMessageContent(object)));
+                new ColibriMessageContent(ColibriMessageContentCreator.createAddServiceMessageContent(object)));
         msg.setOptionalObixObject(object);
         return msg;
     }
@@ -120,6 +119,18 @@ public class ColibriMessage {
                 new ColibriMessageContent(statusCode.getCode() + " " + statusCode.toString() + newLine + description));
     }
 
+    public static ColibriMessage createPutMessage(ObixObject object) {
+        return  new ColibriMessage(MessageIdentifier.PUT,
+                new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
+                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
+    }
+
+    public static ColibriMessage createPutMessage(ObixObject object, String referenceId) {
+        return  new ColibriMessage(MessageIdentifier.STA,
+                new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML, referenceId),
+                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
+    }
+
     public MessageIdentifier getMsgType() {
         return msgType;
     }
@@ -162,6 +173,7 @@ public class ColibriMessage {
 
     @Override
     public String toString() {
-        return msgType.getIdentifier() + newLine + header.getMessageHeaderAsString() + newLine + newLine + content.getContent() + newLine;
+        return msgType.getIdentifier() + newLine + header.getMessageHeaderAsString() + newLine + content.getContent() + newLine;
     }
+
 }

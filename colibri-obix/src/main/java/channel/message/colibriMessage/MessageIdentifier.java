@@ -7,7 +7,8 @@ public enum MessageIdentifier {
     ADD("ADD"),
     OBS("OBS"),
     DET("DET"),
-    REM("REM");
+    REM("REM"),
+    PUT("PUT");
 
     private String type;
 

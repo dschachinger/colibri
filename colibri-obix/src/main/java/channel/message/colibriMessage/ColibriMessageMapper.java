@@ -4,14 +4,18 @@ import service.TimeDurationConverter;
 
 public class ColibriMessageMapper {
 
+    //TODO: Change to \r\n
     static String newLine = "<br>";
 
-    public static ColibriMessage msgToPOJO(String msg) {
+    public static ColibriMessage msgToPOJO(String msg) throws IllegalArgumentException{
 
         try {
             int endCommandPos = msg.indexOf(newLine);
             String cmdName = (endCommandPos >= 0 ? msg.substring(0, endCommandPos) : msg).replaceAll(" ", "");
             int endHeaderPos = msg.indexOf(newLine + newLine);
+            if(endCommandPos < 1 || endHeaderPos < 1) {
+                throw new IllegalArgumentException("The message is not in the right format and cannot be parsed");
+            }
             ColibriMessageHeader header = parseMsgToHeader(msg.substring(endCommandPos + newLine.length(), endHeaderPos));
 
             return new ColibriMessage(MessageIdentifier.fromString(cmdName), header, new ColibriMessageContent(msg.substring(endHeaderPos)));
