@@ -14,7 +14,6 @@ import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;
-import service.TimeDurationConverter;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
@@ -288,25 +287,25 @@ public class ColibriChannel {
                     System.out.println(serviceObject.getParameter1().getParameterUri());
                     if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                         if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.setValueParameter1(content.getValue1().getValue());
+                            serviceObject.setValueParameter1(content.getValue1());
                             setParam1 = true;
                         }
                     }
                     if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
                         if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.setValueParameter2(TimeDurationConverter.ical2Date(content.getValue2().getValue()));
+                            serviceObject.setValueParameter2(content.getValue1());
                             setParam2 = true;
                         }
                     }
                     if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                         if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.setValueParameter1(content.getValue1().getValue());
+                            serviceObject.setValueParameter1(content.getValue2());
                             setParam1 = true;
                         }
                     }
                     if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
                         if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.setValueParameter2(TimeDurationConverter.ical2Date(content.getValue2().getValue()));
+                            serviceObject.setValueParameter2(content.getValue2());
                             setParam2 = true;
                         }
                     }

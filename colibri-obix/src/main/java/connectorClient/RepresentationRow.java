@@ -13,10 +13,12 @@ public class RepresentationRow {
     private JCheckBox writableCheckbox;
     private JButton getButton;
     private JCheckBox chooseCheckbox;
-    private String objectType;
     private JCheckBox addedAsServiceCheckbox;
     private JCheckBox observedByColibriCheckBox;
     private JCheckBox observeColibriActionsCheckbox;
+    private JComboBox param1TypeComboBox;
+    private JComboBox param2TypeComboBox;
+
 
     public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField,
                              ObixObject obixObject, JCheckBox writableCheckbox, JButton getButton,
@@ -32,10 +34,15 @@ public class RepresentationRow {
         this.observeColibriActionsCheckbox = observeColibriActionsCheckbox;
     }
 
-    public RepresentationRow(ObixObject obixObject, JCheckBox chooseCheckbox, String objectType) {
+    public RepresentationRow(ObixObject obixObject, JCheckBox chooseCheckbox) {
         this.obixObject = obixObject;
         this.chooseCheckbox = chooseCheckbox;
-        this.objectType = objectType;
+    }
+
+    public RepresentationRow(ObixObject obixObject, JComboBox param1TypeComboBox, JComboBox param2TypeComboBox) {
+        this.obixObject = obixObject;
+        this.param1TypeComboBox = param1TypeComboBox;
+        this.param2TypeComboBox = param2TypeComboBox;
     }
 
     public JLabel getUriLabel() {
@@ -98,14 +105,6 @@ public class RepresentationRow {
         this.chooseCheckbox = chooseCheckbox;
     }
 
-    public String getObjectType() {
-        return objectType;
-    }
-
-    public void setObjectType(String objectType) {
-        this.objectType = objectType;
-    }
-
     public JCheckBox getAddedAsServiceCheckBox() {
         return addedAsServiceCheckbox;
     }
@@ -128,5 +127,21 @@ public class RepresentationRow {
 
     public void setObserveColibriActionsCheckbox(JCheckBox observeColibriActionsCheckbox) {
         this.observeColibriActionsCheckbox = observeColibriActionsCheckbox;
+    }
+
+    public JComboBox getParam1TypeComboBox() {
+        return param1TypeComboBox;
+    }
+
+    public void setParam1TypeComboBox(JComboBox param1TypeComboBox) {
+        this.param1TypeComboBox = param1TypeComboBox;
+    }
+
+    public JComboBox getParam2TypeComboBox() {
+        return param2TypeComboBox;
+    }
+
+    public void setParam2TypeComboBox(JComboBox param2TypeComboBox) {
+        this.param2TypeComboBox = param2TypeComboBox;
     }
 }

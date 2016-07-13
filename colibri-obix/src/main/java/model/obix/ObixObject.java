@@ -1,6 +1,7 @@
 package model.obix;
 
-import model.obix.parameter.*;
+import channel.message.messageObj.Value;
+import model.obix.parameter.Parameter;
 import obix.*;
 import obix.contracts.Unit;
 import org.eclipse.californium.core.CoapObserveRelation;
@@ -34,6 +35,8 @@ public class ObixObject {
     private String dataValueUri;
     private Boolean observesColibriActions;
     private Boolean setByColibri;
+    private String connectorUri;
+    private String obixUnitUri;
 
 
     public ObixObject(String uri) {
@@ -41,7 +44,8 @@ public class ObixObject {
     }
 
     public ObixObject(String uri, int obixChannelPort) {
-        this.colibriBaseUri = new Configurator().getConnectorAddress() + "/" + obixChannelPort + "/" + uri + "/";
+        this.connectorUri = new Configurator().getConnectorAddress();
+        this.colibriBaseUri = connectorUri + "/" + obixChannelPort + "/" + uri + "/";
         this.obixUri = uri;
         this.serviceUri = colibriBaseUri + "service";
         this.configurationUri = colibriBaseUri + "configuration";
@@ -75,7 +79,8 @@ public class ObixObject {
     public void setObj(Obj obj) {
         this.obj = obj;
         this.setParameter1();
-        this.parameter2 = new DateParameter(colibriBaseUri, 2, new Date());
+        this.parameter2 = new Parameter(colibriBaseUri, 2, new Date());
+        this.parameter1.setParameterType("&colibri;DiscreteParameter");
         this.parameter2.setParameterType("&colibri;TimeParameter");
     }
 
@@ -95,7 +100,7 @@ public class ObixObject {
         this.unit = unit;
         if (unit != null) {
             if (unit.getName().equals("celsius")) {
-                parameter1.setParameterUnit(colibriBaseUri + "degree-celsius");
+                parameter1.setParameterUnit(connectorUri + "/" + "degree-celsius");
                 parameter1.setParameterType("&colibri;TemperatureParameter");
             } else if (unit.getName().equals("percent")) {
                 parameter1.setParameterType("&colibri;EnvironmentalParameter");
@@ -112,10 +117,6 @@ public class ObixObject {
             } else if (unit.getName().equals("millimeter")) {
                 parameter1.setParameterType("&colibri;EnvironmentalParameter");
             }
-        } else if(parameter1.getParameterType() == null) {
-            parameter1.setParameterType("&colibri;DiscreteParameter");
-        } else {
-            parameter1.setParameterUnit(null);
         }
     }
 
@@ -139,26 +140,26 @@ public class ObixObject {
     private void setParameter1() {;
         if (getObj().isAbstime()) {
             Abstime abstime = (Abstime) getObj();
-            parameter1 = new DateParameter(colibriBaseUri, 1, abstime.getMillis());
+            parameter1 = new Parameter(colibriBaseUri, 1, new Date(abstime.get()));
             parameter1.setParameterType("&colibri;TimeParameter");
         } else if (getObj().isInt()) {
             Int i = (Int) getObj();
-            parameter1 = new LongParameter(colibriBaseUri, 1, i.getInt());
+            parameter1 = new Parameter(colibriBaseUri, 1, i.getInt());
         } else if (getObj().isReltime()) {
             Reltime reltime = (Reltime) getObj();
-            parameter1 = new DateParameter(colibriBaseUri, 1, reltime.getMillis());
+            parameter1 = new Parameter(colibriBaseUri, 1, new Date(reltime.get()));
             parameter1.setParameterType("&colibri;TimeParameter");
         } else if (getObj().isBool()) {
             Bool boo = (Bool) getObj();
-            parameter1 = new BooleanParameter(colibriBaseUri, 1, boo.get());
+            parameter1 = new Parameter(colibriBaseUri, 1, boo.get());
         } else if (getObj().isReal()) {
             Real r = (Real) getObj();
-            parameter1 = new DoubleParameter(colibriBaseUri, 1, r.get());
+            parameter1 = new Parameter(colibriBaseUri, 1, r.get());
         } else if (getObj().isStr()) {
             Str str = (Str) getObj();
-            parameter1 = new StringParameter(colibriBaseUri, 1, str.get());
+            parameter1 = new Parameter(colibriBaseUri, 1, str.get());
         } else {
-            parameter1 = new StringParameter(colibriBaseUri, 1, obixUri);
+            parameter1 = new Parameter(colibriBaseUri, 1, obixUri);
         }
     }
 
@@ -218,7 +219,7 @@ public class ObixObject {
         this.observesColibriActions = observesColibriActions;
     }
 
-    public void setValueParameter1(String value) {
+ /*   public void setValueParameter1(String value) {
         if (this.getObj().isInt()) {
             Int i = (Int) this.getObj();
             i.set(Long.parseLong(value));
@@ -236,11 +237,73 @@ public class ObixObject {
             r.set(Double.parseDouble(value));
             this.setObj(r);
         }
+    }*/
+/*
+    public void setValueParameter1(Integer value) {
+        this.getObj().setInt(value);
+    }
+
+    public void setValueParameter1(Double value) {
+        this.getObj().setReal(value);
+    }
+
+    public void setValueParameter1(Boolean value) {
+        this.getObj().setBool(value);
+    }
+
+    public void setValueParamater1(String value) {
+        this.getObj().setStr(value);
+    }
+*/
+    public void setValueParameter1(Value value) {
+        if (value.getDatatype().equals("xsd;integer")) {
+            this.getObj().setInt(Integer.parseInt(value.getValue()));
+        } else if (value.getDatatype().equals("xsd;double")) {
+            this.getObj().setReal(Double.parseDouble(value.getValue()));
+        } else if (value.getDatatype().equals("xsd;boolean")) {
+            this.getObj().setBool(Boolean.parseBoolean(value.getValue()));
+        } else if (value.getDatatype().equals("xsd;string")) {
+            this.getObj().setStr(value.getValue());
+        }
+        parameter1.setValue(value);
+    }
+
+    public void setValueParameter1(String value) {
+        if (parameter1.getValueType().equals("xsd;integer")) {
+            this.getObj().setInt(Integer.parseInt(value));
+        } else if (parameter1.getValueType().equals("xsd;double")) {
+            this.getObj().setReal(Double.parseDouble(value));
+        } else if (parameter1.getValueType().equals("xsd;boolean")) {
+            this.getObj().setBool(Boolean.parseBoolean(value));
+        } else if (parameter1.getValueType().equals("xsd;string")) {
+            this.getObj().setStr(value);
+        }
+        parameter1.setValueAsString(value);
+    }
+
+    public void setValueParameter2(Value value) {
+        parameter2.setValue(value);
+    }
+/*
+    public void setValueParameter2(String value) {
+        parameter2.setValueAsString(value);
     }
 
     public void setValueParameter2(Date date) {
-        new DateParameter(colibriBaseUri, 2, date);
+        parameter2.setValueAsString(TimeDurationConverter.date2Ical(date).toString());
     }
+
+    public void setValueParameter2(Long value) {
+        parameter2.setValueAsString(Long.toString(value));
+    }
+
+    public void setValueParameter2(Double value) {
+        parameter2.setValueAsString(Double.toString(value));
+    }
+
+    public void setValueParameter2(Boolean value) {
+        parameter2.setValueAsString(Boolean.toString(value));
+    }*/
 
     public String getColibriBaseUri() {
         return colibriBaseUri;
@@ -252,5 +315,17 @@ public class ObixObject {
 
     public void setSetByColibri(Boolean setByColibri) {
         this.setByColibri = setByColibri;
+    }
+
+    public String getConnectorUri() {
+        return connectorUri;
+    }
+
+    public String getObixUnitUri() {
+        return obixUnitUri;
+    }
+
+    public void setObixUnitUri(String obixUnitUri) {
+        this.obixUnitUri = obixUnitUri;
     }
 }

@@ -139,4 +139,28 @@ public class Configurator {
             throw new ConfigurationException("No obix Connector IP address URI in config file!");
         }
     }
+
+    /**
+     * This method returns the available parameter types which are specified in the .properties file of the given bundle.
+     *
+     * @return The parsed parameter types.
+     * @throws ConfigurationException Is thrown, if there are no parameters provided in the parsed .properties file.
+     */
+    public List<String> getAvailableParameterTypes() throws ConfigurationException {
+        List<String> parameterTypes = new ArrayList<String>();
+        Enumeration<String> keys = bundle.getKeys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            if (key.contains("parameterTypes")) {
+                String[] types = bundle.getString(key).replaceAll("\\s+", "").split(",");
+                Collections.addAll(parameterTypes, types);
+            }
+        }
+
+        if (parameterTypes.size() == 0) {
+            throw new ConfigurationException("No parameter types in config file!");
+        }
+
+        return parameterTypes;
+    }
 }

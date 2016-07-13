@@ -44,7 +44,7 @@ public class Description {
     @XmlElement(name = "hasValue", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
     private List<HasProperty> hasValues;
 
-    @XmlElement(name = "hasStates", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(name = "hasState", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
     private List<HasProperty> hasStates;
 
     @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")

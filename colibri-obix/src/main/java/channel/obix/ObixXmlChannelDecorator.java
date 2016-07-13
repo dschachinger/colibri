@@ -40,7 +40,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         ObixObject object = channel.get(uri, APPLICATION_XML);
         object.setObixUri(uri);
         object.setObj(ObixXmlChannelDecorator.decode(object.getObjectAsString()));
-        object.setUnit(getUnitOfObject(object));
+        setUnitOfObject(object);
         return object;
     }
 
@@ -82,7 +82,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         return list;
     }
 
-    private Unit getUnitOfObject(ObixObject object) {
+    private void setUnitOfObject(ObixObject object) {
         String unitUri = null;
         if(object.getObj().isReal()) {
             Real real = (Real) object.getObj();
@@ -95,12 +95,13 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
                 unitUri = i.getUnit().toString();
             }
         }
+        object.setObixUnitUri("dimensionless");
         if(unitUri != null) {
             Obj o = ObixXmlChannelDecorator.decode(channel.get(unitUri, APPLICATION_XML).getObjectAsString());
             if(!o.isErr()) {
-                return (Unit) o;
+                object.setUnit((Unit) o);
             }
+            object.setObixUnitUri(unitUri);
         }
-        return null;
     }
 }

@@ -34,6 +34,7 @@ public class ColibriMessageContentCreator {
             jaxbMarshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders",
                     "\n<!DOCTYPE rdf:RDF [\n" +
                             "<!ENTITY xsd \"http://www.w3.org/2001/XMLSchema#\" >\n" +
+                            "<!ENTITY rdf \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" >\n" +
                             "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#\">]>");
 
         } catch (JAXBException e) {
@@ -75,9 +76,9 @@ public class ColibriMessageContentCreator {
         if (parameter1.getParameterUnit() != null) {
             parameter1Description.setHasUnit(parameter1.getParameterUnit());
         }
-        if (parameter1.hasBooleanStates() != null) {
-            parameter1Description.addHasStates(obixObject.getColibriBaseUri() + "true");
-            parameter1Description.addHasStates(obixObject.getColibriBaseUri() + "false");
+        if (parameter1.hasBooleanStates()) {
+            parameter1Description.addHasStates(obixObject.getConnectorUri() + "/" + "true");
+            parameter1Description.addHasStates(obixObject.getConnectorUri() + "/" + "false");
         }
         addServiceMessageContent.addDescription(parameter1Description);
 
@@ -87,6 +88,10 @@ public class ColibriMessageContentCreator {
         parameter2Description.addType(parameter2.getParameterType());
         if (parameter2.getParameterUnit() != null) {
             parameter2Description.setHasUnit(parameter2.getParameterUnit());
+        }
+        if (parameter2.hasBooleanStates()) {
+            parameter2Description.addHasStates(obixObject.getConnectorUri() + "/" + "true");
+            parameter2Description.addHasStates(obixObject.getConnectorUri() + "/" + "false");
         }
         addServiceMessageContent.addDescription(parameter2Description);
 
@@ -151,12 +156,12 @@ public class ColibriMessageContentCreator {
     public static String createRegisterMessageContent(Connector connector) {
         RegisterMessageContent registerMessageContent = new RegisterMessageContent();
         Description description = new Description();
-        description.setAbout(connector.getConnectorAddress() + "/" + "tc1");
+        description.setAbout(connector.getConnectorAddress());
         description.addType("&colibri;ObixConnector");
         Address address = new Address();
         address.setAddress(connector.getIpAddress());
         description.setConnectorAddress(address);
-        description.setHasTechnologyProtocol("&colibri;obix");
+        description.setHasTechnologyProtocol("&colibri;Obix");
         registerMessageContent.setDescription(description);
         StringWriter writer = new StringWriter();
 
