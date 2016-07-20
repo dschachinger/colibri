@@ -16,16 +16,8 @@ sourceCompatibility = 1.7
 repositories {
     mavenCentral()
 }
-/*
-configurations {
-    xjc
-}
-*/
-dependencies {
-    // compile 'org.springframework:spring-context:4.3.0.RELEASE'
-    // http://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream
-    // compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.2'
 
+dependencies {
     compile group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
@@ -33,10 +25,6 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
 
-
-
-
-    //xjc 'com.github.jaxb-xew-plugin:jaxb-xew-plugin:1.1'
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile "org.igniterealtime.smack:smack-java7:4.1.0"
     // Optional for XMPPTCPConnection
