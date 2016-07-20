@@ -1,14 +1,13 @@
 package Utils;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -163,6 +162,18 @@ public class TimeDurationConverter {
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
         return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+    }
+
+    public static Date addDurationToDate(Date date, long durSec){
+        System.out.println("old Time: " + date.toString());
+
+        Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, (int) durSec);
+
+        System.out.println("new Time: " + calendar.getTime().toString());
+
+        return calendar.getTime();
     }
 
 }
