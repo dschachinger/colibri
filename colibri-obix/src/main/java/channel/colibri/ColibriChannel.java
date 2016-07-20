@@ -33,6 +33,7 @@ public class ColibriChannel {
     private Map<String, ColibriMessage> messagesWithoutResponse;
     private Map<String, ObixObject> observeAbleObjectsMap;
     private Map<String, ObixObject> observedObjectsMap;
+    private Map<String, ObixObject> requestedGetMessageMap;
     private String lastMessageReceived = "No messages from Colibri SC received.";
     private Map<String, ObixObject> observedColibriActionsMap;
 
@@ -46,6 +47,7 @@ public class ColibriChannel {
         this.observeAbleObjectsMap = new HashMap<>();
         this.observedObjectsMap = new HashMap<>();
         this.observedColibriActionsMap = new HashMap<>();
+        this.requestedGetMessageMap = new HashMap<>();
     }
 
     public void run() throws IOException {
@@ -122,7 +124,12 @@ public class ColibriChannel {
         try {
             if (!alreadySent(msg)) {
                 socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
-                this.addMessageWithoutResponse(msg);
+                if(msg.getMsgType().equals(MessageIdentifier.GET)) {
+                    requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
+                            msg.getOptionalObixObject());
+                } if(!(msg.getMsgType().equals(MessageIdentifier.GET) || msg.getMsgType().equals(MessageIdentifier.STA))) {
+                    this.addMessageWithoutResponse(msg);
+                }
                 //TODO: remove this line, only for testing with FAKE
                 handleStatusMessagesFAKE(msg);
             }
@@ -165,6 +172,8 @@ public class ColibriChannel {
             send(handleRemoveMessage(message));
         } else if (message.getMsgType().equals(MessageIdentifier.PUT)) {
             send(handlePutMessage(message));
+        }else if (message.getMsgType().equals(MessageIdentifier.GET)) {
+            send(handleGetMessage(message));
         }
 
     }
@@ -279,6 +288,9 @@ public class ColibriChannel {
         try {
             PutMessageContent content = ColibriMessageContentCreator.getPutMessageContent(message);
             ObixObject serviceObject = observedColibriActionsMap.get(content.getServiceUri());
+            if(serviceObject == null) {
+                serviceObject = requestedGetMessageMap.get(content.getServiceUri());
+            }
             boolean setParam1 = false;
             boolean setParam2 = false;
             if (serviceObject != null) {
@@ -316,6 +328,7 @@ public class ColibriChannel {
                     serviceObject.setSetByColibri(true);
                     serviceObject.notify();
                 }
+                requestedGetMessageMap.remove(content.getServiceUri());
                 return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
             } else {
                 return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
@@ -326,6 +339,13 @@ public class ColibriChannel {
         }
     }
 
+    private ColibriMessage handleGetMessage(ColibriMessage message) {
+        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
+        if (temp != null) {
+            return ColibriMessage.createPutMessage(temp, message.getHeader().getId());
+        }
+        return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not existing and therefore cannot handle GET message", message.getHeader().getId());
+    }
 
     private Boolean alreadySent(ColibriMessage message) {
         for (ColibriMessage msg : messagesWithoutResponse.values()) {

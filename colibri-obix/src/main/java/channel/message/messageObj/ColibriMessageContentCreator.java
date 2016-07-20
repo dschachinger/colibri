@@ -21,9 +21,12 @@ public class ColibriMessageContentCreator {
 
     private static Marshaller jaxbMarshaller;
     private static Unmarshaller jaxbUnmarshaller;
+    private static boolean booleanStatesAlreadyReigstered;
 
     static {
         try {
+            booleanStatesAlreadyReigstered = false;
+
             JAXBContext jaxbContext = JAXBContext.newInstance(AddServiceMessageContent.class, PutMessageContent.class, RegisterMessageContent.class);
             JAXBContext jaxbUmarshallerContext = JAXBContext.newInstance(PutMessageContent.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
@@ -76,10 +79,7 @@ public class ColibriMessageContentCreator {
         if (parameter1.getParameterUnit() != null) {
             parameter1Description.setHasUnit(parameter1.getParameterUnit());
         }
-        if (parameter1.hasBooleanStates()) {
-            parameter1Description.addHasStates(obixObject.getConnectorUri() + "/" + "true");
-            parameter1Description.addHasStates(obixObject.getConnectorUri() + "/" + "false");
-        }
+        parameter1.getStateUris().forEach(parameter1Description::addHasStates);
         addServiceMessageContent.addDescription(parameter1Description);
 
         //Description of parameter 2
@@ -89,11 +89,36 @@ public class ColibriMessageContentCreator {
         if (parameter2.getParameterUnit() != null) {
             parameter2Description.setHasUnit(parameter2.getParameterUnit());
         }
-        if (parameter2.hasBooleanStates()) {
-            parameter2Description.addHasStates(obixObject.getConnectorUri() + "/" + "true");
-            parameter2Description.addHasStates(obixObject.getConnectorUri() + "/" + "false");
-        }
+        parameter2.getStateUris().forEach(parameter2Description::addHasStates);
         addServiceMessageContent.addDescription(parameter2Description);
+
+        //Description of possible states
+        if(!booleanStatesAlreadyReigstered) {
+            int countBooleanStates = 0;
+            for(StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+                if(des.isBooleanState()) {
+                    countBooleanStates++;
+                }
+                Description stateDescription = new Description();
+                stateDescription.setAbout(des.getStateDescriptionUri());
+                des.getStateTypes().forEach(stateDescription::addType);
+                stateDescription.setValue(des.getValue());
+                stateDescription.setName(des.getName());
+                addServiceMessageContent.addDescription(stateDescription);
+            }
+            if(countBooleanStates == 2) {
+                booleanStatesAlreadyReigstered = true;
+            }
+        }
+
+        for(StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+            Description stateDescription = new Description();
+            stateDescription.setAbout(des.getStateDescriptionUri());
+            des.getStateTypes().forEach(stateDescription::addType);
+            stateDescription.setValue(des.getValue());
+            stateDescription.setName(des.getName());
+            addServiceMessageContent.addDescription(stateDescription);
+        }
 
         StringWriter writer = new StringWriter();
 

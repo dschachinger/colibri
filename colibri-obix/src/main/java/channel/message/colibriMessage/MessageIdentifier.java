@@ -8,7 +8,8 @@ public enum MessageIdentifier {
     OBS("OBS"),
     DET("DET"),
     REM("REM"),
-    PUT("PUT");
+    PUT("PUT"),
+    GET("GET");
 
     private String type;
 

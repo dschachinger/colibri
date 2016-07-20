@@ -1,9 +1,10 @@
 package model.obix.parameter;
 
+import channel.message.messageObj.StateDescription;
 import channel.message.messageObj.Value;
 import service.TimeDurationConverter;
 
-import java.util.Date;
+import java.util.*;
 
 public class Parameter {
     private String parameterUri;
@@ -11,11 +12,17 @@ public class Parameter {
     private String parameterType;
     private String valueUri;
     private Value value;
+    private List<String> stateUris;
+    private ArrayList<StateDescription> stateDescriptions;
+    private ArrayList<StateDescription> states;
 
     private Parameter(String uri, int paramNumber) {
         this.parameterUri = uri + "parameter" + paramNumber;
         this.valueUri = uri + "value" + paramNumber;
         this.value = new Value();
+        this.stateUris = new ArrayList<>();
+        this.stateDescriptions = new ArrayList<>();
+        this.states = new ArrayList<>();
     }
 
     public Parameter(String uri, int paramNumber, Date date) {
@@ -26,7 +33,7 @@ public class Parameter {
 
     public Parameter(String uri, int paramNumber, Long i) {
         this(uri, paramNumber);
-        this.value.setDatatype("&xsd;integer");
+        this.value.setDatatype("&xsd;long");
         this.value.setValue(Long.toString(i));
     }
 
@@ -88,10 +95,6 @@ public class Parameter {
         this.valueUri = valueUri;
     }
 
-    public Boolean hasBooleanStates() {
-        return false;
-    }
-
     public void setValueAsString(String valueAsString) {
         this.value.setValue(valueAsString);
     }
@@ -106,5 +109,33 @@ public class Parameter {
 
     public void setValue(Value value) {
         this.value = value;
+    }
+
+    public List<String> getStateUris() {
+        return stateUris;
+    }
+
+    public List<String> addStateUri(String stateUri) {
+        stateUris.add(stateUri);
+        return stateUris;
+    }
+
+    public ArrayList<StateDescription> getStateDescriptions() {
+        return stateDescriptions;
+    }
+
+    public ArrayList<StateDescription> addStateDescription(StateDescription desc) {
+        stateDescriptions.add(desc);
+        return stateDescriptions;
+    }
+
+    public List<StateDescription> addState(StateDescription state) {
+        this.addStateUri(state.getStateDescriptionUri());
+        states.add(state);
+        return states;
+    }
+
+    public ArrayList<StateDescription> getStates() {
+        return states;
     }
 }

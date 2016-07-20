@@ -41,7 +41,8 @@ public class ObserveThread implements Runnable {
                 colibriChannel.send(ColibriMessage.createPutMessage(obj));
                 textField.setText(obj.toString());
             }
-            else if(obj.getObservesColibriActions() && obj.getSetByColibri()) {
+         //   else if(obj.getObservesColibriActions() && obj.getSetByColibri()) {
+            else if(obj.getSetByColibri()) {
                 obixChannel.put(obj);
                 obj.setSetByColibri(false);
                 textField.setText(obj.toString());

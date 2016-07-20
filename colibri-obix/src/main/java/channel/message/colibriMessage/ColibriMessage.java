@@ -120,15 +120,27 @@ public class ColibriMessage {
     }
 
     public static ColibriMessage createPutMessage(ObixObject object) {
-        return  new ColibriMessage(MessageIdentifier.PUT,
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.PUT,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
                 new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
+        msg.setOptionalObixObject(object);
+        return msg;
     }
 
     public static ColibriMessage createPutMessage(ObixObject object, String referenceId) {
-        return  new ColibriMessage(MessageIdentifier.STA,
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.PUT,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML, referenceId),
                 new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
+        msg.setOptionalObixObject(object);
+        return msg;
+    }
+
+    public static ColibriMessage createGetMessage(ObixObject object) {
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.GET,
+                new ColibriMessageHeader(ContentType.TEXT_PLAIN),
+                new ColibriMessageContent(object.getServiceUri()));
+        msg.setOptionalObixObject(object);
+        return msg;
     }
 
     public MessageIdentifier getMsgType() {

@@ -11,24 +11,27 @@ public class RepresentationRow {
     private JTextField valueTextField;
     private ObixObject obixObject;
     private JCheckBox writableCheckbox;
-    private JButton getButton;
+    private JButton getObixButton;
+    private JButton getColibriButton;
     private JCheckBox chooseCheckbox;
     private JCheckBox addedAsServiceCheckbox;
     private JCheckBox observedByColibriCheckBox;
     private JCheckBox observeColibriActionsCheckbox;
     private JComboBox param1TypeComboBox;
     private JComboBox param2TypeComboBox;
-
+    private JTextField param1UnitTextField;
+    private JTextField param2UnitTextField;
 
     public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField,
-                             ObixObject obixObject, JCheckBox writableCheckbox, JButton getButton,
+                             ObixObject obixObject, JCheckBox writableCheckbox, JButton getObixButton, JButton getColibriButton,
                              JCheckBox addedAsServiceCheckBox, JCheckBox observedByColibriCheckBox, JCheckBox observeColibriActionsCheckbox) {
         this.uriLabel = uriLabel;
         this.observedCheckBox = observedCheckBox;
         this.valueTextField = valueTextField;
         this.obixObject = obixObject;
         this.writableCheckbox = writableCheckbox;
-        this.getButton = getButton;
+        this.getObixButton = getObixButton;
+        this.getColibriButton = getColibriButton;
         this.addedAsServiceCheckbox = addedAsServiceCheckBox;
         this.observedByColibriCheckBox = observedByColibriCheckBox;
         this.observeColibriActionsCheckbox = observeColibriActionsCheckbox;
@@ -39,10 +42,13 @@ public class RepresentationRow {
         this.chooseCheckbox = chooseCheckbox;
     }
 
-    public RepresentationRow(ObixObject obixObject, JComboBox param1TypeComboBox, JComboBox param2TypeComboBox) {
+    public RepresentationRow(ObixObject obixObject, JComboBox param1TypeComboBox, JComboBox param2TypeComboBox,
+                             JTextField param1UnitTextField, JTextField param2UnitTextField) {
         this.obixObject = obixObject;
         this.param1TypeComboBox = param1TypeComboBox;
         this.param2TypeComboBox = param2TypeComboBox;
+        this.param1UnitTextField = param1UnitTextField;
+        this.param2UnitTextField = param2UnitTextField;
     }
 
     public JLabel getUriLabel() {
@@ -89,12 +95,12 @@ public class RepresentationRow {
         this.writableCheckbox = writableCheckbox;
     }
 
-    public JButton getGetButton() {
-        return getButton;
+    public JButton getGetObixButton() {
+        return getObixButton;
     }
 
-    public void setGetButton(JButton getButton) {
-        this.getButton = getButton;
+    public void setGetObixButton(JButton getObixButton) {
+        this.getObixButton = getObixButton;
     }
 
     public JCheckBox getChooseCheckbox() {
@@ -143,5 +149,29 @@ public class RepresentationRow {
 
     public void setParam2TypeComboBox(JComboBox param2TypeComboBox) {
         this.param2TypeComboBox = param2TypeComboBox;
+    }
+
+    public JTextField getParam1UnitTextField() {
+        return param1UnitTextField;
+    }
+
+    public void setParam1UnitTextField(JTextField param1UnitTextField) {
+        this.param1UnitTextField = param1UnitTextField;
+    }
+
+    public JTextField getParam2UnitTextField() {
+        return param2UnitTextField;
+    }
+
+    public void setParam2UnitTextField(JTextField param2UnitTextField) {
+        this.param2UnitTextField = param2UnitTextField;
+    }
+
+    public JButton getGetColibriButton() {
+        return getColibriButton;
+    }
+
+    public void setGetColibriButton(JButton getColibriButton) {
+        this.getColibriButton = getColibriButton;
     }
 }

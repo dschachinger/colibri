@@ -1,5 +1,7 @@
 package model.obix;
 
+import channel.message.messageObj.Name;
+import channel.message.messageObj.StateDescription;
 import channel.message.messageObj.Value;
 import model.obix.parameter.Parameter;
 import obix.*;
@@ -8,6 +10,7 @@ import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.coap.CoAP;
 import service.Configurator;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ObixObject {
@@ -54,6 +57,7 @@ public class ObixObject {
         this.observedByColibri = false;
         this.observesColibriActions = false;
         this.setByColibri = false;
+
     }
 
     public String getObixUri() {
@@ -78,9 +82,9 @@ public class ObixObject {
 
     public void setObj(Obj obj) {
         this.obj = obj;
+        this.obj = obj;
         this.setParameter1();
         this.parameter2 = new Parameter(colibriBaseUri, 2, new Date());
-        this.parameter1.setParameterType("&colibri;DiscreteParameter");
         this.parameter2.setParameterType("&colibri;TimeParameter");
     }
 
@@ -137,7 +141,7 @@ public class ObixObject {
         return obj.toString();
     }
 
-    private void setParameter1() {;
+    private void setParameter1() {
         if (getObj().isAbstime()) {
             Abstime abstime = (Abstime) getObj();
             parameter1 = new Parameter(colibriBaseUri, 1, new Date(abstime.get()));
@@ -152,6 +156,7 @@ public class ObixObject {
         } else if (getObj().isBool()) {
             Bool boo = (Bool) getObj();
             parameter1 = new Parameter(colibriBaseUri, 1, boo.get());
+            createBooleanStateDescriptions(parameter1);
         } else if (getObj().isReal()) {
             Real r = (Real) getObj();
             parameter1 = new Parameter(colibriBaseUri, 1, r.get());
@@ -160,6 +165,9 @@ public class ObixObject {
             parameter1 = new Parameter(colibriBaseUri, 1, str.get());
         } else {
             parameter1 = new Parameter(colibriBaseUri, 1, obixUri);
+        }
+        if(parameter1.getParameterType() == null) {
+            parameter1.setParameterType("&colibri;DiscreteParameter");
         }
     }
 
@@ -219,63 +227,27 @@ public class ObixObject {
         this.observesColibriActions = observesColibriActions;
     }
 
- /*   public void setValueParameter1(String value) {
-        if (this.getObj().isInt()) {
-            Int i = (Int) this.getObj();
-            i.set(Long.parseLong(value));
-            this.setObj(i);
-        } else if (this.getObj().isBool()) {
-            Bool b = (Bool) this.getObj();
-            if (value.equals("true")) {
-                b.set(true);
-            } else {
-                b.set(false);
-            }
-            this.setObj(b);
-        } else if (this.getObj().isReal()) {
-            Real r = (Real) this.getObj();
-            r.set(Double.parseDouble(value));
-            this.setObj(r);
-        }
-    }*/
-/*
-    public void setValueParameter1(Integer value) {
-        this.getObj().setInt(value);
-    }
-
-    public void setValueParameter1(Double value) {
-        this.getObj().setReal(value);
-    }
-
-    public void setValueParameter1(Boolean value) {
-        this.getObj().setBool(value);
-    }
-
-    public void setValueParamater1(String value) {
-        this.getObj().setStr(value);
-    }
-*/
     public void setValueParameter1(Value value) {
-        if (value.getDatatype().equals("xsd;integer")) {
-            this.getObj().setInt(Integer.parseInt(value.getValue()));
-        } else if (value.getDatatype().equals("xsd;double")) {
+        if (value.getDatatype().contains("long")) {
+            this.getObj().setInt(Long.parseLong(value.getValue()));
+        } else if (value.getDatatype().contains("double")) {
             this.getObj().setReal(Double.parseDouble(value.getValue()));
-        } else if (value.getDatatype().equals("xsd;boolean")) {
+        } else if (value.getDatatype().contains("boolean")) {
             this.getObj().setBool(Boolean.parseBoolean(value.getValue()));
-        } else if (value.getDatatype().equals("xsd;string")) {
+        } else if (value.getDatatype().contains("string")) {
             this.getObj().setStr(value.getValue());
         }
         parameter1.setValue(value);
     }
 
     public void setValueParameter1(String value) {
-        if (parameter1.getValueType().equals("xsd;integer")) {
+        if (parameter1.getValueType().equals("&xsd;long")) {
             this.getObj().setInt(Integer.parseInt(value));
-        } else if (parameter1.getValueType().equals("xsd;double")) {
+        } else if (parameter1.getValueType().equals("&xsd;double")) {
             this.getObj().setReal(Double.parseDouble(value));
-        } else if (parameter1.getValueType().equals("xsd;boolean")) {
+        } else if (parameter1.getValueType().equals("&xsd;boolean")) {
             this.getObj().setBool(Boolean.parseBoolean(value));
-        } else if (parameter1.getValueType().equals("xsd;string")) {
+        } else if (parameter1.getValueType().equals("&xsd;string")) {
             this.getObj().setStr(value);
         }
         parameter1.setValueAsString(value);
@@ -284,26 +256,6 @@ public class ObixObject {
     public void setValueParameter2(Value value) {
         parameter2.setValue(value);
     }
-/*
-    public void setValueParameter2(String value) {
-        parameter2.setValueAsString(value);
-    }
-
-    public void setValueParameter2(Date date) {
-        parameter2.setValueAsString(TimeDurationConverter.date2Ical(date).toString());
-    }
-
-    public void setValueParameter2(Long value) {
-        parameter2.setValueAsString(Long.toString(value));
-    }
-
-    public void setValueParameter2(Double value) {
-        parameter2.setValueAsString(Double.toString(value));
-    }
-
-    public void setValueParameter2(Boolean value) {
-        parameter2.setValueAsString(Boolean.toString(value));
-    }*/
 
     public String getColibriBaseUri() {
         return colibriBaseUri;
@@ -327,5 +279,34 @@ public class ObixObject {
 
     public void setObixUnitUri(String obixUnitUri) {
         this.obixUnitUri = obixUnitUri;
+    }
+
+    public void createBooleanStateDescriptions(Parameter param) {
+        ArrayList<String> types = new ArrayList<>();
+        types.add("&colibri;AbsoluteState");
+        types.add("&colibri;DiscreteState");
+
+        //true state
+        String stateTrueUri = connectorUri + "/" + "trueState";
+        Value valTrue = new Value();
+        valTrue.setDatatype("&xsd;boolean");
+        valTrue.setValue("true");
+        Name nameTrue = new Name();
+        nameTrue.setName("on");
+        param.addStateDescription(new StateDescription(stateTrueUri, types, valTrue, nameTrue, true));
+
+        //false state
+        String stateFalseUri = connectorUri + "/" + "falseState";
+        Value valFalse= new Value();
+        valFalse.setDatatype("&xsd;boolean");
+        valFalse.setValue("false");
+        Name nameFalse = new Name();
+        nameFalse.setName("off");
+        param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse, true));
+
+        //link states to parameter 1
+        param.setParameterType("&colibri;StateParameter");
+        param.addStateUri(stateTrueUri);
+        param.addStateUri(stateFalseUri);
     }
 }

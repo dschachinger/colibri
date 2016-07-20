@@ -1,0 +1,43 @@
+1.) Obix Java Toolkit
+
+Description:
+The oBIX toolkit provides a Java software library for implementing oBIX enabled applications. The toolkit contains a data model for obj trees, XML encoder/decoder, REST session management, and a Swing diagnostics tool.
+
+URL:
+https://sourceforge.net/projects/obix/
+
+USED AS:
+maven dependency
+
+USED AS:
+uncompiled source code
+
+
+
+
+2.) Californium (Cf) CoAP framework
+
+Description:
+Implements RFC7252
+Californium is a Java CoAP implementation for IoT Cloud services. Thus, the focus is on scalability and usability instead of resource-efficiency like for embedded devices. Yet Californium is also suitable for embedded JVMs.
+More information can be found at http://www.eclipse.org/californium/ and http://coap.technology/.
+
+URL:
+https://github.com/eclipse/californium
+
+USED AS:
+maven dependency
+
+
+
+
+3.) Atmosphere/wasync
+
+Description:
+wAsync is a Java based library allowing asynchronous communication with any WebServer supporting the WebSocket or Http Protocol. wAsync can be used with Node.js, Android, Atmosphere or any WebSocket Framework. To get started, read this super simple Tutorial or read the FAQ
+
+URL:
+https://github.com/Atmosphere/wasync
+
+USED AS:
+maven dependency

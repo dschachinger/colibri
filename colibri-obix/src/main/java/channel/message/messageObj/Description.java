@@ -50,6 +50,9 @@ public class Description {
     @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
     private Value value;
 
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    private Name name;
+
     public Description() {
         this.types = new ArrayList<>();
         this.hasParameters = new ArrayList<>();
@@ -180,5 +183,13 @@ public class Description {
 
     public void setValue(Value value) {
         this.value = value;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public void setName(Name name) {
+        this.name = name;
     }
 }
