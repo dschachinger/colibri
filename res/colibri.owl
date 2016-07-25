@@ -79,6 +79,15 @@
     
 
 
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#dependsOn -->
+
+    <owl:ObjectProperty rdf:about="&colibri;dependsOn">
+        <rdfs:domain rdf:resource="&colibri;ValueParameter"/>
+        <rdfs:range rdf:resource="&colibri;ValueParameter"/>
+    </owl:ObjectProperty>
+    
+
+
     <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#hasAmbientMaterial -->
 
     <owl:ObjectProperty rdf:about="&colibri;hasAmbientMaterial">
@@ -708,10 +717,10 @@
                 <owl:onDatatype rdf:resource="&xsd;int"/>
                 <owl:withRestrictions rdf:parseType="Collection">
                     <rdf:Description>
-                        <xsd:maxExclusive rdf:datatype="&xsd;integer">360</xsd:maxExclusive>
+                        <xsd:minInclusive rdf:datatype="&xsd;integer">0</xsd:minInclusive>
                     </rdf:Description>
                     <rdf:Description>
-                        <xsd:minInclusive rdf:datatype="&xsd;integer">0</xsd:minInclusive>
+                        <xsd:maxExclusive rdf:datatype="&xsd;integer">360</xsd:maxExclusive>
                     </rdf:Description>
                 </owl:withRestrictions>
             </rdfs:Datatype>
@@ -836,7 +845,7 @@
     <owl:Class rdf:about="http://dbpedia.org/ontology/Place">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;altitude"/>
+                <owl:onProperty rdf:resource="&colibri;street"/>
                 <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -848,13 +857,14 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;longitude"/>
-                <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+                <owl:onProperty rdf:resource="&colibri;hasCity"/>
+                <owl:onClass rdf:resource="http://schema.org/City"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;street"/>
+                <owl:onProperty rdf:resource="&colibri;longitude"/>
                 <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -866,9 +876,8 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasCity"/>
-                <owl:onClass rdf:resource="http://schema.org/City"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onProperty rdf:resource="&colibri;altitude"/>
+                <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1074,9 +1083,8 @@
     <owl:Class rdf:about="&colibri;BuildingResource">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Height"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onProperty rdf:resource="&colibri;hasManufacturer"/>
+                <owl:someValuesFrom rdf:resource="&colibri;Manufacturer"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1089,21 +1097,22 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Length"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
                 <owl:onClass rdf:resource="&colibri;Width"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasManufacturer"/>
-                <owl:someValuesFrom rdf:resource="&colibri;Manufacturer"/>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:onClass rdf:resource="&colibri;Height"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:onClass rdf:resource="&colibri;Length"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>Resources that are not measurable are not considered if they are not controllable (e.g. PC)</rdfs:comment>
@@ -1184,15 +1193,15 @@
     <owl:Class rdf:about="&colibri;Constant">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasUnit"/>
-                <owl:onClass rdf:resource="&colibri;Unit"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onProperty rdf:resource="&colibri;value"/>
+                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;value"/>
-                <owl:cardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:cardinality>
+                <owl:onProperty rdf:resource="&colibri;hasUnit"/>
+                <owl:onClass rdf:resource="&colibri;Unit"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1206,14 +1215,14 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:allValuesFrom rdf:resource="&colibri;Constant"/>
+                <owl:onClass rdf:resource="&colibri;Constant"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Constant"/>
-                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:allValuesFrom rdf:resource="&colibri;Constant"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1253,8 +1262,21 @@
         <rdfs:subClassOf rdf:resource="&colibri;Service"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasControlVariation"/>
+                <owl:allValuesFrom rdf:resource="&colibri;ControlVariation"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasState"/>
                 <owl:allValuesFrom rdf:resource="&colibri;State"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasTechnologyConnector"/>
+                <owl:onClass rdf:resource="&colibri;TechnologyConnector"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1271,21 +1293,8 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasControlVariation"/>
-                <owl:allValuesFrom rdf:resource="&colibri;ControlVariation"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;serviceAddress"/>
                 <owl:someValuesFrom rdf:resource="&xsd;string"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasTechnologyConnector"/>
-                <owl:onClass rdf:resource="&colibri;TechnologyConnector"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1333,8 +1342,8 @@
     <owl:Class rdf:about="&colibri;ControlVariation">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasParameter"/>
-                <owl:allValuesFrom rdf:resource="&colibri;Parameter"/>
+                <owl:onProperty rdf:resource="&colibri;hasTrend"/>
+                <owl:someValuesFrom rdf:resource="&colibri;ParameterTrend"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1345,8 +1354,14 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasTrend"/>
-                <owl:someValuesFrom rdf:resource="&colibri;ParameterTrend"/>
+                <owl:onProperty rdf:resource="&colibri;hasParameter"/>
+                <owl:allValuesFrom rdf:resource="&colibri;Parameter"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasOrder"/>
+                <owl:someValuesFrom rdf:resource="&colibri;StateChange"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1354,12 +1369,6 @@
                 <owl:onProperty rdf:resource="&colibri;hasParameter"/>
                 <owl:onClass rdf:resource="&colibri;Parameter"/>
                 <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasOrder"/>
-                <owl:someValuesFrom rdf:resource="&colibri;StateChange"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1409,12 +1418,6 @@
     <owl:Class rdf:about="&colibri;Currency">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;name"/>
-                <owl:someValuesFrom rdf:resource="&xsd;string"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasExchangeRate"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ExchangeRate"/>
             </owl:Restriction>
@@ -1422,6 +1425,12 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;symbol"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;name"/>
                 <owl:someValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -1434,8 +1443,15 @@
     <owl:Class rdf:about="&colibri;DataConfiguration">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;identifier"/>
-                <owl:allValuesFrom rdf:resource="&xsd;string"/>
+                <owl:onProperty rdf:resource="&colibri;hasDataConfiguration"/>
+                <owl:allValuesFrom rdf:resource="&colibri;DataConfiguration"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasParameter"/>
+                <owl:onClass rdf:resource="&colibri;Parameter"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1446,8 +1462,8 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasParameter"/>
-                <owl:allValuesFrom rdf:resource="&colibri;Parameter"/>
+                <owl:onProperty rdf:resource="&colibri;identifier"/>
+                <owl:allValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1458,15 +1474,8 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDataConfiguration"/>
-                <owl:allValuesFrom rdf:resource="&colibri;DataConfiguration"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasParameter"/>
-                <owl:onClass rdf:resource="&colibri;Parameter"/>
-                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+                <owl:allValuesFrom rdf:resource="&colibri;Parameter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1493,20 +1502,8 @@
         <rdfs:subClassOf rdf:resource="&colibri;Service"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDataConfiguration"/>
-                <owl:allValuesFrom rdf:resource="&colibri;DataConfiguration"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasDataValue"/>
                 <owl:allValuesFrom rdf:resource="&colibri;DataValue"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDataValue"/>
-                <owl:someValuesFrom rdf:resource="&colibri;DataValue"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1517,15 +1514,27 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasTechnologyConnector"/>
+                <owl:onClass rdf:resource="&colibri;TechnologyConnector"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasDataValue"/>
+                <owl:someValuesFrom rdf:resource="&colibri;DataValue"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasDataConfiguration"/>
                 <owl:someValuesFrom rdf:resource="&colibri;DataConfiguration"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasTechnologyConnector"/>
-                <owl:onClass rdf:resource="&colibri;TechnologyConnector"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onProperty rdf:resource="&colibri;hasDataConfiguration"/>
+                <owl:allValuesFrom rdf:resource="&colibri;DataConfiguration"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -1573,12 +1582,6 @@
     <owl:Class rdf:about="&colibri;DataValue">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDataValue"/>
-                <owl:allValuesFrom rdf:resource="&colibri;DataValue"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasValue"/>
                 <owl:allValuesFrom rdf:resource="&colibri;Value"/>
             </owl:Restriction>
@@ -1588,6 +1591,12 @@
                 <owl:onProperty rdf:resource="&colibri;hasValue"/>
                 <owl:onClass rdf:resource="&colibri;Value"/>
                 <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">2</owl:qualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasDataValue"/>
+                <owl:allValuesFrom rdf:resource="&colibri;DataValue"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -1743,10 +1752,10 @@
                                 <owl:onDatatype rdf:resource="&xsd;int"/>
                                 <owl:withRestrictions rdf:parseType="Collection">
                                     <rdf:Description>
-                                        <xsd:minInclusive rdf:datatype="&xsd;integer">45</xsd:minInclusive>
+                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">135</xsd:maxInclusive>
                                     </rdf:Description>
                                     <rdf:Description>
-                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">135</xsd:maxInclusive>
+                                        <xsd:minInclusive rdf:datatype="&xsd;integer">45</xsd:minInclusive>
                                     </rdf:Description>
                                 </owl:withRestrictions>
                             </rdfs:Datatype>
@@ -2081,6 +2090,12 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:someValuesFrom rdf:resource="&colibri;ChargingCycles"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;batteryType"/>
                 <owl:someValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
@@ -2088,13 +2103,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:someValuesFrom rdf:resource="&colibri;ChargingPower"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:someValuesFrom rdf:resource="&colibri;ChargingCycles"/>
+                <owl:someValuesFrom rdf:resource="&colibri;Efficiency"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -2106,7 +2115,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:someValuesFrom rdf:resource="&colibri;Efficiency"/>
+                <owl:someValuesFrom rdf:resource="&colibri;ChargingPower"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:comment>http://www.sma-sunny.com/2015/05/08/solarstrom-speichern-aber-schlau-bitte/</rdfs:comment>
@@ -2165,13 +2174,6 @@
     <owl:Class rdf:about="&colibri;ExchangeRate">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDomesticCurrency"/>
-                <owl:onClass rdf:resource="&colibri;Currency"/>
-                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;directQuotation"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
                 <owl:onDataRange rdf:resource="&xsd;float"/>
@@ -2186,9 +2188,15 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;indirectQuotation"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-                <owl:onDataRange rdf:resource="&xsd;float"/>
+                <owl:onProperty rdf:resource="&colibri;hasDomesticCurrency"/>
+                <owl:onClass rdf:resource="&colibri;Currency"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasDomesticCurrency"/>
+                <owl:allValuesFrom rdf:resource="&colibri;Currency"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -2199,8 +2207,9 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasDomesticCurrency"/>
-                <owl:allValuesFrom rdf:resource="&colibri;Currency"/>
+                <owl:onProperty rdf:resource="&colibri;indirectQuotation"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;float"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -2384,7 +2393,20 @@
         <rdfs:subClassOf rdf:resource="&colibri;Agent"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;provides"/>
+                <owl:onProperty rdf:resource="&colibri;covers"/>
+                <owl:someValuesFrom rdf:resource="&colibri;GridSegment"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;isConnectedTo"/>
+                <owl:onClass rdf:resource="&colibri;GridNode"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;consumes"/>
                 <owl:someValuesFrom rdf:resource="&colibri;DataService"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -2396,21 +2418,8 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;consumes"/>
+                <owl:onProperty rdf:resource="&colibri;provides"/>
                 <owl:someValuesFrom rdf:resource="&colibri;DataService"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;covers"/>
-                <owl:someValuesFrom rdf:resource="&colibri;GridSegment"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isConnectedTo"/>
-                <owl:onClass rdf:resource="&colibri;GridNode"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -2492,14 +2501,14 @@
     <owl:Class rdf:about="&colibri;GridNode">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;identifier"/>
-                <owl:allValuesFrom rdf:resource="&xsd;string"/>
+                <owl:onProperty rdf:resource="&colibri;hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://dbpedia.org/ontology/Place"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://dbpedia.org/ontology/Place"/>
+                <owl:onProperty rdf:resource="&colibri;identifier"/>
+                <owl:allValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -2726,6 +2735,12 @@
     <owl:Class rdf:about="&colibri;IntervalState">
         <rdfs:subClassOf rdf:resource="&colibri;State"/>
         <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasEnergy"/>
+                <owl:allValuesFrom rdf:resource="&colibri;EnergyFunction"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
             <owl:Class>
                 <owl:intersectionOf rdf:parseType="Collection">
                     <owl:Restriction>
@@ -2742,12 +2757,6 @@
                     </owl:Restriction>
                 </owl:intersectionOf>
             </owl:Class>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasEnergy"/>
-                <owl:allValuesFrom rdf:resource="&colibri;EnergyFunction"/>
-            </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
     
@@ -2828,14 +2837,14 @@
     <owl:Class rdf:about="&colibri;Manufacturer">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;name"/>
-                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+                <owl:onProperty rdf:resource="&colibri;hasLocation"/>
+                <owl:someValuesFrom rdf:resource="http://dbpedia.org/ontology/Place"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasLocation"/>
-                <owl:someValuesFrom rdf:resource="http://dbpedia.org/ontology/Place"/>
+                <owl:onProperty rdf:resource="&colibri;name"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -2868,15 +2877,15 @@
         <rdfs:subClassOf rdf:resource="&colibri;Parameter"/>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasUnit"/>
-                <owl:onClass rdf:resource="&colibri;Unit"/>
+                <owl:onProperty rdf:resource="&colibri;hasCurrency"/>
+                <owl:onClass rdf:resource="&colibri;Currency"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasCurrency"/>
-                <owl:onClass rdf:resource="&colibri;Currency"/>
+                <owl:onProperty rdf:resource="&colibri;hasUnit"/>
+                <owl:onClass rdf:resource="&colibri;Unit"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -2942,10 +2951,10 @@
                                         <owl:onDatatype rdf:resource="&xsd;int"/>
                                         <owl:withRestrictions rdf:parseType="Collection">
                                             <rdf:Description>
-                                                <xsd:maxInclusive rdf:datatype="&xsd;integer">45</xsd:maxInclusive>
+                                                <xsd:minInclusive rdf:datatype="&xsd;integer">0</xsd:minInclusive>
                                             </rdf:Description>
                                             <rdf:Description>
-                                                <xsd:minInclusive rdf:datatype="&xsd;integer">0</xsd:minInclusive>
+                                                <xsd:maxInclusive rdf:datatype="&xsd;integer">45</xsd:maxInclusive>
                                             </rdf:Description>
                                         </owl:withRestrictions>
                                     </rdfs:Datatype>
@@ -3117,15 +3126,15 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:someValuesFrom rdf:resource="&colibri;ShadingCoefficient"/>
+                <owl:onProperty rdf:resource="&colibri;orientation"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;int"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;orientation"/>
-                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onDataRange rdf:resource="&xsd;int"/>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:someValuesFrom rdf:resource="&colibri;ShadingCoefficient"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -3440,10 +3449,10 @@
                                 <owl:onDatatype rdf:resource="&xsd;int"/>
                                 <owl:withRestrictions rdf:parseType="Collection">
                                     <rdf:Description>
-                                        <xsd:minInclusive rdf:datatype="&xsd;integer">135</xsd:minInclusive>
+                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">225</xsd:maxInclusive>
                                     </rdf:Description>
                                     <rdf:Description>
-                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">225</xsd:maxInclusive>
+                                        <xsd:minInclusive rdf:datatype="&xsd;integer">135</xsd:minInclusive>
                                     </rdf:Description>
                                 </owl:withRestrictions>
                             </rdfs:Datatype>
@@ -3512,13 +3521,13 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasState"/>
-                <owl:allValuesFrom rdf:resource="&colibri;State"/>
+                <owl:someValuesFrom rdf:resource="&colibri;State"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasState"/>
-                <owl:someValuesFrom rdf:resource="&colibri;State"/>
+                <owl:allValuesFrom rdf:resource="&colibri;State"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -3564,15 +3573,15 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;connectorAddress"/>
-                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
-                <owl:onDataRange rdf:resource="&xsd;string"/>
+                <owl:onProperty rdf:resource="&colibri;name"/>
+                <owl:someValuesFrom rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;name"/>
-                <owl:someValuesFrom rdf:resource="&xsd;string"/>
+                <owl:onProperty rdf:resource="&colibri;connectorAddress"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;string"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -3668,8 +3677,9 @@
     <owl:Class rdf:about="&colibri;Unit">
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasBaseUnit"/>
-                <owl:allValuesFrom rdf:resource="&colibri;UnitComponent"/>
+                <owl:onProperty rdf:resource="&colibri;offset"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+                <owl:onDataRange rdf:resource="&xsd;float"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
@@ -3686,16 +3696,15 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;offset"/>
+                <owl:onProperty rdf:resource="&colibri;scaling"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
                 <owl:onDataRange rdf:resource="&xsd;float"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;scaling"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-                <owl:onDataRange rdf:resource="&xsd;float"/>
+                <owl:onProperty rdf:resource="&colibri;hasBaseUnit"/>
+                <owl:allValuesFrom rdf:resource="&colibri;UnitComponent"/>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -3796,9 +3805,27 @@
         <rdfs:subClassOf rdf:resource="&colibri;Parameter"/>
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;max"/>
+                <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasUnit"/>
                 <owl:onClass rdf:resource="&colibri;Unit"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;dependsOn"/>
+                <owl:allValuesFrom rdf:resource="&colibri;ValueParameter"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;min"/>
+                <owl:maxCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
@@ -3872,10 +3899,10 @@
                                 <owl:onDatatype rdf:resource="&xsd;int"/>
                                 <owl:withRestrictions rdf:parseType="Collection">
                                     <rdf:Description>
-                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">315</xsd:maxInclusive>
+                                        <xsd:minInclusive rdf:datatype="&xsd;integer">225</xsd:minInclusive>
                                     </rdf:Description>
                                     <rdf:Description>
-                                        <xsd:minInclusive rdf:datatype="&xsd;integer">225</xsd:minInclusive>
+                                        <xsd:maxInclusive rdf:datatype="&xsd;integer">315</xsd:maxInclusive>
                                     </rdf:Description>
                                 </owl:withRestrictions>
                             </rdfs:Datatype>
@@ -3934,19 +3961,25 @@
     <owl:Class rdf:about="&colibri;Zone">
         <rdfs:subClassOf>
             <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;isBehind"/>
+                <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;isRightOf"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isUnder"/>
+                <owl:onProperty rdf:resource="&colibri;isInFrontOf"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isAbove"/>
+                <owl:onProperty rdf:resource="&colibri;isLeftOf"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -3958,19 +3991,13 @@
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isInFrontOf"/>
+                <owl:onProperty rdf:resource="&colibri;isAbove"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isBehind"/>
-                <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;isLeftOf"/>
+                <owl:onProperty rdf:resource="&colibri;isUnder"/>
                 <owl:allValuesFrom rdf:resource="&colibri;ZoneDelimiter"/>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -3989,6 +4016,34 @@
                 </owl:unionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasMaterial"/>
+                <owl:onClass rdf:resource="&colibri;Material"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:onClass rdf:resource="&colibri;Width"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:onClass rdf:resource="&colibri;Height"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
+                <owl:onClass rdf:resource="&colibri;Length"/>
+                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
+            </owl:Restriction>
+        </rdfs:subClassOf>
         <rdfs:subClassOf>
             <owl:Class>
                 <owl:unionOf rdf:parseType="Collection">
@@ -4022,21 +4077,7 @@
         <rdfs:subClassOf>
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Height"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
                 <owl:onClass rdf:resource="&colibri;Transparency"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasMaterial"/>
-                <owl:onClass rdf:resource="&colibri;Material"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -4044,20 +4085,6 @@
             <owl:Restriction>
                 <owl:onProperty rdf:resource="&colibri;hasConstant"/>
                 <owl:onClass rdf:resource="&colibri;ThermalPermeability"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Length"/>
-                <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
-            </owl:Restriction>
-        </rdfs:subClassOf>
-        <rdfs:subClassOf>
-            <owl:Restriction>
-                <owl:onProperty rdf:resource="&colibri;hasConstant"/>
-                <owl:onClass rdf:resource="&colibri;Width"/>
                 <owl:maxQualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:maxQualifiedCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
@@ -4359,18 +4386,11 @@
      -->
 
     <rdf:Description>
-        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
-        <owl:members rdf:parseType="Collection">
-            <rdf:Description rdf:about="&colibri;AirPressureParameter"/>
-            <rdf:Description rdf:about="&colibri;AirQualityParameter"/>
-            <rdf:Description rdf:about="&colibri;BrightnessParameter"/>
-            <rdf:Description rdf:about="&colibri;HumidityParameter"/>
-            <rdf:Description rdf:about="&colibri;IrradiationParameter"/>
-            <rdf:Description rdf:about="&colibri;NoiseParameter"/>
-            <rdf:Description rdf:about="&colibri;PrecipitationParameter"/>
-            <rdf:Description rdf:about="&colibri;TemperatureParameter"/>
-            <rdf:Description rdf:about="&colibri;WindParameter"/>
-        </owl:members>
+        <rdf:type rdf:resource="&owl;AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="&colibri;DownTrend"/>
+            <rdf:Description rdf:about="&colibri;UpTrend"/>
+        </owl:distinctMembers>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="&owl;AllDifferent"/>
@@ -4385,6 +4405,32 @@
             <rdf:Description rdf:about="&colibri;HigherValue"/>
             <rdf:Description rdf:about="&colibri;LowerValue"/>
         </owl:distinctMembers>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="&colibri;Ampere"/>
+            <rdf:Description rdf:about="&colibri;Candela"/>
+            <rdf:Description rdf:about="&colibri;Kelvin"/>
+            <rdf:Description rdf:about="&colibri;Kilogram"/>
+            <rdf:Description rdf:about="&colibri;Meter"/>
+            <rdf:Description rdf:about="&colibri;Mole"/>
+            <rdf:Description rdf:about="&colibri;Second"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="&colibri;AirPressureParameter"/>
+            <rdf:Description rdf:about="&colibri;AirQualityParameter"/>
+            <rdf:Description rdf:about="&colibri;BrightnessParameter"/>
+            <rdf:Description rdf:about="&colibri;HumidityParameter"/>
+            <rdf:Description rdf:about="&colibri;IrradiationParameter"/>
+            <rdf:Description rdf:about="&colibri;NoiseParameter"/>
+            <rdf:Description rdf:about="&colibri;PrecipitationParameter"/>
+            <rdf:Description rdf:about="&colibri;TemperatureParameter"/>
+            <rdf:Description rdf:about="&colibri;WindParameter"/>
+        </owl:members>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="&owl;AllDisjointClasses"/>
@@ -4409,25 +4455,6 @@
             <rdf:Description rdf:about="&colibri;Oil"/>
             <rdf:Description rdf:about="&colibri;Solar"/>
             <rdf:Description rdf:about="&colibri;Wind"/>
-        </owl:distinctMembers>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&owl;AllDifferent"/>
-        <owl:distinctMembers rdf:parseType="Collection">
-            <rdf:Description rdf:about="&colibri;DownTrend"/>
-            <rdf:Description rdf:about="&colibri;UpTrend"/>
-        </owl:distinctMembers>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&owl;AllDifferent"/>
-        <owl:distinctMembers rdf:parseType="Collection">
-            <rdf:Description rdf:about="&colibri;Ampere"/>
-            <rdf:Description rdf:about="&colibri;Candela"/>
-            <rdf:Description rdf:about="&colibri;Kelvin"/>
-            <rdf:Description rdf:about="&colibri;Kilogram"/>
-            <rdf:Description rdf:about="&colibri;Meter"/>
-            <rdf:Description rdf:about="&colibri;Mole"/>
-            <rdf:Description rdf:about="&colibri;Second"/>
         </owl:distinctMembers>
     </rdf:Description>
     
@@ -4467,20 +4494,6 @@
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
         <swrl:body>
             <rdf:Description>
                 <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -4497,53 +4510,12 @@
                         <rdf:rest>
                             <rdf:Description>
                                 <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
-                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                                    </rdf:Description>
-                                </rdf:first>
                                 <rdf:rest>
                                     <rdf:Description>
                                         <rdf:type rdf:resource="&swrl;AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                            </rdf:Description>
-                                        </rdf:first>
                                         <rdf:rest>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                        <swrl:arguments>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                <rdf:rest>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
-                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </rdf:rest>
-                                                            </rdf:Description>
-                                                        </swrl:arguments>
-                                                    </rdf:Description>
-                                                </rdf:first>
                                                 <rdf:rest>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -4575,125 +4547,6 @@
                                                         </rdf:first>
                                                     </rdf:Description>
                                                 </rdf:rest>
-                                            </rdf:Description>
-                                        </rdf:rest>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isRightOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isInFrontOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;AtomList"/>
                                                 <rdf:first>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
@@ -4719,39 +4572,16 @@
                                                         </swrl:arguments>
                                                     </rdf:Description>
                                                 </rdf:first>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
-                                                                <swrl:arguments>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
-                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </swrl:arguments>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                    </rdf:Description>
-                                                </rdf:rest>
                                             </rdf:Description>
                                         </rdf:rest>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                            </rdf:Description>
+                                        </rdf:first>
                                     </rdf:Description>
                                 </rdf:rest>
                                 <rdf:first>
@@ -4764,6 +4594,54 @@
                                 </rdf:first>
                             </rdf:Description>
                         </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
                         <rdf:first>
                             <rdf:Description>
                                 <rdf:type rdf:resource="&swrl;ClassAtom"/>
@@ -4771,6 +4649,93 @@
                                 <swrl:argument1 rdf:resource="urn:swrl#d2"/>
                             </rdf:Description>
                         </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                        <swrl:arguments>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
+                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
+                                                                <swrl:arguments>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
+                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
+                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                            </rdf:Description>
+                        </rdf:rest>
                     </rdf:Description>
                 </rdf:rest>
                 <rdf:first>
@@ -4812,26 +4777,34 @@
                 <rdf:rest>
                     <rdf:Description>
                         <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
                         <rdf:rest>
                             <rdf:Description>
                                 <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                        <swrl:classPredicate rdf:resource="&colibri;Zone"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                    </rdf:Description>
+                                </rdf:first>
                                 <rdf:rest>
                                     <rdf:Description>
                                         <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyBehind"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                            </rdf:Description>
+                                        </rdf:first>
                                         <rdf:rest>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
                                                 <rdf:first>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
+                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
                                                         <swrl:argument1 rdf:resource="urn:swrl#d2"/>
                                                         <swrl:argument2 rdf:resource="urn:swrl#z1"/>
                                                     </rdf:Description>
@@ -4839,34 +4812,17 @@
                                                 <rdf:rest>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                                            </rdf:Description>
+                                                        </rdf:first>
                                                         <rdf:rest>
                                                             <rdf:Description>
                                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                                <rdf:first>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                                        <swrl:arguments>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                                        <rdf:rest>
-                                                                                            <rdf:Description>
-                                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
-                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                            </rdf:Description>
-                                                                                        </rdf:rest>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </swrl:arguments>
-                                                                    </rdf:Description>
-                                                                </rdf:first>
                                                                 <rdf:rest>
                                                                     <rdf:Description>
                                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -4898,30 +4854,92 @@
                                                                         </rdf:first>
                                                                     </rdf:Description>
                                                                 </rdf:rest>
+                                                                <rdf:first>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                                        <swrl:arguments>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                                        <rdf:rest>
+                                                                                            <rdf:Description>
+                                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
+                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                            </rdf:Description>
+                                                                                        </rdf:rest>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </swrl:arguments>
+                                                                    </rdf:Description>
+                                                                </rdf:first>
                                                             </rdf:Description>
                                                         </rdf:rest>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                                            </rdf:Description>
-                                                        </rdf:first>
                                                     </rdf:Description>
                                                 </rdf:rest>
                                             </rdf:Description>
                                         </rdf:rest>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#z1"/>
-                                            </rdf:Description>
-                                        </rdf:first>
                                     </rdf:Description>
                                 </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
                                 <rdf:first>
                                     <rdf:Description>
                                         <rdf:type rdf:resource="&swrl;ClassAtom"/>
@@ -4929,325 +4947,6 @@
                                         <swrl:argument1 rdf:resource="urn:swrl#z1"/>
                                     </rdf:Description>
                                 </rdf:first>
-                            </rdf:Description>
-                        </rdf:rest>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyUnder"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isUnder"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
-                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                        <swrl:arguments>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                <rdf:rest>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
-                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </rdf:rest>
-                                                            </rdf:Description>
-                                                        </swrl:arguments>
-                                                    </rdf:Description>
-                                                </rdf:first>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
-                                                                <swrl:arguments>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
-                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </swrl:arguments>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </rdf:rest>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
-                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                                    </rdf:Description>
-                                </rdf:first>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
-                                                                <swrl:arguments>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
-                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </swrl:arguments>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                        <swrl:arguments>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                <rdf:rest>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                        <rdf:rest>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
-                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                            </rdf:Description>
-                                                                        </rdf:rest>
-                                                                    </rdf:Description>
-                                                                </rdf:rest>
-                                                            </rdf:Description>
-                                                        </swrl:arguments>
-                                                    </rdf:Description>
-                                                </rdf:first>
-                                            </rdf:Description>
-                                        </rdf:rest>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                            </rdf:Description>
-                                        </rdf:first>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                    </rdf:Description>
-                </rdf:first>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;AtomList"/>
                                 <rdf:rest>
                                     <rdf:Description>
                                         <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -5262,12 +4961,45 @@
                                         <rdf:rest>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
+                                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                                    </rdf:Description>
+                                                </rdf:first>
                                                 <rdf:rest>
                                                     <rdf:Description>
                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
                                                         <rdf:rest>
                                                             <rdf:Description>
                                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                                <rdf:first>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                                        <swrl:arguments>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                                        <rdf:rest>
+                                                                                            <rdf:Description>
+                                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
+                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                            </rdf:Description>
+                                                                                        </rdf:rest>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </swrl:arguments>
+                                                                    </rdf:Description>
+                                                                </rdf:first>
                                                                 <rdf:rest>
                                                                     <rdf:Description>
                                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -5299,31 +5031,6 @@
                                                                         </rdf:first>
                                                                     </rdf:Description>
                                                                 </rdf:rest>
-                                                                <rdf:first>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                                        <swrl:arguments>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                                        <rdf:rest>
-                                                                                            <rdf:Description>
-                                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
-                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                            </rdf:Description>
-                                                                                        </rdf:rest>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </swrl:arguments>
-                                                                    </rdf:Description>
-                                                                </rdf:first>
                                                             </rdf:Description>
                                                         </rdf:rest>
                                                         <rdf:first>
@@ -5336,45 +5043,16 @@
                                                         </rdf:first>
                                                     </rdf:Description>
                                                 </rdf:rest>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
-                                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
-                                                    </rdf:Description>
-                                                </rdf:first>
                                             </rdf:Description>
                                         </rdf:rest>
                                     </rdf:Description>
                                 </rdf:rest>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                        <swrl:classPredicate rdf:resource="&colibri;Zone"/>
-                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
-                                    </rdf:Description>
-                                </rdf:first>
                             </rdf:Description>
                         </rdf:rest>
                     </rdf:Description>
                 </rdf:rest>
             </rdf:Description>
         </swrl:body>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
     </rdf:Description>
     <rdf:Description>
         <rdf:type rdf:resource="&swrl;Imp"/>
@@ -5439,24 +5117,9 @@
                         <rdf:rest>
                             <rdf:Description>
                                 <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:first>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                        <swrl:classPredicate rdf:resource="&colibri;Zone"/>
-                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
-                                    </rdf:Description>
-                                </rdf:first>
                                 <rdf:rest>
                                     <rdf:Description>
                                         <rdf:type rdf:resource="&swrl;AtomList"/>
-                                        <rdf:first>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                                <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyBehind"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#z1"/>
-                                            </rdf:Description>
-                                        </rdf:first>
                                         <rdf:rest>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -5482,6 +5145,31 @@
                                                         <rdf:rest>
                                                             <rdf:Description>
                                                                 <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                                <rdf:first>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                                        <swrl:arguments>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                                        <rdf:rest>
+                                                                                            <rdf:Description>
+                                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
+                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                            </rdf:Description>
+                                                                                        </rdf:rest>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </swrl:arguments>
+                                                                    </rdf:Description>
+                                                                </rdf:first>
                                                                 <rdf:rest>
                                                                     <rdf:Description>
                                                                         <rdf:type rdf:resource="&swrl;AtomList"/>
@@ -5513,183 +5201,20 @@
                                                                         </rdf:first>
                                                                     </rdf:Description>
                                                                 </rdf:rest>
-                                                                <rdf:first>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                                        <swrl:arguments>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                                        <rdf:rest>
-                                                                                            <rdf:Description>
-                                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
-                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                            </rdf:Description>
-                                                                                        </rdf:rest>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </swrl:arguments>
-                                                                    </rdf:Description>
-                                                                </rdf:first>
                                                             </rdf:Description>
                                                         </rdf:rest>
                                                     </rdf:Description>
                                                 </rdf:rest>
                                             </rdf:Description>
                                         </rdf:rest>
-                                    </rdf:Description>
-                                </rdf:rest>
-                            </rdf:Description>
-                        </rdf:rest>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
-                    </rdf:Description>
-                </rdf:rest>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                        <rdf:first>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                            </rdf:Description>
-                        </rdf:first>
-                        <rdf:rest>
-                            <rdf:Description>
-                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                <rdf:rest>
-                                    <rdf:Description>
-                                        <rdf:type rdf:resource="&swrl;AtomList"/>
                                         <rdf:first>
                                             <rdf:Description>
                                                 <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
                                                 <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyBehind"/>
-                                                <swrl:argument2 rdf:resource="urn:swrl#d1"/>
-                                                <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#z1"/>
                                             </rdf:Description>
                                         </rdf:first>
-                                        <rdf:rest>
-                                            <rdf:Description>
-                                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                <rdf:first>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
-                                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
-                                                        <swrl:argument2 rdf:resource="urn:swrl#z1"/>
-                                                    </rdf:Description>
-                                                </rdf:first>
-                                                <rdf:rest>
-                                                    <rdf:Description>
-                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                        <rdf:first>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
-                                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
-                                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
-                                                            </rdf:Description>
-                                                        </rdf:first>
-                                                        <rdf:rest>
-                                                            <rdf:Description>
-                                                                <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                                <rdf:first>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
-                                                                        <swrl:arguments>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                <rdf:rest>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
-                                                                                        <rdf:rest>
-                                                                                            <rdf:Description>
-                                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
-                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                            </rdf:Description>
-                                                                                        </rdf:rest>
-                                                                                    </rdf:Description>
-                                                                                </rdf:rest>
-                                                                            </rdf:Description>
-                                                                        </swrl:arguments>
-                                                                    </rdf:Description>
-                                                                </rdf:first>
-                                                                <rdf:rest>
-                                                                    <rdf:Description>
-                                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
-                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                        <rdf:first>
-                                                                            <rdf:Description>
-                                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
-                                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
-                                                                                <swrl:arguments>
-                                                                                    <rdf:Description>
-                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
-                                                                                        <rdf:rest>
-                                                                                            <rdf:Description>
-                                                                                                <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
-                                                                                                <rdf:rest>
-                                                                                                    <rdf:Description>
-                                                                                                        <rdf:type rdf:resource="&rdf;List"/>
-                                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
-                                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
-                                                                                                    </rdf:Description>
-                                                                                                </rdf:rest>
-                                                                                            </rdf:Description>
-                                                                                        </rdf:rest>
-                                                                                    </rdf:Description>
-                                                                                </swrl:arguments>
-                                                                            </rdf:Description>
-                                                                        </rdf:first>
-                                                                    </rdf:Description>
-                                                                </rdf:rest>
-                                                            </rdf:Description>
-                                                        </rdf:rest>
-                                                    </rdf:Description>
-                                                </rdf:rest>
-                                            </rdf:Description>
-                                        </rdf:rest>
                                     </rdf:Description>
                                 </rdf:rest>
                                 <rdf:first>
@@ -5701,46 +5226,15 @@
                                 </rdf:first>
                             </rdf:Description>
                         </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
                     </rdf:Description>
                 </rdf:rest>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
-                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:body>
-    </rdf:Description>
-    <rdf:Description>
-        <rdf:type rdf:resource="&swrl;Imp"/>
-        <swrl:head>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
-            </rdf:Description>
-        </swrl:head>
-        <swrl:body>
-            <rdf:Description>
-                <rdf:type rdf:resource="&swrl;AtomList"/>
-                <rdf:rest rdf:resource="&rdf;nil"/>
-                <rdf:first>
-                    <rdf:Description>
-                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
-                        <swrl:propertyPredicate rdf:resource="&colibri;isLeftOf"/>
-                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
-                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
-                    </rdf:Description>
-                </rdf:first>
             </rdf:Description>
         </swrl:body>
     </rdf:Description>
@@ -5774,6 +5268,539 @@
                 </rdf:first>
             </rdf:Description>
         </swrl:body>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
+                                                                <swrl:arguments>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
+                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                        <swrl:arguments>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
+                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                    </rdf:Description>
+                                </rdf:rest>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
+                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                            </rdf:Description>
+                        </rdf:rest>
+                    </rdf:Description>
+                </rdf:rest>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyUnder"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isUnder"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isLeftOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyLeftOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isInFrontOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                    </rdf:Description>
+                </rdf:first>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                        <swrl:classPredicate rdf:resource="&colibri;Zone"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#z1"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:rest>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                                <rdf:first>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                                        <swrl:arguments>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                                        <rdf:rest>
+                                                                                            <rdf:Description>
+                                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                <rdf:first rdf:datatype="&xsd;integer">90</rdf:first>
+                                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                            </rdf:Description>
+                                                                                        </rdf:rest>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </swrl:arguments>
+                                                                    </rdf:Description>
+                                                                </rdf:first>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                        <rdf:first>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
+                                                                                <swrl:arguments>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
+                                                                                        <rdf:rest>
+                                                                                            <rdf:Description>
+                                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                                <rdf:rest>
+                                                                                                    <rdf:Description>
+                                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
+                                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                                    </rdf:Description>
+                                                                                                </rdf:rest>
+                                                                                            </rdf:Description>
+                                                                                        </rdf:rest>
+                                                                                    </rdf:Description>
+                                                                                </swrl:arguments>
+                                                                            </rdf:Description>
+                                                                        </rdf:first>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </rdf:rest>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
+                                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                                                        <swrl:argument2 rdf:resource="urn:swrl#z1"/>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                            </rdf:Description>
+                        </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
+                    </rdf:Description>
+                </rdf:rest>
+            </rdf:Description>
+        </swrl:body>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isRightOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyRightOf"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#e1"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#e2"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="&swrl;Imp"/>
+        <swrl:body>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                        <rdf:rest>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                <rdf:rest>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                        <rdf:first>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                                                <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                                                <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                                                <swrl:argument2 rdf:resource="urn:swrl#o"/>
+                                            </rdf:Description>
+                                        </rdf:first>
+                                        <rdf:rest>
+                                            <rdf:Description>
+                                                <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                <rdf:first>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                        <swrl:builtin rdf:resource="&swrlb;add"/>
+                                                        <swrl:arguments>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                <rdf:rest>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:datatype="&xsd;integer">180</rdf:first>
+                                                                                <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </rdf:rest>
+                                                            </rdf:Description>
+                                                        </swrl:arguments>
+                                                    </rdf:Description>
+                                                </rdf:first>
+                                                <rdf:rest>
+                                                    <rdf:Description>
+                                                        <rdf:type rdf:resource="&swrl;AtomList"/>
+                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                        <rdf:first>
+                                                            <rdf:Description>
+                                                                <rdf:type rdf:resource="&swrl;BuiltinAtom"/>
+                                                                <swrl:builtin rdf:resource="&swrlb;mod"/>
+                                                                <swrl:arguments>
+                                                                    <rdf:Description>
+                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                        <rdf:first rdf:resource="urn:swrl#o3"/>
+                                                                        <rdf:rest>
+                                                                            <rdf:Description>
+                                                                                <rdf:type rdf:resource="&rdf;List"/>
+                                                                                <rdf:first rdf:resource="urn:swrl#o2"/>
+                                                                                <rdf:rest>
+                                                                                    <rdf:Description>
+                                                                                        <rdf:type rdf:resource="&rdf;List"/>
+                                                                                        <rdf:first rdf:datatype="&xsd;integer">360</rdf:first>
+                                                                                        <rdf:rest rdf:resource="&rdf;nil"/>
+                                                                                    </rdf:Description>
+                                                                                </rdf:rest>
+                                                                            </rdf:Description>
+                                                                        </rdf:rest>
+                                                                    </rdf:Description>
+                                                                </swrl:arguments>
+                                                            </rdf:Description>
+                                                        </rdf:first>
+                                                    </rdf:Description>
+                                                </rdf:rest>
+                                            </rdf:Description>
+                                        </rdf:rest>
+                                    </rdf:Description>
+                                </rdf:rest>
+                                <rdf:first>
+                                    <rdf:Description>
+                                        <rdf:type rdf:resource="&swrl;IndividualPropertyAtom"/>
+                                        <swrl:propertyPredicate rdf:resource="&colibri;isTransitivelyInFrontOf"/>
+                                        <swrl:argument2 rdf:resource="urn:swrl#d1"/>
+                                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                                    </rdf:Description>
+                                </rdf:first>
+                            </rdf:Description>
+                        </rdf:rest>
+                        <rdf:first>
+                            <rdf:Description>
+                                <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                                <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                                <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                            </rdf:Description>
+                        </rdf:first>
+                    </rdf:Description>
+                </rdf:rest>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;ClassAtom"/>
+                        <swrl:classPredicate rdf:resource="&colibri;OuterDelimiter"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d1"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:body>
+        <swrl:head>
+            <rdf:Description>
+                <rdf:type rdf:resource="&swrl;AtomList"/>
+                <rdf:rest rdf:resource="&rdf;nil"/>
+                <rdf:first>
+                    <rdf:Description>
+                        <rdf:type rdf:resource="&swrl;DatavaluedPropertyAtom"/>
+                        <swrl:propertyPredicate rdf:resource="&colibri;orientation"/>
+                        <swrl:argument1 rdf:resource="urn:swrl#d2"/>
+                        <swrl:argument2 rdf:resource="urn:swrl#o3"/>
+                    </rdf:Description>
+                </rdf:first>
+            </rdf:Description>
+        </swrl:head>
     </rdf:Description>
 </rdf:RDF>
 
