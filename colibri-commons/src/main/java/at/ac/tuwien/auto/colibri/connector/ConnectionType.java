@@ -25,32 +25,18 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
 package at.ac.tuwien.auto.colibri.connector;
 
 /**
- * This interface is used to implement connectors to the Colibri semantic core.
- * The connectors bridge the gap between a distinct technology (e.g. KNX, EnOcean) to the semantic data store.
+ * This enumeration is used to differentiate between outbound connections to the technology and
+ * connections towards the Colibri semantic data store.
  * 
  * @author dschachinger
+ *
  */
-public interface Connector
+public enum ConnectionType
 {
-	/**
-	 * This method is used to open a connection to the data store and to the particular subsystem (e.g. KNX network)
-	 */
-	public void closeConnection();
-	
-	/**
-	 * This method is used to close the connection to the data store and to the particular subsystem
-	 */
-	public void openConnection();
-	
-	/**
-	 * This method is used to test the connection to either the semantic store or the masked technology
-	 */
-	public boolean testConnection(ConnectionType type);
+	ColibriBound, TechnologyBound
 }

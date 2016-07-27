@@ -25,20 +25,41 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
-package at.ac.tuwien.auto.colibri.connector;
+package at.ac.tuwien.auto.colibri.data;
 
 /**
- * This enumeration is used to differentiate between outbound connections to the technology and
- * connections towards the Colibri semantic data store.
+ * The access service interface offers methods for reading and writing data to the semantic store.
+ * 
  * @author dschachinger
  *
  */
-public enum ConnectionType
+public interface AccessService
 {
-	ColibriBound,
-	TechnologyBound
+	/**
+	 * Opens a connection between the data store and the particular technology connector
+	 * 
+	 * @param address Address of the technology connector
+	 * @return true if connection was sucessfully established
+	 */
+	public boolean open(String address);
+
+	/**
+	 * Placeholder for read method
+	 * 
+	 * @return currently, a default object is returned.
+	 * 
+	 *         TODO replace Object by interface for OWL data transfer (-> OWL API)
+	 */
+	public Object read();
+
+	/**
+	 * Placeholder for writing data to the semantic store
+	 * 
+	 * @param obj data that should be stored
+	 */
+	public void write(Object obj);
+
+	// TODO specify additional methods
 }

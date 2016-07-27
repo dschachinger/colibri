@@ -25,48 +25,32 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
-package at.ac.tuwien.auto.colibri.data;
+package at.ac.tuwien.auto.colibri.connector;
 
 /**
- * The access service interface offers methods for reading and writing data to
- * the semantic store.
+ * This interface is used to implement connectors to the Colibri semantic core. The connectors
+ * bridge the gap between a distinct technology (e.g. KNX, EnOcean) to the semantic data store.
  * 
  * @author dschachinger
- *
  */
-public interface AccessService
+public interface Connector
 {
 	/**
-	 * Opens a connection between the data store and the particular technology
-	 * connector
-	 * 
-	 * @param address
-	 *            Address of the technology connector
-	 * @return true if connection was sucessfully established
+	 * This method is used to open a connection to the data store and to the particular subsystem
+	 * (e.g. KNX network)
 	 */
-	public boolean open(String address);
+	public void closeConnection();
 
 	/**
-	 * Placeholder for read method
-	 * 
-	 * @return currently, a default object is returned.
-	 * 
-	 *         TODO replace Object by interface for OWL data transfer (-> OWL
-	 *         API)
+	 * This method is used to close the connection to the data store and to the particular subsystem
 	 */
-	public Object read();
+	public void openConnection();
 
 	/**
-	 * Placeholder for writing data to the semantic store
-	 * 
-	 * @param obj
-	 *            data that should be stored
+	 * This method is used to test the connection to either the semantic store or the masked
+	 * technology
 	 */
-	public void write(Object obj);
-
-	// TODO specify additional methods
+	public boolean testConnection(ConnectionType type);
 }
