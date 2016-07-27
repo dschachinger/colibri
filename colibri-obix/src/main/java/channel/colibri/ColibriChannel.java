@@ -112,11 +112,18 @@ public class ColibriChannel {
                     lastMessageReceived = t.getMessage();
                 }
             }
-        }).on(Event.CLOSE.name(), new Function<String>() {
-            public void on(String t) {
-                logger.info("Connection closed");
+        }).on(new Function<Throwable>() {
+
+            @Override
+            public void on(Throwable t) {
+                logger.info("Cannot interact with colibri, connection is faulty.");
             }
-        }).on(Event.OPEN.name(), new Function<String>() {
+
+        }).on(Event.CLOSE.name(), new Function<String>() {
+                    public void on(String t) {
+                        logger.info("Connection closed");
+                    }
+                }).on(Event.OPEN.name(), new Function<String>() {
             public void on(String t) {
                 logger.info("Connection opened");
             }
@@ -126,33 +133,33 @@ public class ColibriChannel {
     public void send(ColibriMessage msg) {
         logger.info("Send:" + msg.toString());
         try {
-          //  if (!alreadySent(msg)) {
-                socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
-                if (msg.getMsgType().equals(MessageIdentifier.GET)) {
-                    requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
-                            msg.getOptionalObixObject());
+            //  if (!alreadySent(msg)) {
+            socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
+            if (msg.getMsgType().equals(MessageIdentifier.GET)) {
+                requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
+                        msg.getOptionalObixObject());
+            }
+            if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
+                this.addMessageWithoutResponse(msg);
+                int count = 0;
+                Configurator conf = new Configurator();
+                List<ResendMessageTask> tasksForResending = Collections.synchronizedList(new ArrayList<>());
+                while (count <= conf.getTimesToResendMessage()) {
+                    count++;
+                    ResendMessageTask task = new ResendMessageTask(this, msg, tasksForResending);
+                    tasksForResending.add(task);
+                    Timer timer = new Timer();
+                    long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
+                    timer.schedule(task, timing * count);
+                    waitingForStatusMessagesTasks.add(task);
+                    runningTimers.put(UUID.randomUUID().toString(), timer);
                 }
-                if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
-                    this.addMessageWithoutResponse(msg);
-                    int count = 0;
-                    Configurator conf = new Configurator();
-                    List<ResendMessageTask> tasksForResending = Collections.synchronizedList(new ArrayList<>());
-                    while (count <= conf.getTimesToResendMessage()) {
-                        count++;
-                        ResendMessageTask task = new ResendMessageTask(this, msg, tasksForResending);
-                        tasksForResending.add(task);
-                        Timer timer = new Timer();
-                        long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
-                        timer.schedule(task, timing * count);
-                        waitingForStatusMessagesTasks.add(task);
-                        runningTimers.put(UUID.randomUUID().toString(), timer);
-                    }
-                }
-                //TODO: remove this line, only for testing with FAKE
-                //   handleStatusMessagesFAKE(msg);
-          //  }
+            }
+            //TODO: remove this line, only for testing with FAKE
+            //   handleStatusMessagesFAKE(msg);
+            //  }
         } catch (IOException e) {
-            logger.info("Colibri Channel closed");
+            logger.info("Cannot interact with colibri, connection is faulty.");
         }
     }
 
@@ -169,7 +176,7 @@ public class ColibriChannel {
             }
             socket.fire(new AtmosphereMessage(connectorName, resendMsg.toString()));
         } catch (IOException e) {
-            this.close();
+            logger.info("Cannot interact with colibri, connection is faulty.");
         }
         return resendMsg;
     }

@@ -35,7 +35,6 @@ public class Main {
             } catch (IOException e) {
                 logger.info(e.getMessage() + "\n" + "Please check the Colibri channel address in the config.properties file.");
                 colibriChannel.close();
-                return;
             }
              final GuiUtility guiUtility = new GuiUtility(connector);
             SwingUtilities.invokeLater(new Runnable() {
