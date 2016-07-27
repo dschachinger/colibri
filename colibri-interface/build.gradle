@@ -27,58 +27,9 @@
  * SUCH DAMAGE.
  *************************************************************************************************/
  
-description = 'Colibri - KNX connector'
+description = 'Colibri - Semantic interface'
 
-eclipse
+dependencies
 {
-	classpath
-	{
-		file 
-		{
-			withXml 
-			{
-				def node = it.asNode()
-				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-calimero', exported:'true'])
-				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
-			}
-		}
-	}
-}
-
-dependencies 
-{		
-	provided project (':colibri-commons')
-	provided project (':colibri-calimero')
-	provided project (':colibri-osgi')
-}
-
-jar 
-{
-	manifest 
-	{
-		attributes ( "Import-Package": 
-							"tuwien.auto.calimero,"+ 
-							"tuwien.auto.calimero.buffer,"+
-							"tuwien.auto.calimero.buffer.cache,"+
-							"tuwien.auto.calimero.cemi,"+
-							"tuwien.auto.calimero.datapoint,"+
-							"tuwien.auto.calimero.dptxlator,"+
-							"tuwien.auto.calimero.exception,"+
-							"tuwien.auto.calimero.internal,"+
-							"tuwien.auto.calimero.knxnetip,"+
-							"tuwien.auto.calimero.knxnetip.servicetype,"+ 
-							"tuwien.auto.calimero.knxnetip.util,"+
-							"tuwien.auto.calimero.link,"+
-							"tuwien.auto.calimero.link.medium,"+
-							"tuwien.auto.calimero.log,"+
-							"tuwien.auto.calimero.mgmt,"+
-							"tuwien.auto.calimero.process,"+
-							"tuwien.auto.calimero.serial,"+ 
-							"tuwien.auto.calimero.xml,"+
-							"tuwien.auto.calimero.xml.def, "+
-							"at.ac.tuwien.auto.colibri.data, "+
-							"at.ac.tuwien.auto.colibri.connector, "+
-							"org.osgi.framework" )
-	}
+	// none
 }
