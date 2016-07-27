@@ -24,6 +24,28 @@ In the following figure, a simple test bed is sketched. This test bed consists o
 
 Colibri consists of multiple projects and components that are partly based on existing open source libraries with different licenses. The modified Calimero 2.1 source code is published under GPLv2 with Classpath Exception. BACnet for Java is open source under GPLv3, and thus the modified source is published under the same license. These subprojects are separately compiled and subsequently linked to the other Colibri subprojects, such as technology connectors, optimization, or semantic core. These Colibri subprojects are published under the [BSD 3-Clause License](http://opensource.org/licenses/BSD-3-Clause).
 
+# Getting started
+
+## Requirements
+  * Java JDK (>= 1.7)
+  * Gradle (>= 1.10)
+
+## Install
+  * Clone the repository to your local <colibri-dir>
+  * Check your environment variables for Java and Gradle and verify the version
+
+## Build
+  * <colibri-dir># gradle clean
+  * <colibri-dir># gradle compileJava
+
+## Run with Eclipse
+  * <colibri-dir># gradle eclipse
+
+## Run with OSGi
+  * <colibri-dir># gradle felix
+  * <colibri-dir># gradle osgi
+  * <colibri-dir>/felix-framework-5.4.0/# java -jar bin/felix.jar
+
 # Contact
 
 [Daniel Schachinger](https://www.auto.tuwien.ac.at/people/view/Daniel_Schachinger/)
