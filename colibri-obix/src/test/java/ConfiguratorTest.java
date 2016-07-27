@@ -1,5 +1,6 @@
-import exception.ConfigurationException;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import service.Configurator;
 
@@ -8,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
 
 public class ConfiguratorTest {
 
@@ -55,7 +54,7 @@ public class ConfiguratorTest {
     public void tearDown() {
         tempFolder.delete();
     }
-
+/*
     @Test(expected = ConfigurationException.class)
     public void readEmptyConfigFile() {
         conf.getObixCoapChannels(tempFolder.getRoot() + File.separator + "empty.properties");
@@ -70,5 +69,5 @@ public class ConfiguratorTest {
     public void readObixLobbiesSuccessfully() {
         assertEquals("http://localhost:8080/obix", conf.getObixCoapChannels(tempFolder.getRoot() +File.separator + "test.properties").get(0).getLobbyUri());
         assertEquals("http://test.test.test/obix", conf.getObixCoapChannels(tempFolder.getRoot() +File.separator + "test.properties").get(1).getLobbyUri());
-    }
+    } */
 }

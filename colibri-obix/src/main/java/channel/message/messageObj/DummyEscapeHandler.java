@@ -1,7 +1,5 @@
 package channel.message.messageObj;
-
 import com.sun.xml.internal.bind.marshaller.CharacterEscapeHandler;
-
 import java.io.IOException;
 import java.io.Writer;
 

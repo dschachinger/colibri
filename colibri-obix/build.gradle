@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'colibri-obix'
+group = 'at.ac.tuwien.auto.colibr'
 version = '1.0-SNAPSHOT'
 
 description = "colibri oBIX Connector"
@@ -27,3 +27,26 @@ dependencies {
     // https://mvnrepository.com/artifact/org.apache.jena/jena-arq
     compile group: 'org.apache.jena', name: 'jena-arq', version: '3.1.0'
 }
+
+compileJava {
+    options.compilerArgs << '-XDignore.symbol.file'
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+
+build.dependsOn.add(':felix')
+build.dependsOn.add(':osgi')
+
+/*
+task runFelix(type: JavaExec) {
+    javaexec {
+        main="-jar";
+        args = [
+                "../felix-framework-5.4.0/bin/felix.jar",
+        ]
+    }
+}
+
+build.dependsOn.add('runFelix')
+*/

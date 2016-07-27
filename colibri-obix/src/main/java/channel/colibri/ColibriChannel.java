@@ -112,12 +112,6 @@ public class ColibriChannel {
                     lastMessageReceived = t.getMessage();
                 }
             }
-        }).on(new Function<Throwable>() {
-            @Override
-            public void on(Throwable t) {
-                t.printStackTrace();
-            }
-
         }).on(Event.CLOSE.name(), new Function<String>() {
             public void on(String t) {
                 logger.info("Connection closed");
