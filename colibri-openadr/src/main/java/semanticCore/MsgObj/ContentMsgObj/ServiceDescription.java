@@ -12,16 +12,16 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ServiceDescription extends Description{
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Address serviceAddress;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Address identifier;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private  HasProperty isPrecededBy;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private HasProperty hasTechnologyConnector;
 
     public Address getServiceAddress() {

@@ -2,6 +2,8 @@ package semanticCore.WebSocketHandling;
 
 import Utils.EventType;
 import openADR.Utils.XMPPConInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.*;
 import semanticCore.MsgObj.ContentType;
@@ -13,6 +15,7 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by georg on 29.06.16.
@@ -21,17 +24,9 @@ import java.util.Date;
 public class GenerateSendMessage {
 
     Marshaller jaxbMarshaller;
+    private Logger logger = LoggerFactory.getLogger(GenerateSendMessage.class);
     static int msgID = 0;
-    static Header header;
-    static {
-        header = new Header();
-        header.setReferenceId("ref1");
-        header.setExpires(new Date());
-        header.setDate(new Date());
-        header.setContentType(ContentType.TEXT_PLAIN);
-        header.setMessageId("msgID1");
-    }
-
+    
     public GenerateSendMessage(Marshaller jaxbMarshaller){
         this.jaxbMarshaller = jaxbMarshaller;
     }
@@ -47,7 +42,7 @@ public class GenerateSendMessage {
      * @return register colibri message
      */
     public ColibriMessage gen_REGISTER(){
-        System.out.println(">>>>>>>send "+MsgType.REGISTER + " message");
+        logger.info("send "+MsgType.REGISTER + " message");
 
         // create header
         Header header = new Header();
@@ -88,7 +83,7 @@ public class GenerateSendMessage {
      * @return
      */
     public ColibriMessage gen_DEREGISTER(){
-        System.out.println(">>>>>>>send "+MsgType.DEREGISTER + " message");
+        logger.info("send "+MsgType.DEREGISTER + " message");
 
         // create header
         Header header = new Header();
@@ -120,12 +115,10 @@ public class GenerateSendMessage {
      * other service is used to inform the connector if it is possible to comply to an openADR event.
      * @return
      */
-    public ColibriMessage gen_ADD_SERVICE(EventType eventType, String serviceBaseURL){
-        System.out.println(">>>>>>>send "+MsgType.ADD_SERVICE + " message");
+    public ColibriMessage gen_ADD_SERVICE(ServiceDataConfig serviceDataConfig, String serviceBaseURL){
+        logger.info("send "+MsgType.ADD_SERVICE + " message");
 
-        String type = eventType.toString();
-
-        String serviceID = serviceBaseURL+"/"+type+"/"+"Service";
+        String serviceURL = serviceDataConfig.getServiceName();
 
         // create header
         Header header = new Header();
@@ -138,7 +131,7 @@ public class GenerateSendMessage {
         Description description;
         AddMsg addMsg = new AddMsg();
         ServiceDescription serviceDescription = new ServiceDescription();
-        serviceDescription.setAbout(serviceID);
+        serviceDescription.setAbout(serviceURL);
         serviceDescription.getType().add(new Type().withRessource("&colibri;GridData"));
         serviceDescription.getType().add(new Type().withRessource("&colibri;DataService"));
         Address serviceAdress = new Address();
@@ -147,63 +140,23 @@ public class GenerateSendMessage {
         serviceDescription.setServiceAddress(serviceAdress);
         Address identifier = new Address();
         identifier.setDatatype("&xsd;string");
-        identifier.setAddress("openADR_set"+type);
+        identifier.setAddress("openADR_set"+serviceDataConfig.getEventType());
         serviceDescription.setIdentifier(identifier);
-        serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceConfiguration"));
+        serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getServiceConfig()));
         serviceDescription.setHasTechnologyConnector(new HasProperty().withRessource(serviceBaseURL));
         addMsg.getServiceDescriptions().add(serviceDescription);
 
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/"+type+"/"+"ServiceConfiguration");
-        description.getType().add(new Type().withRessource("&colibri;DataConfiguration"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceParameter1-1"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceParameter1-2"));
-        description.setHasDataConfiguration(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceConfiguration2"));
-        addMsg.getDescriptions().add(description);
+        addServiceDescription(serviceDataConfig, addMsg);
 
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/"+type+"/"+"ServiceParameter1-1");
-        description.getType().add(new Type().withRessource("&colibri;InformationParameter"));
-        addMsg.getDescriptions().add(description);
+        addParameter(serviceDataConfig.getParameters(), addMsg);
 
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/"+type+"/"+"ServiceParameter1-2");
-        description.getType().add(new Type().withRessource("&colibri;TimeParameter"));
-        addMsg.getDescriptions().add(description);
+        addServiceDescription(serviceDataConfig.getNestedServiceDataConfig(), addMsg);
 
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/"+type+"/"+"ServiceConfiguration2");
-        description.getType().add(new Type().withRessource("&colibri;DataConfiguration"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceParameter2-1"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+type+"/"+"ServiceParameter2-2"));
-        addMsg.getDescriptions().add(description);
-
-        if(eventType.equals(EventType.PRICE)){
-            description = new Description();
-            description.setAbout(serviceBaseURL+"/"+type+"/"+"ServiceParameter2-1");
-            description.getType().add(new Type().withRessource("&colibri;MoneyParameter"));
-            description.setHasCurrency(new HasProperty().withRessource("http://www.colibri.org/Euro"));
-            description.setHasUnit(new HasProperty().withRessource("http://www.colibri.org/KiloWattHour"));
-            addMsg.getDescriptions().add(description);
-        } else {
-            description = new Description();
-            description.setAbout(serviceBaseURL +"/"+type+"/"+"ServiceParameter2-1");
-            description.getType().add(new Type().withRessource("&colibri;EnergyParameter"));
-            description.setHasUnit(new HasProperty().withRessource("http://www.colibri.org/KiloWattHour"));
-            addMsg.getDescriptions().add(description);
-        }
-
-
-        description = new Description();
-        description.setAbout(serviceBaseURL +"/"+type+"/"+"ServiceParameter2-2");
-        description.getType().add(new Type().withRessource("&colibri;IntervalParameter"));
-        description.getType().add(new Type().withRessource("&colibri;TimeParameter"));
-        addMsg.getDescriptions().add(description);
-
+        addParameter(serviceDataConfig.getNestedServiceDataConfig().getParameters(), addMsg);
 
         // follow service
         serviceDescription = new ServiceDescription();
-        serviceDescription.setAbout(serviceBaseURL+"/accept"+type+"/"+"Service");
+        serviceDescription.setAbout(serviceDataConfig.getFollowUpServiceDataConfig().getServiceName());
         serviceDescription.getType().add(new Type().withRessource("&colibri;BuildingData"));
         serviceDescription.getType().add(new Type().withRessource("&colibri;DataService"));
         serviceAdress = new Address();
@@ -212,34 +165,21 @@ public class GenerateSendMessage {
         serviceDescription.setServiceAddress(serviceAdress);
         identifier = new Address();
         identifier.setDatatype("&xsd;string");
-        identifier.setAddress("openADR_accept"+type);
+        identifier.setAddress("openADR_accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType());
         serviceDescription.setIdentifier(identifier);
-        serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceBaseURL+"/accept"+type+"/"+"ServiceConfiguration"));
+        serviceDescription.setHasDataConfiguration(
+                new HasProperty().withRessource(serviceBaseURL+"/accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType()+"/"+"ServiceConfiguration"));
+        serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getFollowUpServiceDataConfig().getServiceConfig()));
         serviceDescription.setHasTechnologyConnector(new HasProperty().withRessource(serviceBaseURL));
-        serviceDescription.setIsPrecededBy(new HasProperty().withRessource(serviceID));
+        serviceDescription.setIsPrecededBy(new HasProperty().withRessource(serviceURL));
         addMsg.getServiceDescriptions().add(serviceDescription);
 
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/accept"+type+"/"+"ServiceConfiguration");
-        description.getType().add(new Type().withRessource("&colibri;DataConfiguration"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/accept"+type+"/"+"ServiceParameter1-1"));
-        description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/accept"+type+"/"+"ServiceParameter1-2"));
-        addMsg.getDescriptions().add(description);
+        addServiceDescription(serviceDataConfig.getFollowUpServiceDataConfig(), addMsg);
+
+        addParameter(serviceDataConfig.getFollowUpServiceDataConfig().getParameters(), addMsg);
 
         description = new Description();
-        description.setAbout(serviceBaseURL+"/accept"+type+"/"+"ServiceParameter1-1");
-        description.getType().add(new Type().withRessource("&colibri;InformationParameter"));
-        addMsg.getDescriptions().add(description);
-
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/accept"+type+"/"+"ServiceParameter1-2");
-        description.getType().add(new Type().withRessource("&colibri;StateParameter"));
-        description.getHasState().add(new HasProperty().withRessource(serviceBaseURL+"/OptIn"));
-        description.getHasState().add(new HasProperty().withRessource(serviceBaseURL+"/OptOut"));
-        addMsg.getDescriptions().add(description);
-
-        description = new Description();
-        description.setAbout(serviceBaseURL+"/accept"+type+"/"+"OptOut");
+        description.setAbout(serviceBaseURL+"/accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType()+"/"+"OptOut");
         description.getType().add(new Type().withRessource("&colibri;AbsoluteState"));
         description.getType().add(new Type().withRessource("&colibri;DiscreteState"));
         description.setName(new Value().withValue("optOut").withDatatype("&xsd;string"));
@@ -247,7 +187,7 @@ public class GenerateSendMessage {
         addMsg.getDescriptions().add(description);
 
         description = new Description();
-        description.setAbout(serviceBaseURL+"/accept"+type+"/"+"OptIn");
+        description.setAbout(serviceBaseURL+"/accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType() +"/"+"OptIn");
         description.getType().add(new Type().withRessource("&colibri;AbsoluteState"));
         description.getType().add(new Type().withRessource("&colibri;DiscreteState"));
         description.setName(new Value().withValue("optIn").withDatatype("&xsd;string"));
@@ -256,6 +196,40 @@ public class GenerateSendMessage {
 
         ColibriMessage msg = new ColibriMessage(MsgType.ADD_SERVICE, header, transformPOJOToXML(addMsg), addMsg);
         return msg;
+    }
+
+    private void addServiceDescription(ServiceDataConfig serviceDataConfig, AddMsg addMsg){
+        Description description = new Description();
+        description.setAbout(serviceDataConfig.getServiceConfig());
+        description.getType().add(new Type().withRessource("&colibri;DataConfiguration"));
+        for(ServiceDataConfig.Parameter param : serviceDataConfig.getParameters()){
+            description.getHasParameter().add(new HasProperty().withRessource(param.getName()));
+        }
+
+        if(serviceDataConfig.getNestedServiceDataConfig() != null){
+            description.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getNestedServiceDataConfig().getServiceConfig()));
+        }
+        addMsg.getDescriptions().add(description);
+    }
+
+    private void addParameter(List<ServiceDataConfig.Parameter> parameters, AddMsg addMsg){
+        for(ServiceDataConfig.Parameter param : parameters){
+            Description description = new Description();
+            description.setAbout(param.getName());
+            for(String type : param.getTypes()){
+                description.getType().add(new Type().withRessource(type));
+            }
+            if(param.getCurrency() != null){
+                description.setHasCurrency(new HasProperty().withRessource(param.getCurrency()));
+            }
+            if(param.getUnit() != null){
+                description.setHasUnit(new HasProperty().withRessource(param.getUnit()));
+            }
+            for(String state : param.getStates()){
+                description.getHasState().add(new HasProperty().withRessource(state));
+            }
+            addMsg.getDescriptions().add(description);
+        }
     }
 
     /**
@@ -269,7 +243,7 @@ public class GenerateSendMessage {
      * @return
      */
     private ColibriMessage gen_REMOVE_SERVICE(){
-        System.out.println(">>>>>>>send "+MsgType.REMOVE_SERVICE + " message");
+        logger.info("send "+MsgType.REMOVE_SERVICE + " message");
 
         // create header
         Header header = new Header();
@@ -296,7 +270,7 @@ public class GenerateSendMessage {
      * @return
      */
     public ColibriMessage gen_OBSERVE_SERVICE(String serviceURL){
-        System.out.println(">>>>>>>send "+MsgType.OBSERVE_SERVICE + " message");
+        logger.info("send "+MsgType.OBSERVE_SERVICE + " message");
 
         // create header
         Header header = new Header();
@@ -319,7 +293,7 @@ public class GenerateSendMessage {
      * @return
      */
     public ColibriMessage gen_DETACH_OBSERVATION(String serviceURL){
-        System.out.println(">>>>>>>send "+MsgType.DETACH_OBSERVATION + " message");
+        logger.info("send "+MsgType.DETACH_OBSERVATION + " message");
         // create header
         Header header = new Header();
         header.setContentType(ContentType.TEXT_PLAIN);
@@ -343,8 +317,8 @@ public class GenerateSendMessage {
      * @return
      */
     private ColibriMessage gen_GET_DATA_VALUES(){
-        System.out.println(">>>>>>>send "+MsgType.GET_DATA_VALUES + " message");
-        ColibriMessage msg = new ColibriMessage(MsgType.GET_DATA_VALUES, header, "");
+        logger.info("send "+MsgType.GET_DATA_VALUES + " message");
+        ColibriMessage msg = null;
         return msg;
     }
 
@@ -356,9 +330,16 @@ public class GenerateSendMessage {
      * STA messages can be sent to indicate the status code.
      * @return
      */
-    private ColibriMessage gen_QUERY(){
-        System.out.println(">>>>>>>send "+MsgType.QUERY + " message");
-        ColibriMessage msg = new ColibriMessage(MsgType.QUERY, header, "");
+    public ColibriMessage gen_QUERY(String query){
+        logger.info("send "+MsgType.QUERY + " message");
+
+        // create header
+        Header header = new Header();
+        header.setContentType(ContentType.APPLICATION_SPARQLQUERY);
+        header.setDate(new Date());
+        header.setMessageId(getUniqueMsgID());
+
+        ColibriMessage msg = new ColibriMessage(MsgType.QUERY, header, query);
         return msg;
     }
 
@@ -371,8 +352,8 @@ public class GenerateSendMessage {
      * @return
      */
     private ColibriMessage gen_UPDATE(){
-        System.out.println(">>>>>>>send "+MsgType.UPDATE + " message");
-        ColibriMessage msg = new ColibriMessage(MsgType.UPDATE, header, "");
+        logger.info("send "+MsgType.UPDATE + " message");
+        ColibriMessage msg = null;
         return msg;
     }
 
@@ -384,7 +365,7 @@ public class GenerateSendMessage {
      * @return
      */
     public ColibriMessage gen_STATUS(String statusCode, String referenceId){
-        System.out.println(">>>>>>>send "+MsgType.STATUS + " message");
+        logger.info("send "+MsgType.STATUS + " message");
 
 
         // create header

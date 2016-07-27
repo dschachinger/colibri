@@ -5,12 +5,15 @@ import com.enernoc.open.oadr2.model.v20b.ei.OptTypeType;
 import openADR.OADRMsgInfo.MsgInfo_OADRCreatedEvent;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import openADR.OADRMsgInfo.OADRMsgInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.Description;
 import semanticCore.MsgObj.ContentMsgObj.PutMsg;
 import semanticCore.MsgObj.ContentType;
 import semanticCore.MsgObj.Header;
 import semanticCore.MsgObj.MsgType;
+import semanticCore.WebSocketHandling.ServiceDataConfig;
 
 import javax.xml.bind.JAXBException;
 import java.io.StringReader;
@@ -25,6 +28,8 @@ import java.util.regex.Pattern;
  */
 public class ColibriToOpenADR {
 
+    private Logger logger = LoggerFactory.getLogger(ColibriToOpenADR.class);
+
     public Pair<ColibriMessage, OADRMsgInfo> convertColibriMsg(ColibriMessage msg, OpenADRColibriBridge bridge){
         Pair<ColibriMessage, OADRMsgInfo> result = null;
 
@@ -37,9 +42,9 @@ public class ColibriToOpenADR {
             case GET_DATA_VALUES:
                 result = handle_GET_DATA_VALUES(msg, bridge);
                 break;
-           /* case QUERY_RESULT:
+            case QUERY_RESULT:
                 result = handle_QUERY_RESULT(msg);
-                break; */
+                break;
             default:
                 result = new Pair<>(null, null);
                 break;
@@ -50,7 +55,7 @@ public class ColibriToOpenADR {
     }
 
     private Pair<ColibriMessage, OADRMsgInfo> handle_PUT_DATA_VALUES(ColibriMessage msg, OpenADRColibriBridge bridge){
-        System.out.println(">>>>>>>handle "+MsgType.PUT_DATA_VALUES + " message");
+        logger.info(">>>>>>>handle "+MsgType.PUT_DATA_VALUES + " message");
 
         StringReader contentReader = new StringReader(msg.getContent());
 
@@ -83,18 +88,40 @@ public class ColibriToOpenADR {
                 String eventID;
                 boolean status;
 
-                String value1;
-                String value2;
+                String parameterValue1;
+                String parameterValue2;
 
-                value1 = parameter.get(dataValue.getFst()).getSnd();
-                value2 = parameter.get(dataValue.getSnd()).getSnd();
-                if(value1.equals("true") ||
-                        value1.equals("false")){
-                    status = Boolean.parseBoolean(value1);
-                    eventID = value2;
+                String parameterURL1 = parameter.get(dataValue.getFst()).getFst();
+                String parameterURL2 = parameter.get(dataValue.getSnd()).getFst();
+
+                Boolean normalOrder = null;
+
+                // TODO better variable naming
+                for(String serviceURL : bridge.getColClient().getKnownServicesHashMap().keySet()){
+                    ServiceDataConfig followServiceDataConfig = bridge.getColClient().getKnownServicesHashMap().get(serviceURL).getServiceDataConfig().getFollowUpServiceDataConfig();
+                    for(ServiceDataConfig.Parameter configParameter : followServiceDataConfig.getParameters()){
+                        for(String type : configParameter.getTypes()){
+                            if(type.equals("&colibri;InformationParameter")){
+                                String currentMsgIDParameter = configParameter.getName();
+                                if(parameterURL1.equals(currentMsgIDParameter)){
+                                    normalOrder = true;
+                                } else if(parameterURL2.equals(currentMsgIDParameter)){
+                                    normalOrder = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                parameterValue1 = parameter.get(dataValue.getFst()).getSnd();
+                parameterValue2 = parameter.get(dataValue.getSnd()).getSnd();
+
+                if(normalOrder){
+                    eventID = parameterValue1;
+                    status = Boolean.parseBoolean(parameterValue2);
                 } else {
-                    status = Boolean.parseBoolean(value2);
-                    eventID = value1;
+                    eventID = parameterValue2;
+                    status = Boolean.parseBoolean(parameterValue1);
                 }
 
                 eventStatus.put(eventID, status);
@@ -106,7 +133,7 @@ public class ColibriToOpenADR {
                 if( elem != null){
                     createdEvent = new MsgInfo_OADRCreatedEvent();
                     MsgInfo_OADRDistributeEvent.Event event = elem.getSnd();
-                    System.out.println("event: " + key + " status " + eventStatus.get(key));
+                    logger.info("event: " + key + " status " + eventStatus.get(key));
                     MsgInfo_OADRCreatedEvent.EventResponse eventResponse = createdEvent.getNewEventResponse();
                     eventResponse.setEventID(key);
                     eventResponse.setOptType(eventStatus.get(key)? OptTypeType.OPT_IN:OptTypeType.OPT_OUT);
@@ -116,14 +143,14 @@ public class ColibriToOpenADR {
                     event.setCreatedEventToVTNSent(true);
                     createdEvent.getEventResponses().add(eventResponse);
                 } else {
-                    System.out.println("wrong service url or eventID!");
+                    logger.error("wrong service url or eventID!");
                     statusCode = "500";
                 }
 
             }
 
         } catch (JAXBException e) {
-            System.out.println("invalid syntax!");
+            logger.error("invalid syntax!");
             statusCode = "300";
         }
 
@@ -134,12 +161,12 @@ public class ColibriToOpenADR {
     }
 
     private Pair<ColibriMessage, OADRMsgInfo> handle_GET_DATA_VALUES(ColibriMessage msg, OpenADRColibriBridge bridge){
-        System.out.println(">>>>>>>handle "+MsgType.GET_DATA_VALUES + " message");
+        logger.info(">>>>>>>handle "+MsgType.GET_DATA_VALUES + " message");
 
         boolean onlyOneEventNeeded = false;
 
         if(!msg.getContent().matches("[^\\?]+\\??(\\&?(from=|to=)\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z){0,2}")){
-            System.out.println("maleformed url: " + msg.getContent());
+            logger.error("malformed url: " + msg.getContent());
             ColibriMessage reply = bridge.getColClient().getGenSendMessage().gen_STATUS("300", msg.getHeader().getMessageId());
             return new Pair<ColibriMessage, OADRMsgInfo>(reply, null);
         }
@@ -172,7 +199,7 @@ public class ColibriToOpenADR {
         }
 
         if(!bridge.getColClient().getKnownServicesHashMap().keySet().contains(serviceURL)){
-            System.out.println("service URL " + serviceURL + " unknown");
+            logger.error("service URL " + serviceURL + " unknown");
             ColibriMessage reply = bridge.getColClient().getGenSendMessage().gen_STATUS("500", msg.getHeader().getMessageId());
             return new Pair<ColibriMessage, OADRMsgInfo>(reply, null);
         }
@@ -185,21 +212,20 @@ public class ColibriToOpenADR {
 
         Header header = new Header();
         header.setDate(new Date());
-        header.setContentType(ContentType.TEXT_PLAIN);
+        header.setContentType(ContentType.APPLICATION_RDF_XML);
         header.setMessageId(bridge.getColClient().getGenSendMessage().getUniqueMsgID());
         header.setReferenceId(msg.getHeader().getMessageId());
 
         ColibriMessage reply = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsgContent));
 
-        System.out.println("reply last PUT message with " + serviceURL );
+        logger.info("reply PUT message with service URL " + serviceURL );
         return new Pair<>(reply, null);
     }
-/*
-    private OADRMsgInfo handle_QUERY_RESULT(ColibriMessage msg){
-        System.out.println(">>>>>>>handle "+MsgType.QUERY_RESULT + " message");
-        OADRMsgInfo sendToOpenADRMsg = null;
 
-        return sendToOpenADRMsg;
+    private Pair<ColibriMessage, OADRMsgInfo> handle_QUERY_RESULT(ColibriMessage msg){
+        logger.info(">>>>>>>handle "+MsgType.QUERY_RESULT + " message");
+
+        return new Pair<>(null, null);
     }
-*/
+
 }

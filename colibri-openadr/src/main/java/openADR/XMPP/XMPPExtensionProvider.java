@@ -38,7 +38,6 @@ public class XMPPExtensionProvider extends IQProvider{
 
     @Override
     public Element parse(XmlPullParser parser, int initialDepth) throws XmlPullParserException, IOException, SmackException {
-        System.out.println( "++++++++++++++++++++++++++ Parsing IQ!!!" );
         try {
             return new OADR2IQ( (OADR2PacketExtension)parseExtension(parser) );
         } catch (Exception e) {
@@ -55,11 +54,9 @@ public class XMPPExtensionProvider extends IQProvider{
         catch ( JAXBException ex ) {
             throw new RuntimeException("Error initializing JAXB context",ex);
         }
-		System.out.println("++++++++++++++++++++ LOADED OADR Packet Extension Provider");
     }
 
     public ExtensionElement parseExtension(XmlPullParser pullParser) throws Exception {
-		System.out.println( "++++++++++++++++++++++++++ Parsing Extension!!!" );
         return new OADR2PacketExtension( oadr2Unmarshaller.convertOADRMsg(pullParser), this.jaxb );
     }
 }

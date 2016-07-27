@@ -3,6 +3,7 @@ package Utils;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,15 +37,27 @@ public class TimeDurationConverter {
      * @return date object
      */
     public static Date ical2Date(String icalDate){
+        // remove milli seconds
         icalDate = icalDate.replaceAll("\\.\\d*Z", "");
-        System.out.println("new string " + icalDate);
         // if fractional seconds needed SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date d = null;
         try {
             d = sdf.parse(icalDate);
-            System.out.println("parsed date: " + d); // output in your system timezone using toString()
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return d;
+    }
+
+    public static Date xmlTimeToDateObj(String xmlTime){
+        DateFormat sdf = new SimpleDateFormat("HH:mm:ss'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date d = null;
+        try {
+            d = sdf.parse(xmlTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -165,13 +178,9 @@ public class TimeDurationConverter {
     }
 
     public static Date addDurationToDate(Date date, long durSec){
-        System.out.println("old Time: " + date.toString());
-
         Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
         calendar.setTime(date);
         calendar.add(Calendar.SECOND, (int) durSec);
-
-        System.out.println("new Time: " + calendar.getTime().toString());
 
         return calendar.getTime();
     }

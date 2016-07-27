@@ -51,8 +51,6 @@ public class OADRIQRequestHandler implements IQRequestHandler {
         OADRMsgObject obj = new OADRMsgObject(receivedIQ.getExtension().getElementNameWithoutNamespace(),
                 null, receivedIQ.getOADRPayload());
 
-        System.out.println("Oadr msg received: " + iqRequest.getChildElementXML());
-
         OADRMsgObject responseObj = channel.processPacket(obj);
 
         if(responseObj != null) {

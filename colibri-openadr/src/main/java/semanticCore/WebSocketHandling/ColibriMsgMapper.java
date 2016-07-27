@@ -45,19 +45,11 @@ public class ColibriMsgMapper {
 
             Header header = parseMsgToHeader(msg.substring(endCommandPos+newLine.length(), endHeaderPos));
 
-
-            System.out.println("cmd:"+cmdName);
-            System.out.println("header:"+msg.substring(endCommandPos+newLine.length(), endHeaderPos));
-            System.out.println("content: " + content);
-
             ColibriMessage col_msg = new ColibriMessage(MsgType.stringToEnum(cmdName),header, content);
-
-            System.out.println("generated:\n" +  col_msg.toMsgString());
 
             return col_msg;
 
         } catch (StringIndexOutOfBoundsException e){
-            System.out.println("exception");
             e.printStackTrace();
             return null;
         }
@@ -74,12 +66,9 @@ public class ColibriMsgMapper {
         String[] splitedMsg = msg.split(newLine);
 
         for(String s : splitedMsg){
-            System.out.println("header: " + s);
             String[] parts = s.split(":",2);
             String fieldType = parts[0].trim();
             String value = parts[1].trim();
-
-            System.out.println("field type " + fieldType + " value " + value);
 
             switch (fieldType){
                 case "Message-Id":

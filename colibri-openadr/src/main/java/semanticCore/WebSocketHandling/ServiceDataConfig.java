@@ -1,9 +1,7 @@
 package semanticCore.WebSocketHandling;
 
 import Utils.EventType;
-import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,6 +12,8 @@ import java.util.List;
 public class ServiceDataConfig {
     // TODO implement later is this class useful?
 
+    EventType eventType;
+
     String serviceName;
     String serviceConfig;
 
@@ -23,13 +23,20 @@ public class ServiceDataConfig {
 
     ServiceDataConfig followUpServiceDataConfig;
 
+    String serviceBaseURL;
+
     String serviceType;
 
-    private ServiceDataConfig(EventType eventType, boolean normalServiceFirstLevel, boolean followUpService){
+    private ServiceDataConfig(EventType eventType, String serviceBaseURL, boolean normalServiceFirstLevel, boolean followUpService){
+        this.eventType = eventType;
         serviceType = (followUpService ? "accept" : "") + eventType;
+        this.serviceBaseURL = serviceBaseURL + "/"+serviceType+"/";
 
-        serviceName = "/"+serviceType+"/"+"Service";
-        serviceConfig = "/"+serviceType+"/"+"ServiceConfiguration";
+        String postlude = !normalServiceFirstLevel && !followUpService ? "2" : "";
+
+
+        serviceName = "Service"+postlude;
+        serviceConfig = "ServiceConfiguration"+postlude;
 
         parameters = new ArrayList<>();
 
@@ -37,7 +44,10 @@ public class ServiceDataConfig {
             addParameter( "ServiceParameter1-1", "&colibri;InformationParameter");
             addParameter("ServiceParameter1-2", "&colibri;TimeParameter");
         }
+    }
 
+    public EventType getEventType() {
+        return eventType;
     }
 
     private Parameter addParameter(String name, String... type){
@@ -46,53 +56,93 @@ public class ServiceDataConfig {
         return parameter;
     }
 
-    public static ServiceDataConfig initPriceService(){
-        EventType eventType = EventType.PRICE;
+    public static ServiceDataConfig initService(EventType eventType, String baseURL){
+        ServiceDataConfig serviceDataConfig = new ServiceDataConfig(eventType, baseURL, true, false);
+        serviceDataConfig.nestedServiceDataConfig = new ServiceDataConfig(eventType, baseURL, false, false);
 
-        ServiceDataConfig serviceDataConfig = new ServiceDataConfig(eventType, true, false);
-        serviceDataConfig.nestedServiceDataConfig = new ServiceDataConfig(eventType, false, false);
+        Parameter parameter;
+        switch (eventType){
+            case PRICE: addPriceServiceParameter(serviceDataConfig);
+                break;
+            case LOAD: addLoadServiceParameter(serviceDataConfig);
+                break;
+        }
 
+        serviceDataConfig.nestedServiceDataConfig.
+                addParameter("ServiceParameter2-2", "&colibri;IntervalParameter", "&colibri;TimeParameter");
+
+        serviceDataConfig.followUpServiceDataConfig = new ServiceDataConfig(eventType, baseURL, false, true);
+
+        serviceDataConfig.followUpServiceDataConfig.
+                addParameter("ServiceParameter1-1", "&colibri;InformationParameter");
+
+        parameter = serviceDataConfig.followUpServiceDataConfig.
+                addParameter("ServiceParameter1-2", "&colibri;StateParameter");
+        parameter.getStates().add("http://www.colibri.org/openADRConnector/OptIn");
+        parameter.getStates().add("http://www.colibri.org/openADRConnector/OptOut");
+
+        return serviceDataConfig;
+    }
+
+    public static void addPriceServiceParameter(ServiceDataConfig serviceDataConfig){
         Parameter parameter;
         parameter = serviceDataConfig.nestedServiceDataConfig.
                 addParameter("ServiceParameter2-1", "&colibri;MoneyParameter");
         parameter.setCurrency("http://www.colibri.org/Euro");
         parameter.setUnit("http://www.colibri.org/KiloWattHour");
-
-        serviceDataConfig.nestedServiceDataConfig.
-                addParameter("ServiceParameter2-2", "&colibri;IntervalParameter", "&colibri;TimeParameter");
-
-        serviceDataConfig.followUpServiceDataConfig = new ServiceDataConfig(eventType, false, true);
-
-        parameter = serviceDataConfig.followUpServiceDataConfig.
-                addParameter("ServiceParameter2-1", "&colibri;MoneyParameter");
-        parameter.setCurrency("http://www.colibri.org/Euro");
-        parameter.setUnit("http://www.colibri.org/KiloWattHour");
-
-        serviceDataConfig.followUpServiceDataConfig.
-                addParameter("ServiceParameter1-1", "&colibri;InformationParameter");
-
-        serviceDataConfig.followUpServiceDataConfig.
-                addParameter("ServiceParameter1-2", "&colibri;StateParameter");
-
-
-        return serviceDataConfig;
-
     }
 
-    class Parameter{
+    public static void addLoadServiceParameter(ServiceDataConfig serviceDataConfig){
+        Parameter parameter;
+        parameter = serviceDataConfig.nestedServiceDataConfig.
+                addParameter("ServiceParameter2-1", "&colibri;EnergyParameter");
+        parameter.setUnit("http://www.colibri.org/KiloWattHour");
+    }
+
+    public String getServiceName() {
+        return serviceBaseURL + serviceName;
+    }
+
+    public String getServiceConfig() {
+        return serviceBaseURL + serviceConfig;
+    }
+
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public ServiceDataConfig getNestedServiceDataConfig() {
+        return nestedServiceDataConfig;
+    }
+
+    public ServiceDataConfig getFollowUpServiceDataConfig() {
+        return followUpServiceDataConfig;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public class Parameter{
         String name;
         List<String> types;
 
         String unit;
         String currency;
+        List<String> states;
 
         public Parameter(String serviceType, String name, String... type) {
-            this.name = "/"+serviceType+"/"+name;
+            this.name = name;
             this.types = new ArrayList<>(Arrays.asList(type));
+            this.states = new ArrayList<>();
         }
 
         public String getName() {
-            return name;
+            return serviceBaseURL + name;
+        }
+
+        public List<String> getStates() {
+            return states;
         }
 
         public List<String> getTypes() {

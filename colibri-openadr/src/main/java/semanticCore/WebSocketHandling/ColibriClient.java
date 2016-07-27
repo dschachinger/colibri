@@ -2,6 +2,8 @@ package semanticCore.WebSocketHandling;
 
 import Utils.*;
 import org.atmosphere.wasync.Socket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.AddMsg;
 import semanticCore.MsgObj.ContentMsgObj.RegisterMsg;
@@ -34,12 +36,12 @@ public class ColibriClient {
 
     private TimeoutWatcher timeoutWatcher;
 
+    private Logger logger = LoggerFactory.getLogger(ColibriClient.class);
+
     /* This HashMap contains all services which the semantic core knows.
         The key is the colibri core service and the value is the follow service for the connector.
         This follow service is used the inform the connector how it should react on new information at the colibri core service. */
-    private HashMap<String, String> knownConnectorToColibriServices;
-    // This HashMap contains all services which the semantic core observes
-    private List<String> observedConnectorToColibriServices;
+    private HashMap<String, ServiceHandler> knownConnectorToColibriServices;
 
     // true...when the connector is proper registered, false...otherwise
     private boolean registered = false;
@@ -49,7 +51,7 @@ public class ColibriClient {
     // This string represents the base URL for all services
     private String serviceBaseURL;
 
-    public ColibriClient(OpenADRColibriBridge bridge){
+    public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL){
         try {
             jaxbContext = JAXBContext.newInstance(RegisterMsg.class, AddMsg.class, PutMsg.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
@@ -62,20 +64,27 @@ public class ColibriClient {
             jaxbMarshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders",
                     "<!DOCTYPE rdf:RDF [\n" +
                             "<!ENTITY xsd \"http://www.w3.org/2001/XMLSchema#\" >\n" +
-                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#\">]>");
+                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#\">]>");
         } catch (PropertyException e) {
             e.printStackTrace();
         } catch (JAXBException e) {
             e.printStackTrace();
         }
 
+        this.serviceBaseURL = serviceBaseURL;
+
         knownConnectorToColibriServices = new HashMap<>();
-        observedConnectorToColibriServices = new ArrayList<>();
+
+        for(EventType eventType : EventType.values()){
+            ServiceDataConfig serviceDataConfig = ServiceDataConfig.initService(eventType, serviceBaseURL);
+            ServiceHandler serviceHandler = new ServiceHandler(serviceDataConfig, this);
+            knownConnectorToColibriServices.put(serviceDataConfig.getServiceName(), serviceHandler);
+        }
 
         try {
             socket = InitWebsocket.initWebSocket(this);
         } catch (ConnectException e) {
-            System.err.println("Exception: Connection establishment to colibri server refused. Maybe it is not running");
+            logger.error("Exception: Connection establishment to colibri server refused. Maybe it is not running");
             System.exit(1);
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,14 +105,7 @@ public class ColibriClient {
     /**
      * @return a list of all services which the colibri core observes.
      */
-    public List<String> getObservedConnectorToColibriServices() {
-        return observedConnectorToColibriServices;
-    }
-
-    /**
-     * @return a list of all services which the colibri core observes.
-     */
-    public HashMap<String, String> getKnownServicesHashMap() {
+    public HashMap<String, ServiceHandler> getKnownServicesHashMap() {
         return knownConnectorToColibriServices;
     }
 
@@ -154,7 +156,7 @@ public class ColibriClient {
             sendColibriMsg(genSendMessage.gen_REGISTER());
         }
         else {
-            System.out.println("connector is already registered");
+            logger.info("connector is already registered");
         }
     }
 
@@ -163,16 +165,39 @@ public class ColibriClient {
             sendColibriMsg(genSendMessage.gen_DEREGISTER());
         }
         else {
-            System.out.println("connector is already deregistered");
+            logger.info("connector is already deregistered");
         }
     }
 
     public void sendAddService(EventType eventType){
-        if(!registered){
-            System.out.println("connector is not registered");
+        if(!registered) {
+            logger.info("connector is not registered");
         }
 
-        sendColibriMsg(genSendMessage.gen_ADD_SERVICE(eventType, serviceBaseURL));
+        ServiceDataConfig serviceDataConfig = null;
+
+        for(String serviceURL : knownConnectorToColibriServices.keySet()){
+            ServiceDataConfig buffer = knownConnectorToColibriServices.get(serviceURL).getServiceDataConfig();
+
+            if(buffer.getEventType().equals(eventType)){
+                serviceDataConfig = buffer;
+            }
+        }
+
+        if(serviceDataConfig==null){
+            logger.error("no supported add message for eventType: " + eventType);
+            return;
+        }
+
+        sendColibriMsg(genSendMessage.gen_ADD_SERVICE(serviceDataConfig, serviceBaseURL));
+    }
+
+    public void sendQueryMessage(String query){
+        if(!registered){
+            logger.info("connector is not registered");
+        }
+
+        sendColibriMsg(genSendMessage.gen_QUERY(query));
     }
 
     public Map<String, ColibriMessage> getSendedMsgToColCore() {
@@ -187,12 +212,12 @@ public class ColibriClient {
         return serviceBaseURL;
     }
 
-    public void setServiceBaseURL(String serviceBaseURL) {
-        this.serviceBaseURL = serviceBaseURL;
-    }
-
     public Unmarshaller getJaxbUnmarshaller() {
         return jaxbUnmarshaller;
+    }
+
+    public OpenADRColibriBridge getBridge() {
+        return bridge;
     }
 
     /**
@@ -217,9 +242,9 @@ public class ColibriClient {
         public void run() {
             if(registered) {
                 sendDeregisterMessage();
-                System.out.println("wait");
+                logger.info("waiting for proper deregistration on the colibri core side");
                 waitForDeregistration();
-                System.out.println("go on");
+                logger.info("go on with termination");
             }
             socket.close();
         }

@@ -25,6 +25,10 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
 
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+
     compile 'org.codehaus.groovy:groovy-all:2.3.11'
     compile "org.igniterealtime.smack:smack-java7:4.1.0"
     // Optional for XMPPTCPConnection

@@ -52,7 +52,6 @@ public class OADR2IQ extends IQ {
     @Override
     protected IQChildElementXmlStringBuilder getIQChildElementBuilder(IQChildElementXmlStringBuilder xml) {
         // do not add any additional elements to the message
-        System.out.println("build OadrMessage:" + xml);
         return xml;
     }
 

@@ -28,12 +28,6 @@ public class Header {
         response to a QUE message), this header field is mandatory. */
     private String referenceId;
 
-    public Header(String header){
-        String[] fields = header.split("\n");
-
-        System.out.println(fields[0]);
-    }
-
     public Header(){
 
     }

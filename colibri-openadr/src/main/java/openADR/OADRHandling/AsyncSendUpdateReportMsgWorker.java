@@ -6,6 +6,8 @@ import openADR.OADRMsgInfo.MsgInfo_OADRCreateReport;
 import openADR.OADRMsgInfo.MsgInfo_OADRUpdateReport;
 import openADR.OADRMsgInfo.Report;
 import openADR.Utils.OADRConInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -32,6 +34,8 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
     // 0...not canceled, 1...canceled, 2...canceled and send last follow up report
     private AtomicInteger isReportCanceled;
 
+    private Logger logger = LoggerFactory.getLogger(AsyncSendUpdateReportMsgWorker.class);
+
     /**
      * This instantiate a AsyncSendFollowUpMsgWorker object
      * @param reportRequest not null
@@ -53,7 +57,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
             sendInfo.setMetareport(true);
             sendInfo.getReports().addAll(OADRConInfo.getAllReportPossibilities());
             party.getChannel().sendMsg(sendInfo);
-            System.out.println("send METADATA report");
+            logger.info("send METADATA report");
             return;
         }
 
@@ -66,15 +70,15 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
         long amountSendReports = reportRequest.getReportIntervalDuration() / reportRequest.getReportBackDurationSec();
         boolean unlimitedSendReports = reportRequest.getReportIntervalDuration() == 0;
 
-        System.out.println("received start date: " + reportRequest.getReportIntervalStart());
-        System.out.println("New Thread started wait for "+startTimeDiffMilli);
+        logger.info("received start date: " + reportRequest.getReportIntervalStart());
+        logger.info("New Thread started wait for "+startTimeDiffMilli);
 
         threadSleep(startTimeDiffMilli);
 
         for(long amountSendedReports = 0; (amountSendedReports<amountSendReports) || unlimitedSendReports; amountSendedReports++){
             for(long amountMeasuredDataPerReport = 0; amountMeasuredDataPerReport<amountMesurementsPerReport; amountMeasuredDataPerReport++) {
                 // TODO implement later get in contact with colibri and query the needed information
-                System.out.println("Query colibri for information "+reportRequest.getReportRequestID());
+                logger.info("Query colibri for information "+reportRequest.getReportRequestID());
 
                 threadSleep(reportRequest.getGranularitySec()*1000);
             }
@@ -83,19 +87,19 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
             if(isReportCanceled.intValue() != 1){
                 if(isReportCanceled.intValue() == 2){
-                    System.out.println("Report "+reportRequest.getReportRequestID() + " gen follow up report");
+                    logger.info("Report "+reportRequest.getReportRequestID() + " gen follow up report");
                 }
 
                 isReportCanceled.compareAndSet(2,1);
                 // TODO implement later use it that way party.handleUpdateReportMsg(reportRequest);
-                System.out.println("Send Data to VTN! "+reportRequest.getReportRequestID());
+                logger.info("Send Data to VTN! "+reportRequest.getReportRequestID());
                 party.getChannel().sendMsg(genUpdateReport());
             } else {
-                System.out.println("Report "+reportRequest.getReportRequestID() + " canceled");
+                logger.info("Report "+reportRequest.getReportRequestID() + " canceled");
                 return;
             }
         }
-        System.out.println("Report "+reportRequest.getReportRequestID() + " finished");
+        logger.info("Report "+reportRequest.getReportRequestID() + " finished");
 
     }
 

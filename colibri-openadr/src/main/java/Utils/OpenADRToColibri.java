@@ -4,6 +4,8 @@ import com.enernoc.open.oadr2.model.v20b.ei.SignalTypeEnumeratedType;
 import openADR.OADRMsgInfo.Interval;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import openADR.OADRMsgInfo.OADRMsgInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.*;
 import semanticCore.MsgObj.ContentType;
@@ -18,6 +20,8 @@ import java.util.*;
  * This is only for the direction from openADR to colibri.
  */
 public class OpenADRToColibri {
+
+    private Logger logger = LoggerFactory.getLogger(OpenADRToColibri.class);
 
     public List<ColibriMessage> convertOpenADRMsg(OADRMsgInfo msg, OpenADRColibriBridge bridge){
         List<ColibriMessage> sendToColibriMsges = null;
@@ -57,17 +61,21 @@ public class OpenADRToColibri {
 
             EventType eventType = getEventTypeFromSignalType(event.getSignals().get(0).getSignalType());
 
+            // TODO not hardcoded service URL
             String serviceURL = serviceBaseURL + "/" + eventType + "/" + "Service";
 
             bridge.addOpenADREvent(serviceURL, new Pair<>(event.getStartDate(), TimeDurationConverter.addDurationToDate(event.getStartDate(), event.getDurationSec())), event);
 
+
             // TODO implement later del
-            colibriMessages.add(colMsg);
-/*
-            if (bridge.getColClient().getObservedConnectorToColibriServices().contains(serviceURL)) {
-                colibriMessages.add(colMsg);
+            //colibriMessages.add(colMsg);
+
+
+            if (bridge.getColClient().getKnownServicesHashMap().get(serviceURL).isServiceObserved()) {
+                bridge.getColClient().getKnownServicesHashMap().get(serviceURL).addEvent(event);
+                // TODO del this colibriMessages.add(colMsg);
             }
-*/
+
         }
         return colibriMessages;
     }
@@ -85,7 +93,7 @@ public class OpenADRToColibri {
             EventType eventType;
 
             if (event.getSignals().size() > 1) {
-                System.out.println("Only one signal per event is supported. Namely the VEN can be a direct target of a price event. Only the first signal will be processed");
+                logger.error("Only one signal per event is supported. Namely the VEN can be a direct target of a price event. Only the first signal will be processed");
             }
 
             MsgInfo_OADRDistributeEvent.Signal signal = event.getSignals().get(0);
@@ -151,7 +159,7 @@ public class OpenADRToColibri {
                 eventType.setMode(EventType.Mode.MULTIPLIER);
                 break;
             default:
-                System.out.println("openADR event type " + signalType + " not unknown, will not be forwared to colibri core");
+                logger.error("openADR event type " + signalType + " not unknown, will not be forwared to colibri core");
                 return null;
         }
 

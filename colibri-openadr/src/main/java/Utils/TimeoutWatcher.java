@@ -2,6 +2,8 @@ package Utils;
 
 import openADR.OADRHandling.Channel;
 import openADR.Utils.OADRMsgObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.WebSocketHandling.ColibriClient;
 import semanticCore.WebSocketHandling.ColibriTimeoutHandler;
@@ -20,6 +22,8 @@ public class TimeoutWatcher<S, T> {
     private ExecutorService executor;
     private S medium;
     private TimeoutHandler<S, T> handler;
+
+    private Logger logger = LoggerFactory.getLogger(TimeoutWatcher.class);
 
     private TimeoutWatcher(int timeoutMilliSec){
         this.executor = Executors.newCachedThreadPool();
@@ -62,7 +66,7 @@ public class TimeoutWatcher<S, T> {
 
         @Override
         public void run() {
-            System.out.println(Thread.currentThread().getName()+" Start. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
+            logger.info(Thread.currentThread().getName()+" Start. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
 
             try {
                 Thread.sleep(timeoutMilliSec);
@@ -71,13 +75,13 @@ public class TimeoutWatcher<S, T> {
             }
 
             if(monitoredMsg.containsKey(messageID)){
-                System.out.println("timeout for msg: " + messageID);
-                handler.handleTimeout(medium, monitoredMsg, messageID);
+                logger.info("timeout for msg: " + messageID);
+                // TODO insert again handler.handleTimeout(medium, monitoredMsg, messageID);
             } else {
-                System.out.println("timing is okay for msg: " + messageID);
+                logger.info("timing is okay for msg: " + messageID);
             }
 
-            System.out.println(Thread.currentThread().getName()+" End. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
+            logger.info(Thread.currentThread().getName()+" End. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
         }
     }
 }

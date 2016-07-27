@@ -3,6 +3,8 @@ package Utils;
 import openADR.OADRHandling.OADR2VEN;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import openADR.OADRMsgInfo.OADRMsgInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.WebSocketHandling.ColibriClient;
 
@@ -24,7 +26,7 @@ public class OpenADRColibriBridge {
     private HashMap<String, SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event>> serviceSortedReceivedEvents;
     private HashMap<String, String> eventsTyp;
 
-
+    private Logger logger = LoggerFactory.getLogger(OpenADRColibriBridge.class);
 
     public OpenADRColibriBridge(){
         colibriToOpenADR = new ColibriToOpenADR();
@@ -81,12 +83,7 @@ public class OpenADRColibriBridge {
 
         for(Pair<Pair<Date, Date>, MsgInfo_OADRDistributeEvent.Event> elem : subSet){
             events.add(elem.getSnd());
-        }
-
-        System.out.println("start search: ");
-        for(Pair<Pair<Date,Date>,MsgInfo_OADRDistributeEvent.Event> event : subSet){
-
-            System.out.println("found: " + event.getSnd().getEventID());
+            logger.info("found: " + elem.getSnd().getEventID());
         }
 
         return events;
@@ -95,14 +92,17 @@ public class OpenADRColibriBridge {
     private int getOpenADREventIndex (String serviceName, String eventID){
         SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event> sortedPUTMessages = serviceSortedReceivedEvents.get(serviceName);
 
-        int i = 0;
-        for(Pair<Pair<Date, Date>, MsgInfo_OADRDistributeEvent.Event> elem : sortedPUTMessages){
-            MsgInfo_OADRDistributeEvent.Event event = elem.getSnd();
-            if(event.getEventID().equals(eventID)){
-                return i;
+        if(sortedPUTMessages != null){
+            int i = 0;
+            for(Pair<Pair<Date, Date>, MsgInfo_OADRDistributeEvent.Event> elem : sortedPUTMessages){
+                MsgInfo_OADRDistributeEvent.Event event = elem.getSnd();
+                if(event.getEventID().equals(eventID)){
+                    return i;
+                }
+                i++;
             }
-            i++;
         }
+
         return -1;
     }
 

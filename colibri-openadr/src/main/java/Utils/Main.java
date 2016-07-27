@@ -1,21 +1,34 @@
 package Utils;
 
+import com.google.gson.*;
 import openADR.OADRHandling.OADR2VEN;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import openADR.OADRMsgInfo.Report;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.XMPPConInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.impl.SimpleLoggerFactory;
+import org.w3c.dom.*;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import semanticCore.MsgObj.ContentMsgObj.QueryResult;
+import semanticCore.MsgObj.ContentMsgObj.Result;
 import semanticCore.WebSocketHandling.ColibriClient;
 import semanticCore.WebSocketHandling.WebSocketConInfo;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
-import java.util.Scanner;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 
 /**
  * Created by georg on 28.05.16.
@@ -23,12 +36,108 @@ import java.util.Scanner;
 public class Main {
     static public Date testDate;
 
+    private static Logger logger = LoggerFactory.getLogger(Main.class);
+
     public static void main(String args[]){
         initXMPPConfInfo();
         initWebSocketConInfo();
         addExampleReportPossibility();
 
         OpenADRColibriBridge bridge = new OpenADRColibriBridge();
+
+
+
+        // JSON parsen begin
+        Gson g = new Gson();
+        String cont = "{\n" +
+                "\"head\": { \"vars\": [\"service\",\"identifier\"] },\n" +
+                "\"results\": {\n" +
+                "\"bindings\": [\n" +
+                "{\n" +
+                "\"service\" : { \"type\": \"uri\", \"value\": \"http://www.colibri-samples.org/service1\" },\n" +
+                "\"identifier\" : { \"type\": \"literal\", \"value\": \"temp_monitoring_17\" }\n" +
+                "}\n" +
+                "]\n" +
+                "}\n" +
+                "}";
+
+        cont = "{\n" +
+                "  \"head\": { \"vars\": [ \"book\" , \"title\" ]\n" +
+                "  } ,\n" +
+                "  \"results\": { \n" +
+                "    \"bindings\": [\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book6\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Half-Blood Prince\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book7\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Deathly Hallows\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book5\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Order of the Phoenix\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book4\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Goblet of Fire\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book2\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Chamber of Secrets\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book3\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Prisoner Of Azkaban\" }\n" +
+                "      } ,\n" +
+                "      {\n" +
+                "        \"book\": { \"type\": \"uri\" , \"value\": \"http://example.org/book/book1\" } ,\n" +
+                "        \"title\": { \"type\": \"literal\" , \"value\": \"Harry Potter and the Philosopher's Stone\" }\n" +
+                "      }\n" +
+                "    ]\n" +
+                "  }\n" +
+                "}";
+        cont = "{ \n" +
+                "  \"head\" : { } ,\n" +
+                "  \"boolean\" : true\n" +
+                "}";
+
+        cont = "<sparql xmlns=\"http://www.w3.org/2005/sparql-results#\">\n" +
+                "\n" +
+                "  <head>\n" +
+                "    <variable name=\"x\"/>\n" +
+                "    <variable name=\"hpage\"/>\n" +
+                "    <variable name=\"name\"/>\n" +
+                "    <variable name=\"age\"/>\n" +
+                "    <variable name=\"mbox\"/>\n" +
+                "    <variable name=\"friend\"/>\n" +
+                "  </head>\n" +
+                "\n" +
+                "  <results>\n" +
+                "\n" +
+                "    <result> \n" +
+                "      <binding name=\"x\">\n" +
+                "\t<bnode>r2</bnode>\n" +
+                "      </binding>\n" +
+                "      <binding name=\"hpage\">\n" +
+                "\t<uri>http://work.example.org/bob/</uri>\n" +
+                "      </binding>\n" +
+                "      <binding name=\"name\">\n" +
+                "\t<literal xml:lang=\"en\">Bob</literal>\n" +
+                "      </binding>\n" +
+                "      <binding name=\"age\">\n" +
+                "\t<literal datatype=\"http://www.w3.org/2001/XMLSchema#integer\">30</literal>\n" +
+                "      </binding>\n" +
+                "      <binding name=\"mbox\">\n" +
+                "\t<uri>mailto:bob@work.example.org</uri>\n" +
+                "      </binding>\n" +
+                "    </result>\n" +
+                "\n" +
+                "  </results>\n" +
+                "\n" +
+                "</sparql>";
+
+        logger.info(cont + "\n\n");
 
 /*
         Scanner reader = new Scanner(System.in);  // Reading from System.in
@@ -72,8 +181,7 @@ public class Main {
         OADR2VEN ven = new OADR2VEN(bridge);
         bridge.setOadrVEN(ven);
 
-        ColibriClient colClient = new ColibriClient(bridge);
-        colClient.setServiceBaseURL(initColibriService());
+        ColibriClient colClient = new ColibriClient(bridge, initColibriService());
         bridge.setColClient(colClient);
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
@@ -94,7 +202,7 @@ public class Main {
         Date min7 = TimeDurationConverter.addDurationToDate(testDate, 480);
         Date min8 = TimeDurationConverter.addDurationToDate(testDate, 540);
 
-        System.out.println("aussehen: " + sdf.format(min1));
+        // logger.info("aussehen: " + sdf.format(min1));
 
         MsgInfo_OADRDistributeEvent msgInfo_oadrDistributeEvent = new MsgInfo_OADRDistributeEvent();
         Pair<Date, Date> inter1 = new Pair<>(min1, min2);
@@ -114,11 +222,11 @@ public class Main {
         Pair<Date, Date> searchInter5 = new Pair<>(min3,null);
         Pair<Date, Date> searchInter6 = new Pair<>(null,min5);
         */
-
+/*
         bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter1, msg1);
         bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter2, msg2);
         bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter3, msg3);
-/*
+
         bridge.getOpenADREvents("test", searchInter1);
         bridge.getOpenADREvents("test", searchInter2);
         bridge.getOpenADREvents("test", searchInter3);
@@ -137,46 +245,60 @@ public class Main {
 
         int n;
         loop : while (true){
-            System.out.print("Enter a action number: ");
+            logger.info("Enter a action number: ");
             n = reader.nextInt();
             switch (n){
-                case 1: System.out.println("websocket registered: " + colClient.isRegistered());
+                case 1: logger.info("websocket registered: " + colClient.isRegistered());
                     break;
                 case 2:
-                    System.out.println("colibri: send registration");
+                    logger.info("colibri: send registration");
                     colClient.sendRegisterMessage();
                     break;
                 case 3:
-                    System.out.println("ven: terminate");
+                    logger.info("ven: terminate");
                     ven.terminate();
                     break;
                 case 4:
-                    System.out.println("colibri: terminate (can not used anymore)");
+                    logger.info("colibri: terminate (can not used anymore)");
                     colClient.terminate();
                     break;
                 case 5:
-                    System.out.println("colibri: send deregistration");
+                    logger.info("colibri: send deregistration");
                     colClient.sendDeregisterMessage();
                     break;
                 case 6:
-                    System.out.println("colibri: add price service");
+                    logger.info("colibri: add price service");
                     colClient.sendAddService(EventType.PRICE);
                     break;
                 case 7:
-                    System.out.println("colibri: add load service");
+                    logger.info("colibri: add load service");
                     colClient.sendAddService(EventType.LOAD);
                     break;
                 case 8:
-                    System.out.println("added services:");
+                    logger.info("added services:");
                     for(String service : colClient.getKnownServicesHashMap().keySet()){
-                        System.out.println("\t"+service);
+                        logger.info("\t"+service);
                     }
                     break;
                 case 9:
-                    System.out.println("observed services:");
-                    for(String service : colClient.getObservedConnectorToColibriServices()){
-                        System.out.println("\t"+service);
+                    logger.info("observed services:");
+                    for(String serviceURL : colClient.getKnownServicesHashMap().keySet()){
+                        if(colClient.getKnownServicesHashMap().get(serviceURL).isServiceObserved()){
+                            logger.info("\t"+serviceURL);
+                        }
                     }
+                    break;
+                case 10:
+                    logger.info("colibri: query message");
+                    logger.info("\tEnter the query (end query input with \"?!?\"):");
+                    String in = "";
+                    String buffer= reader.nextLine().trim();
+                    while (!buffer.equals("?!?")){
+                        in +=buffer;
+                        buffer = reader.nextLine().trim();
+                    }
+
+                    colClient.sendQueryMessage(in);
                     break;
                 case 51: ven.sendExampleOadrQueryRegistration();
                     break;
@@ -200,8 +322,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("test: " + prop.getProperty("REG.registeredDescriptionAbout"));
-
         WebSocketConInfo.regConnectorAddress = prop.getProperty("REG.connectorAddress");
         WebSocketConInfo.regTechnologyProtocolResourceName = prop.getProperty("REG.technologyProtocolResourceName");
         WebSocketConInfo.regRegisteredDescriptionAbout = prop.getProperty("REG.registeredDescriptionAbout");
@@ -220,8 +340,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println("test: " + prop.getProperty("VTN.Username"));
-
         XMPPConInfo.VTNUsername = prop.getProperty("VTN.Username");
         XMPPConInfo.VTNPassword = prop.getProperty("VTN.Password");
         XMPPConInfo.VTNServiceName = prop.getProperty("VTN.ServiceName");
@@ -230,8 +348,6 @@ public class Main {
         XMPPConInfo.VENPassword = prop.getProperty("VEN.Password");
         XMPPConInfo.VENServiceName = prop.getProperty("VEN.ServiceName");
         XMPPConInfo.VENRessourceeName = prop.getProperty("VEN.RessourceeName");
-
-        System.out.println("out: " + XMPPConInfo.getVTNFullAdrName() + " part " + XMPPConInfo.VTNUsername);
     }
 
     private static String initColibriService(){

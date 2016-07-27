@@ -5,6 +5,8 @@ import openADR.OADRMsgInfo.MsgInfo_OADRCreateReport;
 import openADR.Utils.FollowUpMsg;
 import openADR.Utils.OADRConInfo;
 import openADR.XMPP.XMPPChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
@@ -22,6 +24,8 @@ public abstract class OADRParty {
 
     protected OpenADRColibriBridge bridge;
 
+    private Logger logger = LoggerFactory.getLogger(OADRParty.class);
+
     public OADRParty(OpenADRColibriBridge bridge) {
         try {
             jaxbManager = new JAXBManager();
@@ -33,7 +37,7 @@ public abstract class OADRParty {
             channel = new XMPPChannel(jaxbManager, this);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Can not establish a proper connection to XMPP server.");
+            logger.error("Can not establish a proper connection to XMPP server.");
             System.exit(1);
         }
 

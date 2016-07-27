@@ -3,6 +3,8 @@ package openADR.Utils;
 import com.enernoc.open.oadr2.model.v20b.OadrCancelReport;
 import openADR.OADRHandling.AsyncSendUpdateReportMsgWorker;
 import openADR.OADRMsgInfo.Report;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +35,8 @@ public class OADRConInfo {
     /* This map contains all reports which can be generated.
             The key ist the reportSpecifierID. */
     private static HashMap<String, Report> reportPossibilities;
+
+    private static Logger logger = LoggerFactory.getLogger(OADRConInfo.class);
 
     static {
         asyncSendUpdateReportMsgWorkers = new HashMap<>();
@@ -87,7 +91,7 @@ public class OADRConInfo {
         for(String requestID : asyncSendUpdateReportMsgWorkers.keySet()){
             AsyncSendUpdateReportMsgWorker worker = asyncSendUpdateReportMsgWorkers.remove(requestID);
             worker.cancelReport(false);
-            System.out.println("Cancel report with ID: " + requestID + " !");
+            logger.info("Cancel report with ID: " + requestID + " !");
         }
     }
 
@@ -106,7 +110,7 @@ public class OADRConInfo {
             if(worker != null){
                 worker.cancelReport(msg.isReportToFollow());
             } else {
-                System.out.println("Given reportRequestID " + reportRequestID + " not allocated!");
+                logger.info("Given reportRequestID " + reportRequestID + " not allocated!");
                 wrongIDOccur = true;
             }
 

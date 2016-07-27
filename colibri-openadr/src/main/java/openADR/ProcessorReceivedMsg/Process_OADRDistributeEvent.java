@@ -14,6 +14,8 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.Utils.FollowUpMsg;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.List;
  * This class is used to handle the receipt of openADR message type oadrDistributeEvent.
  */
 public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
+
+    private Logger logger = LoggerFactory.getLogger(Process_OADRDistributeEvent.class);
 
     /**
      * This method generates the proper reply for a openADR message OadrDistributeEvent.
@@ -92,7 +96,7 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
             info.getEvents().add(event);
         }
 
-        System.out.println("obj: \n"+info);
+        logger.info("parsed distribute event message: \n"+info);
 
         new AsyncSendFollowUpMsgWorker(party, new FollowUpMsg(info, FollowUpMsg.FollowUpMsgType.oadrCreatedEvent)).start();
 

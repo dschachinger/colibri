@@ -15,6 +15,8 @@ import org.jivesoftware.smack.provider.ProviderManager;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by georg on 28.05.16.
@@ -23,6 +25,8 @@ import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
 public class XMPPChannel extends Channel {
     // This object is from smack and is responsible to convey messages to the opposite openADR.XMPP party.
     private AbstractXMPPConnection con;
+
+    private Logger logger = LoggerFactory.getLogger(XMPPChannel.class);
 
     public XMPPChannel(JAXBManager jaxbManager, OADRParty party) throws Exception{
         super(new Controller(party), jaxbManager, party);
@@ -43,7 +47,7 @@ public class XMPPChannel extends Channel {
         serviceDiscoveryManager.addFeature(XMLNS.OADR2.getNamespaceURI());
 
         for(String msgTypes : controller.getSupportedReceivedMsgTypes()){
-            System.out.println("supported types: " + msgTypes + " namespace: " + XMLNS.OADR2.getNamespaceURI() + " long " + XMLNS.OADR2.getPrefix()+":"+msgTypes);
+            logger.info("supported received message types: " + msgTypes);
             ProviderManager.addIQProvider(msgTypes, XMLNS.OADR2.getNamespaceURI(), xmppExtensionProvider);
             con.registerIQRequestHandler(
                     new OADRIQRequestHandler(this, XMLNS.OADR2.getPrefix()+":"+msgTypes, XMLNS.OADR2.getNamespaceURI(),
@@ -103,7 +107,6 @@ public class XMPPChannel extends Channel {
         OADR2IQ oadrIQ = new OADR2IQ(sendObj.getMsgType(), XMLNS.OADR2.getNamespaceURI());
         oadrIQ.setTo(XMPPConInfo.getVTNFullAdrName());
         oadrIQ.init(new OADR2PacketExtension(sendObj.getMsg(), jaxbManager));
-        System.out.println("new iq id: " + oadrIQ.getStanzaId());
         try {
             con.sendStanza(oadrIQ);
         } catch (SmackException.NotConnectedException e) {
@@ -117,7 +120,7 @@ public class XMPPChannel extends Channel {
      */
     @Override
     public void close(){
-        System.out.println("close XMPP connection");
+        logger.info("close XMPP connection");
 
         Presence presence = new Presence(Presence.Type.unavailable);
         presence.setStatus("Gone eating");

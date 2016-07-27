@@ -61,7 +61,6 @@ public class CreateMsg_OADRRegisterReport extends CreateSendMsg {
 
             DateTime dateTime = new DateTime();
             dateTime.setValue(TimeDurationConverter.date2Ical(report.getCreatedDateTime()));
-            System.out.println("time " + TimeDurationConverter.date2Ical(report.getCreatedDateTime()));
             oadrReport.setCreatedDateTime(dateTime);
 
             oadrReport.setReportRequestID(report.getReportRequestID());

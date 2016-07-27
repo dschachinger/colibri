@@ -1,6 +1,8 @@
 package openADR.OADRHandling;
 
 import com.sun.xml.internal.bind.marshaller.NamespacePrefixMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
@@ -18,6 +20,8 @@ import java.util.List;
 public class OADR2NamespacePrefixMapper extends NamespacePrefixMapper {
 
 	static final String[] allURIs;
+
+	private Logger logger = LoggerFactory.getLogger(OADR2NamespacePrefixMapper.class);
 
 	static {
 		List<String> uris = new ArrayList<String>();
@@ -39,7 +43,6 @@ public class OADR2NamespacePrefixMapper extends NamespacePrefixMapper {
 	 * @throws PropertyException
 	 */
 	public void addTo( Marshaller marshaller ) throws PropertyException {
-//		System.out.println("--------------- Marshaller class: " + marshaller.getClass().toString());
 		// This probably only works for com.sun.xml.bind.v2.runtime.MarshallerImpl
 		try {
 			marshaller.setProperty("com.sun.xml.internal.bind.namespacePrefixMapper", this); 
@@ -49,7 +52,7 @@ public class OADR2NamespacePrefixMapper extends NamespacePrefixMapper {
 		        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", this);
 		    }
 		    catch ( Exception e2 ) {
-		        System.err.println( "Couldn't enable the Namespace Prefix mapper, we're probably not"
+				logger.error("Couldn't enable the Namespace Prefix mapper, we're probably not"
 		                + " using the Sun XML impl. " + e2.getMessage() );
 		    }
 		}		
@@ -62,7 +65,6 @@ public class OADR2NamespacePrefixMapper extends NamespacePrefixMapper {
 	 */
 	@Override
 	public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
-//    	System.out.println("----------------- Asked for namespace for " + namespaceUri);
 		try {
 			XMLNS ns = XMLNS.fromURI( namespaceUri );
 			if ( ns == XMLNS.OADR2 ) return ns.getPrefix();

@@ -4,6 +4,8 @@ import openADR.CreatorSendMsg.*;
 import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.ProcessorReceivedMsg.*;
 import openADR.Utils.OADRMsgObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +36,8 @@ public class Controller {
      */
     private OADRParty party;
 
+    private Logger logger = LoggerFactory.getLogger(Controller.class);
+
     /**
      * It will initiate a controller object.
      */
@@ -61,7 +65,7 @@ public class Controller {
             createSendMsgMap.put(createSendMsg.getMsgType(), createSendMsg);
         }
 
-        System.out.println("amount of send: " + createSendMsgMap.keySet().size());
+        logger.info("amount of different send message types: " + createSendMsgMap.keySet().size());
 
         /* init procReceivedMsgMap                                  */
         procReceivedMsgMap = new HashMap<>();
@@ -111,7 +115,7 @@ public class Controller {
         }
 
         boolean violate = proc.doRecMsgViolateConstraintsAndUpdateSendMap(recObj,party.getChannel().getSendedMsgMap());
-        System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> received message type " + recObj.getMsgType()+
+        logger.error("received message type " + recObj.getMsgType()+
                 (violate?" VIOLATES ":" does not violates ")+"constraints");
 
         // generate reply
@@ -133,7 +137,7 @@ public class Controller {
         OADRMsgObject sendObj = createSendMsg.genSendMsg(info, receivedMsgMap);
 
         boolean violate = createSendMsg.doSendMsgViolateMsgOrderAndUpdateRecMap(info,receivedMsgMap);
-        System.err.println("<<<<<<<<<<<<<<<<<<<<<<<<<<< send message type " + info.getMsgType()+
+        logger.error("send message type " + info.getMsgType()+
                 (violate?" VIOLATES ":" does not violates ")+"constraints");
 
 

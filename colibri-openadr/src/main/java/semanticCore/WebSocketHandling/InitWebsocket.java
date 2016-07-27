@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.wasync.*;
 import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.atmosphere.websocket.WebSocketStreamingHandlerAdapter;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 
@@ -16,6 +17,8 @@ import java.util.Date;
  */
 public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
 
+    private static Logger logger = LoggerFactory.getLogger(InitWebsocket.class);
+
     /**
      * This static class is used to establish for a given colibri connector a websocket connecton to the semantic core.
      * @param colClient given colibri connector
@@ -23,7 +26,6 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
      * @throws IOException
      */
     public static Socket initWebSocket(final ColibriClient colClient) throws IOException {
-        final org.slf4j.Logger logger = LoggerFactory.getLogger(InitWebsocket.class);
         final ObjectMapper mapper = new ObjectMapper();
 
         AtmosphereClient client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
@@ -56,7 +58,7 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                             try {
                                 return mapper.readValue(data, Message.class);
                             } catch (IOException e) {
-                                logger.debug("Invalid message {}", data);
+                                logger.info("Invalid message {}", data);
                                 return null;
                             }
                         } else {
