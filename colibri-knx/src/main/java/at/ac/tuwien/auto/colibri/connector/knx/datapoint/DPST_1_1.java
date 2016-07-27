@@ -25,8 +25,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
 package at.ac.tuwien.auto.colibri.connector.knx.datapoint;
@@ -75,7 +73,7 @@ public class DPST_1_1
 						// read value from bus
 						DPTXlatorBoolean x = new DPTXlatorBoolean(DPTXlatorBoolean.DPT_SWITCH);
 						x.setData(apdu, 0);
-						
+
 						// log message
 						System.out.println("Switch for " + DPST_1_1.this.identifier + " now " + x.getValueBoolean());
 

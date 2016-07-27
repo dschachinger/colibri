@@ -25,8 +25,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
 package at.ac.tuwien.auto.colibri.connector.knx;
@@ -279,10 +277,8 @@ public class KNXConnector implements Connector
 	/**
 	 * Writes a value to the KNX bus
 	 * 
-	 * @param group
-	 *            KNX group address
-	 * @param value
-	 *            new boolean value
+	 * @param group KNX group address
+	 * @param value new boolean value
 	 */
 	public void write(GroupAddress group, boolean value)
 	{

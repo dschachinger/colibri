@@ -25,8 +25,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
 package at.ac.tuwien.auto.colibri.connector.knx;
@@ -34,7 +32,7 @@ package at.ac.tuwien.auto.colibri.connector.knx;
 /**
  * The listener can be registered for events related to a KNX group address.
  */
-public interface KNXListener 
+public interface KNXListener
 {
 	/**
 	 * Notification method
