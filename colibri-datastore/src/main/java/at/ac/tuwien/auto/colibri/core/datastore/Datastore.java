@@ -29,17 +29,32 @@
 
 package at.ac.tuwien.auto.colibri.core.datastore;
 
+import java.io.File;
 import java.util.Iterator;
+import java.util.Set;
+
+import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLNamedIndividual;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
+
+import com.clarkparsia.pellet.owlapiv3.PelletReasoner;
+import com.clarkparsia.pellet.owlapiv3.PelletReasonerFactory;
 
 public class Datastore
 {
-	String ns_ontology = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#";
+	String ns_ontology = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#";
 	String ns_example = "http://www.auto.tuwien.ac.at/example/";
 	String default_dir = "C:\\dschachinger\\Dokumente\\Eclipse\\colibri\\files";
 
-	// public OWLDataFactory factory;
-	// public OWLOntology ontology;
-	// public PelletReasoner reasoner;
+	public OWLDataFactory factory;
+	public OWLOntology ontology;
+	public PelletReasoner reasoner;
 
 	public Datastore()
 	{
@@ -48,48 +63,46 @@ public class Datastore
 
 	private void loadOntology()
 	{
-		// try
-		// {
-		// File file = new File(default_dir + "\\temp.owl");
-		//
-		// OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		// ontology = manager.loadOntologyFromOntologyDocument(file);
-		//
-		// PelletReasonerFactory reasonerFactory =
-		// PelletReasonerFactory.getInstance();
-		// reasoner = reasonerFactory.createReasoner(ontology);
-		//
-		// reasoner.precomputeInferences();
-		//
-		// System.out.println("Ontology is consistent: " +
-		// reasoner.isConsistent());
-		//
-		// factory = manager.getOWLDataFactory();
-		//
-		// OWLDataProperty p = factory.getOWLDataProperty(IRI.create(ns_ontology
-		// + "orientation"));
-		//
-		// OWLClassExpression ex1 = factory.getOWLDataHasValue(p,
-		// factory.getOWLLiteral(0));
-		// // OWLClassExpression ex2 =
-		// // factory.getOWLClass(IRI.create(ns_ontology +
-		// // "SouthboundDelimiter"));
-		// // OWLClassExpression ex3 =
-		// // factory.getOWLClass(IRI.create(ns_ontology +
-		// // "EastboundDelimiter"));
-		//
-		// System.out.println("Result set: ");
-		// Set<OWLNamedIndividual> result = reasoner.getInstances(ex1,
-		// true).getFlattened();
-		// for (OWLNamedIndividual owlNamedIndividual : result)
-		// System.out.println(owlNamedIndividual);
-		// System.out.println("-END-");
-		// }
-		// catch (OWLOntologyCreationException e1)
-		// {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
+		try
+		{
+			File file = new File(default_dir + "\\temp.owl");
+
+			OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+			ontology = manager.loadOntologyFromOntologyDocument(file);
+
+			PelletReasonerFactory reasonerFactory = PelletReasonerFactory.getInstance();
+			reasoner = reasonerFactory.createReasoner(ontology);
+
+			reasoner.precomputeInferences();
+
+			System.out.println("Ontology is consistent: " + reasoner.isConsistent());
+
+			factory = manager.getOWLDataFactory();
+
+			for (int i = 0; i < 2; i++)
+			{
+				OWLDataProperty p = factory.getOWLDataProperty(IRI.create(ns_ontology + "orientation"));
+
+				OWLClassExpression ex1 = factory.getOWLDataHasValue(p, factory.getOWLLiteral(0));
+				// OWLClassExpression ex2 =
+				// factory.getOWLClass(IRI.create(ns_ontology +
+				// "SouthboundDelimiter"));
+				// OWLClassExpression ex3 =
+				// factory.getOWLClass(IRI.create(ns_ontology +
+				// "EastboundDelimiter"));
+
+				System.out.println("Result set " + i + ": ");
+				Set<OWLNamedIndividual> result = reasoner.getInstances(ex1, true).getFlattened();
+				for (OWLNamedIndividual owlNamedIndividual : result)
+					System.out.println(owlNamedIndividual);
+			}
+			System.out.println("-END-");
+		}
+		catch (OWLOntologyCreationException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// model =
 		// ModelFactory.createOntologyModel(PelletReasonerFactory.THE_SPEC);
