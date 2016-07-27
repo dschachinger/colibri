@@ -41,3 +41,19 @@ https://github.com/Atmosphere/wasync
 
 USED AS:
 maven dependency
+
+
+
+
+
+4.) Spanqit
+
+Desciption:
+A Java-based SPARQL query generator
+Spanqit is an open source, fluent Java library to programatically create SPARQL queries. See the wiki and javadocs (coming soon) for more info.
+
+URL:
+https://github.com/anqit/spanqit/home/josef/Schreibtisch/spanqit-master (2)/src/main/java/com
+
+USED AS:
+uncompiled source code

@@ -2,6 +2,7 @@ package channel.message.messageObj;
 
 import javax.xml.bind.annotation.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -11,53 +12,54 @@ public class Description {
     @XmlElement(name = "type", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private List<Type> types;
 
-    @XmlElement(name = "hasParameter", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(name = "hasParameter", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private List<HasProperty> hasParameters;
 
     @XmlAttribute
     private String about;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Address connectorAddress;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Address serviceAddress;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Address identifier;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private HasProperty hasDataConfiguration;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private HasProperty hasTechnologyProtocol;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private HasProperty hasTechnologyConnector;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private HasProperty hasUnit;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
-    private HasProperty hasDataValue;
+    @XmlElement(name = "hasDataValue", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
+    private List<HasProperty> hasDataValues;
 
-    @XmlElement(name = "hasValue", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(name = "hasValue", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private List<HasProperty> hasValues;
 
-    @XmlElement(name = "hasState", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(name = "hasState", namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private List<HasProperty> hasStates;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Value value;
 
-    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#")
+    @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Name name;
 
     public Description() {
-        this.types = new ArrayList<>();
-        this.hasParameters = new ArrayList<>();
-        this.hasValues = new ArrayList<>();
-        this.hasStates = new ArrayList<>();
+        this.types = Collections.synchronizedList(new ArrayList<>());
+        this.hasParameters = Collections.synchronizedList(new ArrayList<>());
+        this.hasValues = Collections.synchronizedList(new ArrayList<>());
+        this.hasStates = Collections.synchronizedList(new ArrayList<>());
+        this.hasDataValues = Collections.synchronizedList(new ArrayList<>());
     }
 
     public HasProperty getHasTechnologyProtocol() {
@@ -148,13 +150,14 @@ public class Description {
         this.identifier = identifier;
     }
 
-    public HasProperty getHasDataValue() {
-        return hasDataValue;
+    public List<HasProperty> getHasDataValue() {
+        return hasDataValues;
     }
 
-    public void setHasDataValue(String hasDataValue) {
-        this.hasDataValue = new HasProperty();
-        this.hasDataValue.setResource(hasDataValue);
+    public void addHasDataValue(String resource) {
+        HasProperty hasDataValue = new HasProperty();
+        hasDataValue.setResource(resource);
+        this.hasDataValues.add(hasDataValue);
     }
 
     public List<HasProperty> getHasValues() {

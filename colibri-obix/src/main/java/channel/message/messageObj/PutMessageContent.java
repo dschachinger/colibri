@@ -1,21 +1,27 @@
 package channel.message.messageObj;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement(name = "RDF" ,namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PutMessageContent {
 
+    private static final Logger logger = LoggerFactory.getLogger(PutMessageContent.class);
+
     @XmlElement(name="Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private List<Description> descriptions;
 
     public PutMessageContent() {
-        this.descriptions = new ArrayList<>();
+        this.descriptions = Collections.synchronizedList(new ArrayList<>());;
     }
 
     public List<Description> getDescriptions() {
@@ -61,7 +67,7 @@ public class PutMessageContent {
     public String getValue1HasParameterUri() {
         if(descriptions.get(2) != null && descriptions.get(2).getHasParameters() != null &&
                 descriptions.get(2).getHasParameters().get(0) != null) {
-            System.out.println(descriptions.get(2).getHasParameters().get(0).getResource());
+            logger.info(descriptions.get(2).getHasParameters().get(0).getResource());
             return descriptions.get(2).getHasParameters().get(0).getResource();
         } else {
             return "No Parameter Uri";

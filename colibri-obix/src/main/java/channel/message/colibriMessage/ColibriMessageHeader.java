@@ -15,38 +15,23 @@ public class ColibriMessageHeader {
     private String headerAsString;
     private static final String newLine = "<br>";
 
-    protected ColibriMessageHeader(String headerAsString) {
+    public ColibriMessageHeader(String headerAsString) {
         this.headerAsString = headerAsString;
     }
 
-    protected ColibriMessageHeader(ContentType contentType) {
+    public ColibriMessageHeader(ContentType contentType) {
         this.id = UUID.randomUUID().toString();
         this.id = id.replace("-", "");
         this.contentType = contentType;
         this.date = new Date();
     }
 
-    protected ColibriMessageHeader(ContentType contentType, String refenceId) {
+    public ColibriMessageHeader(ContentType contentType, String refenceId) {
         this.id = UUID.randomUUID().toString();
         this.id = id.replace("-", "");
         this.contentType = contentType;
         this.date = new Date();
         this.refenceId = refenceId;
-    }
-
-    public ColibriMessageHeader(String id, ContentType contentType, Date date, Date expires) {
-        this.id = id;
-        this.contentType = contentType;
-        this.date = date;
-        this.expires = expires;
-    }
-
-    public ColibriMessageHeader(String id, ContentType contentType, Date date, String refenceId, Date expires) {
-        this.id = id;
-        this.contentType = contentType;
-        this.date = date;
-        this.refenceId = refenceId;
-        this.expires = expires;
     }
 
     public String getId() {

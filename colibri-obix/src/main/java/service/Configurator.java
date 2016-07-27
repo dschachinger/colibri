@@ -7,6 +7,7 @@ import channel.obix.ObixChannel;
 import exception.ConfigurationException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class is used to operate on properties files.
@@ -102,9 +103,8 @@ public class Configurator {
     public List<Connector> getConnectors() throws ConfigurationException {
         List<Connector> connectors = new ArrayList<>();
         ColibriChannel colibriChannel = getColibriChannel();
-        for(ObixChannel obixChannel : getObixCoapChannels()) {
-            connectors.add(new Connector(obixChannel, colibriChannel, getConnectorAddress(), getConnectorIPAddress()));
-        }
+        connectors.addAll(getObixCoapChannels().stream().map(obixChannel -> new Connector(obixChannel, colibriChannel,
+                getConnectorAddress(), getConnectorIPAddress())).collect(Collectors.toList()));
 
         if (connectors.size() == 0) {
             throw new ConfigurationException("Cannot parse connectors of config file!");
@@ -162,5 +162,33 @@ public class Configurator {
         }
 
         return parameterTypes;
+    }
+
+    /**
+     * This method returns the time to wait for a Status Response in milliseconds which is specified in the .properties file of the given bundle.
+     *
+     * @return time to wait for a status response
+     * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
+     */
+    public int getTimeWaitingForStatusResponseInMilliseconds() throws ConfigurationException {
+        if (bundle.containsKey("timeWaitingForStatusResponseInMilliseconds")){
+            return Integer.parseInt(bundle.getString("timeWaitingForStatusResponseInMilliseconds"));
+        }else{
+            throw new ConfigurationException("No time to wait for a status response in config file!");
+        }
+    }
+
+    /**
+     * This method returns the times to resend a message which is specified in the .properties file of the given bundle.
+     *
+     * @return how often the message will be resended
+     * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
+     */
+    public int getTimesToResendMessage() throws ConfigurationException {
+        if (bundle.containsKey("resendMessageTimes")){
+            return Integer.parseInt(bundle.getString("resendMessageTimes"));
+        }else{
+            throw new ConfigurationException("No times to resend a message configured in the config file!");
+        }
     }
 }

@@ -7,6 +7,7 @@ import channel.message.colibriMessage.MessageIdentifier;
 import channel.message.colibriMessage.StatusCode;
 import channel.message.messageObj.ColibriMessageContentCreator;
 import channel.message.messageObj.PutMessageContent;
+import channel.obix.PutExecutionTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.obix.ObixObject;
 import org.atmosphere.wasync.*;
@@ -14,11 +15,15 @@ import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;
+import service.TimeDurationConverter;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ColibriChannel {
 
@@ -34,20 +39,26 @@ public class ColibriChannel {
     private Map<String, ObixObject> observeAbleObjectsMap;
     private Map<String, ObixObject> observedObjectsMap;
     private Map<String, ObixObject> requestedGetMessageMap;
-    private String lastMessageReceived = "No messages from Colibri SC received.";
+    private String lastMessageReceived = "No messages from Colibri Semantic Core received.";
     private Map<String, ObixObject> observedColibriActionsMap;
+    private ExecutorService executor;
+    private List<ResendMessageTask> waitingForStatusMessagesTasks;
+    private Map<String, Timer> runningTimers;
 
     public ColibriChannel(String connectorName, String host, int port) {
         this.connectorName = connectorName;
         this.host = host;
         this.port = port;
         this.registered = false;
-        client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
-        this.messagesWithoutResponse = new HashMap<>();
-        this.observeAbleObjectsMap = new HashMap<>();
-        this.observedObjectsMap = new HashMap<>();
-        this.observedColibriActionsMap = new HashMap<>();
-        this.requestedGetMessageMap = new HashMap<>();
+        this.client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
+        this.messagesWithoutResponse = Collections.synchronizedMap(new HashMap<>());
+        this.observeAbleObjectsMap = Collections.synchronizedMap(new HashMap<>());
+        this.observedObjectsMap = Collections.synchronizedMap(new HashMap<>());
+        this.observedColibriActionsMap = Collections.synchronizedMap(new HashMap<>());
+        this.requestedGetMessageMap = Collections.synchronizedMap(new HashMap<>());
+        this.waitingForStatusMessagesTasks = Collections.synchronizedList(new ArrayList<>());
+        this.runningTimers = new HashMap<>();
+        this.executor = Executors.newCachedThreadPool();
     }
 
     public void run() throws IOException {
@@ -62,6 +73,7 @@ public class ColibriChannel {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
+
                     }
                 })
                 .decoder(new Decoder<String, AtmosphereMessage>() {
@@ -88,7 +100,6 @@ public class ColibriChannel {
                 })
                 .transport(Request.TRANSPORT.WEBSOCKET)
                 .transport(Request.TRANSPORT.LONG_POLLING);
-
         socket = client.create();
         socket.on("message", new Function<AtmosphereMessage>() {
             public void on(AtmosphereMessage t) {
@@ -102,7 +113,7 @@ public class ColibriChannel {
                 }
             }
         }).on(new Function<Throwable>() {
-
+            @Override
             public void on(Throwable t) {
                 t.printStackTrace();
             }
@@ -119,26 +130,59 @@ public class ColibriChannel {
     }
 
     public void send(ColibriMessage msg) {
-        System.out.println(msg);
-        String tempTail = "<br> SENTMSG";
+        logger.info("Send:" + msg.toString());
         try {
-            if (!alreadySent(msg)) {
+          //  if (!alreadySent(msg)) {
                 socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
-                if(msg.getMsgType().equals(MessageIdentifier.GET)) {
+                if (msg.getMsgType().equals(MessageIdentifier.GET)) {
                     requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                             msg.getOptionalObixObject());
-                } if(!(msg.getMsgType().equals(MessageIdentifier.GET) || msg.getMsgType().equals(MessageIdentifier.STA))) {
+                }
+                if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
                     this.addMessageWithoutResponse(msg);
+                    int count = 0;
+                    Configurator conf = new Configurator();
+                    List<ResendMessageTask> tasksForResending = Collections.synchronizedList(new ArrayList<>());
+                    while (count <= conf.getTimesToResendMessage()) {
+                        count++;
+                        ResendMessageTask task = new ResendMessageTask(this, msg, tasksForResending);
+                        tasksForResending.add(task);
+                        Timer timer = new Timer();
+                        long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
+                        timer.schedule(task, timing * count);
+                        waitingForStatusMessagesTasks.add(task);
+                        runningTimers.put(UUID.randomUUID().toString(), timer);
+                    }
                 }
                 //TODO: remove this line, only for testing with FAKE
-                handleStatusMessagesFAKE(msg);
-            }
+                //   handleStatusMessagesFAKE(msg);
+          //  }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.info("Colibri Channel closed");
         }
     }
 
+    public ColibriMessage resend(ColibriMessage msg) {
+        logger.info("Resend: " + msg.toString());
+        ColibriMessage resendMsg = ColibriMessage.createMessageWithNewId(msg);
+        try {
+            if (msg.getMsgType().equals(MessageIdentifier.GET)) {
+                requestedGetMessageMap.remove(msg.getHeader().getId());
+                requestedGetMessageMap.put(resendMsg.getHeader().getId(), resendMsg.getOptionalObixObject());
+            } else {
+                messagesWithoutResponse.remove(msg.getHeader().getId());
+                messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
+            }
+            socket.fire(new AtmosphereMessage(connectorName, resendMsg.toString()));
+        } catch (IOException e) {
+            this.close();
+        }
+        return resendMsg;
+    }
+
     public void close() {
+        runningTimers.values().forEach(Timer::cancel);
+        executor.shutdownNow();
         socket.close();
     }
 
@@ -160,6 +204,9 @@ public class ColibriChannel {
     }
 
     public void messageReceived(ColibriMessage message) {
+        for (ResendMessageTask task : waitingForStatusMessagesTasks) {
+            task.addReceivedMessage(message);
+        }
         if (message.getMsgType().equals(MessageIdentifier.STA)) {
             handleStatusMessages(message);
         } else if (message.getMsgType().equals(MessageIdentifier.DRE)) {
@@ -171,11 +218,10 @@ public class ColibriChannel {
         } else if (message.getMsgType().equals(MessageIdentifier.REM)) {
             send(handleRemoveMessage(message));
         } else if (message.getMsgType().equals(MessageIdentifier.PUT)) {
-            send(handlePutMessage(message));
-        }else if (message.getMsgType().equals(MessageIdentifier.GET)) {
+            handlePutMessage(message);
+        } else if (message.getMsgType().equals(MessageIdentifier.GET)) {
             send(handleGetMessage(message));
         }
-
     }
 
     private void handleStatusMessages(ColibriMessage message) {
@@ -213,8 +259,6 @@ public class ColibriChannel {
     }
 
     //TODO: ONLY FOR TESTING PURPOSES
-
-
     private void handleStatusMessagesFAKE(ColibriMessage requestMsg) {
         if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
             this.registered = true;
@@ -249,10 +293,59 @@ public class ColibriChannel {
     }
 
     private ColibriMessage handleObserveMessage(ColibriMessage message) {
-        ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
-        if (temp != null) {
-            temp.setObservedByColibri(true);
-            observedObjectsMap.put(temp.getServiceUri(), temp);
+        String msgContent = message.getContent().getContentWithoutBreaksAndWhiteSpace();
+        String serviceUri = "";
+        ObixObject obj;
+        boolean successful = true;
+        if (msgContent.contains("?freq=")) {
+            String[] content = msgContent.split("\\?freq=");
+            serviceUri = content[0];
+            obj = observeAbleObjectsMap.get(serviceUri);
+            PutMessageToColibriTask executionTask = new PutMessageToColibriTask(obj, this, message.getHeader().getId());
+            if (obj == null) {
+                successful = false;
+            } else {
+                Date dateNow = new Date();
+                String icalTemp = TimeDurationConverter.date2Ical(dateNow).toString();
+                Timer timer = new Timer();
+                try {
+                    Date d = (TimeDurationConverter.ical2Date(icalTemp.split("T")[0] + "T" + content[1]));
+                    executionTask.setScheduled(true);
+                    /**
+                     * Send Put once a day at the specified time
+                     */
+                    timer.schedule(executionTask, d, 24 * 60 * 60 * 1000);
+                    obj.setPutMessageToColibriTask(executionTask);
+                } catch (ParseException e) {
+                    try {
+                        java.time.Duration duration = java.time.Duration.parse(content[1]);
+                        executionTask.setScheduled(true);
+                        /**
+                         * Send Put with the specified duration
+                         */
+                        timer.schedule(executionTask, duration.toMillis(), duration.toMillis());
+
+                        obj.setPutMessageToColibriTask(executionTask);
+                    } catch (DateTimeParseException ex) {
+                        successful = false;
+                    }
+                }
+                runningTimers.put(serviceUri, timer);
+            }
+        } else {
+            serviceUri = msgContent;
+            obj = observeAbleObjectsMap.get(serviceUri);
+            if (obj == null) {
+                successful = false;
+            } else {
+                PutMessageToColibriTask executionTask = new PutMessageToColibriTask(obj, this, message.getHeader().getId());
+                obj.setPutMessageToColibriTask(executionTask);
+                executionTask.setScheduled(false);
+            }
+        }
+        if (successful) {
+            obj.setObservedByColibri(true);
+            observedObjectsMap.put(obj.getServiceUri(), obj);
             return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
         }
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service cannot be observed", message.getHeader().getId());
@@ -263,6 +356,7 @@ public class ColibriChannel {
         if (temp != null) {
             temp.setObservedByColibri(false);
             observedObjectsMap.remove(temp.getServiceUri());
+            runningTimers.remove(temp.getServiceUri()).cancel();
             return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
         }
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not observed", message.getHeader().getId());
@@ -284,77 +378,80 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not added and therefore cannot be removed", message.getHeader().getId());
     }
 
-    private ColibriMessage handlePutMessage(ColibriMessage message) {
+    private void handlePutMessage(ColibriMessage message) {
         try {
             PutMessageContent content = ColibriMessageContentCreator.getPutMessageContent(message);
             ObixObject serviceObject = observedColibriActionsMap.get(content.getServiceUri());
-            if(serviceObject == null) {
+            if (serviceObject == null) {
                 serviceObject = requestedGetMessageMap.get(content.getServiceUri());
             }
             boolean setParam1 = false;
             boolean setParam2 = false;
             if (serviceObject != null) {
-                if (content.getDataValueUri().equals(serviceObject.getDataValueUri())) {
-                    System.out.println(content.getValue1HasParameterUri());
-                    System.out.println(serviceObject.getParameter1().getParameterUri());
-                    if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
-                        if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.setValueParameter1(content.getValue1());
-                            setParam1 = true;
-                        }
+                logger.info(content.getValue1HasParameterUri());
+                logger.info(serviceObject.getParameter1().getParameterUri());
+                if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
+                    if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
+                        serviceObject.setValueParameter1(content.getValue1());
+                        setParam1 = true;
                     }
-                    if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
-                        if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.setValueParameter2(content.getValue1());
-                            setParam2 = true;
-                        }
+                }
+                if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
+                    if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
+                        serviceObject.setValueParameter2(content.getValue1());
+                        setParam2 = true;
                     }
-                    if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
-                        if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                            serviceObject.setValueParameter1(content.getValue2());
-                            setParam1 = true;
-                        }
+                }
+                if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
+                    if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
+                        serviceObject.setValueParameter1(content.getValue2());
+                        setParam1 = true;
                     }
-                    if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
-                        if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                            serviceObject.setValueParameter2(content.getValue2());
-                            setParam2 = true;
-                        }
+                }
+                if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
+                    if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
+                        serviceObject.setValueParameter2(content.getValue2());
+                        setParam2 = true;
                     }
                 }
             }
             if (setParam1 && setParam2) {
-                synchronized (serviceObject) {
-                    serviceObject.setSetByColibri(true);
-                    serviceObject.notify();
+
+                //read optional timing for Put on Obix from parameter 2
+                PutExecutionTask executionTask = new PutExecutionTask(serviceObject, this, message.getHeader().getId());
+                java.util.Date param2Date;
+                try {
+                    param2Date = TimeDurationConverter.ical2Date(serviceObject.getParameter2().getValue().getValue());
+                } catch (ParseException e) {
+                    param2Date = new Date();
                 }
+                Timer timer = new Timer();
+                timer.schedule(executionTask, param2Date);
                 requestedGetMessageMap.remove(content.getServiceUri());
-                return ColibriMessage.createStatusMessage(StatusCode.OK, "", message.getHeader().getId());
             } else {
-                return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
-                        "Please check if the service address is correct.", message.getHeader().getId());
+                this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
+                        "Please check if the service address is correct.", message.getHeader().getId()));
             }
         } catch (JAXBException e) {
-            return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!", message.getHeader().getId());
+            this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!", message.getHeader().getId()));
         }
     }
 
     private ColibriMessage handleGetMessage(ColibriMessage message) {
         ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
-            return ColibriMessage.createPutMessage(temp, message.getHeader().getId());
+            List<ObixObject> putObjectList = Collections.synchronizedList(new ArrayList<>());
+            putObjectList.add(temp);
+            return ColibriMessage.createPutMessage(putObjectList, message.getHeader().getId());
         }
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not existing and therefore cannot handle GET message", message.getHeader().getId());
     }
-
+/*
     private Boolean alreadySent(ColibriMessage message) {
         for (ColibriMessage msg : messagesWithoutResponse.values()) {
             if (msg.getMsgType().equals(message.getMsgType())) {
-                if (msg.getMsgType().equals(MessageIdentifier.REG)
-                        || msg.getMsgType().equals(MessageIdentifier.DRE)) {
-                    return true;
-                }
-                if (message.getOptionalObixObject() != null && msg.getOptionalObixObject() != null) {
+                if (message.getOptionalObixObject() != null && msg.getOptionalObixObject() != null
+                        && !message.getMsgType().equals(MessageIdentifier.GET)) {
                     if (message.getOptionalObixObject().getServiceUri().equals(msg.getOptionalObixObject().getServiceUri())) {
                         return true;
                     }
@@ -362,7 +459,7 @@ public class ColibriChannel {
             }
         }
         return false;
-    }
+    } */
 
     public String getLastMessageReceived() {
         return lastMessageReceived;
@@ -370,5 +467,25 @@ public class ColibriChannel {
 
     public void setLastMessageReceived(String lastMessageReceived) {
         this.lastMessageReceived = lastMessageReceived;
+    }
+
+    public Map<String, ObixObject> getRequestedGetMessageMap() {
+        return requestedGetMessageMap;
+    }
+
+    public void setRequestedGetMessageMap(Map<String, ObixObject> requestedGetMessageMap) {
+        this.requestedGetMessageMap = requestedGetMessageMap;
+    }
+
+    public void removeWaitingForStatusMessagesThread(ResendMessageTask thread) {
+        waitingForStatusMessagesTasks.remove(thread);
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
     }
 }

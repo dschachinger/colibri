@@ -10,6 +10,8 @@ import channel.obix.ObixChannel;
 import exception.CoapException;
 import model.obix.ObixLobby;
 import model.obix.ObixObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.Configurator;
 
 import javax.swing.*;
@@ -17,18 +19,17 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class GuiUtility {
     private Connector connector;
     private ObixChannel obixChannel;
     private JFrame mainFrame;
     private List<RepresentationRow> representationRows = new ArrayList<RepresentationRow>();
-    private ExecutorService executor = Executors.newCachedThreadPool();
-    ;
+    private ExecutorService executor;
     private ObixLobby lobby;
     private JPanel cards;
     private CommandFactory commandFactory;
@@ -38,38 +39,30 @@ public class GuiUtility {
     private List<ObserveThread> observeThreads;
     private List<StateRepresentation> listOfStateRepresentations;
 
+    private static final Logger logger = LoggerFactory.getLogger(GuiUtility.class);
+
     public GuiUtility(Connector connector) {
         this.connector = connector;
         this.obixChannel = connector.getObixChannel();
         this.commandFactory = new CommandFactory();
-        this.observeThreads = new ArrayList<>();
-        this.listOfStateRepresentations = new ArrayList<>();
+        this.observeThreads = Collections.synchronizedList(new ArrayList<>());;
+        this.listOfStateRepresentations = Collections.synchronizedList(new ArrayList<>());;
+        this.updateThread = new UpdateThread(commandFactory);
+        this.executor = connector.getExecutor();
     }
 
-    public void runGui() {
-        try {
-            this.lobby = obixChannel.getLobby(obixChannel.getLobbyUri());
-        } catch (CoapException e) {
-            System.err.println("Cannot connect to oBIX Lobby of host " + obixChannel.getBaseUri() + " with the CoAP port " + obixChannel.getPort() + ". " +
-                    "Maybe the lobby URI in the config.properties file is wrong, " +
-                    "or the lobby is not online.");
-            return;
-        }
+    public void runGui() throws CoapException {
+        this.lobby = obixChannel.getLobby(obixChannel.getLobbyUri());
         //Create and set up the window.
         mainFrame = new JFrame("ObixConnector at " + obixChannel.getBaseUri() + ": " + obixChannel.getPort());
         mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        mainFrame.setUndecorated(true);
+        mainFrame.setUndecorated(false);
 
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                for (ObserveThread thread : observeThreads) {
-                    thread.stop();
-                }
-                updateThread.stop();
-                connector.getColibriChannel().close();
-                executor.shutdownNow();
+                close();
             }
         });
 
@@ -81,8 +74,8 @@ public class GuiUtility {
 
         //Display the window.
         mainFrame.pack();
-        updateThread = new UpdateThread(commandFactory);
         executor.execute(updateThread);
+        connector.addRunAndStopAble(updateThread);
         mainFrame.setVisible(true);
     }
 
@@ -92,7 +85,7 @@ public class GuiUtility {
         cards = new JPanel(new CardLayout());
         JScrollPane scrollPane = new JScrollPane(chooseComponents());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        scrollPane.setBorder(new EmptyBorder(20, 20, 0, 10));
+        //     scrollPane.setBorder(new EmptyBorder(20, 20, 0, 10));
 
         cards.add(scrollPane);
 
@@ -102,6 +95,7 @@ public class GuiUtility {
     private JPanel chooseComponents() {
         int numRows = lobby.getObixObjects().size() + 2;
         JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         registeredColibriChannelCheckBox = new JCheckBox("IS REGISTERD ON COLIBRI SEMANTIC CORE");
         commandFactory.addCommand(() -> registeredColibriChannelCheckBox.setSelected(connector.getColibriChannel().getRegistered()));
         connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
@@ -155,7 +149,7 @@ public class GuiUtility {
             }
 
             public void mouseReleased(MouseEvent e) {
-                List<ObixObject> chosenObjects = new ArrayList<>();
+                List<ObixObject> chosenObjects = Collections.synchronizedList(new ArrayList<>());;
                 for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                     if (r.getChooseCheckbox().isSelected()) {
                         chosenObjects.add(r.getObixObject());
@@ -186,7 +180,6 @@ public class GuiUtility {
     private Container chooseParameters(List<ObixObject> chosenComponents) {
         Container pane = new Container();
         pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         Font titelF = new Font("Courier", Font.BOLD, 30);
@@ -249,7 +242,7 @@ public class GuiUtility {
             int param1UnitLabelxPosition = c.gridx;
             int param1UnitLabelyPosition = c.gridy;
 
-            for(StateDescription s : o.getParameter1().getStateDescriptions()) {
+            for (StateDescription s : o.getParameter1().getStateDescriptions()) {
                 JLabel stateNameLabel = new JLabel("State Name: ");
                 JTextField stateNameTextfield = new JTextField(20);
                 stateNameTextfield.setText(s.getName().getName());
@@ -478,7 +471,7 @@ public class GuiUtility {
 
                     s.getParameter().addStateDescription(state);
                 }
-                List<ObixObject> chosenObjects = new ArrayList<>();
+                List<ObixObject> chosenObjects = Collections.synchronizedList(new ArrayList<>());
                 for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                     r.getObixObject().getParameter1().setParameterType((String) r.getParam1TypeComboBox().getSelectedItem());
                     r.getObixObject().getParameter2().setParameterType((String) r.getParam2TypeComboBox().getSelectedItem());
@@ -604,7 +597,7 @@ public class GuiUtility {
 
             final JCheckBox observeColibriActionsCheckbox = new JCheckBox("Observe Colibri Actions");
             if (o.getObj().isWritable()) {
-                commandFactory.addCommand(() -> observeColibriActionsCheckbox.setEnabled(o.getObservedByColibri()));
+                commandFactory.addCommand(() -> observeColibriActionsCheckbox.setEnabled(o.getAddedAsService()));
                 commandFactory.addCommand(() -> observeColibriActionsCheckbox.setSelected(o.getObservesColibriActions()));
             } else {
                 observeColibriActionsCheckbox.setEnabled(false);
@@ -616,6 +609,7 @@ public class GuiUtility {
                     getObixButton, getColibriButton, addServiceCheckbox, observedByColibriCheckBox, observeColibriActionsCheckbox));
             ObserveThread thread = new ObserveThread(observeObixCheckBox, textField, o, connector);
             executor.execute(thread);
+            connector.addRunAndStopAble(thread);
             observeThreads.add(thread);
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
@@ -723,7 +717,7 @@ public class GuiUtility {
                     object = obixChannel.get(object.getObixUri());
                     textF.setText(object.toString());
                     if (o.getObservedByColibri()) {
-                        connector.getColibriChannel().send(ColibriMessage.createPutMessage(object));
+                        o.getPutMessageToColibriTask().execute(o);
                     }
                 }
 
@@ -788,6 +782,8 @@ public class GuiUtility {
         }
 
         JTextArea receivedMessagesTextArea = new JTextArea("Received Messages");
+        receivedMessagesTextArea.setLineWrap(true);
+        receivedMessagesTextArea.setWrapStyleWord(true);
         c.gridy++;
         c.gridx = 0;
         c.insets = new Insets(50, 0, 0, 0);
@@ -795,6 +791,42 @@ public class GuiUtility {
         pane.add(receivedMessagesTextArea, c);
         receivedMessagesTextArea.setEnabled(false);
         commandFactory.addCommand(() -> receivedMessagesTextArea.setText(connector.getColibriChannel().getLastMessageReceived()));
+
+        c.gridy++;
+        c.gridwidth = 1;
+
+        JLabel sendMessageLabel = new JLabel("Send Query Message to Colibri Semantic Core:");
+        pane.add(sendMessageLabel, c);
+
+        c.gridy++;
+        c.gridwidth = 10;
+        JTextArea sendMessageArea = new JTextArea("");
+        pane.add(sendMessageArea, c);
+
+        c.gridy++;
+        c.gridwidth = 1;
+        JButton sendMessageButton = new JButton("Send Query Message");
+        pane.add(sendMessageButton, c);
+        commandFactory.addCommand(() -> sendMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
+
+        sendMessageButton.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                connector.getColibriChannel().send(ColibriMessage.createQueryMessage(sendMessageArea.getText()));
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+
         return pane;
     }
 
@@ -802,4 +834,10 @@ public class GuiUtility {
         return representationRows;
     }
 
+    public void close() {
+        observeThreads.forEach(ObserveThread::stop);
+        updateThread.stop();
+        connector.setRunning(false);
+        connector.stop();
+    }
 }

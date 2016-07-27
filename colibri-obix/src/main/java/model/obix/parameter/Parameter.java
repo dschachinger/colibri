@@ -13,16 +13,16 @@ public class Parameter {
     private String valueUri;
     private Value value;
     private List<String> stateUris;
-    private ArrayList<StateDescription> stateDescriptions;
-    private ArrayList<StateDescription> states;
+    private List<StateDescription> stateDescriptions;
+    private List<StateDescription> states;
 
     private Parameter(String uri, int paramNumber) {
         this.parameterUri = uri + "parameter" + paramNumber;
         this.valueUri = uri + "value" + paramNumber;
         this.value = new Value();
-        this.stateUris = new ArrayList<>();
-        this.stateDescriptions = new ArrayList<>();
-        this.states = new ArrayList<>();
+        this.stateUris = Collections.synchronizedList(new ArrayList<>());
+        this.stateDescriptions = Collections.synchronizedList(new ArrayList<>());
+        this.states = Collections.synchronizedList(new ArrayList<>());
     }
 
     public Parameter(String uri, int paramNumber, Date date) {
@@ -120,11 +120,11 @@ public class Parameter {
         return stateUris;
     }
 
-    public ArrayList<StateDescription> getStateDescriptions() {
+    public List<StateDescription> getStateDescriptions() {
         return stateDescriptions;
     }
 
-    public ArrayList<StateDescription> addStateDescription(StateDescription desc) {
+    public List<StateDescription> addStateDescription(StateDescription desc) {
         stateDescriptions.add(desc);
         return stateDescriptions;
     }
@@ -135,7 +135,7 @@ public class Parameter {
         return states;
     }
 
-    public ArrayList<StateDescription> getStates() {
+    public List<StateDescription> getStates() {
         return states;
     }
 }

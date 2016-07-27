@@ -1,11 +1,17 @@
 package channel.message.colibriMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import service.TimeDurationConverter;
+
+import java.text.ParseException;
 
 public class ColibriMessageMapper {
 
     //TODO: Change to \r\n
     static String newLine = "<br>";
+
+    private static final Logger logger = LoggerFactory.getLogger(ColibriMessageMapper.class);
 
     public static ColibriMessage msgToPOJO(String msg) throws IllegalArgumentException{
 
@@ -20,7 +26,7 @@ public class ColibriMessageMapper {
 
             return new ColibriMessage(MessageIdentifier.fromString(cmdName), header, new ColibriMessageContent(msg.substring(endHeaderPos)));
         } catch (StringIndexOutOfBoundsException e) {
-            System.out.println("exception");
+            logger.error(e.getMessage());
             return null;
         }
     }
@@ -31,29 +37,30 @@ public class ColibriMessageMapper {
         String[] splittedMsg = msg.split(newLine);
 
         for (String s : splittedMsg) {
-            System.out.println("header: " + s);
             String[] parts = s.split(":", 2);
             String fieldType = parts[0].trim();
             String value = parts[1].trim();
 
-            System.out.println("field type " + fieldType + " value " + value);
-
-            switch (fieldType) {
-                case "Message-Id":
-                    header.setId(value);
-                    break;
-                case "Content-Type":
-                    header.setContentType(ContentType.fromString(value));
-                    break;
-                case "Date":
-                    header.setDate(TimeDurationConverter.ical2Date(value));
-                    break;
-                case "Expires":
-                    header.setExpires(TimeDurationConverter.ical2Date(value));
-                    break;
-                case "Reference-Id":
-                    header.setRefenceId(value);
-                    break;
+            try {
+                switch (fieldType) {
+                    case "Message-Id":
+                        header.setId(value);
+                        break;
+                    case "Content-Type":
+                        header.setContentType(ContentType.fromString(value));
+                        break;
+                    case "Date":
+                        header.setDate(TimeDurationConverter.ical2Date(value));
+                        break;
+                    case "Expires":
+                        header.setExpires(TimeDurationConverter.ical2Date(value));
+                        break;
+                    case "Reference-Id":
+                        header.setRefenceId(value);
+                        break;
+                }
+            } catch (ParseException e) {
+                logger.error("Time in Header not parseable");
             }
         }
         return header;

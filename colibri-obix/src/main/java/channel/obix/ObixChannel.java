@@ -3,6 +3,8 @@ package channel.obix;
 import model.obix.ObixLobby;
 import model.obix.ObixObject;
 import org.eclipse.californium.core.coap.CoAP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -19,6 +21,8 @@ public abstract class ObixChannel {
     protected List<String> observedTypes;
     protected Map<String, ObixObject> observedObjects = new HashMap<String, ObixObject>();
     protected Integer port;
+
+    private static final Logger logger = LoggerFactory.getLogger(ObixChannel.class);
 
     public ObixChannel() {
     }
@@ -150,9 +154,9 @@ public abstract class ObixChannel {
             uri = uri.split(":")[1];
         }
         if(uri.contains("%") || baseUri.contains("%")) {
-            System.out.println("Please do not use % in URIs when using CoAP. This URI is skipped.");
-            uri = uri.replace("%", "");
-            baseUri = baseUri.replace("%", "");
+            //URL Encode % with %25
+            uri = uri.replace("%", "%25");
+            baseUri = baseUri.replace("%", "%25");
         }
         String[] uriPaths = uri.split("/");
         String newUri = baseUri;

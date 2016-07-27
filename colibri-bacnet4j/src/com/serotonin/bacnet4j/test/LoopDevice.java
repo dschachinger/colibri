@@ -138,7 +138,7 @@ public class LoopDevice implements Runnable {
                 }
             });
 
-            // for valid property values with valid datatypes see com.serotonin.bacnet4j.obj.ObjectProperties and ther
+            // for valid property values with valid datatypes see ObjectProperties and ther
             // look for the big static block at the end;
             // properties of device object
             localDevice.getConfiguration().setProperty(PropertyIdentifier.modelName,

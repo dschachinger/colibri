@@ -1,5 +1,8 @@
 package service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -19,7 +22,7 @@ import java.util.regex.Pattern;
 public class TimeDurationConverter {
 
     static private DatatypeFactory datatypeFactory;
-
+    private static final Logger logger = LoggerFactory.getLogger(TimeDurationConverter.class);
 
     static {
         try {
@@ -31,38 +34,31 @@ public class TimeDurationConverter {
 
 
     /**
-     *  * This method returns a Date object. This object is according to the values of the given XCal Date String assigned.
-     *  * The method expect that the XCal Date String is in UTC timezone.
-     *  * @param icalDate ical Date String
-     *  * @return date object
-     *
+     * * This method returns a Date object. This object is according to the values of the given XCal Date String assigned.
+     * * The method expect that the XCal Date String is in UTC timezone.
+     * * @param icalDate ical Date String
+     * * @return date object
      */
 
 
-    public static Date ical2Date(String icalDate) {
+    public static Date ical2Date(String icalDate) throws ParseException {
         icalDate = icalDate.replaceAll("\\.\\d*Z", "");
-        System.out.println("new string " + icalDate);
+        logger.info("new string " + icalDate);
         // if fractional seconds needed SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         Date d = null;
-        try {
-            d = sdf.parse(icalDate);
-            System.out.println("parsed date: " + d); // output in your system timezone using toString()
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+        d = sdf.parse(icalDate);
+        logger.info("parsed date: " + d); // output in your system timezone using toString()
         return d;
     }
 
 
     /**
-     *  * This method transforms a given data object into an XMLGregorianCalendar.
-     *  * The returned time is in UTC timezone
-     *  * @param date given data object
-     *  * @return date in XCal Format in UTC
-     *
+     * * This method transforms a given data object into an XMLGregorianCalendar.
+     * * The returned time is in UTC timezone
+     * * @param date given data object
+     * * @return date in XCal Format in UTC
      */
 
 
@@ -82,11 +78,10 @@ public class TimeDurationConverter {
     }
 
     /**
-     *  * Takes a long of seconds and converts it into an XCal string
-     *  *
-     *  * @param seconds - The number of seconds required by the String. Only positive allowed
-     *  * @return the String properly formatted for XCal with 0 values omitted
-     *
+     * * Takes a long of seconds and converts it into an XCal string
+     * *
+     * * @param seconds - The number of seconds required by the String. Only positive allowed
+     * * @return the String properly formatted for XCal with 0 values omitted
      */
 
 

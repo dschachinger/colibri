@@ -5,6 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement(name = "RDF" ,namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
@@ -17,7 +18,7 @@ public class AddServiceMessageContent {
     private List<Description> descriptions;
 
     public AddServiceMessageContent() {
-        this.descriptions = new ArrayList<>();
+        this.descriptions = Collections.synchronizedList(new ArrayList<>());;
     }
 
     public List<Description> getDescriptions() {

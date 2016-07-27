@@ -37,7 +37,7 @@ public class QuickTest {
             for (ObjectPropertyReference opr : pvs)
                 System.out.println(pvs.getNoErrorCheck(opr));
             
-//            Encodable value = new com.serotonin.bacnet4j.type.primitive.Boolean(true);
+//            Encodable value = new Boolean(true);
 //            //Encodable value = BinaryPV.active;
 //            WritePropertyRequest wpr = new WritePropertyRequest(oid, PropertyIdentifier.presentValue, null, value, null);
 //            System.out.println(localDevice.send(d, wpr));

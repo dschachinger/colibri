@@ -9,7 +9,10 @@ public enum MessageIdentifier {
     DET("DET"),
     REM("REM"),
     PUT("PUT"),
-    GET("GET");
+    GET("GET"),
+    QUE("QUE"),
+    QRE("QRE"),
+    UPD("UPD");
 
     private String type;
 

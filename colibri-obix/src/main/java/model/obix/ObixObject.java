@@ -1,5 +1,6 @@
 package model.obix;
 
+import channel.colibri.PutMessageToColibriTask;
 import channel.message.messageObj.Name;
 import channel.message.messageObj.StateDescription;
 import channel.message.messageObj.Value;
@@ -11,6 +12,7 @@ import org.eclipse.californium.core.coap.CoAP;
 import service.Configurator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ObixObject {
@@ -40,6 +42,7 @@ public class ObixObject {
     private Boolean setByColibri;
     private String connectorUri;
     private String obixUnitUri;
+    private PutMessageToColibriTask putMessageToColibriTask;
 
 
     public ObixObject(String uri) {
@@ -52,7 +55,7 @@ public class ObixObject {
         this.obixUri = uri;
         this.serviceUri = colibriBaseUri + "service";
         this.configurationUri = colibriBaseUri + "configuration";
-        this.dataValueUri = colibriBaseUri + "data-value1";
+        this.dataValueUri = colibriBaseUri + "data-value";
         this.addedAsService = false;
         this.observedByColibri = false;
         this.observesColibriActions = false;
@@ -281,8 +284,16 @@ public class ObixObject {
         this.obixUnitUri = obixUnitUri;
     }
 
+    public PutMessageToColibriTask getPutMessageToColibriTask() {
+        return putMessageToColibriTask;
+    }
+
+    public void setPutMessageToColibriTask(PutMessageToColibriTask putMessageToColibriTask) {
+        this.putMessageToColibriTask = putMessageToColibriTask;
+    }
+
     public void createBooleanStateDescriptions(Parameter param) {
-        ArrayList<String> types = new ArrayList<>();
+        java.util.List<String> types = Collections.synchronizedList(new ArrayList<>());
         types.add("&colibri;AbsoluteState");
         types.add("&colibri;DiscreteState");
 
@@ -309,4 +320,6 @@ public class ObixObject {
         param.addStateUri(stateTrueUri);
         param.addStateUri(stateFalseUri);
     }
+
+
 }

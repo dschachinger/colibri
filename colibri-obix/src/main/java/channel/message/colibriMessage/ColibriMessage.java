@@ -5,6 +5,10 @@ import channel.Connector;
 import channel.message.messageObj.ColibriMessageContentCreator;
 import model.obix.ObixObject;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ColibriMessage {
 
     private MessageIdentifier msgType;
@@ -29,22 +33,23 @@ public class ColibriMessage {
     /**
      * Creates a register message of this connector for the colibri semantic core.
      *
-     * @return              The register message.
+     * @return The register message.
      */
     public static ColibriMessage createRegisterMessage(Connector connector) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.REG,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
                 new ColibriMessageContent(ColibriMessageContentCreator.createRegisterMessageContent(connector)));
+        msg.setOptionalConnector(connector);
         return msg;
     }
 
     /**
      * Creates a deregister message of this connector for the colibri semantic core.
      *
-     * @return          The deregister message.
+     * @return The deregister message.
      */
     public static ColibriMessage createDeregisterMessage(Connector connector) {
-        ColibriMessage msg =  new ColibriMessage(MessageIdentifier.DRE,
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.DRE,
                 new ColibriMessageHeader(ContentType.TEXT_PLAIN),
                 new ColibriMessageContent(connector.getConnectorAddress()));
         msg.setOptionalConnector(connector);
@@ -54,8 +59,8 @@ public class ColibriMessage {
     /**
      * Creates a addService message of this connector for the given obix Object and the colibri semantic core.
      *
-     * @param object    The object which should be registered as a service.
-     * @return          The addService message.
+     * @param object The object which should be registered as a service.
+     * @return The addService message.
      */
     public static ColibriMessage createAddServiceMessage(ObixObject object) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.ADD,
@@ -68,8 +73,8 @@ public class ColibriMessage {
     /**
      * Creates a removeService message of this connector for the given obix Object and the colibri semantic core.
      *
-     * @param object    The object which represents the service should be removed.
-     * @return          The removeService message.
+     * @param object The object which represents the service should be removed.
+     * @return The removeService message.
      */
     public static ColibriMessage createRemoveServiceMessage(ObixObject object) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.REM,
@@ -82,8 +87,8 @@ public class ColibriMessage {
     /**
      * Creates a observeService message of this connector for the given obix Object which represents the service.
      *
-     * @param object    The object which represents the service which is observed.
-     * @return          The observeService message.
+     * @param object The object which represents the service which is observed.
+     * @return The observeService message.
      */
     public static ColibriMessage createObserveServiceMessage(ObixObject object) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.OBS,
@@ -96,8 +101,8 @@ public class ColibriMessage {
     /**
      * Creates a detachService message of this connector for the given obix Object which represents the service.
      *
-     * @param object    The object which represents the service which is detached.
-     * @return          The detachService message.
+     * @param object The object which represents the service which is detached.
+     * @return The detachService message.
      */
     public static ColibriMessage createDetachServiceMessage(ObixObject object) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.DET,
@@ -108,30 +113,30 @@ public class ColibriMessage {
     }
 
     public static ColibriMessage createStatusMessage(StatusCode statusCode, String description) {
-        return  new ColibriMessage(MessageIdentifier.STA,
+        return new ColibriMessage(MessageIdentifier.STA,
                 new ColibriMessageHeader(ContentType.TEXT_PLAIN),
                 new ColibriMessageContent(statusCode.getCode() + " " + statusCode.toString() + newLine + description));
     }
 
     public static ColibriMessage createStatusMessage(StatusCode statusCode, String description, String referenceId) {
-        return  new ColibriMessage(MessageIdentifier.STA,
+        return new ColibriMessage(MessageIdentifier.STA,
                 new ColibriMessageHeader(ContentType.TEXT_PLAIN, referenceId),
                 new ColibriMessageContent(statusCode.getCode() + " " + statusCode.toString() + newLine + description));
     }
 
-    public static ColibriMessage createPutMessage(ObixObject object) {
+    public static ColibriMessage createPutMessage(List<ObixObject> objects) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.PUT,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML),
-                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
-        msg.setOptionalObixObject(object);
+                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(objects)));
+        msg.setOptionalObixObject(objects.get(0));
         return msg;
     }
 
-    public static ColibriMessage createPutMessage(ObixObject object, String referenceId) {
+    public static ColibriMessage createPutMessage(List<ObixObject> objects, String referenceId) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.PUT,
                 new ColibriMessageHeader(ContentType.APPLICATION_RDF_XML, referenceId),
-                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(object)));
-        msg.setOptionalObixObject(object);
+                new ColibriMessageContent(ColibriMessageContentCreator.createPutMessageContent(objects)));
+        msg.setOptionalObixObject(objects.get(0));
         return msg;
     }
 
@@ -140,6 +145,13 @@ public class ColibriMessage {
                 new ColibriMessageHeader(ContentType.TEXT_PLAIN),
                 new ColibriMessageContent(object.getServiceUri()));
         msg.setOptionalObixObject(object);
+        return msg;
+    }
+
+    public static ColibriMessage createQueryMessage(String queryContent) {
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.QUE,
+                new ColibriMessageHeader(ContentType.APPLICATION_SPARQL_QUERY),
+                new ColibriMessageContent(queryContent));
         return msg;
     }
 
@@ -186,5 +198,46 @@ public class ColibriMessage {
     @Override
     public String toString() {
         return msgType.getIdentifier() + newLine + header.getMessageHeaderAsString() + newLine + content.getContent();
+    }
+
+    public static ColibriMessage createMessageWithNewId(ColibriMessage oldMessage) {
+        MessageIdentifier i = oldMessage.getMsgType();
+        switch (i) {
+            case REG:
+                return ColibriMessage.createRegisterMessage(oldMessage.getOptionalConnector());
+            case DRE:
+                return ColibriMessage.createDeregisterMessage(oldMessage.getOptionalConnector());
+            case ADD:
+                return ColibriMessage.createAddServiceMessage(oldMessage.getOptionalObixObject());
+
+            case REM:
+                return ColibriMessage.createAddServiceMessage(oldMessage.getOptionalObixObject());
+
+            case OBS:
+                return ColibriMessage.createObserveServiceMessage(oldMessage.getOptionalObixObject());
+
+            case DET:
+                return ColibriMessage.createDetachServiceMessage(oldMessage.getOptionalObixObject());
+
+            case STA:
+                if(oldMessage.getHeader().hasReferenceId()) {
+                    return new ColibriMessage(oldMessage.getMsgType(), new ColibriMessageHeader(ContentType.TEXT_PLAIN,
+                            oldMessage.getHeader().getRefenceId()), oldMessage.getContent());
+                } else {
+                    return new ColibriMessage(oldMessage.getMsgType(), new ColibriMessageHeader(ContentType.TEXT_PLAIN), oldMessage.getContent());
+                }
+
+            case PUT:
+                List<ObixObject> bundledObjects = Collections.synchronizedList(new ArrayList<>());;
+                bundledObjects.add(oldMessage.getOptionalObixObject());
+                return ColibriMessage.createPutMessage(bundledObjects);
+
+            case GET:
+                return ColibriMessage.createGetMessage(oldMessage.getOptionalObixObject());
+
+            default:
+                return ColibriMessage.createStatusMessage(StatusCode.ERROR_PROCESSING, "Error creating message with new ID");
+
+        }
     }
 }

@@ -1,10 +1,14 @@
 package connectorClient;
 
 import channel.commandPattern.CommandFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import service.RunAndStopAble;
 
-public class UpdateThread implements Runnable {
+public class UpdateThread implements RunAndStopAble {
     private CommandFactory commandFactory;
     private boolean stopped;
+    private static final Logger logger = LoggerFactory.getLogger(UpdateThread.class);
 
     public UpdateThread(CommandFactory commandFactory) {
         this.commandFactory = commandFactory;
@@ -19,7 +23,7 @@ public class UpdateThread implements Runnable {
                     commandFactory.executeCommand(command);
                 }
             } catch (InterruptedException e) {
-                System.out.println("Closing GUI");
+                logger.info("Closing GUI");
                 return;
             }
         }

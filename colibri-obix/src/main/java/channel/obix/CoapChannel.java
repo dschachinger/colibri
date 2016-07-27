@@ -3,12 +3,14 @@ package channel.obix;
 import exception.CoapException;
 import model.obix.ObixLobby;
 import model.obix.ObixObject;
-import obix.net.Http;
+import org.apache.http.HttpStatus;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.coap.CoAP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class CoapChannel extends ObixChannel {
 
     private final String SCHEME = "coap";
     private CoapClient coapClient;
+    private static final Logger logger = LoggerFactory.getLogger(CoapChannel.class);
 
     public CoapChannel(String baseUri, String lobbyUri, List<String> observedTypes) {
         super(baseUri, lobbyUri, observedTypes);
@@ -75,10 +78,11 @@ public class CoapChannel extends ObixChannel {
 
     private String getAsString(String uri, int mediaType) throws CoapException {
         coapClient = getCoapClientWithUri(uri);
-        if (!coapClient.ping()) {
-            throw new CoapException(Http.SC_BAD_REQUEST);
+        CoapResponse r = coapClient.get();
+        if(r == null) {
+            throw new CoapException(HttpStatus.SC_BAD_REQUEST);
         }
-        return coapClient.get(mediaType).getResponseText();
+        return r.getResponseText();
     }
 
     private String observeAsXml(ObixObject obj, int mediaType) {
@@ -103,7 +107,7 @@ public class CoapChannel extends ObixChannel {
                     }
 
                     public void onError() {
-                        System.err.println("OBSERVING FAILED");
+                        logger.error("OBSERVING " + obj.getObixUri() + " FAILED");
                     }
 
                 }, mediaType);

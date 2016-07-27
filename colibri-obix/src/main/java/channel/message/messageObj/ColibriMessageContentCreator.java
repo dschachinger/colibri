@@ -1,13 +1,16 @@
 package channel.message.messageObj;
 
 import channel.Connector;
-import channel.message.colibriMessage.ColibriMessage;
+import channel.colibri.ColibriChannel;
+import channel.colibri.PutMessageToColibriTask;
+import channel.message.colibriMessage.*;
 import channel.obix.CoapChannel;
 import channel.obix.ObixChannel;
 import channel.obix.ObixXmlChannelDecorator;
 import model.obix.ObixObject;
 import model.obix.parameter.Parameter;
 import service.Configurator;
+import service.TimeDurationConverter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,13 +18,16 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.time.Duration;
+import java.util.*;
 
 public class ColibriMessageContentCreator {
 
     private static Marshaller jaxbMarshaller;
     private static Unmarshaller jaxbUnmarshaller;
     private static boolean booleanStatesAlreadyReigstered;
+    private static int dataValueCounter = 1;
 
     static {
         try {
@@ -38,7 +44,7 @@ public class ColibriMessageContentCreator {
                     "\n<!DOCTYPE rdf:RDF [\n" +
                             "<!ENTITY xsd \"http://www.w3.org/2001/XMLSchema#\" >\n" +
                             "<!ENTITY rdf \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" >\n" +
-                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/res/colibri.owl#\">]>");
+                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl\">]>");
 
         } catch (JAXBException e) {
             e.printStackTrace();
@@ -93,10 +99,10 @@ public class ColibriMessageContentCreator {
         addServiceMessageContent.addDescription(parameter2Description);
 
         //Description of possible states
-        if(!booleanStatesAlreadyReigstered) {
+        if (!booleanStatesAlreadyReigstered) {
             int countBooleanStates = 0;
-            for(StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
-                if(des.isBooleanState()) {
+            for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+                if (des.isBooleanState()) {
                     countBooleanStates++;
                 }
                 Description stateDescription = new Description();
@@ -106,12 +112,12 @@ public class ColibriMessageContentCreator {
                 stateDescription.setName(des.getName());
                 addServiceMessageContent.addDescription(stateDescription);
             }
-            if(countBooleanStates == 2) {
+            if (countBooleanStates == 2) {
                 booleanStatesAlreadyReigstered = true;
             }
         }
 
-        for(StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+        for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
             Description stateDescription = new Description();
             stateDescription.setAbout(des.getStateDescriptionUri());
             des.getStateTypes().forEach(stateDescription::addType);
@@ -130,43 +136,46 @@ public class ColibriMessageContentCreator {
         return writer.toString();
     }
 
-    public static String createPutMessageContent(ObixObject obixObject) {
+    public static String createPutMessageContent(List<ObixObject> obixObjects) {
         PutMessageContent putMessageContent = new PutMessageContent();
         //Description of the service
         Description description = new Description();
-        description.setAbout(obixObject.getServiceUri());
-        description.setHasDataValue(obixObject.getDataValueUri());
+        description.setAbout(obixObjects.get(0).getServiceUri());
         putMessageContent.addDescription(description);
 
-        //Description of the data Values
-        Description dataValueDescription = new Description();
-        dataValueDescription.setAbout(obixObject.getDataValueUri());
-        dataValueDescription.addType("&colibri;DataValue");
-        dataValueDescription.addHasValue(obixObject.getParameter1().getValueUri());
-        dataValueDescription.addHasValue(obixObject.getParameter2().getValueUri());
-        putMessageContent.addDescription(dataValueDescription);
+        for(ObixObject obixObject : obixObjects) {
+            description.addHasValue(obixObjects.get(0).getDataValueUri() + dataValueCounter);
+            //Description of the data Values
+            Description dataValueDescription = new Description();
+            dataValueDescription.setAbout(obixObject.getDataValueUri() + dataValueCounter);
+            dataValueDescription.addType("&colibri;DataValue");
+            dataValueDescription.addHasValue(obixObject.getParameter1().getValueUri());
+            dataValueDescription.addHasValue(obixObject.getParameter2().getValueUri());
+            putMessageContent.addDescription(dataValueDescription);
 
-        //Description of the values
-        Description value1Description = new Description();
-        value1Description.setAbout(obixObject.getParameter1().getValueUri());
-        value1Description.addType("&colibri;Value");
-        Value value1 = new Value();
-        value1.setValue(obixObject.getParameter1().getValueAsString());
-        value1.setDatatype(obixObject.getParameter1().getValueType());
-        value1Description.setValue(value1);
-        value1Description.addHasParamater(obixObject.getParameter1().getParameterUri());
-        putMessageContent.addDescription(value1Description);
+            //Description of the values
+            Description value1Description = new Description();
+            value1Description.setAbout(obixObject.getParameter1().getValueUri());
+            value1Description.addType("&colibri;Value");
+            Value value1 = new Value();
+            value1.setValue(obixObject.getParameter1().getValueAsString());
+            value1.setDatatype(obixObject.getParameter1().getValueType());
+            value1Description.setValue(value1);
+            value1Description.addHasParamater(obixObject.getParameter1().getParameterUri());
+            putMessageContent.addDescription(value1Description);
 
-        //Description of parameter 2
-        Description value2Description = new Description();
-        value2Description.setAbout(obixObject.getParameter2().getValueUri());
-        value2Description.addType("&colibri;Value");
-        Value value2 = new Value();
-        value2.setValue(obixObject.getParameter2().getValueAsString());
-        value2.setDatatype(obixObject.getParameter2().getValueType());
-        value2Description.setValue(value2);
-        value2Description.addHasParamater(obixObject.getParameter2().getParameterUri());
-        putMessageContent.addDescription(value2Description);
+            //Description of parameter 2
+            Description value2Description = new Description();
+            value2Description.setAbout(obixObject.getParameter2().getValueUri());
+            value2Description.addType("&colibri;Value");
+            Value value2 = new Value();
+            value2.setValue(obixObject.getParameter2().getValueAsString());
+            value2.setDatatype(obixObject.getParameter2().getValueType());
+            value2Description.setValue(value2);
+            value2Description.addHasParamater(obixObject.getParameter2().getParameterUri());
+            putMessageContent.addDescription(value2Description);
+            dataValueCounter++;
+        }
 
         StringWriter writer = new StringWriter();
 
@@ -203,8 +212,12 @@ public class ColibriMessageContentCreator {
         return (PutMessageContent) jaxbUnmarshaller.unmarshal(reader);
     }
 
+    public static int increase() {
+        return dataValueCounter++;
+    }
+
     public static void main(String[] args) {
-        ObixChannel channel = new ObixXmlChannelDecorator(new CoapChannel("localhost", "localhost/obix", new ArrayList<>()));
+        ObixChannel channel = new ObixXmlChannelDecorator(new CoapChannel("localhost", "localhost/obix", Collections.synchronizedList(new ArrayList<>())));
         ObixObject obj = channel.get("VirtualDevices/virtualTemperatureSensor/value");
 
         System.out.println("------------------------------------------------------------------------------------------");
@@ -215,11 +228,45 @@ public class ColibriMessageContentCreator {
         System.out.println("------------------------------------------------------------------------------------------");
         System.out.println("PUT MESSAGE");
 
-        System.out.println(ColibriMessageContentCreator.createPutMessageContent(obj));
+        List<ObixObject> putObjectList = Collections.synchronizedList(new ArrayList<>());;
+        putObjectList.add(obj);
+        System.out.println(ColibriMessageContentCreator.createPutMessageContent(putObjectList));
 
         System.out.println("------------------------------------------------------------------------------------------");
         System.out.println("RECEIVED PUT MESSAGE");
 
-        ColibriMessage msg = ColibriMessage.createPutMessage(obj);
+        ColibriMessage observeMsg = new ColibriMessage(MessageIdentifier.OBS, new ColibriMessageHeader(ContentType.TEXT_PLAIN),
+                new ColibriMessageContent("http://test.org/res1?freq=sad"));
+
+        ColibriChannel colibriChannel = new ColibriChannel("bla", "127.0.0.1", 6789);
+
+        String serviceUri = "";
+        if (observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace().contains("?freq=")) {
+            String[] content = observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace().split("\\?freq=");
+            Date dateNow = new Date();
+            String icalTemp = TimeDurationConverter.date2Ical(dateNow).toString();
+            Timer timer = new Timer();
+            PutMessageToColibriTask executionTask = new PutMessageToColibriTask(obj, colibriChannel, observeMsg.getHeader().getId());
+            try {
+                Date d = (TimeDurationConverter.ical2Date(icalTemp.split("T")[0] + "T" + content[1]));
+
+                /**
+                 * Send Put once a day at the specified time
+                 */
+                timer.schedule(executionTask, d, 24 * 60 * 60 * 1000);
+            } catch (ParseException e) {
+                Duration duration = Duration.parse(content[1]);
+                /**
+                 * Send Put with the specified duration
+                 */
+                timer.schedule(executionTask, duration.toMillis());
+
+            }
+        } else {
+            serviceUri = observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace();
+        }
+        while (true) {
+
+        }
     }
 }
