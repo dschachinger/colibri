@@ -25,54 +25,19 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
-package at.ac.tuwien.auto.colibri.semantics;
+package at.ac.tuwien.auto.colibri.core.connection;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.ServiceFactory;
-import org.osgi.framework.ServiceRegistration;
-
-import at.ac.tuwien.auto.colibri.data.AccessService;
-import at.ac.tuwien.auto.colibri.semantics.impl.AccessServiceImpl;
-
-/**
- * This factory is used to manage the requested data access service objects.
- * 
- * @author dschachinger
- */
-public class AccessServiceFactory implements ServiceFactory<Object>
+public class SocketEndpoint
 {
-	// number of issued access service objects
-	private int usageCounter = 0;
-
-	/**
-	 * Method is invoked in order to return a new access service object
-	 */
-	public Object getService(Bundle bundle, ServiceRegistration<Object> registration)
+	public SocketEndpoint()
 	{
-		// increase number of issued objects
-		usageCounter++;
-
-		// log messages
-		System.out.println("Create object of AccessService for " + bundle.getSymbolicName());
-		System.out.println("Number of bundles using this service: " + usageCounter);
-
-		// create new data access service object
-		AccessService service = new AccessServiceImpl();
-
-		return service;
+		System.out.println("I'm the WebSocket endpoint.");
 	}
 
-	public void ungetService(Bundle bundle, ServiceRegistration<Object> registration, Object service)
+	public static void main(String[] args)
 	{
-		// decrease counter
-		usageCounter--;
-
-		// log messages
-		System.out.println("Release object of AccessService for " + bundle.getSymbolicName());
-		System.out.println("Number of bundles using this service: " + usageCounter);
+		new SocketEndpoint();
 	}
 }

@@ -25,68 +25,33 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
-package at.ac.tuwien.auto.colibri.semantics;
+package at.ac.tuwien.auto.colibri.core.integration;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceRegistration;
+import at.ac.tuwien.auto.colibri.core.datastore.Datastore;
 
-import at.ac.tuwien.auto.colibri.data.AccessService;
-
-/**
- * This class is the activator for the semantic core OSGi bundle.
- * 
- * @author dschachinger
- */
-public class SemanticsBundleActivator implements BundleActivator
+public class IntegrationLayer
 {
-	/**
-	 * Used to store context
-	 */
-	private static BundleContext context;
-
-	/**
-	 * Returns context of this bundle
-	 * 
-	 * @return
-	 */
-	static BundleContext getContext()
+	public IntegrationLayer(int i)
 	{
-		return context;
+		this.start(i);
 	}
 
-	/**
-	 * Service registration object for providing access service objects
-	 */
-	private ServiceRegistration<?> serviceRegistration;
-
-	/**
-	 * OSGi start method
-	 */
-	public void start(BundleContext bundleContext) throws Exception
+	public void start(int i)
 	{
-		// assign context
-		SemanticsBundleActivator.context = bundleContext;
+		System.out.println("Hello world No. " + i);
 
-		// create and register service factory
-		AccessServiceFactory serviceFactory = new AccessServiceFactory();
-		serviceRegistration = context.registerService(AccessService.class.getName(), serviceFactory, null);
+		Datastore ds = new Datastore();
 	}
 
-	/**
-	 * OSGi stop method
-	 */
-	public void stop(BundleContext bundleContext) throws Exception
+	public void stop()
 	{
-		// clear context
-		SemanticsBundleActivator.context = null;
-
-		// unregister service
-		serviceRegistration.unregister();
+		System.out.println("See you");
 	}
 
+	public static void main(String[] args)
+	{
+		new IntegrationLayer(1);
+	}
 }
