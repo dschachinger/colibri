@@ -25,8 +25,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * 
- * This file is part of the Colibri project.
  *************************************************************************************************/
 
 package at.ac.tuwien.auto.colibri.connector.enocean;
@@ -47,7 +45,7 @@ public class EnOceanBundleActivator implements BundleActivator
 	/**
 	 * Defines a reference to the registered access service
 	 */
-	private ServiceReference<?> serviceReference;
+	private ServiceReference serviceReference;
 
 	/**
 	 * Access service implementation
