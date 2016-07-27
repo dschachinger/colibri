@@ -1,51 +1,135 @@
-description = 'Colibri - Smart Building Energy Management'
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+ 
+description = 'Colibri - Smart building energy management'
 
-configure([
-		project(':colibri-calimero'), 
-		project(':colibri-commons'),
-		project(':colibri-enocean'),
-		project(':colibri-knx'),
-		project(':colibri-bacnet4j'),
-		project(':colibri-optimization'),
-		project(':colibri-semantics'),
-		project(':colibri-obix')])
-{
+subprojects {
+
 	apply plugin: 'java'
-	apply plugin: 'maven-publish'
-	apply plugin: 'maven'
 	apply plugin: 'eclipse'
-
-	group = 'at.ac.tuwien.auto.colibri'
-	version = '0.1'
+	
+	group = 'at.ac.tuwien.auto.colibri'	
+	version = '1.0.0'
 	
 	repositories()
 	{
-		jcenter()
 		mavenCentral()
-		maven
-		{
-			url 'https://repository.jboss.org/nexus/content/repositories/releases/'
-			url 'https://repository.jboss.org/nexus/content/groups/public/'
-		}
-		flatDir 
-		{ 
-			dirs "../lib/rhino", "../lib/jena"
-		}
+		jcenter()
+	}
+	
+	configurations
+	{
+		provided
 	}
 	
 	sourceSets 
+	{	
+		main { compileClasspath += configurations.provided }
+		test { runtimeClasspath += configurations.provided }
+	}
+	
+	dependencies 
+	{	
+        testCompile group:'junit', name:'junit', version:'4.12'
+    }
+
+	jar 
 	{
-    		main 
-			{
-        		java 
-				{
-            			srcDir 'src'
-        		}
-    		}
+		from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+		
+        manifest.attributes 'Bundle-Vendor': 'Automation Systems Group, Institute of Computer Aided Automation, TU Wien, http://www.auto.tuwien.ac.at'
+		manifest.attributes 'Bundle-Version': version
+		manifest.attributes 'Bundle-Classpath': '.'
+	}
+	
+	task osgi(dependsOn: jar) <<
+	{
+		println "copying jar from $jar.archivePath to $felixBundleDir"
+		ant.copy(file:jar.archivePath, todir:felixBundleDir)
 	}
 }
 
-ext
-{
-	distLib = file('dist')
+ext {	
+
+	String felixDir = "felix-framework-5.4.0"
+	
+	felix = file(felixDir)
+	felixConfFile = file(felixDir + '/conf/config.properties')
+	felixBundleDir = file(felixDir + '/bundle')
+	felixCacheDir = file(felixDir + '/felix-cache')	
+}
+
+
+task osgi {
+
+	description = 'Deploy OSGi bundles.'
+
+	doFirst 
+	{
+		if(felixCacheDir.exists())
+		{
+			ant.delete (includeemptydirs:"true") 
+			{
+				fileset (dir:felixCacheDir, includes:"**/*")
+			}
+		}
+	}
+}
+	
+task felix {
+
+	description = 'Setup Felix environment.'
+	
+	doFirst
+	{
+		println "setting up Felix 5.4.0 at " + felix.absolutePath
+		
+		if(!felix.exists())
+		{
+			println "download Felix 5.4.0 distribution"
+			ant.get(src:"ftp://gd.tuwien.ac.at/pub/infosys/servers/http/apache/dist//felix/org.apache.felix.main.distribution-5.4.0.zip", dest:"org.apache.felix.main.distribution-5.4.0.zip", verbose:true)
+			ant.unzip(src:"org.apache.felix.main.distribution-5.4.0.zip", dest:file('.').absolutePath)
+			ant.delete(file:"org.apache.felix.main.distribution-5.4.0.zip")
+		}
+		
+		println "updating Felix config.properties file"			
+		ant.propertyfile(file: felixConfFile.absolutePath)
+		{
+			entry( key: 'org.osgi.framework.system.packages.extra', 
+			value: "javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.naming, javax.naming.directory, javax.naming.spi, javax.management, javax.management.loading, " + 		
+					"javax.management.modelmbean, javax.net, javax.net.ssl, javax.crypto, javax.crypto.interfaces, javax.crypto.spec, javax.security.auth," +
+					"javax.security.auth.spi, javax.security.auth.callback, javax.security.auth.login, javax.security.cert, javax.xml.parsers,  javax.xml.xpath, " +
+					"javax.xml.transform.sax, javax.xml.transform.dom, javax.xml.namespace, javax.xml.transform, javax.xml.transform.stream, " +
+					"javax.xml.validation, javax.xml.datatype, org.xml.sax, org.xml.sax.helpers, org.xml.sax.ext, org.apache.xalan, org.apache.xalan.res, " +
+					"com.sun.org.apache.xml.internal.utils, com.sun.org.apache.xpath.internal, com.sun.org.apache.xpath.internal.jaxp, com.sun.org.apache.xpath.internal.objects, " +
+					"com.sun.org.apache.xml.internal, org.w3c.dom, org.w3c.dom.traversal, org.w3c.dom.ls, javax.sql, javax.transaction, sun.misc, " +
+					"com.sun.org.apache.xerces.internal.jaxp.validation, com.sun.org.apache.xerces.internal.jaxp, javax.naming.ldap, javax.naming, javax.xml.ws, com.sun.xml.internal.ws.api.message")
+		}	
+	}
 }

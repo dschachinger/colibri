@@ -3,11 +3,12 @@
  */
 package obix.test;
 
-import java.io.*;
 import obix.*;
 import obix.Enum;
-import obix.io.*;
 import obix.contracts.*;
+import obix.io.ObixDecoder;
+
+import java.io.ByteArrayInputStream;
 
 /**
  * ContractTest tests contracts and using them to map to specified types.
@@ -21,7 +22,7 @@ public class ContractTest
 {                    
 
 ////////////////////////////////////////////////////////////////
-// connectorClient.GuiUtility
+// GuiUtility
 ////////////////////////////////////////////////////////////////  
 
   public void run()

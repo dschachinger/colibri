@@ -1,0 +1,35 @@
+description = 'Colibri - Semantic core'
+
+eclipse
+{
+	classpath
+	{
+		file 
+		{
+			withXml 
+			{
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-datastore', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+			}
+		}
+	}
+}
+
+dependencies 
+{	
+	provided project(':colibri-osgi')
+	provided project(':colibri-datastore')
+}
+
+jar 
+{
+	
+	manifest 
+	{
+		attributes( "Bundle-Activator": "at.ac.tuwien.auto.colibri.core.integration.IntegrationLayerActivator",
+					"Import-Package":
+						"at.ac.tuwien.auto.colibri.core.datastore, "+						
+						"org.osgi.framework" )
+	}
+}

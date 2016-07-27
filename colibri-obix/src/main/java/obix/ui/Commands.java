@@ -3,16 +3,15 @@
  */
 package obix.ui;  
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.*;
-
 import obix.Obj;
 import obix.Op;
 import obix.Uri;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+
 /**
- * connectorClient.GuiUtility class for obix Swing application.
+ * GuiUtility class for obix Swing application.
  *
  * @author    Brian Frank
  * @creation  13 Sept 05

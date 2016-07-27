@@ -44,5 +44,4 @@ public class CoapChannelTest {
         ObixLobby lobby = undecoratedCoapChannel.getLobby(uri);
         Assert.assertThat(lobby.getLobbyAsString(), CoreMatchers.containsString("href=\"obix/\""));
     }
-
 }
