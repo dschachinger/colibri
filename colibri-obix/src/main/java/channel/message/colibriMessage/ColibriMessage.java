@@ -155,6 +155,13 @@ public class ColibriMessage {
         return msg;
     }
 
+    public static ColibriMessage createUpdateMessage(String queryContent) {
+        ColibriMessage msg = new ColibriMessage(MessageIdentifier.UPD,
+                new ColibriMessageHeader(ContentType.APPLICATION_SPARQL_QUERY),
+                new ColibriMessageContent(queryContent));
+        return msg;
+    }
+
     public MessageIdentifier getMsgType() {
         return msgType;
     }

@@ -220,6 +220,8 @@ public class ColibriChannel {
             handlePutMessage(message);
         } else if (message.getMsgType().equals(MessageIdentifier.GET)) {
             send(handleGetMessage(message));
+        } else if (message.getMsgType().equals(MessageIdentifier.QRE)) {
+            send(handleQreMessage(message));
         }
     }
 
@@ -437,6 +439,11 @@ public class ColibriChannel {
         }
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not existing and therefore cannot handle GET message", message.getHeader().getId());
     }
+
+    private ColibriMessage handleQreMessage(ColibriMessage message) {
+        logger.info(message.toString());
+        return ColibriMessage.createStatusMessage(StatusCode.OK, "Received QRE message", message.getHeader().getId());
+    }
 /*
     private Boolean alreadySent(ColibriMessage message) {
         for (ColibriMessage msg : messagesWithoutResponse.values()) {
@@ -454,18 +461,6 @@ public class ColibriChannel {
 
     public String getLastMessageReceived() {
         return lastMessageReceived;
-    }
-
-    public void setLastMessageReceived(String lastMessageReceived) {
-        this.lastMessageReceived = lastMessageReceived;
-    }
-
-    public Map<String, ObixObject> getRequestedGetMessageMap() {
-        return requestedGetMessageMap;
-    }
-
-    public void setRequestedGetMessageMap(Map<String, ObixObject> requestedGetMessageMap) {
-        this.requestedGetMessageMap = requestedGetMessageMap;
     }
 
     public String getHost() {

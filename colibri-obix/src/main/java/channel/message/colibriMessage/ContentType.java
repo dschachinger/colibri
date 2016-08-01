@@ -5,6 +5,7 @@ public enum ContentType {
     APPLICATION_RDF_XML("application/rdf+xml"),
     APPLICATION_SPARQL_QUERY("application/sparql-query"),
     APPLICATION_SPARQL_RESULT_XML("application/sparql-result+xml"),
+    APPLICATION_SPARQL_UPDATE("application/sparql-update"),
     APPLICATION_SPARQL_RESULT_JSON("application/sparql-result+json");
 
     private String type;

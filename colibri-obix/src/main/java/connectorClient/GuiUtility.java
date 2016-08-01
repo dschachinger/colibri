@@ -765,7 +765,7 @@ public class GuiUtility {
         c.gridy++;
         c.gridwidth = 1;
 
-        JLabel sendMessageLabel = new JLabel("Send Query Message to Colibri Semantic Core:");
+        JLabel sendMessageLabel = new JLabel("Send Message to Colibri Semantic Core:");
         pane.add(sendMessageLabel, c);
 
         c.gridy++;
@@ -774,12 +774,19 @@ public class GuiUtility {
         pane.add(sendMessageArea, c);
 
         c.gridy++;
-        c.gridwidth = 1;
-        JButton sendMessageButton = new JButton("Send Query Message");
-        pane.add(sendMessageButton, c);
-        commandFactory.addCommand(() -> sendMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
+        c.gridwidth = 2;
+        JButton sendQueMessageButton = new JButton("Send Query Message");
+        pane.add(sendQueMessageButton, c);
+        c.gridx++;
+        c.gridx++;
+        c.gridwidth = 2;
+        JButton sendUpdMessageButton = new JButton("Send Update Message");
+        pane.add(sendUpdMessageButton, c);
 
-        sendMessageButton.addMouseListener(new MouseListener() {
+        commandFactory.addCommand(() -> sendQueMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
+        commandFactory.addCommand(() -> sendUpdMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
+
+        sendQueMessageButton.addMouseListener(new MouseListener() {
             public void mouseClicked(MouseEvent e) {
             }
 
@@ -788,6 +795,24 @@ public class GuiUtility {
 
             public void mouseReleased(MouseEvent e) {
                 connector.getColibriChannel().send(ColibriMessage.createQueryMessage(sendMessageArea.getText()));
+            }
+
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            public void mouseExited(MouseEvent e) {
+            }
+        });
+
+        sendUpdMessageButton.addMouseListener(new MouseListener() {
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            public void mousePressed(MouseEvent e) {
+            }
+
+            public void mouseReleased(MouseEvent e) {
+                connector.getColibriChannel().send(ColibriMessage.createUpdateMessage(sendMessageArea.getText()));
             }
 
             public void mouseEntered(MouseEvent e) {
