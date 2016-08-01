@@ -1,5 +1,6 @@
-package channel.message.colibriMessage;
+package channel.message.messageObj;
 
+import channel.message.colibriMessage.*;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;

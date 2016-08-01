@@ -8,7 +8,6 @@ import model.obix.parameter.Parameter;
 import obix.*;
 import obix.contracts.Unit;
 import org.eclipse.californium.core.CoapObserveRelation;
-import org.eclipse.californium.core.coap.CoAP;
 import service.Configurator;
 
 import java.util.ArrayList;
@@ -43,14 +42,11 @@ public class ObixObject {
     private String connectorUri;
     private String obixUnitUri;
     private PutMessageToColibriTask putMessageToColibriTask;
-
-
-    public ObixObject(String uri) {
-        this(uri, CoAP.DEFAULT_COAP_PORT);
-    }
+    private int obixChannelPort;
 
     public ObixObject(String uri, int obixChannelPort) {
-        this.connectorUri = new Configurator().getConnectorAddress();
+        this.connectorUri = Configurator.getInstance().getConnectorAddress();
+        this.obixChannelPort = obixChannelPort;
         this.colibriBaseUri = connectorUri + "/" + obixChannelPort + "/" + uri + "/";
         this.obixUri = uri;
         this.serviceUri = colibriBaseUri + "service";
@@ -87,7 +83,7 @@ public class ObixObject {
         this.obj = obj;
         this.obj = obj;
         this.setParameter1();
-        this.parameter2 = new Parameter(colibriBaseUri, 2, new Date());
+        this.parameter2 = new Parameter(colibriBaseUri, 2, new Date(), true);
         this.parameter2.setParameterType("&colibri;TimeParameter");
     }
 
@@ -321,5 +317,11 @@ public class ObixObject {
         param.addStateUri(stateFalseUri);
     }
 
+    public int getObixChannelPort() {
+        return obixChannelPort;
+    }
 
+    public void setObixChannelPort(int obixChannelPort) {
+        this.obixChannelPort = obixChannelPort;
+    }
 }

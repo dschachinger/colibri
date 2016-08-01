@@ -66,7 +66,7 @@ public class ColibriMessageContentCreator {
         address.setAddress(obixObject.getObixUri());
         description.setServiceAddress(address);
         description.setHasDataConfiguration(obixObject.getConfigurationUri());
-        description.setHasTechnologyConnector(new Configurator().getConnectorAddress());
+        description.setHasTechnologyConnector(Configurator.getInstance().getConnectorAddress());
         addServiceMessageContent.addDescription(description);
 
         //Description of the configuration
@@ -144,7 +144,7 @@ public class ColibriMessageContentCreator {
         putMessageContent.addDescription(description);
 
         for(ObixObject obixObject : obixObjects) {
-            description.addHasValue(obixObjects.get(0).getDataValueUri() + dataValueCounter);
+            description.addHasDataValue(obixObjects.get(0).getDataValueUri() + dataValueCounter);
             //Description of the data Values
             Description dataValueDescription = new Description();
             dataValueDescription.setAbout(obixObject.getDataValueUri() + dataValueCounter);

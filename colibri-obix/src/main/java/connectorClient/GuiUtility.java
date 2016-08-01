@@ -192,7 +192,7 @@ public class GuiUtility {
         c.gridy = 0;
         pane.add(titel, c);
 
-        List<String> parametersList = new Configurator().getAvailableParameterTypes();
+        List<String> parametersList = Configurator.getInstance().getAvailableParameterTypes();
         String[] parameterTypes = new String[parametersList.size()];
         parameterTypes = parametersList.toArray(parameterTypes);
 
@@ -249,7 +249,6 @@ public class GuiUtility {
                 vBox1.add(stateNameLabel);
                 vBox1.add(stateNameTextfield);
 
-
                 JLabel stateValueLabel = new JLabel("State Value: ");
                 JTextField stateValueTextfield = new JTextField(20);
                 stateValueTextfield.setText(s.getValue().getValue());
@@ -261,48 +260,28 @@ public class GuiUtility {
                 stateURITextfield.setText(s.getStateDescriptionUri());
                 vBox1.add(stateURILabel);
                 vBox1.add(stateURITextfield);
-                vBox1.add(new JSeparator(JSeparator.HORIZONTAL));
-                vBox1.add(new JSeparator(JSeparator.HORIZONTAL));
-                listOfStateRepresentations.add(new StateRepresentation(param1AddStateButton,
+
+                JButton deleteStateButton = new JButton("Delete State");
+                vBox1.add(deleteStateButton);
+
+                JSeparator horizontalLine = new JSeparator(JSeparator.HORIZONTAL);
+                vBox1.add(horizontalLine);
+                vBox1.add(horizontalLine);
+
+                StateRepresentation stateRepresentation = (new StateRepresentation(param1AddStateButton, deleteStateButton,
                         stateNameLabel, stateNameTextfield,
                         stateValueLabel, stateValueTextfield,
-                        stateURILabel, stateURITextfield, vBox1, o.getParameter1()));
+                        stateURILabel, stateURITextfield, horizontalLine, vBox1, o.getParameter1()));
+
+                addDeleteStateListener(stateRepresentation);
+                listOfStateRepresentations.add(stateRepresentation);
+
                 pane.revalidate();
                 pane.repaint();
             }
 
-            parameter1comboBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    GridBagConstraints cTemp = new GridBagConstraints();
-                    cTemp.gridx = param1UnitLabelxPosition + 1;
-                    cTemp.gridy = param1UnitLabelyPosition;
-                    if (parameter1comboBox.getSelectedItem().equals("&colibri;StateParameter")) {
-                        parameter1UnitLabel.setEnabled(false);
-                        parameter1UnitTextField.setEnabled(false);
-                        //stateDescriptionPanel.add(vBox1);
-                        pane.add(param1AddStateButton, cTemp);
-                        cTemp.gridx++;
-                        pane.add(vBox1, cTemp);
-                    } else {
-                        pane.remove(param1AddStateButton);
-
-                        Iterator<StateRepresentation> iter = listOfStateRepresentations.iterator();
-                        while (iter.hasNext()) {
-                            StateRepresentation s = iter.next();
-                            if (param1AddStateButton.equals(s.getAddButon())) {
-                                vBox1.removeAll();
-                                pane.remove(s.getContainerVBox());
-                                iter.remove();
-                            }
-                        }
-                        parameter1UnitLabel.setEnabled(true);
-                        parameter1UnitTextField.setEnabled(true);
-                    }
-                    pane.revalidate();
-                    pane.repaint();
-                }
-            });
+            addParameterBoxListener(parameter1comboBox, param1UnitLabelxPosition, param1UnitLabelyPosition,
+                    parameter1UnitLabel, parameter1UnitTextField, pane, param1AddStateButton, vBox1);
 
             param1AddStateButton.addActionListener(new ActionListener() {
                 @Override
@@ -321,12 +300,21 @@ public class GuiUtility {
                     JTextField stateURITextfield = new JTextField(20);
                     vBox1.add(stateURILabel);
                     vBox1.add(stateURITextfield);
-                    vBox1.add(new JSeparator(JSeparator.HORIZONTAL));
-                    vBox1.add(new JSeparator(JSeparator.HORIZONTAL));
-                    listOfStateRepresentations.add(new StateRepresentation(param1AddStateButton,
+
+                    JButton deleteStateButton = new JButton("Delete State");
+                    vBox1.add(deleteStateButton);
+
+                    JSeparator horizontalLine = new JSeparator(JSeparator.HORIZONTAL);
+                    vBox1.add(horizontalLine);
+                    vBox1.add(horizontalLine);
+
+                    StateRepresentation stateRepresentation = (new StateRepresentation(param1AddStateButton, deleteStateButton,
                             stateNameLabel, stateNameTextfield,
                             stateValueLabel, stateValueTextfield,
-                            stateURILabel, stateURITextfield, vBox1, o.getParameter1()));
+                            stateURILabel, stateURITextfield, horizontalLine, vBox1, o.getParameter1()));
+
+                    addDeleteStateListener(stateRepresentation);
+                    listOfStateRepresentations.add(stateRepresentation);
                     pane.revalidate();
                     pane.repaint();
                 }
@@ -363,36 +351,8 @@ public class GuiUtility {
             int param2UnitLabelxPosition = c.gridx;
             int param2UnitLabelyPosition = c.gridy;
 
-            parameter2comboBox.addItemListener(new ItemListener() {
-                @Override
-                public void itemStateChanged(ItemEvent e) {
-                    GridBagConstraints cTemp = new GridBagConstraints();
-                    cTemp.gridx = param2UnitLabelxPosition + 1;
-                    cTemp.gridy = param2UnitLabelyPosition;
-                    if (parameter2comboBox.getSelectedItem().equals("&colibri;StateParameter")) {
-                        parameter2UnitLabel.setEnabled(false);
-                        parameter2UnitTextField.setEnabled(false);
-                        pane.add(param2AddStateButton, cTemp);
-                        cTemp.gridx++;
-                        pane.add(vBox2, cTemp);
-                    } else {
-                        pane.remove(param2AddStateButton);
-                        Iterator<StateRepresentation> iter = listOfStateRepresentations.iterator();
-                        while (iter.hasNext()) {
-                            StateRepresentation s = iter.next();
-                            if (param2AddStateButton.equals(s.getAddButon())) {
-                                vBox2.removeAll();
-                                pane.remove(s.getContainerVBox());
-                                iter.remove();
-                            }
-                        }
-                        parameter2UnitLabel.setEnabled(true);
-                        parameter2UnitTextField.setEnabled(true);
-                    }
-                    pane.revalidate();
-                    pane.repaint();
-                }
-            });
+            addParameterBoxListener(parameter2comboBox, param2UnitLabelxPosition, param2UnitLabelyPosition,
+                    parameter2UnitLabel, parameter2UnitTextField, pane, param2AddStateButton, vBox2);
 
             param2AddStateButton.addActionListener(new ActionListener() {
                 @Override
@@ -411,12 +371,22 @@ public class GuiUtility {
                     JTextField stateURITextfield = new JTextField(20);
                     vBox2.add(stateURILabel);
                     vBox2.add(stateURITextfield);
-                    vBox2.add(new JSeparator(JSeparator.HORIZONTAL));
-                    vBox2.add(new JSeparator(JSeparator.HORIZONTAL));
-                    listOfStateRepresentations.add(new StateRepresentation(param2AddStateButton,
+
+                    JButton deleteStateButton = new JButton("Delete State");
+                    vBox2.add(deleteStateButton);
+
+                    JSeparator horizontalLine = new JSeparator(JSeparator.HORIZONTAL);
+                    vBox2.add(horizontalLine);
+                    vBox2.add(horizontalLine);
+
+                    StateRepresentation stateRepresentation = (new StateRepresentation(param2AddStateButton, deleteStateButton,
                             stateNameLabel, stateNameTextfield,
                             stateValueLabel, stateValueTextfield,
-                            stateURILabel, stateURITextfield, vBox2, o.getParameter2()));
+                            stateURILabel, stateURITextfield, horizontalLine, vBox2, o.getParameter2()));
+
+                    addDeleteStateListener(stateRepresentation);
+                    listOfStateRepresentations.add(stateRepresentation);
+
                     pane.revalidate();
                     pane.repaint();
                 }
@@ -613,7 +583,7 @@ public class GuiUtility {
             observeThreads.add(thread);
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getObservedCheckBox().equals(observeObixCheckBox)) {
@@ -640,7 +610,7 @@ public class GuiUtility {
 
             writableCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getWritableCheckbox().equals(writableCheckBox)) {
                             object = r.getObixObject();
@@ -659,7 +629,7 @@ public class GuiUtility {
 
             addServiceCheckbox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getAddedAsServiceCheckBox().equals(addServiceCheckbox)) {
                             object = r.getObixObject();
@@ -679,7 +649,7 @@ public class GuiUtility {
 
             observeColibriActionsCheckbox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getObserveColibriActionsCheckbox().equals(observeColibriActionsCheckbox)) {
                             object = r.getObixObject();
@@ -705,7 +675,7 @@ public class GuiUtility {
                 }
 
                 public void mouseReleased(MouseEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getGetObixButton().equals(getObixButton)) {
@@ -736,7 +706,7 @@ public class GuiUtility {
                 }
 
                 public void mouseReleased(MouseEvent e) {
-                    ObixObject object = new ObixObject("");
+                    ObixObject object = new ObixObject("", o.getObixChannelPort());
                     JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getGetColibriButton().equals(getColibriButton)) {
@@ -765,7 +735,7 @@ public class GuiUtility {
 
                 public void keyReleased(KeyEvent e) {
                     if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                        ObixObject object = new ObixObject("");
+                        ObixObject object = new ObixObject("", o.getObixChannelPort());
                         for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                             if (r.getValueTextField().equals(textField)) {
                                 object = r.getObixObject();
@@ -839,5 +809,64 @@ public class GuiUtility {
         updateThread.stop();
         connector.setRunning(false);
         connector.stop();
+    }
+
+    private void addDeleteStateListener(StateRepresentation s) {
+        s.getDeleteButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                s.getContainerVBox().remove(s.getStateUriLabel());
+                s.getContainerVBox().remove(s.getStateUriTextField());
+                s.getContainerVBox().remove(s.getStateNameLabel());
+                s.getContainerVBox().remove(s.getStateNameTextField());
+                s.getContainerVBox().remove(s.getStateValueLabel());
+                s.getContainerVBox().remove(s.getStateValueTextField());
+                s.getContainerVBox().remove(s.getDeleteButton());
+                s.getContainerVBox().remove(s.getHorizontalLine());
+                s.getContainerVBox().revalidate();
+                s.getContainerVBox().revalidate();
+                listOfStateRepresentations.remove(s);
+            }
+        });
+    }
+
+    private void addParameterBoxListener(JComboBox parameterComboBox, int paramUnitLabelxPosition,
+                                         int paramUnitLabelyPosition, JLabel parameterUnitLabel,
+                                         JTextField parameterUnitTextField, Container pane,
+                                         JButton paramAddStateButton, Box vbox) {
+        parameterComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                GridBagConstraints cTemp = new GridBagConstraints();
+                cTemp.gridx = paramUnitLabelxPosition + 1;
+                cTemp.gridy = paramUnitLabelyPosition;
+                if (parameterComboBox.getSelectedItem().equals("&colibri;StateParameter")) {
+                    parameterUnitLabel.setEnabled(false);
+                    parameterUnitTextField.setEnabled(false);
+                    //stateDescriptionPanel.add(vBox1);
+                    pane.add(paramAddStateButton, cTemp);
+                    vbox.repaint();
+                    vbox.revalidate();
+                    cTemp.gridx++;
+                    pane.add(vbox, cTemp);
+                } else {
+                    pane.remove(paramAddStateButton);
+
+                    Iterator<StateRepresentation> iter = listOfStateRepresentations.iterator();
+                    while (iter.hasNext()) {
+                        StateRepresentation s = iter.next();
+                        if (paramAddStateButton.equals(s.getAddButon())) {
+                            vbox.removeAll();
+                            pane.remove(s.getContainerVBox());
+                            iter.remove();
+                        }
+                    }
+                    parameterUnitLabel.setEnabled(true);
+                    parameterUnitTextField.setEnabled(true);
+                }
+                pane.revalidate();
+                pane.repaint();
+            }
+        });
     }
 }

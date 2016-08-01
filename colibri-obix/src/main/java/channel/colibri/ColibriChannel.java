@@ -120,10 +120,10 @@ public class ColibriChannel {
             }
 
         }).on(Event.CLOSE.name(), new Function<String>() {
-                    public void on(String t) {
-                        logger.info("Connection closed");
-                    }
-                }).on(Event.OPEN.name(), new Function<String>() {
+            public void on(String t) {
+                logger.info("Connection closed");
+            }
+        }).on(Event.OPEN.name(), new Function<String>() {
             public void on(String t) {
                 logger.info("Connection opened");
             }
@@ -142,12 +142,11 @@ public class ColibriChannel {
             if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
                 this.addMessageWithoutResponse(msg);
                 int count = 0;
-                Configurator conf = new Configurator();
-                List<ResendMessageTask> tasksForResending = Collections.synchronizedList(new ArrayList<>());
+                Configurator conf = Configurator.getInstance();
+                messagesWithoutResponse.put(msg.getHeader().getId(), msg);
                 while (count <= conf.getTimesToResendMessage()) {
                     count++;
-                    ResendMessageTask task = new ResendMessageTask(this, msg, tasksForResending);
-                    tasksForResending.add(task);
+                    ResendMessageTask task = new ResendMessageTask(this, msg);
                     Timer timer = new Timer();
                     long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
                     timer.schedule(task, timing * count);
@@ -156,7 +155,7 @@ public class ColibriChannel {
                 }
             }
             //TODO: remove this line, only for testing with FAKE
-            //   handleStatusMessagesFAKE(msg);
+              handleStatusMessagesFAKE(msg);
             //  }
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
@@ -171,7 +170,6 @@ public class ColibriChannel {
                 requestedGetMessageMap.remove(msg.getHeader().getId());
                 requestedGetMessageMap.put(resendMsg.getHeader().getId(), resendMsg.getOptionalObixObject());
             } else {
-                messagesWithoutResponse.remove(msg.getHeader().getId());
                 messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
             }
             socket.fire(new AtmosphereMessage(connectorName, resendMsg.toString()));
@@ -231,27 +229,27 @@ public class ColibriChannel {
             if (message.getContent().getContent().contains(StatusCode.OK.toString())) {
                 if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
                     this.registered = true;
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.DRE)) {
                     this.registered = false;
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.ADD)) {
                     requestMsg.getOptionalObixObject().setAddedAsService(true);
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                     observeAbleObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.REM)) {
                     requestMsg.getOptionalObixObject().setAddedAsService(false);
                     observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.OBS)) {
                     requestMsg.getOptionalObixObject().setObservesColibriActions(true);
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                     observedColibriActionsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.DET)) {
                     requestMsg.getOptionalObixObject().setObservesColibriActions(false);
-                    messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+                    removeAccordingMessagesFromWaitingForResponse(message);
                     observedColibriActionsMap.remove(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
                 }
@@ -281,7 +279,7 @@ public class ColibriChannel {
 
 
     private ColibriMessage handleDeregisterMessage(ColibriMessage message) {
-        if (message.getContent().getContentWithoutBreaksAndWhiteSpace().equals(new Configurator().getConnectorAddress())
+        if (message.getContent().getContentWithoutBreaksAndWhiteSpace().equals(Configurator.getInstance().getConnectorAddress())
                 && this.getRegistered()) {
             for (ObixObject o : observeAbleObjectsMap.values()) {
                 o.setObservedByColibri(false);
@@ -311,6 +309,10 @@ public class ColibriChannel {
                 Timer timer = new Timer();
                 try {
                     Date d = (TimeDurationConverter.ical2Date(icalTemp.split("T")[0] + "T" + content[1]));
+                    //If the time fpr execution is alreday passed on this day, increase it by one day
+                    if (d.before(new Date())) {
+                        d = new Date(d.getTime() + 24 * 60 * 60 * 1000);
+                    }
                     executionTask.setScheduled(true);
                     /**
                      * Send Put once a day at the specified time
@@ -389,7 +391,6 @@ public class ColibriChannel {
             boolean setParam1 = false;
             boolean setParam2 = false;
             if (serviceObject != null) {
-                logger.info(content.getValue1HasParameterUri());
                 logger.info(serviceObject.getParameter1().getParameterUri());
                 if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                     if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
@@ -417,18 +418,7 @@ public class ColibriChannel {
                 }
             }
             if (setParam1 && setParam2) {
-
-                //read optional timing for Put on Obix from parameter 2
-                PutExecutionTask executionTask = new PutExecutionTask(serviceObject, this, message.getHeader().getId());
-                java.util.Date param2Date;
-                try {
-                    param2Date = TimeDurationConverter.ical2Date(serviceObject.getParameter2().getValue().getValue());
-                } catch (ParseException e) {
-                    param2Date = new Date();
-                }
-                Timer timer = new Timer();
-                timer.schedule(executionTask, param2Date);
-                requestedGetMessageMap.remove(content.getServiceUri());
+                setTimerTask(serviceObject, message);
             } else {
                 this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
                         "Please check if the service address is correct.", message.getHeader().getId()));
@@ -478,15 +468,71 @@ public class ColibriChannel {
         this.requestedGetMessageMap = requestedGetMessageMap;
     }
 
-    public void removeWaitingForStatusMessagesThread(ResendMessageTask thread) {
-        waitingForStatusMessagesTasks.remove(thread);
-    }
-
     public String getHost() {
         return host;
     }
 
     public int getPort() {
         return port;
+    }
+
+    public void setTimerTask(ObixObject serviceObject, ColibriMessage message) {
+        //read optional timing for Put on Obix from parameter 2
+        PutExecutionTask executionTask = new PutExecutionTask(serviceObject, this, message.getHeader().getId());
+        java.util.Date paramDate;
+        try {
+            if (serviceObject.getParameter1().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(serviceObject.getParameter1().getValue().getValue());
+            } else if (serviceObject.getParameter2().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(serviceObject.getParameter2().getValue().getValue());
+            } else {
+                paramDate = new Date();
+            }
+        } catch (ParseException e) {
+            paramDate = new Date();
+        }
+        Timer timer = new Timer();
+        timer.schedule(executionTask, paramDate);
+        requestedGetMessageMap.remove(serviceObject.getServiceUri());
+    }
+
+    public void removeAccordingMessagesFromWaitingForResponse(ColibriMessage message) {
+        ColibriMessage toRemove = messagesWithoutResponse.remove(message.getHeader().getRefenceId());
+        if (toRemove == null) {
+            toRemove = message;
+        }
+        List<ColibriMessage> remList = Collections.synchronizedList(new ArrayList<>());
+        for (ColibriMessage msg : messagesWithoutResponse.values()) {
+            if (toRemove.getMsgType().equals(msg.getMsgType())) {
+                if (msg.getOptionalConnector() != null) {
+                    if (toRemove.getOptionalConnector() != null) {
+                        if (toRemove.getOptionalConnector().equals(msg.getOptionalConnector())) {
+                            remList.add(msg);
+                        }
+                    }
+                }
+                if (msg.getOptionalObixObject() != null) {
+                    if (toRemove.getOptionalObixObject() != null) {
+                        if (toRemove.getOptionalObixObject().equals(msg.getOptionalObixObject())) {
+                            remList.add(msg);
+                        }
+                    }
+                }
+            }
+        }
+        for (ColibriMessage msg : remList) {
+            messagesWithoutResponse.remove(msg.getHeader().getId());
+        }
+    }
+    public void removeAccordingTasks(ResendMessageTask task) {
+        List<ResendMessageTask> remList = Collections.synchronizedList(new ArrayList<>());
+        for (ResendMessageTask t : waitingForStatusMessagesTasks) {
+            if (t.getWaitingForResponse().equals(task.getWaitingForResponse())) {
+                remList.add(t);
+            }
+        }
+        for (ResendMessageTask t : remList) {
+            waitingForStatusMessagesTasks.remove(t);
+        }
     }
 }

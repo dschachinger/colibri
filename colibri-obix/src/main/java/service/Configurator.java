@@ -15,9 +15,17 @@ import java.util.stream.Collectors;
 public class Configurator {
 
     private ResourceBundle bundle;
+    private static Configurator instance;
 
-    public Configurator() {
+    protected Configurator() {
         this.bundle = ResourceBundle.getBundle("config");
+    }
+
+    public static Configurator getInstance() {
+        if(instance == null) {
+            instance = new Configurator();
+        }
+        return instance;
     }
 
     /**

@@ -20,7 +20,7 @@ public class Main {
         /*
             Load configuration from config.properties file. For example all oBIX Lobbies
          */
-        Configurator configurator = new Configurator();
+        Configurator configurator = Configurator.getInstance();
         List<Connector> connectors = configurator.getConnectors();
         boolean colibriIsRunning = false;
 

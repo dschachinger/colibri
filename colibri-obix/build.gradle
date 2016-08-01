@@ -34,19 +34,5 @@ compileJava {
     options.forkOptions.executable = 'javac'
 }
 
-
 build.dependsOn.add(':felix')
 build.dependsOn.add(':osgi')
-
-/*
-task runFelix(type: JavaExec) {
-    javaexec {
-        main="-jar";
-        args = [
-                "../felix-framework-5.4.0/bin/felix.jar",
-        ]
-    }
-}
-
-build.dependsOn.add('runFelix')
-*/

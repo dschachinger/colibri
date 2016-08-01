@@ -19,7 +19,7 @@ public class ConfiguratorTest {
 
     @Before
     public void setUp() {
-        conf = new Configurator();
+        conf = Configurator.getInstance();
         Properties prop = new Properties();
         OutputStream output = null;
 

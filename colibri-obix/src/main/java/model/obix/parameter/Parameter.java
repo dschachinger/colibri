@@ -15,6 +15,7 @@ public class Parameter {
     private List<String> stateUris;
     private List<StateDescription> stateDescriptions;
     private List<StateDescription> states;
+    private boolean isTimer;
 
     private Parameter(String uri, int paramNumber) {
         this.parameterUri = uri + "parameter" + paramNumber;
@@ -25,10 +26,24 @@ public class Parameter {
         this.states = Collections.synchronizedList(new ArrayList<>());
     }
 
+    /**
+     * Creates a time parameter. isTimer == false by default.
+     * @param uri
+     * @param paramNumber
+     * @param date
+     */
     public Parameter(String uri, int paramNumber, Date date) {
         this(uri, paramNumber);
         this.value.setDatatype("&xsd;dateTime");
+        this.isTimer = false;
         this.value.setValue(TimeDurationConverter.date2Ical(date).toString());
+    }
+
+    public Parameter(String uri, int paramNumber, Date date, Boolean isTimer) {
+        this(uri, paramNumber);
+        this.value.setDatatype("&xsd;dateTime");
+        this.value.setValue(TimeDurationConverter.date2Ical(date).toString());
+        this.isTimer = isTimer;
     }
 
     public Parameter(String uri, int paramNumber, Long i) {
@@ -137,5 +152,13 @@ public class Parameter {
 
     public List<StateDescription> getStates() {
         return states;
+    }
+
+    public boolean isTimer() {
+        return isTimer;
+    }
+
+    public void setTimer(boolean timer) {
+        isTimer = timer;
     }
 }

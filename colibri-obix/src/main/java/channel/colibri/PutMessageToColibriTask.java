@@ -56,7 +56,7 @@ public class PutMessageToColibriTask extends TimerTask {
     }
 
     public void addObjectToBundle(ObixObject obj) {
-        ObixObject temp = new ObixObject(obj.getObixUri());
+        ObixObject temp = new ObixObject(obj.getObixUri(), obj.getObixChannelPort());
         temp.setParameter1(obj.getParameter1());
         temp.setParameter2(obj.getParameter2());
         bundledObjects.add(temp);

@@ -6,6 +6,7 @@ import javax.swing.*;
 
 public class StateRepresentation {
     private JButton addButon;
+    private JButton deleteButton;
     private JLabel stateNameLabel;
     private JTextField stateNameTextField;
     private JLabel stateValueLabel;
@@ -14,17 +15,21 @@ public class StateRepresentation {
     private JTextField stateUriTextField;
     private Parameter parameter;
     private Box containerVBox;
+    private JSeparator horizontalLine;
 
-    public StateRepresentation(JButton addButon, JLabel stateNameLabel, JTextField stateNameTextField,
+    public StateRepresentation(JButton addButon, JButton deleteButton, JLabel stateNameLabel, JTextField stateNameTextField,
                                JLabel stateValueLabel, JTextField stateValueTextField,
-                               JLabel stateUriLabel, JTextField stateUriTextField, Box containerVBox, Parameter parameter) {
+                               JLabel stateUriLabel, JTextField stateUriTextField, JSeparator horizontalLine,
+                               Box containerVBox, Parameter parameter) {
         this.addButon = addButon;
+        this.deleteButton = deleteButton;
         this.stateNameLabel = stateNameLabel;
         this.stateNameTextField = stateNameTextField;
         this.stateValueLabel = stateValueLabel;
         this.stateValueTextField = stateValueTextField;
         this.stateUriLabel = stateUriLabel;
         this.stateUriTextField = stateUriTextField;
+        this.horizontalLine = horizontalLine;
         this.containerVBox = containerVBox;
         this.parameter = parameter;
     }
@@ -35,6 +40,14 @@ public class StateRepresentation {
 
     public void setAddButon(JButton addButon) {
         this.addButon = addButon;
+    }
+
+    public JButton getDeleteButton() {
+        return deleteButton;
+    }
+
+    public void setDeleteButton(JButton deleteButton) {
+        this.deleteButton = deleteButton;
     }
 
     public JTextField getStateNameTextField() {
@@ -99,5 +112,13 @@ public class StateRepresentation {
 
     public void setContainerVBox(Box containerVBox) {
         this.containerVBox = containerVBox;
+    }
+
+    public JSeparator getHorizontalLine() {
+        return horizontalLine;
+    }
+
+    public void setHorizontalLine(JSeparator horizontalLine) {
+        this.horizontalLine = horizontalLine;
     }
 }
