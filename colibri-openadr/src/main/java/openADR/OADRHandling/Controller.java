@@ -19,11 +19,6 @@ import java.util.Set;
  */
 public class Controller {
 
-
-    /* This hash map holds the received messages and
-        the key is the openADR message type */
-    private HashMap<String, OADRMsgInfo> receivedMsgMap;
-
     /* This hash map holds the processors to deal with different receive messages and
         the key is the openADR message type */
     private HashMap<String, ProcessorReceivedMsg> procReceivedMsgMap;
@@ -43,9 +38,6 @@ public class Controller {
      */
     public Controller(OADRParty party){
         this.party = party;
-
-        // init receivedMsgMap
-        receivedMsgMap = new HashMap<>();
 
         // init createSendMsgMap
         createSendMsgMap = new HashMap<>();
@@ -107,22 +99,26 @@ public class Controller {
     public OADRMsgObject processReceivedMessage(OADRMsgObject recObj){
         ProcessorReceivedMsg proc = procReceivedMsgMap.get(recObj.getMsgType());
 
-        // extract information
-        OADRMsgInfo recInfo = proc.extractInfo(recObj, party);
-        if(recInfo != null){
-            receivedMsgMap.put(recInfo.getMsgType(), recInfo);
-            party.getBridge().informationFlowFromOpenADRToColibri(recInfo);
+        String statusCode = proc.doRecMsgViolateConstraints(recObj,party.getChannel().getSendedMsgMap());
+        if(statusCode.equals("200")){
+            logger.info("received message type " + recObj.getMsgType()+
+                    " does not violates "+"constraints");
+
+            // extract information
+            OADRMsgInfo recInfo = proc.extractInfo(recObj, party);
+            if(recInfo != null){
+                party.getBridge().informationFlowFromOpenADRToColibri(recInfo);
+            }
+            proc.updateSendedMsgMap(recObj, party.getChannel().getSendedMsgMap());
+        } else {
+            logger.error("received message type " + recObj.getMsgType()+
+                    " VIOLATES "+"constraints. status code " + statusCode + " info: " +
+                    ProcessorReceivedMsg.respValueText.get(statusCode));
+
         }
 
-        boolean violate = proc.doRecMsgViolateConstraintsAndUpdateSendMap(recObj,party.getChannel().getSendedMsgMap());
-        logger.error("received message type " + recObj.getMsgType()+
-                (violate?" VIOLATES ":" does not violates ")+"constraints");
-
         // generate reply
-        // TODO possible: implement different error codes
-        OADRMsgObject respObj= proc.genResponse(recObj, violate?"450":"200");
-
-
+        OADRMsgObject respObj= proc.genResponse(recObj, statusCode);
 
         return respObj;
     }
@@ -134,11 +130,17 @@ public class Controller {
      */
     public OADRMsgObject createSendMsg(OADRMsgInfo info){
         CreateSendMsg createSendMsg = createSendMsgMap.get(info.getMsgType());
-        OADRMsgObject sendObj = createSendMsg.genSendMsg(info, receivedMsgMap);
+        OADRMsgObject sendObj = createSendMsg.genSendMsg(info);
 
-        boolean violate = createSendMsg.doSendMsgViolateMsgOrderAndUpdateRecMap(info,receivedMsgMap);
-        logger.error("send message type " + info.getMsgType()+
-                (violate?" VIOLATES ":" does not violates ")+"constraints");
+        boolean violate = createSendMsg.doSendMsgViolateMsgOrder(info);
+        if(violate){
+            logger.error("send message type " + info.getMsgType()+
+                    " VIOLATES " + "constraints");
+        } else {
+            logger.info("send message type " + info.getMsgType()+
+                    " does not violates "+"constraints");
+        }
+
 
 
 

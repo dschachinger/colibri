@@ -2,7 +2,10 @@ package semanticCore.WebSocketHandling;
 
 import Utils.Pair;
 import Utils.TimeDurationConverter;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -15,7 +18,6 @@ import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.AddMsg;
 import semanticCore.MsgObj.ContentMsgObj.QueryResult;
 import semanticCore.MsgObj.ContentMsgObj.Result;
-import semanticCore.MsgObj.ContentMsgObj.ServiceDescription;
 import semanticCore.MsgObj.MsgType;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -53,11 +55,10 @@ public class ProcessReceivedMsg {
         ColibriMessage originMsg = null;
         if(msg.getHeader().getReferenceId() != null){
             originMsg = colClient.getSendedMsgToColCore().get(msg.getHeader().getReferenceId());
-            /* TODO uncomment if (originMsg == null){
+            if (originMsg == null){
                 logger.error("unkown reference id");
                 return new Pair<>(false, null);
             }
-            */
 
             if(!(msg.getMsgType().equals(MsgType.STATUS) &&
                     (originMsg.getMsgType().equals(MsgType.GET_DATA_VALUES) ||
@@ -68,7 +69,7 @@ public class ProcessReceivedMsg {
             msg.setOriginMessage(originMsg);
         }
 
-        Pair<Boolean, List<ColibriMessage>> result = null;
+        Pair<Boolean, List<ColibriMessage>> result = new Pair<>(false, null);
         
         switch (type){
             case DEREGISTER:
@@ -97,6 +98,9 @@ public class ProcessReceivedMsg {
                 break;
             case STATUS:
                 result = handle_STATUS(msg);
+                break;
+            default:
+                logger.error("unsupported message received");
                 break;
         }
 
@@ -156,7 +160,7 @@ public class ProcessReceivedMsg {
 
         String removeService = msg.getContent();
         logger.info("remove service " + removeService);
-        if(colClient.getKnownServicesHashMap().remove(removeService) == null){
+        if(colClient.getServicesMap().remove(removeService) == null){
             logger.error("service ID " + removeService + " unknown");
         } else {
             logger.info("service ID " + removeService + " successful deleted");
@@ -185,24 +189,28 @@ public class ProcessReceivedMsg {
         } else {
             String[] parts = msg.getContent().split("\\?");
             observeService = parts[0];
-            String parameter = parts[1].split("=")[1];
+            boolean noParameter = parts.length == 1;
 
-            logger.info("observe " + observeService + "parameter: " + parameter);
+            logger.info("observe " + observeService + (noParameter?"":"parameter: " + parts[1]));
 
-            if(!colClient.getKnownServicesHashMap().keySet().contains(observeService)){
+            if(!colClient.getServicesMap().keySet().contains(observeService)){
                 logger.error("service ID " + observeService + " unknown");
                 replyStatusCode = "500";
             } else {
                 logger.info("service ID " + observeService + " observation request processed successfully ");
-                ServiceHandler serviceHandler = colClient.getKnownServicesHashMap().get(observeService);
+                ServiceHandler serviceHandler = colClient.getServicesMap().get(observeService);
 
-                if(parameter.matches("P((\\d+)Y)?((\\d+)M)?((\\d+)D)?T?((\\d+)H)?((\\d+)M)?((\\d+)S)?")){
-                    serviceHandler.setIntervalDurationSec(TimeDurationConverter.xCal2Seconds(parameter));
-                    logger.info("parsed interval length: " + serviceHandler.getIntervalDurationSec());
-                } else if(parameter.matches("\\d{2}:\\d{2}:\\d{2}Z")){
-                    serviceHandler.setSendTime(TimeDurationConverter.xmlTimeToDateObj(parameter));
-                    logger.info("parsed sending time: " + serviceHandler.getSendTime());
+                if(!noParameter){
+                    String parameter = parts[1].split("=")[1];
+                    if(parameter.matches("P((\\d+)Y)?((\\d+)M)?((\\d+)D)?T?((\\d+)H)?((\\d+)M)?((\\d+)S)?")){
+                        serviceHandler.setIntervalDurationSec(TimeDurationConverter.xCal2Seconds(parameter));
+                        logger.info("parsed interval length: " + serviceHandler.getIntervalDurationSec());
+                    } else if(parameter.matches("\\d{2}:\\d{2}:\\d{2}Z")){
+                        serviceHandler.setSendTime(TimeDurationConverter.xmlTimeToDateObj(parameter));
+                        logger.info("parsed sending time: " + serviceHandler.getSendTime());
+                    }
                 }
+
                 replyStatusCode = "200";
             }
         }
@@ -211,7 +219,7 @@ public class ProcessReceivedMsg {
         replies.add(colClient.getGenSendMessage().gen_STATUS(replyStatusCode, msg.getHeader().getMessageId()));
 
         if(replyStatusCode.equals("200")){
-            replies.add(colClient.getGenSendMessage().gen_OBSERVE_SERVICE(colClient.getKnownServicesHashMap().get(observeService).getFollowService()));
+            replies.add(colClient.getGenSendMessage().gen_OBSERVE_SERVICE(colClient.getServicesMap().get(observeService).getFollowService()));
         }
         return new Pair<>(true, replies);
     }
@@ -229,12 +237,12 @@ public class ProcessReceivedMsg {
         String detachObserveService = msg.getContent();
         String replyStatusCode;
         logger.info("detach observe " + detachObserveService);
-        if(colClient.getKnownServicesHashMap().get(detachObserveService) == null ||
-                !colClient.getKnownServicesHashMap().get(detachObserveService).isServiceObserved()){
+        if(colClient.getServicesMap().get(detachObserveService) == null ||
+                !colClient.getServicesMap().get(detachObserveService).isServiceObserved()){
             logger.error("service ID " + detachObserveService + " not observed");
             replyStatusCode = "500";
         } else {
-            colClient.getKnownServicesHashMap().get(detachObserveService).setServiceObserved(false);
+            colClient.getServicesMap().get(detachObserveService).changeServiceObservedStatus(false);
             logger.info("service ID " + detachObserveService + " observation detached successfully ");
             replyStatusCode = "200";
         }
@@ -243,7 +251,7 @@ public class ProcessReceivedMsg {
         replies.add(colClient.getGenSendMessage().gen_STATUS(replyStatusCode, msg.getHeader().getMessageId()));
 
         if(replyStatusCode.equals("200")){
-            replies.add(colClient.getGenSendMessage().gen_DETACH_OBSERVATION(colClient.getKnownServicesHashMap().get(detachObserveService).getFollowService()));
+            replies.add(colClient.getGenSendMessage().gen_DETACH_OBSERVATION(colClient.getServicesMap().get(detachObserveService).getFollowService()));
         }
 
         return new Pair<>(true, replies);
@@ -286,30 +294,75 @@ public class ProcessReceivedMsg {
     private Pair<Boolean, List<ColibriMessage>> handle_QUERY_RESULT(ColibriMessage msg){
         logger.info("handle "+MsgType.QUERY_RESULT + " message");
 
-/* TODO    insert    if(!msg.getOriginMessage().getMsgType().equals(MsgType.QUERY)){
+        if(!msg.getOriginMessage().getMsgType().equals(MsgType.QUERY)){
             logger.error("wrong origin message type for query result message");
             return new Pair<>(false, null);
         }
-*/
-        Pair<Boolean, List<ColibriMessage>> result;
+
+
+        List<String> reqProperties = new ArrayList<>();
+
+        String originContent = msg.getOriginMessage().getContent().replace("\n", " ").replace("\r", " ");
+
+        int index = originContent.toLowerCase().indexOf("select");
+        int maxIndex = originContent.toLowerCase().indexOf("where");
+        while (index != -1 && maxIndex != -1 && index < maxIndex){
+            int oldIndex = index;
+            index = originContent.indexOf(" ?", oldIndex);
+            if(index < 0){
+                break;
+            }
+            // shift index to beginning of the property name
+            index+=2;
+
+            int endIndex=originContent.indexOf(" ", index);
+
+            if(index < maxIndex){
+                reqProperties.add(originContent.substring(index, endIndex));
+            }
+        }
+
+        System.out.println(reqProperties);
+
+        Pair<Boolean, List<ColibriMessage>> reactMessages = new Pair<>(false, null);
+        QueryResult queryResult = null;
 
         switch (msg.getHeader().getContentType()){
             case "application/sparql-result+json":
-                result = handle_JSON_QUERY_RESULT(msg);
+                queryResult = handle_JSON_QUERY_RESULT(msg, reactMessages);
                 break;
             case "application/sparql-result+xml":
-                result = handle_XML_QUERY_RESULT(msg);
+                queryResult = handle_XML_QUERY_RESULT(msg, reactMessages);
                 break;
 
         }
 
+        // check if the received query result contains all the requested properties
+        List<String> recProp = queryResult.getProperties();
+        boolean error = false;
+        if(recProp.size() == reqProperties.size()){
+            for(String reqProp : reqProperties){
+                if(!recProp.contains(reqProp)){
+                    error = true;
+                    break;
+                }
+            }
+        } else {
+            error = true;
+        }
+
+        if(error){
+            logger.error("result set does not contain all requested properties");
+        } else {
+            logger.info("result set contains all requested properties");
+        }
 
 
-
-        return new Pair<>(true, null);
+        // TODO how to react on it depends on the purpose of the query
+        return reactMessages;
     }
 
-    private Pair<Boolean, List<ColibriMessage>> handle_JSON_QUERY_RESULT(ColibriMessage msg){
+    private QueryResult handle_JSON_QUERY_RESULT(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
         logger.info("handle json");
 
         JsonElement jsonElement = new JsonParser().parse(msg.getContent());
@@ -344,23 +397,20 @@ public class ProcessReceivedMsg {
                 queryResult.addTupel(result);
             }
 
-
-
         } else if(jsonObject.has("boolean")){
             queryResult = new QueryResult(true);
             boolean value = jsonObject.getAsJsonPrimitive("boolean").getAsBoolean();
             queryResult.setASKQueryResult(value);
         }
 
-        // TODO think about how to react on it
         if(queryResult != null){
             logger.info(queryResult.toString());
         }
 
-        return new Pair<>(false, null);
+        return queryResult;
     }
 
-    private Pair<Boolean, List<ColibriMessage>> handle_XML_QUERY_RESULT(ColibriMessage msg){
+    private QueryResult handle_XML_QUERY_RESULT(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
         logger.info("handle xml");
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -437,12 +487,11 @@ public class ProcessReceivedMsg {
 
         }
 
-        // TODO think about how to react on it
         if(queryResult != null){
             logger.info(queryResult.toString());
         }
 
-        return new Pair<>(false, null);
+        return queryResult;
     }
 
     /**
@@ -470,35 +519,30 @@ public class ProcessReceivedMsg {
                     String observeServiceClientToCore = null;
                     String acceptServiceNameCoreToClient = msg.getOriginMessage().getContent();
 
-                    for(String service : colClient.getKnownServicesHashMap().keySet()){
-                        if(colClient.getKnownServicesHashMap().get(service).getFollowService().equals(acceptServiceNameCoreToClient)){
+                    for(String service : colClient.getServicesMap().keySet()){
+                        if(colClient.getServicesMap().get(service).getFollowService().equals(acceptServiceNameCoreToClient)){
                             observeServiceClientToCore = service;
                             break;
                         }
                     }
 
-                    colClient.getKnownServicesHashMap().get(observeServiceClientToCore).setServiceObserved(true);
-                    colClient.getKnownServicesHashMap().get(observeServiceClientToCore).start();
+                    colClient.getServicesMap().get(observeServiceClientToCore).changeServiceObservedStatus(true);
                     logger.info("service ID " + observeServiceClientToCore + " observation + follow service added successfully ");
                 }
                 break;
             case ADD_SERVICE:
                 if(responseOK){
-                    String serviceName = null;
-                    String acceptServiceName = null;
+                    AddMsg addMsg = ((AddMsg)msg.getOriginMessage().getContentObj());
 
-                    for(ServiceDescription serviceDescription : ((AddMsg)msg.getOriginMessage().getContentObj()).getServiceDescriptions()){
-                        // TODO besser checken mit serviceConfig
-                        if(serviceDescription.getAbout().contains("accept")){
-                            acceptServiceName = serviceDescription.getAbout();
-                        } else {
-                            serviceName = serviceDescription.getAbout();
-                        }
-                    }
+                    String normalServiceName = addMsg.getNormalServiceDescriptions().getAbout();
+                    String acceptServiceName = addMsg.getAcceptServiceDescriptions().getAbout();
 
-                    colClient.getKnownServicesHashMap().get(serviceName).setServiceAdded(true);
+                    colClient.getServicesMap().get(normalServiceName).setServiceAdded(true);
                 }
-                return new Pair<>(false, null);
+                break;
+            case UPDATE:
+                logger.info("colibri core successful received and processed update message " + msg.getOriginMessage().getHeader().getMessageId());
+                break;
         }
 
         return new Pair<>(false, null);

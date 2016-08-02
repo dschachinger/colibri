@@ -1,6 +1,7 @@
 package openADR.ProcessorReceivedMsg;
 
 import Utils.TimeDurationConverter;
+import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrDistributeEvent;
 import com.enernoc.open.oadr2.model.v20b.ei.EiEventSignal;
 import com.enernoc.open.oadr2.model.v20b.ei.EventDescriptor;
@@ -107,30 +108,27 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrDistributeEvent recMsg = (OadrDistributeEvent)obj.getMsg();
-        if(recMsg.getEiResponse() != null){
-            if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-                return true;
-            }
-
-            OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-            if(!originMsg.getMsgType().equals("oadrRequestEvent")){
-                return true;
-            }
-
-            sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-        }
+        String requestID = recMsg.getEiResponse() != null ? recMsg.getEiResponse().getRequestID() : null;
+        String originMsgType = "oadrRequestEvent";
 
         if(recMsg.getVtnID().equals(OADRConInfo.getVENId())){
-            return true;
+            return "452";
         }
+        return checkConstraints(sendedMsgMap, true, requestID,
+                originMsgType, null, null);
+    }
 
-        return false;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrDistributeEvent recMsg = (OadrDistributeEvent)obj.getMsg();
+        if(recMsg.getEiResponse() != null){
+            sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
+        }
     }
 
     /**

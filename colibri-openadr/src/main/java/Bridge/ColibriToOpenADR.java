@@ -1,6 +1,8 @@
-package Utils;
+package Bridge;
 
-import com.enernoc.open.oadr2.model.v20b.OadrCreatedEvent;
+import Utils.Main;
+import Utils.Pair;
+import Utils.TimeDurationConverter;
 import com.enernoc.open.oadr2.model.v20b.ei.OptTypeType;
 import openADR.OADRMsgInfo.MsgInfo_OADRCreatedEvent;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
@@ -8,18 +10,20 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
+import semanticCore.MsgObj.ContentMsgObj.AddMsg;
 import semanticCore.MsgObj.ContentMsgObj.Description;
 import semanticCore.MsgObj.ContentMsgObj.PutMsg;
+import semanticCore.MsgObj.ContentMsgObj.RegisterMsg;
 import semanticCore.MsgObj.ContentType;
 import semanticCore.MsgObj.Header;
 import semanticCore.MsgObj.MsgType;
 import semanticCore.WebSocketHandling.ServiceDataConfig;
 
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by georg on 04.07.16.
@@ -63,7 +67,8 @@ public class ColibriToOpenADR {
         String statusCode = "200";
 
         try {
-            PutMsg putMsg = (PutMsg)bridge.getColClient().getJaxbUnmarshaller().unmarshal(contentReader);
+            Unmarshaller unmarshaller = bridge.getColClient().getJaxbUnmarshaller();
+            PutMsg putMsg = (PutMsg)unmarshaller.unmarshal(contentReader);
 
             List<Pair<String, String>> dataValues = new ArrayList<>();
             Map<String, Pair<String, String>> parameter = new HashMap<>();
@@ -96,9 +101,8 @@ public class ColibriToOpenADR {
 
                 Boolean normalOrder = null;
 
-                // TODO better variable naming
-                for(String serviceURL : bridge.getColClient().getKnownServicesHashMap().keySet()){
-                    ServiceDataConfig followServiceDataConfig = bridge.getColClient().getKnownServicesHashMap().get(serviceURL).getServiceDataConfig().getFollowUpServiceDataConfig();
+                for(String serviceURL : bridge.getColClient().getServicesMap().keySet()){
+                    ServiceDataConfig followServiceDataConfig = bridge.getColClient().getServicesMap().get(serviceURL).getServiceDataConfig().getFollowUpServiceDataConfig();
                     for(ServiceDataConfig.Parameter configParameter : followServiceDataConfig.getParameters()){
                         for(String type : configParameter.getTypes()){
                             if(type.equals("&colibri;InformationParameter")){
@@ -128,16 +132,16 @@ public class ColibriToOpenADR {
 
             }
 
+            createdEvent = new MsgInfo_OADRCreatedEvent();
+
             for(String key : eventStatus.keySet()){
                 Pair<Pair<Date, Date>, MsgInfo_OADRDistributeEvent.Event> elem = bridge.getOpenADREvent(key);
                 if( elem != null){
-                    createdEvent = new MsgInfo_OADRCreatedEvent();
                     MsgInfo_OADRDistributeEvent.Event event = elem.getSnd();
                     logger.info("event: " + key + " status " + eventStatus.get(key));
                     MsgInfo_OADRCreatedEvent.EventResponse eventResponse = createdEvent.getNewEventResponse();
                     eventResponse.setEventID(key);
                     eventResponse.setOptType(eventStatus.get(key)? OptTypeType.OPT_IN:OptTypeType.OPT_OUT);
-
                     eventResponse.setModificationNumber(event.getModificationNumber());
                     eventResponse.setRequestID(event.getRequestID());
                     event.setCreatedEventToVTNSent(true);
@@ -156,7 +160,12 @@ public class ColibriToOpenADR {
 
         ColibriMessage reply = bridge.getColClient().getGenSendMessage().gen_STATUS(statusCode, msg.getHeader().getMessageId());
 
-        return new Pair<ColibriMessage, OADRMsgInfo>(reply, createdEvent);
+        if(!createdEvent.getEventResponses().isEmpty()){
+            return new Pair<ColibriMessage, OADRMsgInfo>(reply, createdEvent);
+        } else {
+            return new Pair<ColibriMessage, OADRMsgInfo>(reply, null);
+        }
+
 
     }
 
@@ -194,18 +203,18 @@ public class ColibriToOpenADR {
         }
 
         if(fromDate == null && toDate == null){
-            fromDate=Main.testDate;
+            fromDate= Main.testDate;
             onlyOneEventNeeded = true;
         }
 
-        if(!bridge.getColClient().getKnownServicesHashMap().keySet().contains(serviceURL)){
+        if(!bridge.getColClient().getServicesMap().keySet().contains(serviceURL)){
             logger.error("service URL " + serviceURL + " unknown");
             ColibriMessage reply = bridge.getColClient().getGenSendMessage().gen_STATUS("500", msg.getHeader().getMessageId());
             return new Pair<ColibriMessage, OADRMsgInfo>(reply, null);
         }
 
         List<MsgInfo_OADRDistributeEvent.Event> events= bridge.getOpenADREvents(serviceURL, new Pair<Date, Date>(fromDate, toDate));
-        if(onlyOneEventNeeded){
+        if(onlyOneEventNeeded && !events.isEmpty()){
             events = events.subList(0,1);
         }
         PutMsg putMsgContent = bridge.getOpenADRToColibri().convertOpenADREventsToColibriPUTContent(events, bridge);
@@ -216,7 +225,14 @@ public class ColibriToOpenADR {
         header.setMessageId(bridge.getColClient().getGenSendMessage().getUniqueMsgID());
         header.setReferenceId(msg.getHeader().getMessageId());
 
-        ColibriMessage reply = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsgContent));
+        String strContent;
+        if(!putMsgContent.getDescriptions().isEmpty()){
+            strContent = bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsgContent);
+        } else {
+            strContent = "";
+        }
+
+        ColibriMessage reply = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, strContent);
 
         logger.info("reply PUT message with service URL " + serviceURL );
         return new Pair<>(reply, null);

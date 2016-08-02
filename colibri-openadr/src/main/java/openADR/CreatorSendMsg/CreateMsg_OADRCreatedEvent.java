@@ -11,8 +11,6 @@ import openADR.ProcessorReceivedMsg.ProcessorReceivedMsg;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
 
-import java.util.HashMap;
-
 /**
  * Created by georg on 07.06.16.
  * This class is used to create oadrCreatedEvent messages.
@@ -22,11 +20,10 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
     /**
      * Creates a message object with an openADR payload OadrCreatedEvent in it.
      * @param info message info: contains the needed information to create a openADR payload
-     * @param receivedMsgMap contains all received messages
      * @return
      */
     @Override
-    public OADRMsgObject genSendMsg(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap) {
+    public OADRMsgObject genSendMsg(OADRMsgInfo info) {
         MsgInfo_OADRCreatedEvent con_info = (MsgInfo_OADRCreatedEvent) info;
 
         OadrCreatedEvent msg = new OadrCreatedEvent();
@@ -57,8 +54,6 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
             eventResponses.getEventResponses().add(eventResponse);
         }
 
-
-
         eiCreatedEvent.setEventResponses(eventResponses);
 
         msg.setEiCreatedEvent(eiCreatedEvent);
@@ -80,16 +75,7 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
     /**
      * {@inheritDoc}
      */
-    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
-        if(receivedMsgMap.get("oadrDistributeEvent") == null){
-            return true;
-        }
-        receivedMsgMap.remove("oadrDistributeEvent");
-
-        return false;
+    public boolean doSendMsgViolateMsgOrder(OADRMsgInfo info){
+        return checkConstraints(info, true);
     }
 }

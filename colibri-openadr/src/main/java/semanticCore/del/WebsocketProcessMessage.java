@@ -1,6 +1,6 @@
 package semanticCore.del;
 
-import Utils.OpenADRColibriBridge;
+import Bridge.OpenADRColibriBridge;
 
 /**
  * Created by georg on 29.06.16.

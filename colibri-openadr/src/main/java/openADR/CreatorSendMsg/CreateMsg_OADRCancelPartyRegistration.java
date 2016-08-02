@@ -6,8 +6,6 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
 
-import java.util.HashMap;
-
 /**
  * Created by georg on 07.06.16.
  * This class is used to create oadrCancelPartyRegistration messages.
@@ -17,11 +15,10 @@ public class CreateMsg_OADRCancelPartyRegistration extends CreateSendMsg {
     /**
      * Creates a message object with an openADR payload OadrCancelPartyRegistration in it.
      * @param info message info: contains the needed information to create a openADR payload
-     * @param receivedMsgMap contains all received messages
      * @return
      */
     @Override
-    public OADRMsgObject genSendMsg(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap) {
+    public OADRMsgObject genSendMsg(OADRMsgInfo info) {
         MsgInfo_OADRCancelPartyRegistration con_info = (MsgInfo_OADRCancelPartyRegistration) info;
 
         OadrCancelPartyRegistration msg = new OadrCancelPartyRegistration();
@@ -49,10 +46,7 @@ public class CreateMsg_OADRCancelPartyRegistration extends CreateSendMsg {
     /**
      * {@inheritDoc}
      */
-    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-        return false;
+    public boolean doSendMsgViolateMsgOrder(OADRMsgInfo info){
+        return checkConstraints(info, true);
     }
 }

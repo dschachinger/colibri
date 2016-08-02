@@ -1,6 +1,6 @@
 package openADR.OADRHandling;
 
-import Utils.OpenADRColibriBridge;
+import Bridge.OpenADRColibriBridge;
 import openADR.OADRMsgInfo.MsgInfo_OADRCreateReport;
 import openADR.Utils.FollowUpMsg;
 import openADR.Utils.OADRConInfo;
@@ -26,7 +26,9 @@ public abstract class OADRParty {
 
     private Logger logger = LoggerFactory.getLogger(OADRParty.class);
 
-    public OADRParty(OpenADRColibriBridge bridge) {
+    protected int timeoutSec;
+
+    public OADRParty(OpenADRColibriBridge bridge, int timeoutSec) {
         try {
             jaxbManager = new JAXBManager();
         } catch (JAXBException e) {
@@ -34,7 +36,7 @@ public abstract class OADRParty {
         }
 
         try {
-            channel = new XMPPChannel(jaxbManager, this);
+            channel = new XMPPChannel(jaxbManager, this, timeoutSec);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Can not establish a proper connection to XMPP server.");
@@ -42,6 +44,7 @@ public abstract class OADRParty {
         }
 
         this.bridge = bridge;
+        this.timeoutSec = timeoutSec;
     }
 
     /**

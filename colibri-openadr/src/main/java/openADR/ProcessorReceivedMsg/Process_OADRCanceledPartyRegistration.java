@@ -50,32 +50,24 @@ public class Process_OADRCanceledPartyRegistration extends ProcessorReceivedMsg 
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrCanceledPartyRegistration recMsg = (OadrCanceledPartyRegistration)obj.getMsg();
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
+        String requestID = recMsg.getEiResponse().getRequestID();
+        String originMsgType = "oadrCancelPartyRegistration";
+        String venID = recMsg.getVenID();
+        String registrationID = recMsg.getRegistrationID();
 
-        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-        if(!originMsg.getMsgType().equals("oadrCancelPartyRegistration")){
-            return true;
-        }
+        return checkConstraints(sendedMsgMap, true, requestID,
+                originMsgType, venID, registrationID);
+    }
 
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
-
-        if(OADRConInfo.getRegistrationId() != null && !recMsg.getRegistrationID().equals(OADRConInfo.getRegistrationId())){
-            return true;
-        }
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrCanceledPartyRegistration recMsg = (OadrCanceledPartyRegistration)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-
-        return false;
     }
 
     /**

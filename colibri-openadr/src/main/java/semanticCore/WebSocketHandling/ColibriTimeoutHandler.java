@@ -22,7 +22,8 @@ public class ColibriTimeoutHandler implements TimeoutHandler<ColibriClient, Coli
             colClient.sendColibriMsg(colMsg);
             logger.info("resend colibri msg: " + messageID);
         } else {
-            logger.info("not resend colibri msg: " + messageID);
+            logger.info("not resend colibri msg: " + messageID + ", transmit error status message instead");
+            colClient.sendColibriMsg(colClient.getGenSendMessage().gen_STATUS("600", messageID));
         }
     }
 }

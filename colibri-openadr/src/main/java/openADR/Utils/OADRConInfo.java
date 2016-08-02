@@ -132,7 +132,7 @@ public class OADRConInfo {
     }
 
     public static String getVENId() {
-        return VENId;
+        return OADRConInfo.VENId;
     }
 
     public static void setVENId(String VENId) {

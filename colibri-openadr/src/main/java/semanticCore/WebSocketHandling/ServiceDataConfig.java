@@ -10,8 +10,6 @@ import java.util.List;
  * Created by georg on 19.07.16.
  */
 public class ServiceDataConfig {
-    // TODO implement later is this class useful?
-
     EventType eventType;
 
     String serviceName;

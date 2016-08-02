@@ -6,8 +6,6 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
 
-import java.util.HashMap;
-
 /**
  * Created by georg on 07.06.16.
  * This class is used to create oadrQueryRegistration messages.
@@ -17,11 +15,10 @@ public class CreateMsg_OADRQueryRegistration extends CreateSendMsg {
     /**
      * Creates a message object with an openADR payload OadrQueryRegistration in it.
      * @param info message info: contains the needed information to create a openADR payload
-     * @param receivedMsgMap contains all received messages
      * @return
      */
     @Override
-    public OADRMsgObject genSendMsg(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap) {
+    public OADRMsgObject genSendMsg(OADRMsgInfo info) {
         MsgInfo_OADRQueryRegistration con_info = (MsgInfo_OADRQueryRegistration) info;
 
         OadrQueryRegistration msg = new OadrQueryRegistration();
@@ -46,7 +43,7 @@ public class CreateMsg_OADRQueryRegistration extends CreateSendMsg {
     /**
      * {@inheritDoc}
      */
-    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
-        return false;
+    public boolean doSendMsgViolateMsgOrder(OADRMsgInfo info){
+        return checkConstraints(info,false);
     }
 }

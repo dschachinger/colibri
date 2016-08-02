@@ -3,7 +3,6 @@ package Utils;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +72,6 @@ public class TimeDurationConverter {
      * @return date in XCal Format in UTC
      */
     public static XMLGregorianCalendar date2Ical(Date date){
-        // TODO SimpleDateFormat not thread safe
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
         String dateStr = sdf.format(date);

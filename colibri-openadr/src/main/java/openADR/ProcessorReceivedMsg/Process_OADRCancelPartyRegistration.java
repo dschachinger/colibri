@@ -56,22 +56,20 @@ public class Process_OADRCancelPartyRegistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrCancelPartyRegistration recMsg = (OadrCancelPartyRegistration)obj.getMsg();
+        String venID = recMsg.getVenID();
+        String registrationID = recMsg.getRegistrationID();
 
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
+        return checkConstraints(sendedMsgMap, true, null,
+                null, venID, registrationID);
+    }
 
-        if(OADRConInfo.getRegistrationId() != null && !recMsg.getRegistrationID().equals(OADRConInfo.getRegistrationId())){
-            return true;
-        }
-
-        return false;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
     }
 
     /**

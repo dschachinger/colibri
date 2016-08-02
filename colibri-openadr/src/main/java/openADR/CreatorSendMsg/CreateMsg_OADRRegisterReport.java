@@ -21,7 +21,6 @@ import openADR.Utils.OADRMsgObject;
 
 import javax.xml.bind.JAXBElement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,11 +32,10 @@ public class CreateMsg_OADRRegisterReport extends CreateSendMsg {
     /**
      * Creates a message object with an openADR payload OadrRegisterReport in it.
      * @param info message info: contains the needed information to create a openADR payload
-     * @param receivedMsgMap contains all received messages
      * @return
      */
     @Override
-    public OADRMsgObject genSendMsg(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap) {
+    public OADRMsgObject genSendMsg(OADRMsgInfo info) {
         MsgInfo_OADRRegisterReport con_info = (MsgInfo_OADRRegisterReport) info;
 
         OadrRegisterReport msg = new OadrRegisterReport();
@@ -132,10 +130,7 @@ public class CreateMsg_OADRRegisterReport extends CreateSendMsg {
     /**
      * {@inheritDoc}
      */
-    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-        return false;
+    public boolean doSendMsgViolateMsgOrder(OADRMsgInfo info){
+        return checkConstraints(info,true);
     }
 }

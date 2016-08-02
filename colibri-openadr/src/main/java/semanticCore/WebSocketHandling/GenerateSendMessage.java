@@ -1,6 +1,5 @@
 package semanticCore.WebSocketHandling;
 
-import Utils.EventType;
 import openADR.Utils.XMPPConInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +143,7 @@ public class GenerateSendMessage {
         serviceDescription.setIdentifier(identifier);
         serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getServiceConfig()));
         serviceDescription.setHasTechnologyConnector(new HasProperty().withRessource(serviceBaseURL));
-        addMsg.getServiceDescriptions().add(serviceDescription);
+        addMsg.setNormalServiceDescriptions(serviceDescription);
 
         addServiceDescription(serviceDataConfig, addMsg);
 
@@ -172,7 +171,7 @@ public class GenerateSendMessage {
         serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getFollowUpServiceDataConfig().getServiceConfig()));
         serviceDescription.setHasTechnologyConnector(new HasProperty().withRessource(serviceBaseURL));
         serviceDescription.setIsPrecededBy(new HasProperty().withRessource(serviceURL));
-        addMsg.getServiceDescriptions().add(serviceDescription);
+        addMsg.setAcceptServiceDescriptions(serviceDescription);
 
         addServiceDescription(serviceDataConfig.getFollowUpServiceDataConfig(), addMsg);
 
@@ -351,9 +350,17 @@ public class GenerateSendMessage {
      * response in order to indicate the status code.
      * @return
      */
-    private ColibriMessage gen_UPDATE(){
+    public ColibriMessage gen_UPDATE(String sparqlUpdate){
         logger.info("send "+MsgType.UPDATE + " message");
-        ColibriMessage msg = null;
+
+        // create header
+        Header header = new Header();
+        header.setContentType(ContentType.APPLICATION_SPARQLUPDATE);
+        header.setDate(new Date());
+        header.setMessageId(getUniqueMsgID());
+
+        ColibriMessage msg = new ColibriMessage(MsgType.UPDATE, header, sparqlUpdate);
+
         return msg;
     }
 

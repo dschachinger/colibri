@@ -1,10 +1,7 @@
 package openADR.ProcessorReceivedMsg;
 
 import Utils.TimeDurationConverter;
-import com.enernoc.open.oadr2.model.v20b.OadrCreatedReport;
-import com.enernoc.open.oadr2.model.v20b.OadrPendingReports;
-import com.enernoc.open.oadr2.model.v20b.OadrRegisteredReport;
-import com.enernoc.open.oadr2.model.v20b.OadrReportRequest;
+import com.enernoc.open.oadr2.model.v20b.*;
 import com.enernoc.open.oadr2.model.v20b.ei.ReportSpecifier;
 import com.enernoc.open.oadr2.model.v20b.ei.SpecifierPayload;
 import openADR.OADRHandling.OADRParty;
@@ -115,29 +112,23 @@ public class Process_OADRRegisteredReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
+        String requestID = recMsg.getEiResponse().getRequestID();
+        String originMsgType = "oadrRegisterReport";
+        String venID = recMsg.getVenID();
 
-        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-        if(!originMsg.getMsgType().equals("oadrRegisterReport")){
-            return true;
-        }
+        return checkConstraints(sendedMsgMap, true, requestID,
+                originMsgType, venID, null);
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-
-
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
-
-        return false;
     }
 
     /**

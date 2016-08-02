@@ -61,8 +61,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
             return;
         }
 
-        // TODO implement later change to current time. The current state is only for convenient testing.
-        long startTimeDiffMilli = TimeDurationConverter.getDateDiff(reportRequest.getReportIntervalStart(), new Date(reportRequest.getReportIntervalStart().getTime()+6000), TimeUnit.MILLISECONDS);
+        long startTimeDiffMilli = TimeDurationConverter.getDateDiff(reportRequest.getReportIntervalStart(), new Date(), TimeUnit.MILLISECONDS);
         long amountMesurementsPerReport = reportRequest.getReportBackDurationSec() / reportRequest.getGranularitySec();
         // remaining time between last measurment and transmission of the report
 
@@ -91,8 +90,8 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
                 }
 
                 isReportCanceled.compareAndSet(2,1);
-                // TODO implement later use it that way party.handleUpdateReportMsg(reportRequest);
                 logger.info("Send Data to VTN! "+reportRequest.getReportRequestID());
+                // TODO implement later transmits the report
                 party.getChannel().sendMsg(genUpdateReport());
             } else {
                 logger.info("Report "+reportRequest.getReportRequestID() + " canceled");

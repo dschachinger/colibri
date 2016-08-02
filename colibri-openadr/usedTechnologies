@@ -5,18 +5,63 @@ Used technologies:
 	
 	
 
-group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'
+
 group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.0'
 group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
+    License:  Apache License 2.0
+    Jackson is a suite of data-processing tools for Java (and the JVM platform),
+    including the flagship streaming JSON parser / generator library, matching data-binding library (POJOs to and from JSON) and
+    additional data format modules to process data encoded in Avro, BSON, CBOR, CSV, Smile, Protobuf, XML or YAML; and
+    even the large set of data format modules to support data types of widely used data types such as Joda, Guava and many, many more.
+
+group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'
+    License: org.atmosphere.util.uri.* classes are under the CDDL license and comes from the Jersey Project.
+             All other classes are released under the Apache 2 Licence.
+    The Atmosphere Framework contains client and server side components for building Asynchronous Web Applications.
+    The majority of popular frameworks are either supporting Atmosphere or supported natively by the framework.
+    The Atmosphere Framework supports all major Browsers and Servers.
+
 group: 'org.atmosphere', name: 'wasync', version: '2.1.2'
+    License: Apache License Version 2.0
+    wAsync is a Java based library allowing asynchronous communication with any WebServer supporting
+    the WebSocket or Http Protocol. wAsync can be used with Node.js, Android, Atmosphere or any WebSocket Framework.
+
 group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
 group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+    License: MIT license
+    The Simple Logging Facade for Java (SLF4J) serves as a simple facade or abstraction for various logging frameworks
+    (e.g. java.util.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
+
+group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    License: Apache 2.0 license
+    Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert
+    a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects
+    that you do not have source-code of.
+
 'org.codehaus.groovy:groovy-all:2.3.11'
+    License: Apache License, Version 2.0
+    Groovy is a powerful, optionally typed and dynamic language, with static-typing and static compilation capabilities,
+    for the Java platform aimed at multiplying developers’ productivity thanks to a concise, familiar and easy to learn syntax.
+    It integrates smoothly with any Java program, and immediately delivers to your application powerful features,
+    including scripting capabilities, Domain-Specific Language authoring, runtime and compile-time meta-programming and functional programming.
+
 "org.igniterealtime.smack:smack-java7:4.1.0"
-
 "org.igniterealtime.smack:smack-tcp:4.1.0"
-
 "org.igniterealtime.smack:smack-im:4.1.0"
-
 "org.igniterealtime.smack:smack-extensions:4.1.0"
+    License: Open Source Apache
+    Smack is an Open Source XMPP (Jabber) client library for instant messaging and presence.
+    A pure Java library, it can be embedded into your applications to create anything from a full XMPP client
+    to simple XMPP integrations such as sending notification messages and presence-enabling devices.
+
 group: 'junit', name: 'junit', version: '4.11'
+    JUnit is a simple framework to write repeatable tests. It is an instance of the xUnit architecture for unit testing frameworks.
+    License: Eclipse Public License - v 1.0
+
+
+
+Gradle plugin:
+
+com.intershop.gradle.jaxb
+    License: Apache License, Version 2.0
+    This plugin generates Java code from schema files (see com.sun.tools.xjc.XJCTask) or schema files from existing Java code

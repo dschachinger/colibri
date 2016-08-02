@@ -2,12 +2,12 @@ package Utils;
 
 import openADR.OADRHandling.Channel;
 import openADR.Utils.OADRMsgObject;
+import openADR.Utils.OpenADRTimeoutHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.WebSocketHandling.ColibriClient;
 import semanticCore.WebSocketHandling.ColibriTimeoutHandler;
-import openADR.Utils.OpenADRTimeoutHandler;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -66,6 +66,7 @@ public class TimeoutWatcher<S, T> {
 
         @Override
         public void run() {
+            Thread.currentThread().setName("timeoutWatcher "+messageID);
             logger.info(Thread.currentThread().getName()+" Start. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
 
             try {
@@ -76,7 +77,7 @@ public class TimeoutWatcher<S, T> {
 
             if(monitoredMsg.containsKey(messageID)){
                 logger.info("timeout for msg: " + messageID);
-                // TODO insert again handler.handleTimeout(medium, monitoredMsg, messageID);
+                // TODO insert handler.handleTimeout(medium, monitoredMsg, messageID);
             } else {
                 logger.info("timing is okay for msg: " + messageID);
             }

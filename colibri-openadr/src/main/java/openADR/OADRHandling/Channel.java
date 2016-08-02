@@ -24,7 +24,7 @@ public abstract class Channel {
 
     protected TimeoutWatcher<Channel, OADRMsgObject> timeoutWatcher;
 
-    public Channel(Controller controller, JAXBManager jaxbManager, OADRParty party){
+    public Channel(Controller controller, JAXBManager jaxbManager, OADRParty party, int timeoutSec){
         this.controller = controller;
         this.jaxbManager = jaxbManager;
         this.party = party;
@@ -32,7 +32,7 @@ public abstract class Channel {
         // init sendedMsgMap
         sendedMsgMap = new HashMap<>();
 
-        timeoutWatcher = TimeoutWatcher.initOpenADRTimeoutWatcher(5000, this);
+        timeoutWatcher = TimeoutWatcher.initOpenADRTimeoutWatcher(timeoutSec*1000, this);
     }
 
     public HashMap<String, OADRMsgObject> getSendedMsgMap() {

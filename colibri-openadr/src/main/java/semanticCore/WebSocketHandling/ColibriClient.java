@@ -1,19 +1,23 @@
 package semanticCore.WebSocketHandling;
 
+import Bridge.OpenADRColibriBridge;
 import Utils.*;
 import org.atmosphere.wasync.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.AddMsg;
-import semanticCore.MsgObj.ContentMsgObj.RegisterMsg;
 import semanticCore.MsgObj.ContentMsgObj.PutMsg;
+import semanticCore.MsgObj.ContentMsgObj.RegisterMsg;
 import semanticCore.MsgObj.MsgType;
 
 import javax.xml.bind.*;
 import java.io.IOException;
 import java.net.ConnectException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -41,7 +45,7 @@ public class ColibriClient {
     /* This HashMap contains all services which the semantic core knows.
         The key is the colibri core service and the value is the follow service for the connector.
         This follow service is used the inform the connector how it should react on new information at the colibri core service. */
-    private HashMap<String, ServiceHandler> knownConnectorToColibriServices;
+    private HashMap<String, ServiceHandler> servicesMap;
 
     // true...when the connector is proper registered, false...otherwise
     private boolean registered = false;
@@ -51,7 +55,7 @@ public class ColibriClient {
     // This string represents the base URL for all services
     private String serviceBaseURL;
 
-    public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL){
+    public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL, int timeoutSec){
         try {
             jaxbContext = JAXBContext.newInstance(RegisterMsg.class, AddMsg.class, PutMsg.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
@@ -73,12 +77,12 @@ public class ColibriClient {
 
         this.serviceBaseURL = serviceBaseURL;
 
-        knownConnectorToColibriServices = new HashMap<>();
+        servicesMap = new HashMap<>();
 
         for(EventType eventType : EventType.values()){
             ServiceDataConfig serviceDataConfig = ServiceDataConfig.initService(eventType, serviceBaseURL);
             ServiceHandler serviceHandler = new ServiceHandler(serviceDataConfig, this);
-            knownConnectorToColibriServices.put(serviceDataConfig.getServiceName(), serviceHandler);
+            servicesMap.put(serviceDataConfig.getServiceName(), serviceHandler);
         }
 
         try {
@@ -91,7 +95,7 @@ public class ColibriClient {
         }
         genSendMessage = new GenerateSendMessage(jaxbMarshaller);
         sendedMsgToColCore = Collections.synchronizedMap(new HashMap<String, ColibriMessage>());
-        timeoutWatcher = TimeoutWatcher.initColibriTimeoutWatcher(30000, this);
+        timeoutWatcher = TimeoutWatcher.initColibriTimeoutWatcher(timeoutSec*1000, this);
         this.processMessage = new ProcessReceivedMsg(this);
         this.bridge = bridge;
         this.terminateLock = new MyLock();
@@ -105,8 +109,8 @@ public class ColibriClient {
     /**
      * @return a list of all services which the colibri core observes.
      */
-    public HashMap<String, ServiceHandler> getKnownServicesHashMap() {
-        return knownConnectorToColibriServices;
+    public HashMap<String, ServiceHandler> getServicesMap() {
+        return servicesMap;
     }
 
     public boolean isRegistered() {
@@ -176,8 +180,8 @@ public class ColibriClient {
 
         ServiceDataConfig serviceDataConfig = null;
 
-        for(String serviceURL : knownConnectorToColibriServices.keySet()){
-            ServiceDataConfig buffer = knownConnectorToColibriServices.get(serviceURL).getServiceDataConfig();
+        for(String serviceURL : servicesMap.keySet()){
+            ServiceDataConfig buffer = servicesMap.get(serviceURL).getServiceDataConfig();
 
             if(buffer.getEventType().equals(eventType)){
                 serviceDataConfig = buffer;
@@ -198,6 +202,14 @@ public class ColibriClient {
         }
 
         sendColibriMsg(genSendMessage.gen_QUERY(query));
+    }
+
+    public void sendUpdateMessage(String sparqlUpdate){
+        if(!registered){
+            logger.info("connector is not registered");
+        }
+
+        sendColibriMsg(genSendMessage.gen_UPDATE(sparqlUpdate));
     }
 
     public Map<String, ColibriMessage> getSendedMsgToColCore() {

@@ -1,5 +1,6 @@
 package openADR.ProcessorReceivedMsg;
 
+import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrCreatedPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrProfiles;
 import com.enernoc.open.oadr2.model.v20b.OadrTransports;
@@ -9,7 +10,9 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
@@ -65,39 +68,37 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
+        String requestID = recMsg.getEiResponse().getRequestID();
+        List<String> originMsgTypes = new ArrayList<>();
+        originMsgTypes.add("oadrCreatePartyRegistration");
+        originMsgTypes.add("oadrQueryRegistration");
+        String registrationID = recMsg.getRegistrationID();
 
-        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-        if(!originMsg.getMsgType().equals("oadrCreatePartyRegistration") &&
-                ! originMsg.getMsgType().equals("oadrQueryRegistration")){
-            return true;
-        }
+        String statusCode = checkConstraintsExtendedOriginMsgTypes(sendedMsgMap, false, requestID,
+                originMsgTypes, null, registrationID);
 
-        if(originMsg.getMsgType().equals("oadrCreatePartyRegistration") &&
-                (recMsg.getVenID() == null ||
-                recMsg.getRegistrationID() == null) ){
-            return true;
-        }
 
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
+        if(statusCode.equals("200")){
+            OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
 
-        if(OADRConInfo.getRegistrationId() != null && !recMsg.getRegistrationID().equals(OADRConInfo.getRegistrationId())){
-            return true;
+            if(originMsg.getMsgType().equals("oadrCreatePartyRegistration") &&
+                    (recMsg.getVenID() == null ||
+                            recMsg.getRegistrationID() == null) ){
+                return "452";
+            }
         }
+        return statusCode;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-
-        return false;
     }
 
     /**

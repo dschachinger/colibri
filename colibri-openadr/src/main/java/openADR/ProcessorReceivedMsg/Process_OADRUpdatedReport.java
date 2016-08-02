@@ -1,5 +1,6 @@
 package openADR.ProcessorReceivedMsg;
 
+import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrRegisteredReport;
 import com.enernoc.open.oadr2.model.v20b.OadrUpdatedReport;
 import openADR.OADRHandling.OADRParty;
@@ -53,27 +54,23 @@ public class Process_OADRUpdatedReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
-        OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
-        if(!originMsg.getMsgType().equals("oadrUpdateReport")){
-            return true;
-        }
+        String requestID = recMsg.getEiResponse().getRequestID();
+        String originMsgType = "oadrUpdateReport";
+        String venID = recMsg.getVenID();
+
+        return checkConstraints(sendedMsgMap, true, requestID,
+                originMsgType, venID, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-
-
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
-
-        return false;
     }
 
     /**

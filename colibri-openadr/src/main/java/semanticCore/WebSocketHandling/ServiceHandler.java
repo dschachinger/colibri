@@ -1,6 +1,6 @@
 package semanticCore.WebSocketHandling;
 
-import Utils.OpenADRColibriBridge;
+import Bridge.OpenADRColibriBridge;
 import Utils.TimeDurationConverter;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import org.slf4j.Logger;
@@ -11,7 +11,6 @@ import semanticCore.MsgObj.ContentType;
 import semanticCore.MsgObj.Header;
 import semanticCore.MsgObj.MsgType;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,15 +20,16 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by georg on 26.07.16.
  */
-public class ServiceHandler extends Thread {
+public class ServiceHandler implements Runnable {
     private Date sendTime;
     private Long intervalDurationSec;
     private ColibriClient colClient;
-    private OpenADRColibriBridge bridge;
-    ServiceDataConfig serviceDataConfig;
+    private ServiceDataConfig serviceDataConfig;
 
-    boolean serviceAdded;
-    boolean serviceObserved;
+    private Thread serviceThread;
+
+    private boolean serviceAdded;
+    private boolean serviceObserved;
 
     private LinkedBlockingQueue<MsgInfo_OADRDistributeEvent.Event> bufferedEvents;
 
@@ -41,7 +41,6 @@ public class ServiceHandler extends Thread {
         this.bufferedEvents = new LinkedBlockingQueue<>();
         this.serviceDataConfig = serviceDataConfig;
         this.colClient = colibriClient;
-        this.bridge = colibriClient.getBridge();
     }
 
     public void addEvent(MsgInfo_OADRDistributeEvent.Event event){
@@ -80,8 +79,25 @@ public class ServiceHandler extends Thread {
         return serviceObserved;
     }
 
-    public void setServiceObserved(boolean serviceObserved) {
+    public void changeServiceObservedStatus(boolean serviceObserved) {
         this.serviceObserved = serviceObserved;
+        if(this.serviceObserved){
+            if(serviceThread == null){
+                serviceThread = new Thread(this,"serviceHandler"+serviceDataConfig.getEventType());
+                serviceThread.start();
+            } else{
+                logger.error("service " + serviceDataConfig.getServiceName() + " already running");
+            }
+
+        } else {
+            if(serviceThread != null){
+                serviceThread.interrupt();
+                serviceThread = null;
+            } else {
+                logger.error("service " + serviceDataConfig.getServiceName() + " was not running");
+            }
+
+        }
     }
 
     public ServiceDataConfig getServiceDataConfig() {
@@ -90,18 +106,26 @@ public class ServiceHandler extends Thread {
 
     @Override
     public void run() {
-
-        while (colClient.getKnownServicesHashMap().get(serviceDataConfig.getServiceName()).isServiceObserved()) {
+        logger.info("new thread running");
+        while (true) {
             if (sendTime != null) {
                 sendEventsDaily();
             } else if (intervalDurationSec != null) {
                 sendEventsCyclic();
             } else {
-                sendEventsAsap();
+                sendEventsImmediately();
             }
+
+            if(!colClient.getServicesMap().get(serviceDataConfig.getServiceName()).isServiceObserved()||
+                    Thread.currentThread().isInterrupted()){
+                break;
+            }
+
 
             sendEvents();
         }
+
+        logger.info("no further service messages for " + serviceDataConfig.getServiceName());
     }
 
     private void sendEventsDaily(){
@@ -122,7 +146,7 @@ public class ServiceHandler extends Thread {
         try {
             Thread.sleep(delta);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.info("daily service interrupted");
         }
     }
 
@@ -132,23 +156,24 @@ public class ServiceHandler extends Thread {
         try {
             Thread.sleep(intervalDurationSec*1000);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.info("cyclic service interrupted");
         }
     }
 
-    private void sendEventsAsap(){
-        logger.info("send asap");
+    private void sendEventsImmediately(){
+        logger.info("send immediately");
         try {
             MsgInfo_OADRDistributeEvent.Event event = bufferedEvents.take();
             bufferedEvents.put(event);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.info("immediately service interrupted");
         }
     }
 
 
     private void sendEvents(){
         List<MsgInfo_OADRDistributeEvent.Event> events = new ArrayList<>();
+        OpenADRColibriBridge bridge = colClient.getBridge();
 
         while (true) {
             // condition to stop the loop
@@ -165,7 +190,14 @@ public class ServiceHandler extends Thread {
         header.setContentType(ContentType.APPLICATION_RDF_XML);
         header.setMessageId(bridge.getColClient().getGenSendMessage().getUniqueMsgID());
 
-        ColibriMessage msg = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsgContent));
+        String strContent;
+        if(!putMsgContent.getDescriptions().isEmpty()){
+            strContent = bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsgContent);
+        } else {
+            strContent = "";
+        }
+
+        ColibriMessage msg = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, strContent);
 
         colClient.sendColibriMsg(msg);
 

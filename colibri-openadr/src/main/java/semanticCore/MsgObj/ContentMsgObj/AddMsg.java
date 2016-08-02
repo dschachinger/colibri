@@ -19,18 +19,33 @@ public class AddMsg {
 
     // This describes a service on top level
     @XmlElement(name = "Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-    private List<ServiceDescription> serviceDescriptions;
+    private ServiceDescription normalServiceDescriptions;
+
+    // This describes a accept service on top level
+    @XmlElement(name = "Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+    private ServiceDescription acceptServiceDescriptions;
 
     public AddMsg() {
         this.descriptions = new ArrayList<>();
-        this.serviceDescriptions = new ArrayList<>();
     }
 
     public List<Description> getDescriptions() {
         return descriptions;
     }
 
-    public List<ServiceDescription> getServiceDescriptions() {
-        return serviceDescriptions;
+    public ServiceDescription getNormalServiceDescriptions() {
+        return normalServiceDescriptions;
+    }
+
+    public void setNormalServiceDescriptions(ServiceDescription serviceDescriptions) {
+        this.normalServiceDescriptions = serviceDescriptions;
+    }
+
+    public ServiceDescription getAcceptServiceDescriptions() {
+        return acceptServiceDescriptions;
+    }
+
+    public void setAcceptServiceDescriptions(ServiceDescription acceptServiceDescriptions) {
+        this.acceptServiceDescriptions = acceptServiceDescriptions;
     }
 }

@@ -28,8 +28,8 @@ public class XMPPChannel extends Channel {
 
     private Logger logger = LoggerFactory.getLogger(XMPPChannel.class);
 
-    public XMPPChannel(JAXBManager jaxbManager, OADRParty party) throws Exception{
-        super(new Controller(party), jaxbManager, party);
+    public XMPPChannel(JAXBManager jaxbManager, OADRParty party, int timeoutSec) throws Exception{
+        super(new Controller(party), jaxbManager, party, timeoutSec);
 
         SmackConfiguration.DEBUG = true;
 

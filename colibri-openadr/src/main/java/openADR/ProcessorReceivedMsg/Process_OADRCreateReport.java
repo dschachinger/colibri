@@ -1,10 +1,7 @@
 package openADR.ProcessorReceivedMsg;
 
 import Utils.TimeDurationConverter;
-import com.enernoc.open.oadr2.model.v20b.OadrCreateReport;
-import com.enernoc.open.oadr2.model.v20b.OadrCreatedReport;
-import com.enernoc.open.oadr2.model.v20b.OadrPendingReports;
-import com.enernoc.open.oadr2.model.v20b.OadrReportRequest;
+import com.enernoc.open.oadr2.model.v20b.*;
 import com.enernoc.open.oadr2.model.v20b.ei.ReportSpecifier;
 import com.enernoc.open.oadr2.model.v20b.ei.SpecifierPayload;
 import openADR.OADRHandling.OADRParty;
@@ -100,22 +97,24 @@ public class Process_OADRCreateReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrCreateReport recMsg = (OadrCreateReport)obj.getMsg();
+        String venID = recMsg.getVenID();
 
         if(!OADRConInfo.getVTNReceivesReportCapabilities()){
-            return true;
+            return "450";
+        } else {
+            return checkConstraints(sendedMsgMap, true, null,
+                    null, venID, null);
         }
 
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
+    }
 
-        return false;
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
     }
 
     /**

@@ -1,5 +1,7 @@
-package Utils;
+package Bridge;
 
+import Utils.Pair;
+import Utils.SortedDateIntervalList;
 import openADR.OADRHandling.OADR2VEN;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
 import openADR.OADRMsgInfo.OADRMsgInfo;
@@ -8,7 +10,10 @@ import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.WebSocketHandling.ColibriClient;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by georg on 02.07.16.
@@ -23,7 +28,10 @@ public class OpenADRColibriBridge {
     private ColibriToOpenADR colibriToOpenADR;
     private OpenADRToColibri openADRToColibri;
 
+    // This map stores for every service (key: service URL) a sorted list which contains all received events. They are ordered by their active time.
     private HashMap<String, SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event>> serviceSortedReceivedEvents;
+
+    // This map stores for every eventID (=key) the associated service URL (=value)
     private HashMap<String, String> eventsTyp;
 
     private Logger logger = LoggerFactory.getLogger(OpenADRColibriBridge.class);

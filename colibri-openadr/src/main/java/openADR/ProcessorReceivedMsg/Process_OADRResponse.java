@@ -1,5 +1,6 @@
 package openADR.ProcessorReceivedMsg;
 
+import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrResponse;
 import openADR.OADRHandling.OADRParty;
 import openADR.OADRMsgInfo.MsgInfo_OADRResponse;
@@ -50,23 +51,22 @@ public class Process_OADRResponse extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrResponse recMsg = (OadrResponse)obj.getMsg();
+        String requestID = recMsg.getEiResponse().getRequestID();
+        String venID = recMsg.getVenID();
 
-        if(sendedMsgMap.get(recMsg.getEiResponse().getRequestID()) == null){
-            return true;
-        }
+        return checkConstraints(sendedMsgMap, true, requestID,
+                null, venID, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+        OadrResponse recMsg = (OadrResponse)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
-
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
-
-        return false;
     }
 
     /**

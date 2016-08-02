@@ -1,6 +1,6 @@
 package openADR.OADRHandling;
 
-import Utils.OpenADRColibriBridge;
+import Bridge.OpenADRColibriBridge;
 import com.enernoc.open.oadr2.model.v20b.ei.OptTypeType;
 import openADR.OADRMsgInfo.*;
 import openADR.Utils.FollowUpMsg;
@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class OADR2VEN extends OADRParty {
 
-    public OADR2VEN(OpenADRColibriBridge bridge) {
-        super(bridge);
+    public OADR2VEN(OpenADRColibriBridge bridge, int timeoutSec) {
+        super(bridge, timeoutSec);
     }
 
     /**
@@ -44,7 +44,7 @@ public class OADR2VEN extends OADRParty {
         MsgInfo_OADRCreatedEvent reply = new MsgInfo_OADRCreatedEvent();
 
         try {
-            Thread.sleep(30000);
+            Thread.sleep(timeoutSec * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

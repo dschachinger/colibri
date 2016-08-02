@@ -1,5 +1,8 @@
-package Utils;
+package Bridge;
 
+import Utils.EventType;
+import Utils.Pair;
+import Utils.TimeDurationConverter;
 import com.enernoc.open.oadr2.model.v20b.ei.SignalTypeEnumeratedType;
 import openADR.OADRMsgInfo.Interval;
 import openADR.OADRMsgInfo.MsgInfo_OADRDistributeEvent;
@@ -8,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
 import semanticCore.MsgObj.ContentMsgObj.*;
-import semanticCore.MsgObj.ContentType;
-import semanticCore.MsgObj.Header;
-import semanticCore.MsgObj.MsgType;
+import semanticCore.WebSocketHandling.ServiceDataConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by georg on 04.07.16.
@@ -42,39 +45,30 @@ public class OpenADRToColibri {
         MsgInfo_OADRDistributeEvent con_msg = (MsgInfo_OADRDistributeEvent) msg;
         List<ColibriMessage> colibriMessages = new ArrayList<>();
 
-        String serviceBaseURL = bridge.getColClient().getServiceBaseURL();
-
-        Header header;
-        PutMsg putMsg;
-
         for (MsgInfo_OADRDistributeEvent.Event event : con_msg.getEvents()) {
-            header = new Header();
-            header.setDate(new Date());
-            header.setContentType(ContentType.TEXT_PLAIN);
-            header.setMessageId(bridge.getColClient().getGenSendMessage().getUniqueMsgID());
-
-            ArrayList<MsgInfo_OADRDistributeEvent.Event> events = new ArrayList<>();
-            events.add(event);
-            putMsg = convertOpenADREventsToColibriPUTContent(events, bridge);
-
-            ColibriMessage colMsg = new ColibriMessage(MsgType.PUT_DATA_VALUES, header, bridge.getColClient().getGenSendMessage().transformPOJOToXML(putMsg));
 
             EventType eventType = getEventTypeFromSignalType(event.getSignals().get(0).getSignalType());
 
-            // TODO not hardcoded service URL
-            String serviceURL = serviceBaseURL + "/" + eventType + "/" + "Service";
+            String serviceURL = null;
+            for(String key : bridge.getColClient().getServicesMap().keySet()){
+                ServiceDataConfig serviceDataConfig = bridge.getColClient().getServicesMap().get(key).getServiceDataConfig();
 
-            bridge.addOpenADREvent(serviceURL, new Pair<>(event.getStartDate(), TimeDurationConverter.addDurationToDate(event.getStartDate(), event.getDurationSec())), event);
-
-
-            // TODO implement later del
-            //colibriMessages.add(colMsg);
-
-
-            if (bridge.getColClient().getKnownServicesHashMap().get(serviceURL).isServiceObserved()) {
-                bridge.getColClient().getKnownServicesHashMap().get(serviceURL).addEvent(event);
-                // TODO del this colibriMessages.add(colMsg);
+                if(serviceDataConfig.getEventType().equals(eventType)){
+                    serviceURL = serviceDataConfig.getServiceName();
+                }
             }
+
+            if(serviceURL!=null){
+                bridge.addOpenADREvent(serviceURL, new Pair<>(event.getStartDate(), TimeDurationConverter.addDurationToDate(event.getStartDate(), event.getDurationSec())), event);
+
+                if (bridge.getColClient().getServicesMap().get(serviceURL).isServiceObserved()) {
+                    bridge.getColClient().getServicesMap().get(serviceURL).addEvent(event);
+                }
+            } else {
+                logger.error("no proper service found for event type " + eventType);
+            }
+
+
 
         }
         return colibriMessages;

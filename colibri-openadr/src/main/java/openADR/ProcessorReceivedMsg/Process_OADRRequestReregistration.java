@@ -1,5 +1,6 @@
 package openADR.ProcessorReceivedMsg;
 
+import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrRequestReregistration;
 import com.enernoc.open.oadr2.model.v20b.OadrResponse;
 import openADR.OADRHandling.AsyncSendFollowUpMsgWorker;
@@ -56,17 +57,19 @@ public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public boolean doRecMsgViolateConstraintsAndUpdateSendMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        if(OADRConInfo.getVENId() == null){
-            return true;
-        }
-
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrRequestReregistration recMsg = (OadrRequestReregistration)obj.getMsg();
-        if(!recMsg.getVenID().equals(OADRConInfo.getVENId())){
-            return true;
-        }
+        String venID = recMsg.getVenID();
 
-        return false;
+        return checkConstraints(sendedMsgMap, true, null,
+                null, venID, null);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
     }
 
     /**

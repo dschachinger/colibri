@@ -75,7 +75,7 @@ public class OADR2PacketExtension implements ExtensionElement {
 
 	@Override public String toXML() {
 		try {
-			if ( this.marshaller == null ) // TODO implement later synchronize
+			if ( this.marshaller == null )
 				this.marshaller = this.jaxb.createMarshaller();
 			
 			StringWriter sw = new StringWriter();
@@ -85,9 +85,7 @@ public class OADR2PacketExtension implements ExtensionElement {
 			xml=xml.replaceFirst("^<"+getElementName()+"", "");
 			xml=xml.replaceFirst("</"+getElementName()+">$", "");
 			xml=xml.replaceFirst("xmlns=\"http://openadr.org/oadr-2.0b/2012/07\"", "");
-			// TODO implement later old version xml=xml.replaceFirst("xmlns=\"http://openadr.org/oadr-2.0b/2012/07\"", "xmlns:oadr=\"http://openadr.org/oadr-2.0b/2012/07\"");
 			return xml;
-			// TODO implement later clean version return sw.toString();
 		}
 		catch ( JAXBException ex ) {
 			throw new RuntimeException("JAXB error marshalling XML to string", ex);

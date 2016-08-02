@@ -8,8 +8,6 @@ import openADR.Utils.OADRConInfo;
 import openADR.Utils.OADRMsgObject;
 import openADR.Utils.XMPPConInfo;
 
-import java.util.HashMap;
-
 /**
  * Created by georg on 07.06.16.
  * This class is used to create oadrCreatePartyRegistration messages.
@@ -19,11 +17,10 @@ public class CreateMsg_OADRCreatePartyRegistration extends CreateSendMsg {
     /**
      * Creates a message object with an openADR payload OadrCreatePartyRegistration in it.
      * @param info message info: contains the needed information to create a openADR payload
-     * @param receivedMsgMap contains all received messages
      * @return
      */
     @Override
-    public OADRMsgObject genSendMsg(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap) {
+    public OADRMsgObject genSendMsg(OADRMsgInfo info) {
         MsgInfo_OADRCreatePartyRegistration con_info = (MsgInfo_OADRCreatePartyRegistration) info;
 
         OadrCreatePartyRegistration msg = new OadrCreatePartyRegistration();
@@ -60,7 +57,7 @@ public class CreateMsg_OADRCreatePartyRegistration extends CreateSendMsg {
     /**
      * {@inheritDoc}
      */
-    public boolean doSendMsgViolateMsgOrderAndUpdateRecMap(OADRMsgInfo info, HashMap<String, OADRMsgInfo> receivedMsgMap){
-        return false;
+    public boolean doSendMsgViolateMsgOrder(OADRMsgInfo info){
+        return checkConstraints(info,false);
     }
 }
