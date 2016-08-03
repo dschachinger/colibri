@@ -113,7 +113,7 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
         String requestID = recMsg.getEiResponse() != null ? recMsg.getEiResponse().getRequestID() : null;
         String originMsgType = "oadrRequestEvent";
 
-        if(recMsg.getVtnID().equals(OADRConInfo.getVENId())){
+        if(!recMsg.getVtnID().equals(OADRConInfo.getVTNId())){
             return "452";
         }
         return checkConstraints(sendedMsgMap, true, requestID,

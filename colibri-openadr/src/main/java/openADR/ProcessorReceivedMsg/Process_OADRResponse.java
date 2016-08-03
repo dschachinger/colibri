@@ -53,10 +53,9 @@ public class Process_OADRResponse extends ProcessorReceivedMsg {
     @Override
     public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
         OadrResponse recMsg = (OadrResponse)obj.getMsg();
-        String requestID = recMsg.getEiResponse().getRequestID();
         String venID = recMsg.getVenID();
 
-        return checkConstraints(sendedMsgMap, true, requestID,
+        return checkConstraints(sendedMsgMap, true, null,
                 null, venID, null);
     }
 

@@ -20,6 +20,8 @@ public class OADRConInfo {
 
     // The assigned ven ID by the VTN
     private static String VENId;
+    // The assigned vtn ID by the VTN
+    private static String VTNId;
     // The assigned registrationId by the VTN
     private static String registrationId;
     // Counter to generate a unique requestID
@@ -141,5 +143,13 @@ public class OADRConInfo {
 
     public static String getVENName() {
         return VENName;
+    }
+
+    public static String getVTNId() {
+        return VTNId;
+    }
+
+    public static void setVTNId(String VTNId) {
+        OADRConInfo.VTNId = VTNId;
     }
 }

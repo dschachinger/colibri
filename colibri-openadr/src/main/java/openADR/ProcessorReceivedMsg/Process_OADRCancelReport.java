@@ -3,6 +3,7 @@ package openADR.ProcessorReceivedMsg;
 import com.enernoc.open.oadr2.model.v20b.OadrCancelReport;
 import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrCanceledReport;
+import com.enernoc.open.oadr2.model.v20b.OadrPendingReports;
 import openADR.OADRHandling.OADRParty;
 import openADR.OADRMsgInfo.MsgInfo_OADRCancelReport;
 import openADR.OADRMsgInfo.OADRMsgInfo;
@@ -28,10 +29,15 @@ public class Process_OADRCancelReport extends ProcessorReceivedMsg {
     public OADRMsgObject genResponse(OADRMsgObject obj, String responseCode) {
         OadrCancelReport recMsg = (OadrCancelReport)obj.getMsg();
 
-
         OadrCanceledReport response = new OadrCanceledReport();
         response.setEiResponse(genEiRespone(recMsg.getRequestID(), responseCode));
 
+        OadrPendingReports oadrPendingReports = new OadrPendingReports();
+
+        for(String reportRequestID : OADRConInfo.getAllRegisteredReportRequestIDs()){
+            oadrPendingReports.getReportRequestIDs().add(reportRequestID);
+        }
+        response.setOadrPendingReports(oadrPendingReports);
 
 
         return new OADRMsgObject("oadrCanceledReport", null, response);

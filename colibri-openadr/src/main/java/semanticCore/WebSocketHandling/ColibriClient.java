@@ -176,6 +176,7 @@ public class ColibriClient {
     public void sendAddService(EventType eventType){
         if(!registered) {
             logger.info("connector is not registered");
+            return;
         }
 
         ServiceDataConfig serviceDataConfig = null;
@@ -199,6 +200,7 @@ public class ColibriClient {
     public void sendQueryMessage(String query){
         if(!registered){
             logger.info("connector is not registered");
+            return;
         }
 
         sendColibriMsg(genSendMessage.gen_QUERY(query));
@@ -207,6 +209,7 @@ public class ColibriClient {
     public void sendUpdateMessage(String sparqlUpdate){
         if(!registered){
             logger.info("connector is not registered");
+            return;
         }
 
         sendColibriMsg(genSendMessage.gen_UPDATE(sparqlUpdate));

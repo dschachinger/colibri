@@ -126,7 +126,7 @@ public class Main {
                 case 54: ven.sendExampleOadrRequestEvent();
                     break;
                 case 55:
-                    System.out.println("registraionID: " + OADRConInfo.getRegistrationId());
+                    logger.info("registraionID: " + OADRConInfo.getRegistrationId());
                     break;
                 case 56:
                     ven.sendExampleOadrRegisterReport();

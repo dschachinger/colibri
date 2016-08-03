@@ -52,6 +52,8 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
      * It gathers the reprot information and sends the report to the opposite party
      */
     public void run(){
+        Thread.currentThread().setName("OADR Report Handler " + reportRequest.getReportRequestID());
+
         if(reportRequest.getReportSpecifierID().equals("METADATA")){
             MsgInfo_OADRUpdateReport sendInfo = new MsgInfo_OADRUpdateReport();
             sendInfo.setMetareport(true);
@@ -61,7 +63,14 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
             return;
         }
 
-        long startTimeDiffMilli = TimeDurationConverter.getDateDiff(reportRequest.getReportIntervalStart(), new Date(), TimeUnit.MILLISECONDS);
+        long startTimeDiffMilli;
+        if(reportRequest.getReportIntervalStart().before(new Date())){
+            logger.error("start date is in the past --> start immediately.");
+            startTimeDiffMilli = 0;
+        } else {
+            startTimeDiffMilli = TimeDurationConverter.getDateDiff(new Date(), reportRequest.getReportIntervalStart(), TimeUnit.MILLISECONDS);
+        }
+
         long amountMesurementsPerReport = reportRequest.getReportBackDurationSec() / reportRequest.getGranularitySec();
         // remaining time between last measurment and transmission of the report
 
@@ -86,7 +95,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
             if(isReportCanceled.intValue() != 1){
                 if(isReportCanceled.intValue() == 2){
-                    logger.info("Report "+reportRequest.getReportRequestID() + " gen follow up report");
+                    logger.info("Report "+reportRequest.getReportRequestID() + " generate follow up report");
                 }
 
                 isReportCanceled.compareAndSet(2,1);

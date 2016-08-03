@@ -4,6 +4,7 @@ import com.enernoc.open.oadr2.model.v20b.OadrCanceledPartyRegistration;
 import com.enernoc.open.oadr2.model.v20b.OadrRegisteredReport;
 import com.enernoc.open.oadr2.model.v20b.OadrUpdatedReport;
 import openADR.OADRHandling.OADRParty;
+import openADR.OADRMsgInfo.MsgInfo_OADRCancelReport;
 import openADR.OADRMsgInfo.MsgInfo_OADRUpdatedReport;
 import openADR.OADRMsgInfo.OADRMsgInfo;
 import openADR.Utils.OADRConInfo;
@@ -41,12 +42,19 @@ public class Process_OADRUpdatedReport extends ProcessorReceivedMsg {
         OadrUpdatedReport msg = (OadrUpdatedReport)obj.getMsg();
         MsgInfo_OADRUpdatedReport info = new MsgInfo_OADRUpdatedReport();
 
-        OADRConInfo.deleteUpdateReportMsgWorkers(msg.getOadrCancelReport());
+        // the oadrCancelReport is optional for an oadrUpdatedReport Message
+        if(msg.getOadrCancelReport() != null){
+            info.setCancelReport(new MsgInfo_OADRCancelReport());
 
-        for(String reportRequestID : msg.getOadrCancelReport().getReportRequestIDs()){
-            info.getCancelReport().getReportRequestIDs().add(reportRequestID);
+            OADRConInfo.deleteUpdateReportMsgWorkers(msg.getOadrCancelReport());
+
+            for(String reportRequestID : msg.getOadrCancelReport().getReportRequestIDs()){
+                info.getCancelReport().getReportRequestIDs().add(reportRequestID);
+            }
+            info.getCancelReport().setReportToFollow(msg.getOadrCancelReport().isReportToFollow());
         }
-        info.getCancelReport().setReportToFollow(msg.getOadrCancelReport().isReportToFollow());
+
+
         return info;
     }
 
@@ -55,7 +63,7 @@ public class Process_OADRUpdatedReport extends ProcessorReceivedMsg {
      */
     @Override
     public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
-        OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
+        OadrUpdatedReport recMsg = (OadrUpdatedReport)obj.getMsg();
         String requestID = recMsg.getEiResponse().getRequestID();
         String originMsgType = "oadrUpdateReport";
         String venID = recMsg.getVenID();
@@ -69,7 +77,7 @@ public class Process_OADRUpdatedReport extends ProcessorReceivedMsg {
      */
     @Override
     public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
-        OadrRegisteredReport recMsg = (OadrRegisteredReport)obj.getMsg();
+        OadrUpdatedReport recMsg = (OadrUpdatedReport)obj.getMsg();
         sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
     }
 

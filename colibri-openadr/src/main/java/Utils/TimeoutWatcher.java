@@ -67,7 +67,7 @@ public class TimeoutWatcher<S, T> {
         @Override
         public void run() {
             Thread.currentThread().setName("timeoutWatcher "+messageID);
-            logger.info(Thread.currentThread().getName()+" Start. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
+            logger.info(Thread.currentThread().getName()+" Start. MessageID = "+messageID + " threadID: " + Thread.currentThread().getId());
 
             try {
                 Thread.sleep(timeoutMilliSec);
@@ -82,7 +82,7 @@ public class TimeoutWatcher<S, T> {
                 logger.info("timing is okay for msg: " + messageID);
             }
 
-            logger.info(Thread.currentThread().getName()+" End. MessageID = "+messageID + "threadID: " + Thread.currentThread().getId());
+            logger.info(Thread.currentThread().getName()+" End. MessageID = "+messageID + " threadID: " + Thread.currentThread().getId());
         }
     }
 }

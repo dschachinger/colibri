@@ -49,6 +49,8 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
             OADRConInfo.setVENId(recMsg.getVenID());
         }
 
+        OADRConInfo.setVTNId(recMsg.getVtnID());
+
         if(recMsg.getRegistrationID() != null){
             OADRConInfo.setRegistrationId(recMsg.getRegistrationID());
         }
