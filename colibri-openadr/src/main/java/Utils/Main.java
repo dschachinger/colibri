@@ -31,16 +31,38 @@ public class Main {
 
     private static Logger logger = LoggerFactory.getLogger(Main.class);
 
+    private static OADR2VEN ven;
+    private static ColibriClient colClient;
+
     public static void main(String args[]){
         addExampleReportPossibility();
 
-        OpenADRColibriBridge bridge = new OpenADRColibriBridge();
+        final OpenADRColibriBridge bridge = new OpenADRColibriBridge();
 
-        OADR2VEN ven = initOpenADRVEN(bridge);;
+        ven = initOpenADRVEN(bridge);;
         bridge.setOadrVEN(ven);
 
-        ColibriClient colClient = initColibriService(bridge);
+        colClient = initColibriService(bridge);
         bridge.setColClient(colClient);
+
+        Runtime.getRuntime().addShutdownHook(new Thread()
+        {
+            @Override
+            public void run()
+            {
+                logger.info("Shutdown hook ran!");
+                Main.ven.terminate();
+                Main.colClient.terminate();
+                // give colibri client termination thread time to terminate
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                logger.info("fin");
+
+            }
+        });
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
 
@@ -186,6 +208,7 @@ public class Main {
         }
 
         String serviceBaseURL = prop.getProperty("service.serviceBaseURL");
+        String colibriCoreURL = prop.getProperty("colibriCore.url");
         int timeoutSec = Integer.parseInt(prop.getProperty("msg.timeoutSec"));
 
         WebSocketConInfo.regConnectorAddress = prop.getProperty("REG.connectorAddress");
@@ -193,7 +216,7 @@ public class Main {
         WebSocketConInfo.regRegisteredDescriptionAbout = prop.getProperty("REG.registeredDescriptionAbout");
         WebSocketConInfo.regTypeResource = prop.getProperty("REG.typeResource");
 
-        return new ColibriClient(bridge, serviceBaseURL, timeoutSec);
+        return new ColibriClient(bridge, serviceBaseURL, colibriCoreURL, timeoutSec);
     }
 
     private static void addExampleReportPossibility(){

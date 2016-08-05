@@ -55,7 +55,11 @@ public class ColibriClient {
     // This string represents the base URL for all services
     private String serviceBaseURL;
 
-    public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL, int timeoutSec){
+    String colibriCoreURL;
+
+    private boolean localAtmosphereClient;
+
+    public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL, String colibriCoreURL, int timeoutSec){
         try {
             jaxbContext = JAXBContext.newInstance(RegisterMsg.class, AddMsg.class, PutMsg.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
@@ -76,6 +80,9 @@ public class ColibriClient {
         }
 
         this.serviceBaseURL = serviceBaseURL;
+        this.colibriCoreURL = colibriCoreURL;
+
+        localAtmosphereClient = colibriCoreURL.equals("http://127.0.0.1:8080/chat");
 
         servicesMap = new HashMap<>();
 
@@ -127,7 +134,7 @@ public class ColibriClient {
             timeoutWatcher.addMonitoredMsg(sendMsg.getHeader().getMessageId());
         }
         try {
-            socket.fire(new Message("openADR", sendMsg.toMsgString()));
+            socket.fire(new Message(sendMsg.toMsgString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -235,6 +242,14 @@ public class ColibriClient {
         return bridge;
     }
 
+    public String getColibriCoreURL() {
+        return colibriCoreURL;
+    }
+
+    public boolean isLocalAtmosphereClient() {
+        return localAtmosphereClient;
+    }
+
     public ProcessReceivedMsg getProcessMessage() {
         return processMessage;
     }
@@ -244,8 +259,10 @@ public class ColibriClient {
      * It is not guaranteed that this client still works afterwards.
      * It is only allowed to call this method if the party was successfully started beforehand.
      */
-    public void terminate(){
-        new DeregisterThread().start();
+    public Thread terminate(){
+        Thread terminateThread = new DeregisterThread();
+        terminateThread.start();
+        return terminateThread;
     }
 
     //--------------------------- inner class DeregisterThread ---------------------------------//
@@ -265,7 +282,9 @@ public class ColibriClient {
                 waitForDeregistration();
                 logger.info("go on with termination");
             }
+            logger.info("close websocket");
             socket.close();
+            logger.info("fin close websocket");
         }
     }
 

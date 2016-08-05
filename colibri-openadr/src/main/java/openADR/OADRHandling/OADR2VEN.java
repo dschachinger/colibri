@@ -90,7 +90,9 @@ public class OADR2VEN extends OADRParty {
      */
     @Override
     public void terminate(){
-        channel.sendMsg(createCancelRegInfoObj());
+        if(OADRConInfo.getVENId() != null){
+            channel.sendMsg(createCancelRegInfoObj());
+        }
         channel.close();
     }
 

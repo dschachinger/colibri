@@ -28,47 +28,95 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
     public static Socket initWebSocket(final ColibriClient colClient) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
 
-        AtmosphereClient client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
-        RequestBuilder request = client.newRequestBuilder()
-                .method(Request.METHOD.GET)
-                .uri("http://127.0.0.1:8080/chat")
-                .trackMessageLength(true)
-                .encoder(new Encoder<Message, String>() {
-                    @Override
-                    public String encode(Message data) {
-                        try {
-                            return mapper.writeValueAsString(data);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                })
-                .decoder(new Decoder<String, Message>() {
-                    @Override
-                    public Message decode(Event type, String data) {
+        Client client;
+        RequestBuilder request;
 
-                        data = data.trim();
-
-                        // Padding from Atmosphere, skip
-                        if (data.length() == 0) {
-                            return null;
-                        }
-
-                        if (type.equals(Event.MESSAGE)) {
+        if(colClient.isLocalAtmosphereClient()){
+            client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
+            request = ((AtmosphereClient)client).newRequestBuilder()
+                    .method(Request.METHOD.GET)
+                    .uri(colClient.getColibriCoreURL())
+                    .trackMessageLength(true)
+                    .encoder(new Encoder<Message, String>() {
+                        @Override
+                        public String encode(Message data) {
                             try {
-                                return mapper.readValue(data, Message.class);
+                                return mapper.writeValueAsString(data);
                             } catch (IOException e) {
-                                logger.info("Invalid message {}", data);
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    })
+                    .decoder(new Decoder<String, Message>() {
+                        @Override
+                        public Message decode(Event type, String data) {
+
+                            data = data.trim();
+
+                            // Padding from Atmosphere, skip
+                            if (data.length() == 0) {
                                 return null;
                             }
-                        } else {
-                            return null;
+
+                            if (type.equals(Event.MESSAGE)) {
+                                try {
+                                    return mapper.readValue(data, Message.class);
+                                } catch (IOException e) {
+                                    logger.info("Invalid message {}", data);
+                                    return null;
+                                }
+                            } else {
+                                return null;
+                            }
                         }
-                    }
-                })
-                .transport(Request.TRANSPORT.WEBSOCKET)
-                .transport(Request.TRANSPORT.SSE)
-                .transport(Request.TRANSPORT.LONG_POLLING);
+                    })
+                    .transport(Request.TRANSPORT.WEBSOCKET)
+                    .transport(Request.TRANSPORT.SSE)
+                    .transport(Request.TRANSPORT.LONG_POLLING);
+        } else {
+            client = ClientFactory.getDefault().newClient();
+            request = client.newRequestBuilder()
+                    .method(Request.METHOD.GET)
+                    .uri(colClient.getColibriCoreURL())
+                    .encoder(new Encoder<Message, String>() {
+                        @Override
+                        public String encode(Message data) {
+                            try {
+                                return mapper.writeValueAsString(data);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    })
+                    .decoder(new Decoder<String, Message>() {
+                        @Override
+                        public Message decode(Event type, String data) {
+
+                            data = data.trim();
+
+                            // Padding from Atmosphere, skip
+                            if (data.length() == 0) {
+                                return null;
+                            }
+
+                            if (type.equals(Event.MESSAGE)) {
+                                try {
+                                    return mapper.readValue(data, Message.class);
+                                } catch (IOException e) {
+                                    logger.info("Invalid message {}", data);
+                                    return null;
+                                }
+                            } else {
+                                return null;
+                            }
+                        }
+                    })
+                    .transport(Request.TRANSPORT.WEBSOCKET)
+                    .transport(Request.TRANSPORT.SSE)
+                    .transport(Request.TRANSPORT.LONG_POLLING);
+        }
+
+
 
         final Socket socket = client.create();
 
@@ -83,7 +131,13 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                     colClient.processReceivedMsg(msg);
                 }
 
-                logger.info("Author {}: {}", t.getAuthor() + "@ " + d.getHours() + ":" + d.getMinutes(), t.getMessage());
+                if(colClient.isLocalAtmosphereClient()){
+                    logger.info("Author {}: {}", t.getAuthor() + "@ " + d.getHours() + ":" + d.getMinutes(), t.getMessage(
+                    ));
+                } else {
+                    logger.info("content : {}"/*, t.getAuthor() + "@ " + d.getHours() + ":" + d.getMinutes()*/, t.getMessage());
+                }
+
             }
         }).on(new Function<Throwable>() {
 

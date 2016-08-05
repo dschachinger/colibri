@@ -100,7 +100,8 @@ public class ProcessReceivedMsg {
                 result = handle_STATUS(msg);
                 break;
             default:
-                logger.error("unsupported message received");
+                logger.error(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\nunsupported message received\n" + msg.toMsgString());
+                logger.error("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
                 break;
         }
 
