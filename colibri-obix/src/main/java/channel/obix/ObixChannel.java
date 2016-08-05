@@ -45,7 +45,7 @@ public abstract class ObixChannel {
      * Requests the oBIX lobby with the lobby URI of the channel.
      * Uses XML as messgae format.
      *
-     * @return                  The oBIX lobby of the channel.
+     * @return The oBIX lobby of the channel.
      */
     public ObixLobby getLobby() {
         return this.getLobby(lobbyUri, APPLICATION_XML);
@@ -55,8 +55,8 @@ public abstract class ObixChannel {
      * Requests the oBIX lobby specified URI.
      * Uses XML as messgae format.
      *
-     * @param   uri             The URI of the requested oBIX lobby.
-     * @return                  The oBIX lobby of the specified URI.
+     * @param uri The URI of the requested oBIX lobby.
+     * @return The oBIX lobby of the specified URI.
      */
     public ObixLobby getLobby(String uri) {
         return this.getLobby(uri, APPLICATION_XML);
@@ -64,11 +64,11 @@ public abstract class ObixChannel {
 
     /**
      * Observers data from the oBIX resource mapped to the oBIXObject.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   obj             The oBIXObject which is observed.
-     * @return                  The observed oBIX Object with.
+     * @param obj The oBIXObject which is observed.
+     * @return The observed oBIX Object with.
      */
     public ObixObject observe(ObixObject obj) {
         return this.observe(obj, APPLICATION_XML);
@@ -76,11 +76,11 @@ public abstract class ObixChannel {
 
     /**
      * Requests data from the oBIX resource with the specified URI.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   uri             The URI of the requested oBIX resource.
-     * @return                  The oBIX Object with the specified URI.
+     * @param uri The URI of the requested oBIX resource.
+     * @return The oBIX Object with the specified URI.
      */
     public ObixObject get(String uri) {
         return this.get(uri, APPLICATION_XML);
@@ -88,11 +88,11 @@ public abstract class ObixChannel {
 
     /**
      * Modify an oBIX object with a put call.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   obj             The oBIX object which is modified.
-     * @return                  The modified oBIX Object.
+     * @param obj The oBIX object which is modified.
+     * @return The modified oBIX Object.
      */
     public ObixObject put(ObixObject obj) {
         return this.put(obj, APPLICATION_XML);
@@ -100,12 +100,12 @@ public abstract class ObixChannel {
 
     /**
      * Modify an oBIX object with a put call.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   obj             The oBIX object which is modified.
-     * @param   mediaType       The requested media type, for example APPLICATION_XML.
-     * @return                  The modified oBIX Object.
+     * @param obj       The oBIX object which is modified.
+     * @param mediaType The requested media type, for example APPLICATION_XML.
+     * @return The modified oBIX Object.
      */
     public abstract ObixObject put(ObixObject obj, int mediaType);
 
@@ -113,70 +113,65 @@ public abstract class ObixChannel {
      * Requests the oBIX lobby specified URI.
      * Uses XML as messgae format.
      *
-     * @param   uri             The URI of the requested oBIX lobby.
-     * @param   mediaType       The requested media type, for example APPLICATION_XML.
-     * @return                  The oBIX lobby of the specified URI.
+     * @param uri       The URI of the requested oBIX lobby.
+     * @param mediaType The requested media type, for example APPLICATION_XML.
+     * @return The oBIX lobby of the specified URI.
      */
     public abstract ObixLobby getLobby(String uri, int mediaType);
 
     /**
      * Requests data from the oBIX resource with the specified URI.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   uri             The URI of the requested oBIX resource.
-     * @param   mediaType       The requested media type, for example APPLICATION_XML.
-     * @return                  The oBIX Objects with the specified URI.
+     * @param uri       The URI of the requested oBIX resource.
+     * @param mediaType The requested media type, for example APPLICATION_XML.
+     * @return The oBIX Objects with the specified URI.
      */
-     public abstract ObixObject get(String uri, int mediaType);
+    public abstract ObixObject get(String uri, int mediaType);
 
     /**
      * Observers data from the oBIX resource mapped to the oBIXObject.
-     *
+     * <p>
      * NOTE: ONLY XML SUPPORTED SO FAR.
      *
-     * @param   obj             The oBIXObject which is observed.
-     * @param   mediaType       The requested media type, for example APPLICATION_XML.
-     * @return                  The observed oBIX Object with.
+     * @param obj       The oBIXObject which is observed.
+     * @param mediaType The requested media type, for example APPLICATION_XML.
+     * @return The observed oBIX Object with.
      */
     public abstract ObixObject observe(ObixObject obj, int mediaType);
 
     /**
      * Normalizes the given URI against the CoAP-base URI of the channel
      *
-     * @param uri   The URI which should be normalized
-     * @return      The normalized URI
+     * @param uri The URI which should be normalized
+     * @return The normalized URI
      */
     public abstract String normalizeUri(String uri);
 
     public static String normalizeUri(String uri, String baseUri) {
-        if(uri.contains(":")) {
+        //TODO:Problems with % in path!
+        if (uri.contains(":")) {
             uri = uri.split(":")[1];
         }
-        if(uri.contains("%") || baseUri.contains("%")) {
+        if (uri.contains("%") || baseUri.contains("%")) {
             //URL Encode % with %25
-            uri = uri.replace("%", "%25");
-            baseUri = baseUri.replace("%", "%25");
+            uri = uri.replace("%", "--");
+            baseUri = baseUri.replace("%", "--");
         }
-        String[] uriPaths = uri.split("/");
-        String newUri = baseUri;
-        List<String> notUsedPaths = new ArrayList<String>(Arrays.asList(uriPaths));
-        for(String s : uriPaths) {
-            if(newUri.contains(s)) {
-                notUsedPaths.remove(s);
-                break;
-            }
+
+        String[] baseUriPaths = baseUri.split("/");
+        String retUri = "";
+        for (int i = 0; i < baseUriPaths.length - 1; i++) {
+            retUri += baseUriPaths[i] + "/";
         }
-        for(String s: notUsedPaths) {
-            newUri += "/" + s;
-        }
-        return newUri;
+        return retUri + uri;
     }
 
     /**
      * Returns the base URI of the oBIX Connector
      *
-     * @return  The base URI of the oBIX channel.
+     * @return The base URI of the oBIX channel.
      */
     public String getBaseUri() {
         return this.baseUri;

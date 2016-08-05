@@ -1,4 +1,4 @@
-import channel.ObixXmlChannelDecorator;
+
 import obix.Err;
 import obix.Obj;
 import org.hamcrest.CoreMatchers;

@@ -103,7 +103,9 @@ public class ColibriChannel {
         socket = client.create();
         socket.on("message", new Function<AtmosphereMessage>() {
             public void on(AtmosphereMessage t) {
-                if (!t.getAuthor().equals(connectorName)) {
+
+                //TODO: Check author again for wasync websocket
+                        if (!t.getAuthor().equals(connectorName)) {
                     try {
                         messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                     } catch (IllegalArgumentException e) {

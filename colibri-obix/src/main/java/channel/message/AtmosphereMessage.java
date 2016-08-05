@@ -36,6 +36,10 @@ public class AtmosphereMessage {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -44,9 +48,6 @@ public class AtmosphereMessage {
         this.author = author;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
     public long getTime() {
         return time;

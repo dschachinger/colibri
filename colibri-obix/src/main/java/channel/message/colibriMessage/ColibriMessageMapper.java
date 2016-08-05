@@ -2,14 +2,14 @@ package channel.message.colibriMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.Configurator;
 import service.TimeDurationConverter;
 
 import java.text.ParseException;
 
 public class ColibriMessageMapper {
 
-    //TODO: Change to \r\n
-    static String newLine = "<br>";
+    static String newLine = Configurator.getInstance().getNewlineString();
 
     private static final Logger logger = LoggerFactory.getLogger(ColibriMessageMapper.class);
 

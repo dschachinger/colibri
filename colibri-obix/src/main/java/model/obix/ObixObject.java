@@ -300,7 +300,7 @@ public class ObixObject {
         valTrue.setValue("true");
         Name nameTrue = new Name();
         nameTrue.setName("on");
-        param.addStateDescription(new StateDescription(stateTrueUri, types, valTrue, nameTrue, true));
+        param.addStateDescription(new StateDescription(stateTrueUri, types, valTrue, nameTrue));
 
         //false state
         String stateFalseUri = connectorUri + "/" + "falseState";
@@ -309,12 +309,13 @@ public class ObixObject {
         valFalse.setValue("false");
         Name nameFalse = new Name();
         nameFalse.setName("off");
-        param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse, true));
+        param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse));
 
         //link states to parameter 1
         param.setParameterType("&colibri;StateParameter");
-        param.addStateUri(stateTrueUri);
-        param.addStateUri(stateFalseUri);
+        //param.addStateUri(stateTrueUri);
+        //param.addStateUri(stateFalseUri);
+        //TODO: Comments entfernen
     }
 
     public int getObixChannelPort() {

@@ -12,22 +12,19 @@ public class Parameter {
     private String parameterType;
     private String valueUri;
     private Value value;
-    private List<String> stateUris;
     private List<StateDescription> stateDescriptions;
-    private List<StateDescription> states;
     private boolean isTimer;
 
     private Parameter(String uri, int paramNumber) {
         this.parameterUri = uri + "parameter" + paramNumber;
         this.valueUri = uri + "value" + paramNumber;
         this.value = new Value();
-        this.stateUris = Collections.synchronizedList(new ArrayList<>());
         this.stateDescriptions = Collections.synchronizedList(new ArrayList<>());
-        this.states = Collections.synchronizedList(new ArrayList<>());
     }
 
     /**
      * Creates a time parameter. isTimer == false by default.
+     *
      * @param uri
      * @param paramNumber
      * @param date
@@ -55,7 +52,7 @@ public class Parameter {
     public Parameter(String uri, int paramNumber, Double d) {
         this(uri, paramNumber);
         this.value.setDatatype("&xsd;double");
-        this.value.setValue( Double.toString(d));
+        this.value.setValue(Double.toString(d));
     }
 
     public Parameter(String uri, int paramNumber, Boolean b) {
@@ -127,11 +124,10 @@ public class Parameter {
     }
 
     public List<String> getStateUris() {
-        return stateUris;
-    }
-
-    public List<String> addStateUri(String stateUri) {
-        stateUris.add(stateUri);
+        List<String> stateUris = new ArrayList<>();
+        for (StateDescription description : stateDescriptions) {
+            stateUris.add(description.getStateDescriptionUri());
+        }
         return stateUris;
     }
 
@@ -142,16 +138,6 @@ public class Parameter {
     public List<StateDescription> addStateDescription(StateDescription desc) {
         stateDescriptions.add(desc);
         return stateDescriptions;
-    }
-
-    public List<StateDescription> addState(StateDescription state) {
-        this.addStateUri(state.getStateDescriptionUri());
-        states.add(state);
-        return states;
-    }
-
-    public List<StateDescription> getStates() {
-        return states;
     }
 
     public boolean isTimer() {

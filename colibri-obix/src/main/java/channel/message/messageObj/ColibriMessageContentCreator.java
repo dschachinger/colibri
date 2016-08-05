@@ -99,25 +99,17 @@ public class ColibriMessageContentCreator {
         addServiceMessageContent.addDescription(parameter2Description);
 
         //Description of possible states
-        if (!booleanStatesAlreadyReigstered) {
-            int countBooleanStates = 0;
-            for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
-                if (des.isBooleanState()) {
-                    countBooleanStates++;
-                }
-                Description stateDescription = new Description();
-                stateDescription.setAbout(des.getStateDescriptionUri());
-                des.getStateTypes().forEach(stateDescription::addType);
-                stateDescription.setValue(des.getValue());
-                stateDescription.setName(des.getName());
-                addServiceMessageContent.addDescription(stateDescription);
-            }
-            if (countBooleanStates == 2) {
-                booleanStatesAlreadyReigstered = true;
-            }
+        List<StateDescription> list = obixObject.getParameter1().getStateDescriptions();
+        for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+            Description stateDescription = new Description();
+            stateDescription.setAbout(des.getStateDescriptionUri());
+            des.getStateTypes().forEach(stateDescription::addType);
+            stateDescription.setValue(des.getValue());
+            stateDescription.setName(des.getName());
+            addServiceMessageContent.addDescription(stateDescription);
         }
 
-        for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
+        for (StateDescription des : obixObject.getParameter2().getStateDescriptions()) {
             Description stateDescription = new Description();
             stateDescription.setAbout(des.getStateDescriptionUri());
             des.getStateTypes().forEach(stateDescription::addType);

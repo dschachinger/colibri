@@ -8,7 +8,6 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapObserveRelation;
 import org.eclipse.californium.core.CoapResponse;
-import org.eclipse.californium.core.coap.CoAP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,7 @@ public class CoapChannel extends ObixChannel {
 
     public ObixLobby getLobby(String uri, int mediaType) throws CoapException {
         ObixLobby lobby = new ObixLobby(uri, getObservedTypes());
-        lobby.setLobbyAsString(this.getAsString(uri, mediaType));
+        lobby.setLobbyAsString(this.getAsString(lobbyUri, mediaType));
         return lobby;
     }
 
@@ -79,8 +78,11 @@ public class CoapChannel extends ObixChannel {
     private String getAsString(String uri, int mediaType) throws CoapException {
         coapClient = getCoapClientWithUri(uri);
         CoapResponse r = coapClient.get();
-        if(r == null) {
+        if (r == null) {
             throw new CoapException(HttpStatus.SC_BAD_REQUEST);
+        }
+        if (r.getResponseText().contains("obix:BadUriErr")) {
+            logger.info("BAD URI: " + uri);
         }
         return r.getResponseText();
     }
@@ -131,22 +133,19 @@ public class CoapChannel extends ObixChannel {
         return "coap://" + ObixChannel.normalizeUri(uri, baseUri);
     }
 
-    public static String normalizeUriWithoutBaseUri(String baseUri, String uri) {
-        String tmp = normalizeUri(uri, baseUri);
-        if (tmp.contains(baseUri)) {
-            return tmp.split(baseUri + "/")[1];
-        } else {
-            return tmp;
+    public static String trimBaseUri(String baseUri, String uri) {
+        String base = baseUri.split("/")[0];
+        String firstInUri = uri.split("/")[0];
+        if (base.equals(firstInUri) && uri.split("/").length > 1) {
+            return uri.substring(uri.indexOf("/") + 1);
         }
-
+        return uri;
     }
 
     private CoapClient getCoapClientWithUri(String uri) throws IllegalArgumentException {
-        if (port == 5683) {
-            this.port = CoAP.DEFAULT_COAP_PORT;
-            return new CoapClient(CoapChannel.normalizeUri(uri, this.baseUri));
-        } else {
-            return new CoapClient("coap", this.baseUri, this.port, normalizeUriWithoutBaseUri(this.baseUri, uri));
-        }
+        CoapClient coapClient;
+        coapClient = new CoapClient("coap", this.baseUri, this.port, trimBaseUri(this.baseUri, uri));
+        coapClient.setTimeout(2000);
+        return coapClient;
     }
 }

@@ -415,6 +415,9 @@ public class GuiUtility {
 
             public void mouseReleased(MouseEvent e) {
                 for (StateRepresentation s : listOfStateRepresentations) {
+                    s.getParameter().getStateDescriptions().clear();
+                }
+                for (StateRepresentation s : listOfStateRepresentations) {
                     if (s.getStateNameTextField().getText().isEmpty() ||
                             s.getStateUriTextField().getText().isEmpty() ||
                             s.getStateValueTextField().getText().isEmpty()) {
@@ -428,7 +431,6 @@ public class GuiUtility {
                     types.add("&colibri;AbsoluteState");
                     types.add("&colibri;DiscreteState");
 
-
                     Value val = new Value();
                     val.setValue(s.getStateValueTextField().getText());
                     val.setDatatype(s.getParameter().getValueType());
@@ -437,7 +439,7 @@ public class GuiUtility {
                     name.setName(s.getStateNameTextField().getText());
 
                     StateDescription state = new StateDescription(s.getStateUriTextField().getText(),
-                            types, val, name, false);
+                            types, val, name);
 
                     s.getParameter().addStateDescription(state);
                 }
@@ -884,6 +886,7 @@ public class GuiUtility {
                             vbox.removeAll();
                             pane.remove(s.getContainerVBox());
                             iter.remove();
+                            s.getParameter().getStateDescriptions().clear();
                         }
                     }
                     parameterUnitLabel.setEnabled(true);

@@ -12,15 +12,13 @@ public class StateDescription {
     private List<String> stateTypes;
     private Value value;
     private Name name;
-    private Boolean isBooleanState;
 
-    public StateDescription(String stateDescriptionUri, List<String> stateTypes, Value value, Name name, Boolean isBooleanState) {
+    public StateDescription(String stateDescriptionUri, List<String> stateTypes, Value value, Name name) {
         this.parameterType = "&colibri;StateParameter";
         this.stateDescriptionUri = stateDescriptionUri;
         this.stateTypes = stateTypes;
         this.value = value;
         this.name = name;
-        this.isBooleanState = isBooleanState;
     }
 
     public String getStateDescriptionUri() {
@@ -61,13 +59,5 @@ public class StateDescription {
 
     public void setParameterType(String parameterType) {
         this.parameterType = parameterType;
-    }
-
-    public Boolean isBooleanState() {
-        return isBooleanState;
-    }
-
-    public void setIsBooleanState(Boolean booleanState) {
-        isBooleanState = booleanState;
     }
 }

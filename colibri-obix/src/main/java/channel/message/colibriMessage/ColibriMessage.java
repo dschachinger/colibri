@@ -4,6 +4,7 @@ package channel.message.colibriMessage;
 import channel.Connector;
 import channel.message.messageObj.ColibriMessageContentCreator;
 import model.obix.ObixObject;
+import service.Configurator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ public class ColibriMessage {
     private MessageIdentifier msgType;
     private ColibriMessageHeader header;
     private ColibriMessageContent content;
-    private static final String newLine = "<br>";
+    private static final String newLine = Configurator.getInstance().getNewlineString();
     private ObixObject optionalObixObject;
     private Connector optionalConnector;
 

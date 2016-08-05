@@ -34,8 +34,8 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.github.jsonld-java:jsonld-java:0.7.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.httpcomponents:httpclient-cache:4.2.6" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.20" level="project" />
-    <orderEntry type="library" name="Gradle: org.apache.commons:commons-csv:1.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.thrift:libthrift:0.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.apache.commons:commons-csv:1.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.slf4j:jcl-over-slf4j:1.7.20" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.felix:org.osgi.core:1.0.0" level="project" />
@@ -52,10 +52,10 @@
     <orderEntry type="library" name="Gradle: net.sourceforge.owlapi:owlapi-api:3.4.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: net.sourceforge.owlapi:owlapi-api:3.4.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: net.sourceforge.owlapi:owlapi-impl:3.4.4" level="project" />
-    <orderEntry type="library" name="Gradle: xml-apis:xml-apis:1.4.01" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: net.sourceforge.owlapi:owlapi-parsers:3.4.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.andrewoma.dexx:collection:0.6" level="project" />
+    <orderEntry type="library" name="Gradle: xml-apis:xml-apis:1.4.01" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: net.sourceforge.owlapi:owlapi-tools:3.4.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.andrewoma.dexx:collection:0.6" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.3.0" level="project" />
     <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.1.1" level="project" />
   </component>

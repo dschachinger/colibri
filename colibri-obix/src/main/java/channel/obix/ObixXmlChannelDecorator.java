@@ -29,7 +29,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         List<ObixObject> obixObjects = new ArrayList<ObixObject>();
         for(Obj o : root.list()) {
             List<ObixObject> listOfObjects = new ArrayList<ObixObject>();
-            obixObjects.addAll(getNeededObixLobbyObjectsRecursively(o.getHref().get(), channel.baseUri, listOfObjects));
+            obixObjects.addAll(getNeededObixLobbyObjectsRecursively(o.getHref().get(), channel.lobbyUri, listOfObjects));
         }
         lobby.setObixObjects(obixObjects);
         return lobby;
@@ -69,14 +69,20 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
 
     private List<ObixObject> getNeededObixLobbyObjectsRecursively(String uri, String baseUri, List<ObixObject> list) {
         String u = normalizeUri(uri, baseUri);
-        ObixObject object = this.get(u);
+  /*      String u = "";
+        try {
+            u = new URL(new URL(baseUri), uri).toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+   */     ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
         if(channel.getObservedTypes().contains(tempOb.getClass().getName()) && !list.contains(object)) {
             list.add(object);
         }
         for (Obj o : tempOb.list()) {
             if (o.getHref() != null) {
-                getNeededObixLobbyObjectsRecursively(o.getHref().get(), uri, list);
+                getNeededObixLobbyObjectsRecursively(o.getHref().get(), u, list);
             }
         }
         return list;
@@ -97,6 +103,12 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         }
         object.setObixUnitUri("dimensionless");
         if(unitUri != null) {
+            if(unitUri.contains(":")) {
+                unitUri = unitUri.split(":")[1];
+            }
+            if(unitUri.startsWith("/")) {
+                unitUri = unitUri.substring(1, unitUri.length());
+            }
             Obj o = ObixXmlChannelDecorator.decode(channel.get(unitUri, APPLICATION_XML).getObjectAsString());
             if(!o.isErr()) {
                 object.setUnit((Unit) o);

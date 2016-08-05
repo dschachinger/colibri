@@ -1,8 +1,8 @@
 package service;
 
 import channel.Connector;
-import channel.obix.CoapChannel;
 import channel.colibri.ColibriChannel;
+import channel.obix.CoapChannel;
 import channel.obix.ObixChannel;
 import exception.ConfigurationException;
 
@@ -43,9 +43,10 @@ public class Configurator {
             if (key.contains("oBIXLobby")) {
                 String uri = bundle.getString(key);
                 uri = uri.replaceAll("\\s+", "");
-                String baseUri = uri.substring(0, uri.lastIndexOf("/"));
+                String baseUri = uri.split("/")[0];
                 ObixChannel channel;
                 if (uri.contains(",")) {
+                    //TODO:check parse URI with other than 127.0.0.1
                     Integer port = Integer.parseInt(uri.split(",")[1]);
                     uri = uri.substring(uri.lastIndexOf("/") + 1, uri.lastIndexOf(","));//.substring(0, uri.lastIndexOf(","));
                     channel = new CoapChannel(baseUri, uri, port, getObservedTypes());
@@ -195,6 +196,20 @@ public class Configurator {
     public int getTimesToResendMessage() throws ConfigurationException {
         if (bundle.containsKey("resendMessageTimes")){
             return Integer.parseInt(bundle.getString("resendMessageTimes"));
+        }else{
+            throw new ConfigurationException("No times to resend a message configured in the config file!");
+        }
+    }
+
+    /**
+     * This method returns String representation of a newline specified in the .properties file of the given bundle.
+     *
+     * @return the String representation of a newline
+     * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
+     */
+    public String getNewlineString() throws ConfigurationException {
+        if (bundle.containsKey("newline")){
+            return bundle.getString("newline");
         }else{
             throw new ConfigurationException("No times to resend a message configured in the config file!");
         }

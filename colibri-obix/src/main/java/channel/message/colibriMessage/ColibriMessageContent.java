@@ -1,8 +1,10 @@
 package channel.message.colibriMessage;
 
+import service.Configurator;
+
 public class ColibriMessageContent {
     private String content;
-    private final String newLine = "<br>";
+    private final String newLine = Configurator.getInstance().getNewlineString();
 
     public ColibriMessageContent() {
         this.content = "";

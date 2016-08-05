@@ -1,5 +1,6 @@
 package channel.message.colibriMessage;
 
+import service.Configurator;
 import service.TimeDurationConverter;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ public class ColibriMessageHeader {
     private String refenceId;
     private Date expires;
     private String headerAsString;
-    private static final String newLine = "<br>";
+    private static final String newLine = Configurator.getInstance().getNewlineString();
 
     public ColibriMessageHeader(String headerAsString) {
         this.headerAsString = headerAsString;
