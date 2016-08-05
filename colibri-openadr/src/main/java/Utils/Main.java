@@ -52,14 +52,13 @@ public class Main {
             {
                 logger.info("Shutdown hook ran!");
                 Main.ven.terminate();
-                Main.colClient.terminate();
                 // give colibri client termination thread time to terminate
                 try {
-                    Thread.sleep(300);
+                    Main.colClient.terminate().join();
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    logger.error("can not shut down the colibri client properly");
                 }
-                logger.info("fin");
+                logger.info("finished shutdown task");
 
             }
         });

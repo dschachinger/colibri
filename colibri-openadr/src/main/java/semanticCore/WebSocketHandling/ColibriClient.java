@@ -284,7 +284,7 @@ public class ColibriClient {
             }
             logger.info("close websocket");
             socket.close();
-            logger.info("fin close websocket");
+            logger.info("finished close websocket");
         }
     }
 
