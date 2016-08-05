@@ -304,38 +304,52 @@ public class ProcessReceivedMsg {
 
         String originContent = msg.getOriginMessage().getContent().replace("\n", " ").replace("\r", " ");
 
-        int index = originContent.toLowerCase().indexOf("select");
+        int index = originContent.toLowerCase().indexOf("select") + "select".length();
         int maxIndex = originContent.toLowerCase().indexOf("where");
         while (index != -1 && maxIndex != -1 && index < maxIndex){
-            int oldIndex = index;
-            index = originContent.indexOf(" ?", oldIndex);
-            if(index < 0){
-                break;
-            }
-            // shift index to beginning of the property name
-            index+=2;
+             index++;
 
-            int endIndex=originContent.indexOf(" ", index);
+            switch (originContent.charAt(index)){
+                case '?': {
+                    index = originContent.indexOf("?", index);
+                    if (index < 0) {
+                        break;
+                    }
+                    // shift index to beginning of the property name
+                    index++;
 
-            if(index < maxIndex){
-                reqProperties.add(originContent.substring(index, endIndex));
+                    int endIndex = originContent.indexOf(" ", index);
+
+                    if (index < maxIndex) {
+                        String property = originContent.substring(index, endIndex);
+                        index = index + property.length();
+                        reqProperties.add(property.trim());
+                    }
+                }
+                    break;
+                case '(': {
+                    String part = originContent.substring(index,maxIndex);
+                    int endIndex = endOuterBracketIndex(part);
+                    if(endIndex > 0){
+                        String[] result = part.substring(0,endIndex).split("\\s*[\\(\\)]+\\s*");
+                        String lastElem = result[result.length-1];
+                        String property = lastElem.substring(lastElem.lastIndexOf("?")+1).trim();
+                        reqProperties.add(property);
+                        index = index+endIndex;
+                    } else {
+                        index = -1;
+                    }
+                }
+                    break;
+                default:
+                    break;
             }
         }
 
-        System.out.println(reqProperties);
+        logger.info("parsed properties: " + reqProperties);
 
-        Pair<Boolean, List<ColibriMessage>> reactMessages = new Pair<>(false, null);
-        QueryResult queryResult = null;
-
-        switch (msg.getHeader().getContentType()){
-            case "application/sparql-result+json":
-                queryResult = handle_JSON_QUERY_RESULT(msg, reactMessages);
-                break;
-            case "application/sparql-result+xml":
-                queryResult = handle_XML_QUERY_RESULT(msg, reactMessages);
-                break;
-
-        }
+        Pair<Boolean, List<ColibriMessage>> reactMessages = new Pair<>(true, null);
+        QueryResult queryResult = convertQueryResult(msg, reactMessages);
 
         // check if the received query result contains all the requested properties
         List<String> recProp = queryResult.getProperties();
@@ -360,6 +374,37 @@ public class ProcessReceivedMsg {
 
         // TODO how to react on it depends on the purpose of the query
         return reactMessages;
+    }
+
+    private int endOuterBracketIndex(String string){
+        int count = 0;
+        for(int i = 0; i < string.length(); i++){
+            char sign = string.charAt(i);
+            if(sign == '('){
+                count++;
+            }
+            if(sign == ')'){
+                count--;
+            }
+            if(count == 0){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public QueryResult convertQueryResult(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
+        QueryResult queryResult = null;
+        switch (msg.getHeader().getContentType()){
+            case "application/sparql-result+json":
+                queryResult = handle_JSON_QUERY_RESULT(msg, reactMessages);
+                break;
+            case "application/sparql-result+xml":
+                queryResult = handle_XML_QUERY_RESULT(msg, reactMessages);
+                break;
+
+        }
+        return queryResult;
     }
 
     private QueryResult handle_JSON_QUERY_RESULT(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){

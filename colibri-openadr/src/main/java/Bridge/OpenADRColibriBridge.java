@@ -8,6 +8,7 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
+import semanticCore.MsgObj.ContentMsgObj.QueryResult;
 import semanticCore.WebSocketHandling.ColibriClient;
 
 import java.util.ArrayList;
@@ -34,6 +35,8 @@ public class OpenADRColibriBridge {
     // This map stores for every eventID (=key) the associated service URL (=value)
     private HashMap<String, String> eventsTyp;
 
+    private HashMap<String, List<QueryResult>> openADRReportData;
+
     private Logger logger = LoggerFactory.getLogger(OpenADRColibriBridge.class);
 
     public OpenADRColibriBridge(){
@@ -42,6 +45,7 @@ public class OpenADRColibriBridge {
 
         serviceSortedReceivedEvents = new HashMap<>();
         eventsTyp = new HashMap<>();
+        openADRReportData = new HashMap<>();
     }
 
     public OpenADRToColibri getOpenADRToColibri() {
@@ -77,6 +81,22 @@ public class OpenADRColibriBridge {
         if(reply != null){
             colClient.sendColibriMsg(reply);
         }
+    }
+
+    public HashMap<String, List<QueryResult>> getOpenADRReportData() {
+        return openADRReportData;
+    }
+
+    public void queryColibriCoreForOpenADRReportData(List<QueryResult> reportInfos){
+        // TODO insert proper query
+        String query = "SELECT ?service ?identifier \n" +
+                "WHERE { ?service rdf:type colibri:DataService. \n" +
+                "?service colibri:hasDataConfiguration ?y. \n" +
+                "?y colibri:hasParameter ?z. \n" +
+                "?z rdf:type colibri:TemperatureParameter. \n" +
+                "?service colibri:identifier ?identifier} ";
+        openADRReportData.put(query, reportInfos);
+        colClient.sendQueryMessage(query);
     }
 
     public List<MsgInfo_OADRDistributeEvent.Event> getOpenADREvents(String serviceName, Pair<Date, Date> timeInterval) {

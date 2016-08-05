@@ -77,7 +77,7 @@ public class TimeoutWatcher<S, T> {
 
             if(monitoredMsg.containsKey(messageID)){
                 logger.info("timeout for msg: " + messageID);
-                // TODO insert handler.handleTimeout(medium, monitoredMsg, messageID);
+                // TODO insert to resend message handler.handleTimeout(medium, monitoredMsg, messageID);
             } else {
                 logger.info("timing is okay for msg: " + messageID);
             }

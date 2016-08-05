@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by georg on 28.05.16.
@@ -44,7 +46,7 @@ public class Main {
 
         int n;
         loop : while (true){
-            logger.info("Enter a action number: ");
+            logger.info("Enter an action number: ");
             n = reader.nextInt();
             switch (n){
                 case 1: logger.info("websocket registered: " + colClient.isRegistered());
@@ -126,6 +128,7 @@ public class Main {
                 case 54: ven.sendExampleOadrRequestEvent();
                     break;
                 case 55:
+                    // good possibility to check if correct registered
                     logger.info("registraionID: " + OADRConInfo.getRegistrationId());
                     break;
                 case 56:
@@ -135,6 +138,7 @@ public class Main {
                     ven.sendExampleOadrUpdateReport();
                     break;
                 case 58:
+                    // good possibility to check if correct registered
                     logger.info("openADR venID: " + OADRConInfo.getVENId());
                     break;
                 default:

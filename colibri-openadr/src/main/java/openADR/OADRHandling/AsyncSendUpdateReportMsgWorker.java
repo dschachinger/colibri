@@ -8,8 +8,12 @@ import openADR.OADRMsgInfo.Report;
 import openADR.Utils.OADRConInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import semanticCore.MsgObj.ContentMsgObj.QueryResult;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,6 +37,8 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
     // 0...not canceled, 1...canceled, 2...canceled and send last follow up report
     private AtomicInteger isReportCanceled;
+
+    List<QueryResult> reportInfos = Collections.synchronizedList(new ArrayList<QueryResult>());
 
     private Logger logger = LoggerFactory.getLogger(AsyncSendUpdateReportMsgWorker.class);
 
@@ -84,11 +90,14 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
         threadSleep(startTimeDiffMilli);
 
         for(long amountSendedReports = 0; (amountSendedReports<amountSendReports) || unlimitedSendReports; amountSendedReports++){
-            for(long amountMeasuredDataPerReport = 0; amountMeasuredDataPerReport<amountMesurementsPerReport; amountMeasuredDataPerReport++) {
-                // TODO implement later get in contact with colibri and query the needed information
+            for(long amountGatheredMeasurementsPerReport = 0; amountGatheredMeasurementsPerReport<amountMesurementsPerReport; amountGatheredMeasurementsPerReport++) {
                 logger.info("Query colibri for information "+reportRequest.getReportRequestID());
-
+                party.bridge.queryColibriCoreForOpenADRReportData(reportInfos);
                 threadSleep(reportRequest.getGranularitySec()*1000);
+            }
+
+            if(reportInfos.size() != amountMesurementsPerReport){
+                logger.error("not all the needed data from colibri core received");
             }
 
             threadSleep(deltaTimeMilli);
@@ -100,7 +109,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
                 isReportCanceled.compareAndSet(2,1);
                 logger.info("Send Data to VTN! "+reportRequest.getReportRequestID());
-                // TODO implement later transmits the report
+                // TODO transmit real values not just fixed ones
                 party.getChannel().sendMsg(genUpdateReport());
             } else {
                 logger.info("Report "+reportRequest.getReportRequestID() + " canceled");

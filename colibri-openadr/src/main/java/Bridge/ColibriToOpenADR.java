@@ -10,10 +10,7 @@ import openADR.OADRMsgInfo.OADRMsgInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import semanticCore.MsgObj.ColibriMessage;
-import semanticCore.MsgObj.ContentMsgObj.AddMsg;
-import semanticCore.MsgObj.ContentMsgObj.Description;
-import semanticCore.MsgObj.ContentMsgObj.PutMsg;
-import semanticCore.MsgObj.ContentMsgObj.RegisterMsg;
+import semanticCore.MsgObj.ContentMsgObj.*;
 import semanticCore.MsgObj.ContentType;
 import semanticCore.MsgObj.Header;
 import semanticCore.MsgObj.MsgType;
@@ -47,7 +44,7 @@ public class ColibriToOpenADR {
                 result = handle_GET_DATA_VALUES(msg, bridge);
                 break;
             case QUERY_RESULT:
-                result = handle_QUERY_RESULT(msg);
+                result = handle_QUERY_RESULT(msg, bridge);
                 break;
             default:
                 result = new Pair<>(null, null);
@@ -238,8 +235,16 @@ public class ColibriToOpenADR {
         return new Pair<>(reply, null);
     }
 
-    private Pair<ColibriMessage, OADRMsgInfo> handle_QUERY_RESULT(ColibriMessage msg){
+    private Pair<ColibriMessage, OADRMsgInfo> handle_QUERY_RESULT(ColibriMessage msg, OpenADRColibriBridge bridge){
         logger.info(">>>>>>>handle "+MsgType.QUERY_RESULT + " message");
+
+        QueryResult queryResult = bridge.getColClient().getProcessMessage().convertQueryResult(msg, null);
+
+        List<QueryResult> queryResults = bridge.getOpenADRReportData().get(msg.getOriginMessage().getContent());
+
+        if(queryResults != null){
+            queryResults.add(queryResult);
+        }
 
         return new Pair<>(null, null);
     }

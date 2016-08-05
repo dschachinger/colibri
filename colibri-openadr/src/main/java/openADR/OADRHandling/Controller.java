@@ -102,7 +102,7 @@ public class Controller {
         String statusCode = proc.doRecMsgViolateConstraints(recObj,party.getChannel().getSendedMsgMap());
         if(statusCode.equals("200")){
             logger.info("received message type " + recObj.getMsgType()+
-                    " does not violates "+"constraints");
+                    " does not violate "+"constraints");
 
             // extract information
             OADRMsgInfo recInfo = proc.extractInfo(recObj, party);
@@ -138,7 +138,7 @@ public class Controller {
                     " VIOLATES " + "constraints");
         } else {
             logger.info("send message type " + info.getMsgType()+
-                    " does not violates "+"constraints");
+                    " does not violate "+"constraints");
         }
 
 

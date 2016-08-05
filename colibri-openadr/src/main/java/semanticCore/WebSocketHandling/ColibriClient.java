@@ -235,6 +235,10 @@ public class ColibriClient {
         return bridge;
     }
 
+    public ProcessReceivedMsg getProcessMessage() {
+        return processMessage;
+    }
+
     /**
      * This method terminates the client.
      * It is not guaranteed that this client still works afterwards.
