@@ -263,6 +263,8 @@ public class ColibriChannel {
                     removeAccordingMessagesFromWaitingForResponse(message);
                     observedColibriActionsMap.remove(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
+                } else if (requestMsg.getMsgType().equals(MessageIdentifier.UPD)) {
+                    removeAccordingMessagesFromWaitingForResponse(message);
                 }
             }
         }
