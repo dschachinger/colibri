@@ -35,6 +35,7 @@ public class OpenADRColibriBridge {
     // This map stores for every eventID (=key) the associated service URL (=value)
     private HashMap<String, String> eventsTyp;
 
+    // This map stores for every sparql query (=key) the list of all query results (=values)
     private HashMap<String, List<QueryResult>> openADRReportData;
 
     private Logger logger = LoggerFactory.getLogger(OpenADRColibriBridge.class);
@@ -60,6 +61,12 @@ public class OpenADRColibriBridge {
         this.colClient = colClient;
     }
 
+    /**
+     * This method conveys primarily information from the openADR side to the colibri side.
+     * Therefor a given openADR message is converted into an colibri understandable format.
+     * If there is a need it also replies messages to the openADR side.
+     * @param info openADR message
+     */
     public void informationFlowFromOpenADRToColibri(OADRMsgInfo info){
         List<ColibriMessage> colibriMessages = openADRToColibri.convertOpenADRMsg(info, this);
         if(colibriMessages != null){
@@ -69,6 +76,12 @@ public class OpenADRColibriBridge {
         }
     }
 
+    /**
+     * This method conveys primarily information from the colibri side to the openADR side.
+     * Therefor a given colibri message is converted into an openADR understandable format.
+     * If there is a need it also replies messages to the colibri side.
+     * @param info colibri message
+     */
     public void informationFlowFromColibriToOpenADR(ColibriMessage info){
         Pair<ColibriMessage, OADRMsgInfo> result = colibriToOpenADR.convertColibriMsg(info, this);
         ColibriMessage reply = result.getFst();
@@ -87,6 +100,11 @@ public class OpenADRColibriBridge {
         return openADRReportData;
     }
 
+    /**
+     * This method sends a fixed query to the colibri side. It will add the given list to an map.
+     * Afterwards the method handle_QUERY_RESULT in the class ColibriToOpenADR will add the received result to the list.
+     * @param reportInfos given list. null is not allowed
+     */
     public void queryColibriCoreForOpenADRReportData(List<QueryResult> reportInfos){
         // TODO insert proper query
         String query = "SELECT ?service ?identifier \n" +
@@ -99,6 +117,13 @@ public class OpenADRColibriBridge {
         colClient.sendQueryMessage(query);
     }
 
+    /**
+     * This method returns for a given service name and a given time interval all the events which fits to this constraints.
+     * The proper event has its fully active time between the given interval.
+     * @param serviceName colibri service URL for load events or price events
+     * @param timeInterval search interval (pair: first element: start time, second element: end time)
+     * @return event list
+     */
     public List<MsgInfo_OADRDistributeEvent.Event> getOpenADREvents(String serviceName, Pair<Date, Date> timeInterval) {
         SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event> sortedEvents = serviceSortedReceivedEvents.get(serviceName);
         List<MsgInfo_OADRDistributeEvent.Event> events = new ArrayList<>();
@@ -146,6 +171,11 @@ public class OpenADRColibriBridge {
         return null;
     }
 
+    /**
+     * Returns for a given event id a pair. The first element of this pair is the active interval and the second one is the actual event.
+     * @param eventID given event id
+     * @return
+     */
     public synchronized Pair<Pair<Date, Date>, MsgInfo_OADRDistributeEvent.Event> getOpenADREvent(String eventID){
         String serviceName = eventsTyp.get(eventID);
         SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event> sortedPUTMessages = serviceSortedReceivedEvents.get(serviceName);
@@ -157,6 +187,12 @@ public class OpenADRColibriBridge {
         }
     }
 
+    /**
+     * This method adds a given event and an interval where the event is active.
+     * @param serviceName the event belongs to this service name
+     * @param timeInterval active interval
+     * @param event given event
+     */
     public synchronized void addOpenADREvent(String serviceName, Pair<Date, Date> timeInterval, MsgInfo_OADRDistributeEvent.Event event) {
         SortedDateIntervalList<MsgInfo_OADRDistributeEvent.Event> sortedPUTMessages = serviceSortedReceivedEvents.get(serviceName);
 

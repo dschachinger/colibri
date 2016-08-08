@@ -32,6 +32,7 @@ public class OADRConInfo {
             The key is the reportRequestID. */
     private static HashMap<String, AsyncSendUpdateReportMsgWorker> asyncSendUpdateReportMsgWorkers;
 
+    // true...the vtn receives the report possibilities from the ven
     private static boolean VTNReceivesReportCapabilities = false;
 
     /* This map contains all reports which can be generated.

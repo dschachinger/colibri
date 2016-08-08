@@ -55,7 +55,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
     /**
      * This method is called by the created thread.
-     * It gathers the reprot information and sends the report to the opposite party
+     * It gathers the report information and sends the report to the opposite party
      */
     public void run(){
         Thread.currentThread().setName("OADR Report Handler " + reportRequest.getReportRequestID());

@@ -62,6 +62,17 @@ public abstract class ProcessorReceivedMsg {
         return checkConstraintsExtendedOriginMsgTypes(sendedMsgMap, checkIfRegistered,requestID,originMsgTypes,venID,registrationID);
     }
 
+    /**
+     * This method copes all similar constraints for the received messages.
+     * The parameter specify the needed constraints.
+     * @param sendedMsgMap contains all sended messages which are not acknowledged yet
+     * @param checkIfRegistered true...check if the connector is registered, false..otherwise
+     * @param requestID check if there is an sended message which has the given message id, null means do not check this constraint
+     * @param originMsgTypes this paramter depends in the requestID parameter. If not null it checks if the sended message has this given type
+     * @param venID check if this ven id matches with the registered one
+     * @param registrationID check if this registration id matches with the registered one
+     * @return
+     */
     protected String checkConstraintsExtendedOriginMsgTypes(HashMap<String, OADRMsgObject> sendedMsgMap, boolean checkIfRegistered,
                                       String requestID, List<String> originMsgTypes, String venID,
                                       String registrationID){
@@ -100,6 +111,11 @@ public abstract class ProcessorReceivedMsg {
         return "200";
     }
 
+    /**
+     * This method removes for a received reply the origin message from the given map
+     * @param obj reply
+     * @param sendedMsgMap given map
+     */
     public abstract void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap);
 
     //-------------------------------static part ------------------------------------------------//

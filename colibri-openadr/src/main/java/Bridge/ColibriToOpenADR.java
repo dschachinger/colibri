@@ -31,6 +31,14 @@ public class ColibriToOpenADR {
 
     private Logger logger = LoggerFactory.getLogger(ColibriToOpenADR.class);
 
+    /**
+     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * This method is able to handle all colibri message types.
+     *
+     * @param msg given colibri message
+     * @param bridge
+     * @return a pair, where the first element is the colibri reply and the second element is the openADR reply.
+     */
     public Pair<ColibriMessage, OADRMsgInfo> convertColibriMsg(ColibriMessage msg, OpenADRColibriBridge bridge){
         Pair<ColibriMessage, OADRMsgInfo> result = null;
 
@@ -55,6 +63,14 @@ public class ColibriToOpenADR {
 
     }
 
+    /**
+     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * This method is able to handle the colibri put messages.
+     *
+     * @param msg given colibri message
+     * @param bridge
+     * @return a pair, where the first element is the colibri reply and the second element is the openADR reply.
+     */
     private Pair<ColibriMessage, OADRMsgInfo> handle_PUT_DATA_VALUES(ColibriMessage msg, OpenADRColibriBridge bridge){
         logger.info(">>>>>>>handle "+MsgType.PUT_DATA_VALUES + " message");
 
@@ -166,6 +182,14 @@ public class ColibriToOpenADR {
 
     }
 
+    /**
+     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * This method is able to handle the colibri get messages.
+     *
+     * @param msg given colibri message
+     * @param bridge
+     * @return a pair, where the first element is the colibri reply and the second element is the openADR reply.
+     */
     private Pair<ColibriMessage, OADRMsgInfo> handle_GET_DATA_VALUES(ColibriMessage msg, OpenADRColibriBridge bridge){
         logger.info(">>>>>>>handle "+MsgType.GET_DATA_VALUES + " message");
 
@@ -235,6 +259,14 @@ public class ColibriToOpenADR {
         return new Pair<>(reply, null);
     }
 
+    /**
+     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * This method is able to handle the colibri query result messages.
+     *
+     * @param msg given colibri message
+     * @param bridge
+     * @return a pair, where the first element is the colibri reply and the second element is the openADR reply.
+     */
     private Pair<ColibriMessage, OADRMsgInfo> handle_QUERY_RESULT(ColibriMessage msg, OpenADRColibriBridge bridge){
         logger.info(">>>>>>>handle "+MsgType.QUERY_RESULT + " message");
 

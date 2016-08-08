@@ -6,13 +6,15 @@ import java.util.List;
 
 /**
  * Created by georg on 25.07.16.
+ * Objects from this class hold the result of an sparql query
  */
 public class QueryResult {
     List<String> properties;
     List<Result> results;
+    // true...result is from an aks query (result is only true or false)
     boolean isFromASKQuery;
-    Integer ASKQueryResult;
-
+    // ask query result, null or otherwise...no result,
+    Boolean ASKQueryResult;
 
     public QueryResult(boolean isFromASKQuery){
         this.isFromASKQuery = isFromASKQuery;
@@ -20,7 +22,7 @@ public class QueryResult {
             properties = new ArrayList<>();
             results = new ArrayList<>();
         } else {
-            ASKQueryResult = new Integer(-1);
+            ASKQueryResult = null;
         }
     }
 
@@ -31,7 +33,7 @@ public class QueryResult {
     }
 
     public void setASKQueryResult(boolean ASKQueryResult){
-        this.ASKQueryResult = ASKQueryResult? 1 : 0;
+        this.ASKQueryResult = ASKQueryResult;
     }
 
     public void addProperty(String property) {
@@ -47,11 +49,7 @@ public class QueryResult {
     }
 
     public Boolean getASKQueryResult() {
-        switch (ASKQueryResult){
-            case 0: return false;
-            case 1: return true;
-            default: return null;
-        }
+        return ASKQueryResult;
     }
 
     public String toString(){

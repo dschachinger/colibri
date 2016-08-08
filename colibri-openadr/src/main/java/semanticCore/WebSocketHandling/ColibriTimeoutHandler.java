@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * Created by georg on 20.07.16.
+
  */
 public class ColibriTimeoutHandler implements TimeoutHandler<ColibriClient, ColibriMessage> {
     private Logger logger = LoggerFactory.getLogger(ColibriTimeoutHandler.class);

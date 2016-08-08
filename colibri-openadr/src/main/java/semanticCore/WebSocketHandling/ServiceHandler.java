@@ -135,7 +135,6 @@ public class ServiceHandler implements Runnable {
         logger.info("send date: " + sendTime.getTime()+ " " + sendTime);
         long delta = TimeDurationConverter.getDateDiff(curTime, sendTime, TimeUnit.MILLISECONDS);
 
-        // TODO test
         // when the delta value is negative this means the next message will be transmitted tomorrow.
         if(delta < 0){
             delta += 86400000;

@@ -26,6 +26,14 @@ public class OpenADRToColibri {
 
     private Logger logger = LoggerFactory.getLogger(OpenADRToColibri.class);
 
+    /**
+     * This method returns for a given openADR message the reply for the colibri side.
+     * This method is able to handle all openADR message types which are relevant for the colibri side.
+     *
+     * @param msg given openADR message
+     * @param bridge
+     * @return list which contains all the colibri reply messages
+     */
     public List<ColibriMessage> convertOpenADRMsg(OADRMsgInfo msg, OpenADRColibriBridge bridge){
         List<ColibriMessage> sendToColibriMsges = null;
 
@@ -41,6 +49,14 @@ public class OpenADRToColibri {
 
     }
 
+    /**
+     * This method returns for a given openADR message the reply for the colibri side.
+     * This method is able to handle the openADR distribute event message types.
+     *
+     * @param msg given openADR message
+     * @param bridge
+     * @return list which contains all the colibri reply messages
+     */
     private List<ColibriMessage> handle_DistributeEvent(OADRMsgInfo msg, OpenADRColibriBridge bridge) {
         MsgInfo_OADRDistributeEvent con_msg = (MsgInfo_OADRDistributeEvent) msg;
         List<ColibriMessage> colibriMessages = new ArrayList<>();
