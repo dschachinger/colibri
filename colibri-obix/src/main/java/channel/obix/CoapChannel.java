@@ -51,7 +51,7 @@ public class CoapChannel extends ObixChannel {
 
     public ObixLobby getLobby(String uri, int mediaType) throws CoapException {
         ObixLobby lobby = new ObixLobby(uri, getObservedTypes());
-        lobby.setLobbyAsString(this.getAsString(lobbyUri, mediaType));
+        lobby.setLobbyAsString(this.getAsString(uri, mediaType));
         return lobby;
     }
 
