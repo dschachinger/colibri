@@ -288,7 +288,7 @@ public class ObixObject {
         this.putMessageToColibriTask = putMessageToColibriTask;
     }
 
-    public void createBooleanStateDescriptions(Parameter param) {
+    private void createBooleanStateDescriptions(Parameter param) {
         java.util.List<String> types = Collections.synchronizedList(new ArrayList<>());
         types.add("&colibri;AbsoluteState");
         types.add("&colibri;DiscreteState");
@@ -311,11 +311,8 @@ public class ObixObject {
         nameFalse.setName("off");
         param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse));
 
-        //link states to parameter 1
+        //link states to parameter
         param.setParameterType("&colibri;StateParameter");
-        //param.addStateUri(stateTrueUri);
-        //param.addStateUri(stateFalseUri);
-        //TODO: Comments entfernen
     }
 
     public int getObixChannelPort() {
