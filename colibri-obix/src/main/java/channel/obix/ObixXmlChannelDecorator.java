@@ -31,6 +31,10 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
             List<ObixObject> listOfObjects = new ArrayList<ObixObject>();
             obixObjects.addAll(getNeededObixLobbyObjectsRecursively(o.getHref().get(), channel.lobbyUri, listOfObjects));
         }
+        ObixObject object = new ObixObject(uri, channel.getPort());
+        object.setObj(root);
+        setUnitOfObject(object);
+        obixObjects.add(object);
         lobby.setObixObjects(obixObjects);
         return lobby;
     }
@@ -69,13 +73,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
 
     private List<ObixObject> getNeededObixLobbyObjectsRecursively(String uri, String baseUri, List<ObixObject> list) {
         String u = normalizeUri(uri, baseUri);
-  /*      String u = "";
-        try {
-            u = new URL(new URL(baseUri), uri).toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-   */     ObixObject object = this.get(u);
+        ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
         if(channel.getObservedTypes().contains(tempOb.getClass().getName()) && !list.contains(object)) {
             list.add(object);

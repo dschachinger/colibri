@@ -46,9 +46,7 @@ public class Configurator {
                 String baseUri = uri.split("/")[0];
                 ObixChannel channel;
                 if (uri.contains(",")) {
-                    //TODO:check parse URI with other than 127.0.0.1
                     Integer port = Integer.parseInt(uri.split(",")[1]);
-                    uri = uri.substring(uri.lastIndexOf("/") + 1, uri.lastIndexOf(","));//.substring(0, uri.lastIndexOf(","));
                     channel = new CoapChannel(baseUri, uri, port, getObservedTypes());
                 } else {
                     channel = new CoapChannel(baseUri, uri, getObservedTypes());
