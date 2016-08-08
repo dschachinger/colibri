@@ -13,6 +13,7 @@ import model.obix.ObixObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;
+import service.ListHelper;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -414,18 +415,23 @@ public class GuiUtility {
             }
 
             public void mouseReleased(MouseEvent e) {
-                for (StateRepresentation s : listOfStateRepresentations) {
-                    s.getParameter().getStateDescriptions().clear();
-                }
+                List<Object> listOfStateUris = Collections.synchronizedList(new ArrayList<>());
                 for (StateRepresentation s : listOfStateRepresentations) {
                     if (s.getStateNameTextField().getText().isEmpty() ||
                             s.getStateUriTextField().getText().isEmpty() ||
                             s.getStateValueTextField().getText().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Each state parameter field must contain a text!");
+                        JOptionPane.showMessageDialog(null, "Each state parameter field must contain a text! " +
+                                "There are some empty parameter fields, please change them before proceeding.");
                         return;
                     }
-                    //TODO: Check if states have same URI --> ERROR-Msg!
-
+                    listOfStateUris.add(s.getStateUriTextField().getText());
+                }
+                if(ListHelper.hasDuplicates(listOfStateUris)) {
+                    JOptionPane.showMessageDialog(null, "Each state URI must be unique. There are some states with" +
+                            "the same URI, please change them before proceeding.");
+                    return;
+                }
+                for (StateRepresentation s : listOfStateRepresentations) {
                     //Save created State
                     ArrayList<String> types = new ArrayList<String>();
                     types.add("&colibri;AbsoluteState");

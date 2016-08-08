@@ -1,6 +1,8 @@
 package channel.message.service;
 
-import channel.message.colibriMessage.*;
+import channel.message.colibriMessage.ColibriMessage;
+import channel.message.colibriMessage.ColibriMessageContent;
+import channel.message.colibriMessage.ColibriMessageHeader;
 import channel.message.messageObj.ContentType;
 import channel.message.messageObj.MessageIdentifier;
 import org.apache.jena.query.QuerySolution;
@@ -11,12 +13,12 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.ListHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class SparqlMsgService {
         } else {
             throw new IllegalArgumentException("QRE messsage content type of mesage with ID " + msg.getHeader().getId() + " not supported");
         }
-        if(!SparqlMsgService.listsUnorderedEqual(expectedVars, set.getResultVars())) {
+        if(!ListHelper.listsUnorderedEqual(expectedVars, set.getResultVars())) {
             String message = "The SPARQL result set does not contain the expected result vars. Received Set: " +
                     msg.getContent().getContent();
             logger.info(message);
@@ -160,29 +162,4 @@ public class SparqlMsgService {
         processSparqlResultSetfromColibriMessage(msgXml, expectedVars2);
     }
 
-    /**
-     * Checks if two unordered lists are equal.
-     *
-     * @param firstList     First list to check.
-     * @param secondList    Second list to check.
-     * @return              True, if the two unordered lists are equal, otherwise false.
-     */
-    public static boolean listsUnorderedEqual(List<String> firstList, List<String> secondList){
-        if (firstList == null && secondList == null){
-            return true;
-        }
-
-        if((firstList == null && secondList != null)
-                || firstList != null && secondList == null
-                || firstList.size() != secondList.size()){
-            return false;
-        }
-
-        firstList = new ArrayList<String>(firstList);
-        secondList = new ArrayList<String>(secondList);
-
-        Collections.sort(firstList);
-        Collections.sort(secondList);
-        return firstList.equals(secondList);
-    }
 }

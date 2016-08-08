@@ -150,12 +150,12 @@ public abstract class ObixChannel {
     public abstract String normalizeUri(String uri);
 
     public static String normalizeUri(String uri, String baseUri) {
-        //TODO:Problems with % in path!
         if (uri.contains(":")) {
             uri = uri.split(":")[1];
         }
+        //TODO:Problems with % in path!
+        //% replaced with --    Only a workaround, has to be changed!!
         if (uri.contains("%") || baseUri.contains("%")) {
-            //URL Encode % with %25
             uri = uri.replace("%", "--");
             baseUri = baseUri.replace("%", "--");
         }
