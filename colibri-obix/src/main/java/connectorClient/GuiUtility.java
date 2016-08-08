@@ -796,7 +796,7 @@ public class GuiUtility {
             }
 
             public void mouseReleased(MouseEvent e) {
-                connector.getColibriChannel().send(ColibriMessage.createQueryMessage(sendMessageArea.getText()));
+                connector.getColibriChannel().send(ColibriMessage.createQueryMessage(sendMessageArea.getText(), new ArrayList<>()));
             }
 
             public void mouseEntered(MouseEvent e) {

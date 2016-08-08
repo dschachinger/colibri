@@ -1,9 +1,12 @@
-package channel.message.messageObj;
+package channel.message.service;
 
 import channel.Connector;
 import channel.colibri.ColibriChannel;
-import channel.colibri.PutMessageToColibriTask;
-import channel.message.colibriMessage.*;
+import channel.colibri.taskServices.PutMessageToColibriTask;
+import channel.message.colibriMessage.ColibriMessage;
+import channel.message.colibriMessage.ColibriMessageContent;
+import channel.message.colibriMessage.ColibriMessageHeader;
+import channel.message.messageObj.*;
 import channel.obix.CoapChannel;
 import channel.obix.ObixChannel;
 import channel.obix.ObixXmlChannelDecorator;

@@ -1,5 +1,6 @@
 package channel.message.colibriMessage;
 
+import channel.message.messageObj.ContentType;
 import service.Configurator;
 import service.TimeDurationConverter;
 

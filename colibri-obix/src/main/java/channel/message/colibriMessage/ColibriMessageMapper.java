@@ -1,5 +1,7 @@
 package channel.message.colibriMessage;
 
+import channel.message.messageObj.ContentType;
+import channel.message.messageObj.MessageIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;

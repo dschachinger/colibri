@@ -2,7 +2,10 @@ package channel.message.colibriMessage;
 
 
 import channel.Connector;
-import channel.message.messageObj.ColibriMessageContentCreator;
+import channel.message.messageObj.ContentType;
+import channel.message.messageObj.MessageIdentifier;
+import channel.message.messageObj.StatusCode;
+import channel.message.service.ColibriMessageContentCreator;
 import model.obix.ObixObject;
 import service.Configurator;
 
@@ -18,11 +21,20 @@ public class ColibriMessage {
     private static final String newLine = Configurator.getInstance().getNewlineString();
     private ObixObject optionalObixObject;
     private Connector optionalConnector;
+    private List<String> optionalExpectedVars;
 
     public ColibriMessage(MessageIdentifier msgType, ColibriMessageHeader header, ColibriMessageContent content) {
         this.msgType = msgType;
         this.header = header;
         this.content = content;
+    }
+
+    public ColibriMessage(MessageIdentifier msgType, ColibriMessageHeader header, ColibriMessageContent content,
+                          List<String> expectedVars) {
+        this.msgType = msgType;
+        this.header = header;
+        this.content = content;
+        this.optionalExpectedVars = expectedVars;
     }
 
     public void setMessage(ColibriMessage msg) {
@@ -149,10 +161,10 @@ public class ColibriMessage {
         return msg;
     }
 
-    public static ColibriMessage createQueryMessage(String queryContent) {
+    public static ColibriMessage createQueryMessage(String queryContent, List<String> expectedVars) {
         ColibriMessage msg = new ColibriMessage(MessageIdentifier.QUE,
                 new ColibriMessageHeader(ContentType.APPLICATION_SPARQL_QUERY),
-                new ColibriMessageContent(queryContent));
+                new ColibriMessageContent(queryContent), expectedVars);
         return msg;
     }
 
@@ -201,6 +213,17 @@ public class ColibriMessage {
 
     public void setOptionalConnector(Connector optionalConnector) {
         this.optionalConnector = optionalConnector;
+    }
+
+    public List<String> getOptionalExpectedVars() {
+        if(optionalExpectedVars == null) {
+            return new ArrayList<>();
+        }
+        return optionalExpectedVars;
+    }
+
+    public void setOptionalExpectedVars(List<String> optionalExpectedVars) {
+        this.optionalExpectedVars = optionalExpectedVars;
     }
 
     @Override

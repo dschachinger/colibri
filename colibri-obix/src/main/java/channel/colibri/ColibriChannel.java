@@ -1,12 +1,15 @@
 package channel.colibri;
 
+import channel.colibri.taskServices.PutMessageToColibriTask;
+import channel.colibri.taskServices.ResendMessageTask;
 import channel.message.AtmosphereMessage;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.colibriMessage.ColibriMessageMapper;
-import channel.message.colibriMessage.MessageIdentifier;
-import channel.message.colibriMessage.StatusCode;
-import channel.message.messageObj.ColibriMessageContentCreator;
+import channel.message.messageObj.MessageIdentifier;
+import channel.message.messageObj.StatusCode;
+import channel.message.service.ColibriMessageContentCreator;
 import channel.message.messageObj.PutMessageContent;
+import channel.message.service.SparqlMsgService;
 import channel.obix.PutExecutionTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.obix.ObixObject;
@@ -44,6 +47,7 @@ public class ColibriChannel {
     private ExecutorService executor;
     private List<ResendMessageTask> waitingForStatusMessagesTasks;
     private Map<String, Timer> runningTimers;
+    private Map<String, ColibriMessage> queryMessagesWithoutRespose;
 
     public ColibriChannel(String connectorName, String host, int port) {
         this.connectorName = connectorName;
@@ -57,6 +61,7 @@ public class ColibriChannel {
         this.observedColibriActionsMap = Collections.synchronizedMap(new HashMap<>());
         this.requestedGetMessageMap = Collections.synchronizedMap(new HashMap<>());
         this.waitingForStatusMessagesTasks = Collections.synchronizedList(new ArrayList<>());
+        this.queryMessagesWithoutRespose = Collections.synchronizedMap(new HashMap<>());
         this.runningTimers = new HashMap<>();
         this.executor = Executors.newCachedThreadPool();
     }
@@ -105,7 +110,7 @@ public class ColibriChannel {
             public void on(AtmosphereMessage t) {
 
                 //TODO: Check author again for wasync websocket
-                        if (!t.getAuthor().equals(connectorName)) {
+                if (!t.getAuthor().equals(connectorName)) {
                     try {
                         messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                     } catch (IllegalArgumentException e) {
@@ -141,7 +146,9 @@ public class ColibriChannel {
                 requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                         msg.getOptionalObixObject());
             }
-            if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
+            if (msg.getMsgType().equals(MessageIdentifier.QUE)) {
+                queryMessagesWithoutRespose.put(msg.getHeader().getId(), msg);
+            } else if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
                 this.addMessageWithoutResponse(msg);
                 int count = 0;
                 Configurator conf = Configurator.getInstance();
@@ -157,7 +164,7 @@ public class ColibriChannel {
                 }
             }
             //TODO: remove this line, only for testing with FAKE
-              handleStatusMessagesFAKE(msg);
+            handleStatusMessagesFAKE(msg);
             //  }
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
@@ -443,23 +450,24 @@ public class ColibriChannel {
     }
 
     private ColibriMessage handleQreMessage(ColibriMessage message) {
-        logger.info(message.toString());
+        try {
+            if (message.getHeader().getRefenceId() == null) {
+                return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "QUR message does not contain a reference ID and does therefore not match to" +
+                        "any sent QUE message. QRE-id: " + message.getHeader().getId());
+            }
+            ColibriMessage tempMsg = queryMessagesWithoutRespose.get(message.getHeader().getRefenceId());
+            if (tempMsg == null) {
+                return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "QRE referenceId is not matching any of the" +
+                        "sent QUE message ids. QRE-id: " + message.getHeader().getId());
+            } else {
+                SparqlMsgService.processSparqlResultSetfromColibriMessage(message, tempMsg.getOptionalExpectedVars());
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error(e.getMessage());
+            return ColibriMessage.createStatusMessage(StatusCode.ERROR_PROCESSING, e.getMessage());
+        }
         return ColibriMessage.createStatusMessage(StatusCode.OK, "Received QRE message", message.getHeader().getId());
     }
-/*
-    private Boolean alreadySent(ColibriMessage message) {
-        for (ColibriMessage msg : messagesWithoutResponse.values()) {
-            if (msg.getMsgType().equals(message.getMsgType())) {
-                if (message.getOptionalObixObject() != null && msg.getOptionalObixObject() != null
-                        && !message.getMsgType().equals(MessageIdentifier.GET)) {
-                    if (message.getOptionalObixObject().getServiceUri().equals(msg.getOptionalObixObject().getServiceUri())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    } */
 
     public String getLastMessageReceived() {
         return lastMessageReceived;
@@ -521,6 +529,7 @@ public class ColibriChannel {
             messagesWithoutResponse.remove(msg.getHeader().getId());
         }
     }
+
     public void removeAccordingTasks(ResendMessageTask task) {
         List<ResendMessageTask> remList = Collections.synchronizedList(new ArrayList<>());
         for (ResendMessageTask t : waitingForStatusMessagesTasks) {

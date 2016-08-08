@@ -1,6 +1,6 @@
 package model.obix;
 
-import channel.colibri.PutMessageToColibriTask;
+import channel.colibri.taskServices.PutMessageToColibriTask;
 import channel.message.messageObj.Name;
 import channel.message.messageObj.StateDescription;
 import channel.message.messageObj.Value;

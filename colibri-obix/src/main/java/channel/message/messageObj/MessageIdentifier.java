@@ -1,4 +1,4 @@
-package channel.message.colibriMessage;
+package channel.message.messageObj;
 
 public enum MessageIdentifier {
     STA("STA"),

@@ -1,8 +1,9 @@
-package channel.colibri;
+package channel.colibri.taskServices;
 
+import channel.colibri.ColibriChannel;
 import channel.message.colibriMessage.ColibriMessage;
-import channel.message.colibriMessage.MessageIdentifier;
-import channel.message.colibriMessage.StatusCode;
+import channel.message.messageObj.MessageIdentifier;
+import channel.message.messageObj.StatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.Configurator;

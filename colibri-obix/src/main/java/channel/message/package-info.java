@@ -8,7 +8,7 @@
                 @XmlNs(prefix="colibri", namespaceURI="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
         }
 )
-package channel.message.messageObj;
+package channel.message;
 
 import javax.xml.bind.annotation.XmlNs;
 import javax.xml.bind.annotation.XmlNsForm;

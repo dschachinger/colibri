@@ -1,5 +1,6 @@
-package channel.colibri;
+package channel.colibri.taskServices;
 
+import channel.colibri.ColibriChannel;
 import channel.message.colibriMessage.ColibriMessage;
 import model.obix.ObixObject;
 

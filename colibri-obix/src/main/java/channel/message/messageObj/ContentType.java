@@ -1,4 +1,4 @@
-package channel.message.colibriMessage;
+package channel.message.messageObj;
 
 public enum ContentType {
     TEXT_PLAIN("text/plain"),

@@ -1,6 +1,8 @@
-package channel.message.messageObj;
+package channel.message.service;
 
 import channel.message.colibriMessage.*;
+import channel.message.messageObj.ContentType;
+import channel.message.messageObj.MessageIdentifier;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFactory;
@@ -13,23 +15,31 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
+public class SparqlMsgService {
 
-public class QueryContentCreator {
+    private static final Logger logger = LoggerFactory.getLogger(SparqlMsgService.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(QueryContentCreator.class);
-
-    public static void processResultSetfromColibriMessage(ColibriMessage msg) {
-        String resultSetString = msg.getContent().getContent();
+    public static void processSparqlResultSetfromColibriMessage(ColibriMessage msg, List<String> expectedVars) {
+        String resultSetString = msg.getContent().getContentWithoutBreaksAndWhiteSpace();
         InputStream stream = new ByteArrayInputStream(resultSetString.getBytes(StandardCharsets.UTF_8));
         ResultSet set;
         if(msg.getHeader().getContentType().equals(ContentType.APPLICATION_SPARQL_RESULT_JSON)) {
-           set = ResultSetFactory.fromJSON(stream);
+            set = ResultSetFactory.fromJSON(stream);
         } else if (msg.getHeader().getContentType().equals(ContentType.APPLICATION_SPARQL_RESULT_XML)) {
             set = ResultSetFactory.fromXML(stream);
         } else {
             throw new IllegalArgumentException("QRE messsage content type of mesage with ID " + msg.getHeader().getId() + " not supported");
+        }
+        if(!SparqlMsgService.listsUnorderedEqual(expectedVars, set.getResultVars())) {
+            String message = "The SPARQL result set does not contain the expected result vars. Received Set: " +
+                    msg.getContent().getContent();
+            logger.info(message);
+            throw new IllegalArgumentException(message);
         }
         while(set.hasNext()) {
             QuerySolution sol = set.nextSolution();
@@ -86,7 +96,10 @@ public class QueryContentCreator {
         ColibriMessageHeader headerJson = new ColibriMessageHeader(ContentType.APPLICATION_SPARQL_RESULT_JSON);
         ColibriMessageContent contentJson = new ColibriMessageContent(resultSetJson);
         ColibriMessage msgJson = new ColibriMessage(MessageIdentifier.QRE, headerJson, contentJson);
-        processResultSetfromColibriMessage(msgJson);
+        List<String> expectedVars = new ArrayList<>();
+        expectedVars.add("service");
+        expectedVars.add("identifier");
+        processSparqlResultSetfromColibriMessage(msgJson, expectedVars);
 
 
 
@@ -136,16 +149,40 @@ public class QueryContentCreator {
         ColibriMessageHeader headerXml = new ColibriMessageHeader(ContentType.APPLICATION_SPARQL_RESULT_XML);
         ColibriMessageContent contentXml = new ColibriMessageContent(resultSetXML);
         ColibriMessage msgXml = new ColibriMessage(MessageIdentifier.QRE, headerXml, contentXml);
-        processResultSetfromColibriMessage(msgXml);
+        List<String> expectedVars2 = new ArrayList<>();
+        expectedVars2.add("x");
+        expectedVars2.add("hpage");
+        expectedVars2.add("name");
+        expectedVars2.add("mbox");
+        expectedVars2.add("blurb");
+        expectedVars2.add("age");
+        expectedVars2.add("friend");
+        processSparqlResultSetfromColibriMessage(msgXml, expectedVars2);
     }
 
-  /*  private static Query getNewQueryWithPrefixes() {
-        Query query = new Query();
-        query.setPrefix("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        query.setPrefix("owl", "http://www.w3.org/2002/07/owl#");
-        query.setPrefix("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-        query.setPrefix("xsd", "http://www.w3.org/2001/XMLSchema#");
-        query.setPrefix("colibri", "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl");
-        return query;
-    } */
+    /**
+     * Checks if two unordered lists are equal.
+     *
+     * @param firstList     First list to check.
+     * @param secondList    Second list to check.
+     * @return              True, if the two unordered lists are equal, otherwise false.
+     */
+    public static boolean listsUnorderedEqual(List<String> firstList, List<String> secondList){
+        if (firstList == null && secondList == null){
+            return true;
+        }
+
+        if((firstList == null && secondList != null)
+                || firstList != null && secondList == null
+                || firstList.size() != secondList.size()){
+            return false;
+        }
+
+        firstList = new ArrayList<String>(firstList);
+        secondList = new ArrayList<String>(secondList);
+
+        Collections.sort(firstList);
+        Collections.sort(secondList);
+        return firstList.equals(secondList);
+    }
 }

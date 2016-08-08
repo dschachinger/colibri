@@ -2,7 +2,7 @@ package channel.obix;
 
 import channel.colibri.ColibriChannel;
 import channel.message.colibriMessage.ColibriMessage;
-import channel.message.colibriMessage.StatusCode;
+import channel.message.messageObj.StatusCode;
 import model.obix.ObixObject;
 
 import java.util.TimerTask;
