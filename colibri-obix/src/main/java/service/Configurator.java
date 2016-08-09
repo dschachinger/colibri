@@ -198,8 +198,8 @@ public class Configurator {
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
     public int getTimeWaitingForStatusResponseInMilliseconds() throws ConfigurationException {
-        if (bundle.containsKey("timeWaitingForStatusResponseInMilliseconds")){
-            return Integer.parseInt(bundle.getString("timeWaitingForStatusResponseInMilliseconds"));
+        if (bundle.containsKey("timeWaitingForResponseInMilliseconds")){
+            return Integer.parseInt(bundle.getString("timeWaitingForResponseInMilliseconds"));
         }else{
             throw new ConfigurationException("No time to wait for a status response in config file!");
         }
