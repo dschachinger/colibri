@@ -208,7 +208,7 @@ public class ColibriChannel {
                 requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                         msg.getOptionalObixObject());
             }
-            if (msg.getMsgType().equals(MessageIdentifier.QUE)) {
+            else if (msg.getMsgType().equals(MessageIdentifier.QUE)) {
                 queryMessagesWithoutResponse.put(msg.getHeader().getId(), msg);
             } else if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
                 this.addMessageWithoutResponse(msg);
@@ -701,6 +701,10 @@ public class ColibriChannel {
 
     public int getPort() {
         return port;
+    }
+
+    public Map<String, ObixObject> getRequestedGetMessageMap() {
+        return requestedGetMessageMap;
     }
 
 }
