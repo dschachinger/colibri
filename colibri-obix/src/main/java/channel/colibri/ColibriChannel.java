@@ -227,7 +227,7 @@ public class ColibriChannel {
                 }
             }
             //TODO: remove this line, only for testing with FAKE response
-            handleStatusMessagesFAKE(msg);
+           // handleStatusMessagesFAKE(msg);
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
         }

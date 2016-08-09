@@ -14,13 +14,31 @@ import java.util.stream.Collectors;
  */
 public class Configurator {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    /**
+     * The bundle of which the properties are read.
+     */
     private ResourceBundle bundle;
+
+    /**
+     * The instance of the {@link Configurator} as its used as a singleton.
+     */
     private static Configurator instance;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     protected Configurator() {
         this.bundle = ResourceBundle.getBundle("config");
     }
 
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
     public static Configurator getInstance() {
         if(instance == null) {
             instance = new Configurator();
@@ -29,9 +47,10 @@ public class Configurator {
     }
 
     /**
-     * This method returns the obix lobbies URIs which are specified in the .properties file of the given bundle.
+     * This method returns the a list of {@link ObixChannel} which use CoAP for communication with the obix lobby URIS
+     * specified in the .properties file of the given bundle.
      *
-     * @return The parsed obix lobby URIs.
+     * @return The List of {@link ObixChannel}
      * @throws ConfigurationException Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
      */
     private List<ObixChannel> getObixCoapChannels() throws ConfigurationException {
@@ -82,14 +101,13 @@ public class Configurator {
         if (observedTypes.size() == 0) {
             throw new ConfigurationException("No observed types in config file!");
         }
-
         return observedTypes;
     }
 
     /**
-     * This method returns the URI of the Colibri channel in the .properties file of the given bundle.
+     * This method returns the {@link ColibriChannel} with the URI given in the .properties file of the given bundle.
      *
-     * @return The parsed colibri channel URI.
+     * @return The {@link ColibriChannel}.
      * @throws ConfigurationException Is thrown, if there is no colibri channel URI provided in the parsed .properties file.
      */
     private ColibriChannel getColibriChannel() throws ConfigurationException {
@@ -102,10 +120,11 @@ public class Configurator {
     }
 
     /**
-     * This method returns the obix lobbies URIs which are specified in the .properties file of the given bundle.
+     * This method returns a list of {@link Connector} which contain an {@link ObixChannel} and a {@link ColibriChannel}
+     * that were created through {@link #getObixCoapChannels()} and {@link #getColibriChannel()}.
      *
-     * @return The parsed obix lobby URIs.
-     * @throws ConfigurationException Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
+     * @return The list of {@link Connector}.
+     * @throws ConfigurationException Is thrown, if there no Connectors can be parsed of the .properties file.
      */
     public List<Connector> getConnectors() throws ConfigurationException {
         List<Connector> connectors = new ArrayList<>();
@@ -150,7 +169,7 @@ public class Configurator {
     /**
      * This method returns the available parameter types which are specified in the .properties file of the given bundle.
      *
-     * @return The parsed parameter types.
+     * @return The parsed parameter types as a list of Strings.
      * @throws ConfigurationException Is thrown, if there are no parameters provided in the parsed .properties file.
      */
     public List<String> getAvailableParameterTypes() throws ConfigurationException {
@@ -172,9 +191,10 @@ public class Configurator {
     }
 
     /**
-     * This method returns the time to wait for a Status Response in milliseconds which is specified in the .properties file of the given bundle.
+     * This method returns the time to wait for a Status Response in milliseconds which is specified in the
+     * .properties file of the given bundle.
      *
-     * @return time to wait for a status response
+     * @return The Time to wait for a status response in milliseconds
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
     public int getTimeWaitingForStatusResponseInMilliseconds() throws ConfigurationException {
@@ -188,7 +208,7 @@ public class Configurator {
     /**
      * This method returns the times to resend a message which is specified in the .properties file of the given bundle.
      *
-     * @return how often the message will be resent
+     * @return The times, how often the message will be resent.
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
     public int getTimesToResendMessage() throws ConfigurationException {
@@ -200,16 +220,17 @@ public class Configurator {
     }
 
     /**
-     * This method returns String representation of a newline specified in the .properties file of the given bundle.
+     * This method returns String representation of a newline in a {@link channel.message.colibriMessage.ColibriMessage}
+     * specified in the .properties file of the given bundle.
      *
-     * @return the String representation of a newline
+     * @return The String representation of a newline in a {@link channel.message.colibriMessage.ColibriMessage}.
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
     public String getNewlineString() throws ConfigurationException {
         if (bundle.containsKey("newline")){
             return bundle.getString("newline");
         }else{
-            throw new ConfigurationException("No times to resend a message configured in the config file!");
+            throw new ConfigurationException("No newline representation given in the config file!");
         }
     }
 }

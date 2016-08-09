@@ -1,6 +1,6 @@
 package connectorClient;
 
-import channel.commandPattern.CommandFactory;
+import service.commandPattern.CommandFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.RunAndStopAble;

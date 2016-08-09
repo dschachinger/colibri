@@ -114,7 +114,9 @@ public class ResendMessageTask extends TimerTask {
         int count = -1;
         for (ColibriMessage msg : channel.getMessagesWithoutResponse().values()) {
             if(waitingForResponse.getMsgType().equals(msg.getMsgType())) {
-                //For REG and DRE messages
+                /*
+                 * For REG and DRE messages
+                 */
                 if(msg.getOptionalConnector() != null) {
                     if(waitingForResponse.getOptionalConnector() != null) {
                         if(waitingForResponse.getOptionalConnector().equals(msg.getOptionalConnector())) {
@@ -122,7 +124,9 @@ public class ResendMessageTask extends TimerTask {
                         }
                     }
                 }
-                //For ADD, DET, OBS, REM and GET messages
+                /*
+                 * For ADD, DET, OBS, REM and GET messages
+                 */
                 if(msg.getOptionalObixObject() != null) {
                     if(waitingForResponse.getOptionalObixObject() != null) {
                         if(waitingForResponse.getOptionalObixObject().equals(msg.getOptionalObixObject())) {

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This Class is used to perform actions on lists.
+ */
 public class ListHelper {
 
     /**

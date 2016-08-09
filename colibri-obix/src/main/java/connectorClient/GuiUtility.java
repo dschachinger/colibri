@@ -1,7 +1,7 @@
 package connectorClient;
 
 import channel.Connector;
-import channel.commandPattern.CommandFactory;
+import service.commandPattern.CommandFactory;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.messageObj.Name;
 import channel.message.messageObj.StateDescription;
