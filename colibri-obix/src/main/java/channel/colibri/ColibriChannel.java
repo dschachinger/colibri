@@ -28,9 +28,16 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * This class represents a channel for sending and receiving {@link ColibriMessage} to and from the
+ * colibri semantic core configured by the {@link Configurator}.
+ */
 public class ColibriChannel {
 
-    private final static Logger logger = LoggerFactory.getLogger(ColibriChannel.class);
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     private final static ObjectMapper mapper = new ObjectMapper();
     private AtmosphereClient client;
     private Socket socket;
@@ -38,16 +45,63 @@ public class ColibriChannel {
     private String host;
     private int port;
     private Boolean registered;
-    private Map<String, ColibriMessage> messagesWithoutResponse;
-    private Map<String, ObixObject> observeAbleObjectsMap;
-    private Map<String, ObixObject> observedObjectsMap;
-    private Map<String, ObixObject> requestedGetMessageMap;
-    private String lastMessageReceived = "No messages from Colibri Semantic Core received.";
-    private Map<String, ObixObject> observedColibriActionsMap;
     private ExecutorService executor;
-    private List<ResendMessageTask> waitingForStatusMessagesTasks;
+
+    /**
+     * A map with the message-ID as key. The values are messages which expect a response from the colibri semantic core
+     * but haven't received one.
+     */
+    private Map<String, ColibriMessage> messagesWithoutResponse;
+
+    /**
+     * A map with the service URI of an ObixObject as key. The values are ObixObjects which are added as services to the
+     * colibri semantic core and can therefore be observed by colibri.
+     */
+    private Map<String, ObixObject> observeAbleObjectsMap;
+
+    /**
+     * A map with the service URI of an ObixObject as key. The values are ObixObjects which are currently observed by
+     * the colibri semantic core.
+     */
+    private Map<String, ObixObject> observedObjectsMap;
+
+    /**
+     * A map with the service URI of an ObixObject as key. The values are ObixObjects for which a GET message was sent
+     * to the colibri semantic core.
+     */
+    private Map<String, ObixObject> requestedGetMessageMap;
+
+    private String lastMessageReceived = "No messages from Colibri Semantic Core received.";
+
+    /**
+     * A map with the service URI of an ObixObject as key. The values are ObixObjects which observe actions performed
+     * by the colibri semantic core. 
+     */
+    private Map<String, ObixObject> observedMessagesOfColibriMap;
+
+    /**
+     * A list of tasks which are scheduled to resend messages if no fitting response was received to the initial or
+     * resent messages.
+     */
+    private List<ResendMessageTask> resendMessagesTasks;
+
+    /**
+     * A map with a random ID as key. The values are times to send messages on a specific time to the colibri semantic
+     * core, for example scheduled through a parameter in a received OBS message.
+     */
     private Map<String, Timer> runningTimers;
-    private Map<String, ColibriMessage> queryMessagesWithoutRespose;
+
+    /**
+     * A map with the QUE message-ID as key. The values are QUE messages which expect a response from the colibri
+     * semantic core but haven't received one.
+     */
+    private Map<String, ColibriMessage> queryMessagesWithoutResponse;
+
+    private final static Logger logger = LoggerFactory.getLogger(ColibriChannel.class);
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public ColibriChannel(String connectorName, String host, int port) {
         this.connectorName = connectorName;
@@ -58,13 +112,17 @@ public class ColibriChannel {
         this.messagesWithoutResponse = Collections.synchronizedMap(new HashMap<>());
         this.observeAbleObjectsMap = Collections.synchronizedMap(new HashMap<>());
         this.observedObjectsMap = Collections.synchronizedMap(new HashMap<>());
-        this.observedColibriActionsMap = Collections.synchronizedMap(new HashMap<>());
+        this.observedMessagesOfColibriMap = Collections.synchronizedMap(new HashMap<>());
         this.requestedGetMessageMap = Collections.synchronizedMap(new HashMap<>());
-        this.waitingForStatusMessagesTasks = Collections.synchronizedList(new ArrayList<>());
-        this.queryMessagesWithoutRespose = Collections.synchronizedMap(new HashMap<>());
+        this.resendMessagesTasks = Collections.synchronizedList(new ArrayList<>());
+        this.queryMessagesWithoutResponse = Collections.synchronizedMap(new HashMap<>());
         this.runningTimers = new HashMap<>();
         this.executor = Executors.newCachedThreadPool();
     }
+
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
 
     public void run() throws IOException {
         RequestBuilder request = client.newRequestBuilder()
@@ -137,50 +195,55 @@ public class ColibriChannel {
         }).open(request.build());
     }
 
+    /**
+     * Method for sending messages to the colibri web socket endpoint configured through the {@link Configurator}.
+     *
+     * @param msg   The message which should be sent.
+     */
     public void send(ColibriMessage msg) {
         logger.info("Send:" + msg.toString());
         try {
-            //  if (!alreadySent(msg)) {
             socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
             if (msg.getMsgType().equals(MessageIdentifier.GET)) {
                 requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                         msg.getOptionalObixObject());
             }
             if (msg.getMsgType().equals(MessageIdentifier.QUE)) {
-                queryMessagesWithoutRespose.put(msg.getHeader().getId(), msg);
+                queryMessagesWithoutResponse.put(msg.getHeader().getId(), msg);
             } else if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
                 this.addMessageWithoutResponse(msg);
                 int count = 0;
                 Configurator conf = Configurator.getInstance();
                 messagesWithoutResponse.put(msg.getHeader().getId(), msg);
                 while (count <= conf.getTimesToResendMessage()) {
+                    //Set up tasks for resending messages if no fitting response was received.
                     count++;
                     ResendMessageTask task = new ResendMessageTask(this, msg);
                     Timer timer = new Timer();
                     long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
                     timer.schedule(task, timing * count);
-                    waitingForStatusMessagesTasks.add(task);
+                    resendMessagesTasks.add(task);
                     runningTimers.put(UUID.randomUUID().toString(), timer);
                 }
             }
-            //TODO: remove this line, only for testing with FAKE
+            //TODO: remove this line, only for testing with FAKE response
             handleStatusMessagesFAKE(msg);
-            //  }
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
         }
     }
 
+    /**
+     * Method for resending messages to the colibri web socket endpoint configured through the {@link Configurator}.
+     *
+     * @param msg   The message which should be resent.
+     * @return      The resent message.
+     */
     public ColibriMessage resend(ColibriMessage msg) {
         logger.info("Resend: " + msg.toString());
         ColibriMessage resendMsg = ColibriMessage.createMessageWithNewId(msg);
         try {
-            if (msg.getMsgType().equals(MessageIdentifier.GET)) {
-                requestedGetMessageMap.remove(msg.getHeader().getId());
-                requestedGetMessageMap.put(resendMsg.getHeader().getId(), resendMsg.getOptionalObixObject());
-            } else {
-                messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
-            }
+            messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
             socket.fire(new AtmosphereMessage(connectorName, resendMsg.toString()));
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
@@ -188,31 +251,21 @@ public class ColibriChannel {
         return resendMsg;
     }
 
+    /**
+     * Method for closing the colibri channel.
+     */
     public void close() {
         runningTimers.values().forEach(Timer::cancel);
         executor.shutdownNow();
         socket.close();
     }
 
-    public Boolean getRegistered() {
-        return registered;
-    }
-
-    public void setRegistered(Boolean registered) {
-        this.registered = registered;
-    }
-
-    public Map<String, ColibriMessage> addMessageWithoutResponse(ColibriMessage message) {
-        messagesWithoutResponse.put(message.getHeader().getId(), message);
-        return messagesWithoutResponse;
-    }
-
-    public Map<String, ColibriMessage> getMessagesWithoutResponse() {
-        return messagesWithoutResponse;
-    }
-
-    public void messageReceived(ColibriMessage message) {
-        for (ResendMessageTask task : waitingForStatusMessagesTasks) {
+    /**
+     * Method for receiving messages and starting according handler methods.
+     * @param message   The message which was received from colibri.
+     */
+    private void messageReceived(ColibriMessage message) {
+        for (ResendMessageTask task : resendMessagesTasks) {
             task.addReceivedMessage(message);
         }
         if (message.getMsgType().equals(MessageIdentifier.STA)) {
@@ -234,6 +287,16 @@ public class ColibriChannel {
         }
     }
 
+    /******************************************************************
+     *                Handlers for received messages                  *
+     ******************************************************************/
+
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} STA.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} STA.
+     */
     private void handleStatusMessages(ColibriMessage message) {
         ColibriMessage requestMsg = messagesWithoutResponse.get(message.getHeader().getRefenceId());
         if (requestMsg != null) {
@@ -256,12 +319,12 @@ public class ColibriChannel {
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.OBS)) {
                     requestMsg.getOptionalObixObject().setObservesColibriActions(true);
                     removeAccordingMessagesFromWaitingForResponse(message);
-                    observedColibriActionsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
+                    observedMessagesOfColibriMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.DET)) {
                     requestMsg.getOptionalObixObject().setObservesColibriActions(false);
                     removeAccordingMessagesFromWaitingForResponse(message);
-                    observedColibriActionsMap.remove(requestMsg.getOptionalObixObject().getServiceUri(),
+                    observedMessagesOfColibriMap.remove(requestMsg.getOptionalObixObject().getServiceUri(),
                             requestMsg.getOptionalObixObject());
                 } else if (requestMsg.getMsgType().equals(MessageIdentifier.UPD)) {
                     removeAccordingMessagesFromWaitingForResponse(message);
@@ -270,27 +333,14 @@ public class ColibriChannel {
         }
     }
 
-    //TODO: ONLY FOR TESTING PURPOSES
-    private void handleStatusMessagesFAKE(ColibriMessage requestMsg) {
-        if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
-            this.registered = true;
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.DRE)) {
-            this.registered = false;
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.ADD)) {
-            requestMsg.getOptionalObixObject().setAddedAsService(true);
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-            observeAbleObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
-                    requestMsg.getOptionalObixObject());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.REM)) {
-            requestMsg.getOptionalObixObject().setAddedAsService(false);
-            observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        }
-    }
-
-
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} DRE.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} DRE.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service was
+     *                  successfully deregistered, otherwise with {@link StatusCode} 500.
+     */
     private ColibriMessage handleDeregisterMessage(ColibriMessage message) {
         if (message.getContent().getContentWithoutBreaksAndWhiteSpace().equals(Configurator.getInstance().getConnectorAddress())
                 && this.getRegistered()) {
@@ -304,9 +354,17 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Connector is not registered", message.getHeader().getId());
     }
 
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} OBS.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} OBS.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service is
+     *                  successfully observed, otherwise with {@link StatusCode} 500.
+     */
     private ColibriMessage handleObserveMessage(ColibriMessage message) {
         String msgContent = message.getContent().getContentWithoutBreaksAndWhiteSpace();
-        String serviceUri = "";
+        String serviceUri;
         ObixObject obj;
         boolean successful = true;
         if (msgContent.contains("?freq=")) {
@@ -317,17 +375,22 @@ public class ColibriChannel {
             if (obj == null) {
                 successful = false;
             } else {
+                /*
+                 * Set timers for execution messages if given in the OBS message.
+                 */
                 Date dateNow = new Date();
                 String icalTemp = TimeDurationConverter.date2Ical(dateNow).toString();
                 Timer timer = new Timer();
                 try {
                     Date d = (TimeDurationConverter.ical2Date(icalTemp.split("T")[0] + "T" + content[1]));
-                    //If the time fpr execution is alreday passed on this day, increase it by one day
+                    /*
+                     * If the time for execution is already passed on this day, increase it by one day
+                     */
                     if (d.before(new Date())) {
                         d = new Date(d.getTime() + 24 * 60 * 60 * 1000);
                     }
                     executionTask.setScheduled(true);
-                    /**
+                    /*
                      * Send Put once a day at the specified time
                      */
                     timer.schedule(executionTask, d, 24 * 60 * 60 * 1000);
@@ -336,7 +399,7 @@ public class ColibriChannel {
                     try {
                         java.time.Duration duration = java.time.Duration.parse(content[1]);
                         executionTask.setScheduled(true);
-                        /**
+                        /*
                          * Send Put with the specified duration
                          */
                         timer.schedule(executionTask, duration.toMillis(), duration.toMillis());
@@ -367,6 +430,14 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service cannot be observed", message.getHeader().getId());
     }
 
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} DET.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} DET.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service is
+     *                  successfully detached, otherwise with {@link StatusCode} 500.
+     */
     private ColibriMessage handleDetachMessage(ColibriMessage message) {
         ObixObject temp = observedObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
@@ -378,10 +449,14 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not observed", message.getHeader().getId());
     }
 
-    private void handleAddMessage(ColibriMessage message) {
-        //Nothing to handle for now
-    }
-
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} REM.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} REM.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service is
+     *                  successfully removed, otherwise with {@link StatusCode} 500.
+     */
     private ColibriMessage handleRemoveMessage(ColibriMessage message) {
         ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
@@ -394,10 +469,16 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not added and therefore cannot be removed", message.getHeader().getId());
     }
 
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} PUT.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} PUT.
+     */
     private void handlePutMessage(ColibriMessage message) {
         try {
             PutMessageContent content = ColibriMessageContentCreator.getPutMessageContent(message);
-            ObixObject serviceObject = observedColibriActionsMap.get(content.getServiceUri());
+            ObixObject serviceObject = observedMessagesOfColibriMap.get(content.getServiceUri());
             if (serviceObject == null) {
                 serviceObject = requestedGetMessageMap.get(content.getServiceUri());
             }
@@ -441,6 +522,14 @@ public class ColibriChannel {
         }
     }
 
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} GET.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} GET.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service is
+     *                  successfully handled the GET message, otherwise with {@link StatusCode} 500.
+     */
     private ColibriMessage handleGetMessage(ColibriMessage message) {
         ObixObject temp = observeAbleObjectsMap.get(message.getContent().getContentWithoutBreaksAndWhiteSpace());
         if (temp != null) {
@@ -451,13 +540,21 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Service is not existing and therefore cannot handle GET message", message.getHeader().getId());
     }
 
+    /**
+     * This method handles a received {@link ColibriMessage} with
+     * {@link MessageIdentifier} QRE.
+     *
+     * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} QRE.
+     * @return          The response {@link ColibriMessage} with {@link StatusCode} 200 if the service is
+     *                  successfully handled the QRE message, otherwise with {@link StatusCode} 500 or 700.
+     */
     private ColibriMessage handleQreMessage(ColibriMessage message) {
         try {
             if (message.getHeader().getRefenceId() == null) {
                 return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "QUR message does not contain a reference ID and does therefore not match to" +
                         "any sent QUE message. QRE-id: " + message.getHeader().getId());
             }
-            ColibriMessage tempMsg = queryMessagesWithoutRespose.get(message.getHeader().getRefenceId());
+            ColibriMessage tempMsg = queryMessagesWithoutResponse.get(message.getHeader().getRefenceId());
             if (tempMsg == null) {
                 return ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "QRE referenceId is not matching any of the" +
                         "sent QUE message ids. QRE-id: " + message.getHeader().getId());
@@ -471,19 +568,38 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.OK, "Received QRE message", message.getHeader().getId());
     }
 
-    public String getLastMessageReceived() {
-        return lastMessageReceived;
+    //TODO: ONLY FOR TESTING PURPOSES --> has to be deleted
+    private void handleStatusMessagesFAKE(ColibriMessage requestMsg) {
+        if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
+            this.registered = true;
+            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
+        } else if (requestMsg.getMsgType().equals(MessageIdentifier.DRE)) {
+            this.registered = false;
+            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
+        } else if (requestMsg.getMsgType().equals(MessageIdentifier.ADD)) {
+            requestMsg.getOptionalObixObject().setAddedAsService(true);
+            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
+            observeAbleObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
+                    requestMsg.getOptionalObixObject());
+        } else if (requestMsg.getMsgType().equals(MessageIdentifier.REM)) {
+            requestMsg.getOptionalObixObject().setAddedAsService(false);
+            observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
+            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
+        }
     }
 
-    public String getHost() {
-        return host;
-    }
+    /******************************************************************
+     *                            Helpers                             *
+     ******************************************************************/
 
-    public int getPort() {
-        return port;
-    }
-
-    public void setTimerTask(ObixObject serviceObject, ColibriMessage message) {
+    /**
+     * This method instantiates tasks which are scheduled by a timer for updating the value of a {@link ObixObject}
+     * parameter.
+     *
+     * @param serviceObject     The {@link ObixObject} of which the parameter is updated at the scheduled time.
+     * @param message           The {@link ColibriMessage} which contains the updated value and the timing schedule.
+     */
+    private void setTimerTask(ObixObject serviceObject, ColibriMessage message) {
         //read optional timing for Put on Obix from parameter 2
         PutExecutionTask executionTask = new PutExecutionTask(serviceObject, this, message.getHeader().getId());
         java.util.Date paramDate;
@@ -503,6 +619,15 @@ public class ColibriChannel {
         requestedGetMessageMap.remove(serviceObject.getServiceUri());
     }
 
+    /**
+     * This method removes all messages from {@link #messagesWithoutResponse} which are similar
+     * to the given {@link ColibriMessage}. Similar means, that the {@link MessageIdentifier} is the same
+     * and the optionalObixObject, the optionalConnector or the Reference-ID and the ID of the message are
+     * equal.
+     *
+     * @param message   The {@link ColibriMessage} of which similar messages are removed from
+     *                  {@link #messagesWithoutResponse}
+     */
     public void removeAccordingMessagesFromWaitingForResponse(ColibriMessage message) {
         ColibriMessage toRemove = messagesWithoutResponse.remove(message.getHeader().getRefenceId());
         if (toRemove == null) {
@@ -532,15 +657,50 @@ public class ColibriChannel {
         }
     }
 
+    /**
+     * Removes all {@link ResendMessageTask} from {@link #resendMessagesTasks} which are equal to the given task.
+     *
+     * @param task      The task which is used to specify the tasks to delete from {@link #resendMessagesTasks}.
+     */
     public void removeAccordingTasks(ResendMessageTask task) {
         List<ResendMessageTask> remList = Collections.synchronizedList(new ArrayList<>());
-        for (ResendMessageTask t : waitingForStatusMessagesTasks) {
+        for (ResendMessageTask t : resendMessagesTasks) {
             if (t.getWaitingForResponse().equals(task.getWaitingForResponse())) {
                 remList.add(t);
             }
         }
         for (ResendMessageTask t : remList) {
-            waitingForStatusMessagesTasks.remove(t);
+            resendMessagesTasks.remove(t);
         }
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
+
+    public Boolean getRegistered() {
+        return registered;
+    }
+
+    public Map<String, ColibriMessage> addMessageWithoutResponse(ColibriMessage message) {
+        messagesWithoutResponse.put(message.getHeader().getId(), message);
+        return messagesWithoutResponse;
+    }
+
+    public Map<String, ColibriMessage> getMessagesWithoutResponse() {
+        return messagesWithoutResponse;
+    }
+
+    public String getLastMessageReceived() {
+        return lastMessageReceived;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
 }

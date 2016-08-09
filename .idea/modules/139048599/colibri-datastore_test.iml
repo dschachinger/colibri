@@ -43,12 +43,12 @@
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-lang3:3.3.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.felix:org.osgi.core:1.0.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: net.sourceforge.owlapi:owlapi-apibinding:3.4.4" level="project" />
-    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.jena:jena-iri:3.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: xerces:xercesImpl:2.11.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.2.5" level="project" />
-    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.6" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.apache.jena:jena-base:3.1.0" level="project" />
+    <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.6" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.3.3" level="project" />
     <orderEntry type="library" name="Gradle: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.3.3" level="project" />

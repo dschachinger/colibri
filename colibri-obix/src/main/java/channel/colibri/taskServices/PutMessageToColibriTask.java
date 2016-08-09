@@ -9,22 +9,53 @@ import java.util.Collections;
 import java.util.List;
 import java.util.TimerTask;
 
+/**
+ * Represents Tasks for (un)scheduled sending of PUT messages to the colibri web socket endpoint.
+ */
 public class PutMessageToColibriTask extends TimerTask {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    /**
+     * List of {@link ObixObject} which represents all value changes of a specific obix service since the last PUT message.
+     */
     private List<ObixObject> bundledObjects;
+
     private ColibriChannel channel;
+
+    /**
+     * The ID of the OBS message which started the task.
+     */
     private String observeMessageId;
+
+    /**
+     * True, if the task has a schedule.
+     */
     private boolean scheduled;
+
+    /**
+     * Last change on the {@link ObixObject} according to this task.
+     */
     private ObixObject lastObixObjectForPut;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public PutMessageToColibriTask(ObixObject initialObixObject, ColibriChannel colibriChannel, String observeMessageId) {
         this.lastObixObjectForPut = initialObixObject;
         this.bundledObjects = Collections.synchronizedList(new ArrayList<>());
-        bundledObjects.add(initialObixObject);
+        this.bundledObjects.add(initialObixObject);
         this.channel = colibriChannel;
         this.observeMessageId = observeMessageId;
         this.scheduled = false;
     }
+
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
 
     @Override
     public void run() {
@@ -32,10 +63,10 @@ public class PutMessageToColibriTask extends TimerTask {
     }
 
     /**
-     * Sends PUT message for the specified oBIX object if the task is not scheduled.
+     * Sends PUT message for the specified {@link ObixObject} if the task is not scheduled.
      * Otherwise it adds the object to the objectBundle to send it in one PUT message at the tasks schedule.
      *
-     * @param obj The Object for which the PUT message is sent
+     * @param obj The {@link ObixObject} for which the PUT message is sent
      */
     public void execute(ObixObject obj) {
         addObjectToBundle(obj);
@@ -44,6 +75,9 @@ public class PutMessageToColibriTask extends TimerTask {
         }
     }
 
+    /**
+     * Sends a PUT message to the colibri semantic core.
+     */
     private void sendPutMessage() {
         if (bundledObjects.isEmpty()) {
             bundledObjects.add(lastObixObjectForPut);
@@ -52,15 +86,24 @@ public class PutMessageToColibriTask extends TimerTask {
         bundledObjects.clear();
     }
 
-    public void setScheduled(boolean scheduled) {
-        this.scheduled = scheduled;
-    }
-
-    public void addObjectToBundle(ObixObject obj) {
+    /**
+     * Adds an {@link ObixObject} to the bundle which contains all value changes of the object since the last PUT message.
+     *
+     * @param obj   The {@link ObixObject} with the updated value.
+     */
+    private void addObjectToBundle(ObixObject obj) {
         ObixObject temp = new ObixObject(obj.getObixUri(), obj.getObixChannelPort());
         temp.setParameter1(obj.getParameter1());
         temp.setParameter2(obj.getParameter2());
         bundledObjects.add(temp);
         lastObixObjectForPut = temp;
+    }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
+
+    public void setScheduled(boolean scheduled) {
+        this.scheduled = scheduled;
     }
 }

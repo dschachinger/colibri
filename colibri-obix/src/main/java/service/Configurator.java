@@ -188,7 +188,7 @@ public class Configurator {
     /**
      * This method returns the times to resend a message which is specified in the .properties file of the given bundle.
      *
-     * @return how often the message will be resended
+     * @return how often the message will be resent
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
     public int getTimesToResendMessage() throws ConfigurationException {
