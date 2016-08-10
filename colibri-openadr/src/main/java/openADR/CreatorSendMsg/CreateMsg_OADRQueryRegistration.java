@@ -14,7 +14,7 @@ public class CreateMsg_OADRQueryRegistration extends CreateSendMsg {
 
     /**
      * Creates a message object with an openADR payload OadrQueryRegistration in it.
-     * @param info message info: contains the needed information to create a openADR payload
+     * @param info message info: contains the needed information to create an openADR payload
      * @return
      */
     @Override
@@ -33,7 +33,7 @@ public class CreateMsg_OADRQueryRegistration extends CreateSendMsg {
 
     /**
      * This method returns the message type name for an oadrQueryRegistration message
-     * @return supported messege type
+     * @return supported message type
      */
     @Override
     public String getMsgType() {

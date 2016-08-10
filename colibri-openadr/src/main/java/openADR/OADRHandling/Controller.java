@@ -59,7 +59,7 @@ public class Controller {
 
         logger.info("amount of different send message types: " + createSendMsgMap.keySet().size());
 
-        /* init procReceivedMsgMap                                  */
+        // init procReceivedMsgMap
         procReceivedMsgMap = new HashMap<>();
         List<ProcessorReceivedMsg> procReceivedMsgList = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public class Controller {
     }
 
     /**
-     * This class extract the needful information from a given received message and will
+     * This method extracts the needful information from a given received message and will
      * return the proper reply message.
      * @param recObj process this received message
      * @return reply message
@@ -99,7 +99,7 @@ public class Controller {
     public OADRMsgObject processReceivedMessage(OADRMsgObject recObj){
         ProcessorReceivedMsg proc = procReceivedMsgMap.get(recObj.getMsgType());
 
-        String statusCode = proc.doRecMsgViolateConstraints(recObj,party.getChannel().getSendedMsgMap());
+        String statusCode = proc.doRecMsgViolateConstraints(recObj,party.getChannel().getSentMsgMap());
         if(statusCode.equals("200")){
             logger.info("received message type " + recObj.getMsgType()+
                     " does not violate "+"constraints");
@@ -109,7 +109,7 @@ public class Controller {
             if(recInfo != null){
                 party.getBridge().informationFlowFromOpenADRToColibri(recInfo);
             }
-            proc.updateSendedMsgMap(recObj, party.getChannel().getSendedMsgMap());
+            proc.updateSentMsgMap(recObj, party.getChannel().getSentMsgMap());
         } else {
             logger.error("received message type " + recObj.getMsgType()+
                     " VIOLATES "+"constraints. status code " + statusCode + " info: " +

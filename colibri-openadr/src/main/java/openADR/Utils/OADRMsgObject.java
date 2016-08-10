@@ -3,7 +3,7 @@ package openADR.Utils;
 /**
  * Created by georg on 06.06.16.
  * Objects from this class store the payload of an openADR message.
- * This means it does not contain informations about below communication layers.
+ * This means it does not contain information about below communication layers.
  */
 public class OADRMsgObject {
     // It signalize the stored openADR message type.

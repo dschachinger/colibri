@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 /**
  * Created by georg on 28.05.16.
- * Descendant classes from this abstract class defines channels for the openADR message exchange.
+ * Descendant classes from this abstract class define channels for the openADR message exchange.
  */
 public abstract class Channel {
     // The controller handles the openADR messages
@@ -18,10 +18,11 @@ public abstract class Channel {
     // Defines which party the channel uses
     protected OADRParty party;
 
-    /* This hash map holds the sended messages and
+    /* This hash map holds the sent messages and
     the key is the openADR requestID */
-    protected HashMap<String, OADRMsgObject> sendedMsgMap;
+    protected HashMap<String, OADRMsgObject> sentMsgMap;
 
+    // this object monitors the reply time
     protected TimeoutWatcher<Channel, OADRMsgObject> timeoutWatcher;
 
     public Channel(Controller controller, JAXBManager jaxbManager, OADRParty party, int timeoutSec){
@@ -29,14 +30,14 @@ public abstract class Channel {
         this.jaxbManager = jaxbManager;
         this.party = party;
 
-        // init sendedMsgMap
-        sendedMsgMap = new HashMap<>();
+        // init sentMsgMap
+        sentMsgMap = new HashMap<>();
 
         timeoutWatcher = TimeoutWatcher.initOpenADRTimeoutWatcher(timeoutSec*1000, this);
     }
 
-    public HashMap<String, OADRMsgObject> getSendedMsgMap() {
-        return sendedMsgMap;
+    public HashMap<String, OADRMsgObject> getSentMsgMap() {
+        return sentMsgMap;
     }
 
     public Controller getController() {

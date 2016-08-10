@@ -2,12 +2,15 @@ package openADR.OADRMsgInfo;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrQueryRegistration message.
+ * This class holds the important information for an oadrQueryRegistration message.
  */
 public class MsgInfo_OADRResponse implements OADRMsgInfo {
 
+    // This code shows how the origin message was processed
     private int responseCode;
+    // Id of the origin message
     private String correspondingRequestID;
+    // Description shows how the origin message was processed
     private String responseDescription;
 
     public String getResponseDescription() {

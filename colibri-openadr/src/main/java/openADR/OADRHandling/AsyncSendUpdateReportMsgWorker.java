@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Created by georg on 09.06.16.
  * This class is used to gather report data and transmit the report.
- * A seperate thread can be initiated to fulfil this task.
+ * A seperate thread can be initiated to fulfill this task.
  */
 public class AsyncSendUpdateReportMsgWorker extends Thread {
 
@@ -43,7 +43,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
     private Logger logger = LoggerFactory.getLogger(AsyncSendUpdateReportMsgWorker.class);
 
     /**
-     * This instantiate a AsyncSendFollowUpMsgWorker object
+     * This instantiate an AsyncSendFollowUpMsgWorker object
      * @param reportRequest not null
      */
     public AsyncSendUpdateReportMsgWorker(MsgInfo_OADRCreateReport.ReportRequest reportRequest, OADRParty party){
@@ -89,7 +89,7 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
         threadSleep(startTimeDiffMilli);
 
-        for(long amountSendedReports = 0; (amountSendedReports<amountSendReports) || unlimitedSendReports; amountSendedReports++){
+        for(long amountSentReports = 0; (amountSentReports<amountSendReports) || unlimitedSendReports; amountSentReports++){
             for(long amountGatheredMeasurementsPerReport = 0; amountGatheredMeasurementsPerReport<amountMesurementsPerReport; amountGatheredMeasurementsPerReport++) {
                 logger.info("Query colibri for information "+reportRequest.getReportRequestID());
                 party.bridge.queryColibriCoreForOpenADRReportData(reportInfos);
@@ -120,6 +120,10 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
 
     }
 
+    /**
+     * This method returns an example update report
+     * @return
+     */
     private MsgInfo_OADRUpdateReport genUpdateReport(){
         MsgInfo_OADRUpdateReport info = new MsgInfo_OADRUpdateReport();
 
@@ -146,10 +150,18 @@ public class AsyncSendUpdateReportMsgWorker extends Thread {
         return reportRequest.getReportRequestID();
     }
 
+    /**
+     * If any thread calls this method then the worker for the update message will terminate.
+     * @param followUpReportNeeded true...generate one further report, false...transmit no further report
+     */
     public void cancelReport(boolean followUpReportNeeded){
         isReportCanceled.set(followUpReportNeeded ? 2:1);
     }
 
+    /**
+     * This method will pause the called thread for the given milliseconds
+     * @param milliseconds given milliseconds
+     */
     private void threadSleep(long milliseconds){
         try {
             Thread.sleep(milliseconds);

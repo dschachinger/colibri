@@ -20,7 +20,7 @@ import java.util.List;
 public class Process_OADRCreateReport extends ProcessorReceivedMsg {
 
     /**
-     * This method generates the proper reply for a openADR message OadrCreateReport.
+     * This method generates the proper reply for an openADR message OadrCreateReport.
      * Return null, because there is no need to reply to this type of message.
      * @param obj generate reply for this message. The contained message type has to be OadrCreateReport.
      * @param responseCode
@@ -49,10 +49,10 @@ public class Process_OADRCreateReport extends ProcessorReceivedMsg {
 
     /**
      * This method returns an MsgInfo_OADRCreateReport object.
-     * This object contains all needful information for a engery consumer from an OadrCreateReport message.
+     * This object contains all needful information for an engery consumer from an OadrCreateReport message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrCreateReport.
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
@@ -97,14 +97,14 @@ public class Process_OADRCreateReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrCreateReport recMsg = (OadrCreateReport)obj.getMsg();
         String venID = recMsg.getVenID();
 
         if(!OADRConInfo.getVTNReceivesReportCapabilities()){
             return "450";
         } else {
-            return checkConstraints(sendedMsgMap, true, null,
+            return checkConstraints(sentMsgMap, true, null,
                     null, venID, null);
         }
 
@@ -114,7 +114,7 @@ public class Process_OADRCreateReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
     }
 
     /**

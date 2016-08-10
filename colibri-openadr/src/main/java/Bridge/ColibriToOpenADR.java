@@ -32,7 +32,7 @@ public class ColibriToOpenADR {
     private Logger logger = LoggerFactory.getLogger(ColibriToOpenADR.class);
 
     /**
-     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * For a given colibri message this method returns the reply for the openADR and the colibri side.
      * This method is able to handle all colibri message types.
      *
      * @param msg given colibri message
@@ -64,7 +64,7 @@ public class ColibriToOpenADR {
     }
 
     /**
-     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * For a given colibri message this method returns the reply for the openADR and the colibri side.
      * This method is able to handle the colibri put messages.
      *
      * @param msg given colibri message
@@ -100,6 +100,7 @@ public class ColibriToOpenADR {
                 }
             }
 
+            // To understand which value belongs to which event
             Map<String, Boolean> eventStatus = new HashMap<>();
 
             for(Pair<String, String> dataValue : dataValues){
@@ -114,6 +115,7 @@ public class ColibriToOpenADR {
 
                 Boolean normalOrder = null;
 
+                // To find out if the first parameter is the eventID or the the opt-in/opt-out status
                 for(String serviceURL : bridge.getColClient().getServicesMap().keySet()){
                     ServiceDataConfig followServiceDataConfig = bridge.getColClient().getServicesMap().get(serviceURL).getServiceDataConfig().getFollowUpServiceDataConfig();
                     for(ServiceDataConfig.Parameter configParameter : followServiceDataConfig.getParameters()){
@@ -145,6 +147,7 @@ public class ColibriToOpenADR {
 
             }
 
+            // To generate OADRCreatedEvent message reply
             createdEvent = new MsgInfo_OADRCreatedEvent();
 
             for(String key : eventStatus.keySet()){
@@ -183,7 +186,7 @@ public class ColibriToOpenADR {
     }
 
     /**
-     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * For a given colibri message this method returns the reply for the openADR and the colibri side.
      * This method is able to handle the colibri get messages.
      *
      * @param msg given colibri message
@@ -228,6 +231,7 @@ public class ColibriToOpenADR {
             onlyOneEventNeeded = true;
         }
 
+        // To find out if the requested service is available
         if(!bridge.getColClient().getServicesMap().keySet().contains(serviceURL)){
             logger.error("service URL " + serviceURL + " unknown");
             ColibriMessage reply = bridge.getColClient().getGenSendMessage().gen_STATUS("500", msg.getHeader().getMessageId());
@@ -235,6 +239,8 @@ public class ColibriToOpenADR {
         }
 
         List<MsgInfo_OADRDistributeEvent.Event> events= bridge.getOpenADREvents(serviceURL, new Pair<Date, Date>(fromDate, toDate));
+
+        // If no parameter is in the request then only the next upcoming event is picked
         if(onlyOneEventNeeded && !events.isEmpty()){
             events = events.subList(0,1);
         }
@@ -260,7 +266,7 @@ public class ColibriToOpenADR {
     }
 
     /**
-     * This method returns for a given colibri message the reply for the openADR and the colibri side.
+     * For a given colibri message this method returns the reply for the openADR and the colibri side.
      * This method is able to handle the colibri query result messages.
      *
      * @param msg given colibri message

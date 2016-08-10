@@ -3,8 +3,7 @@ package Utils;
 import java.util.*;
 
 /**
- * This class is a List implementation which sorts the elements using the
- * comparator specified when constructing a new instance.
+ * This class is a List implementation which sorts the elements by its date interval.
  *
  * @param <T>
  */
@@ -12,13 +11,13 @@ public class SortedDateIntervalList<T> extends LinkedList<Pair<Pair<Date, Date>,
     /**
      * Comparator used to sort the list.
      */
-    private IntervalComperator comparator = null;
+    private IntervalComparator comparator = null;
     /**
      * Construct a new instance with the list elements sorted in their
      * {@link java.lang.Comparable} natural ordering.
      */
     public SortedDateIntervalList() {
-        comparator = new IntervalComperator();
+        comparator = new IntervalComparator();
         comparator.setMode(0);
     }
 
@@ -81,7 +80,7 @@ public class SortedDateIntervalList<T> extends LinkedList<Pair<Pair<Date, Date>,
      * It is only allowed that a search interval overlaps with other intervals.
      * All the inserted intervals should not overlap.
      */
-    private class IntervalComperator implements Comparator<Pair<Pair<Date, Date>, T>> {
+    private class IntervalComparator implements Comparator<Pair<Pair<Date, Date>, T>> {
         int mode = 0;   //-1...lower bound mode, 0...normal mode, 1...upper bound mode
 
         public void setMode(int mode) {

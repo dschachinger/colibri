@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Process_OADRCancelReport extends ProcessorReceivedMsg {
 
     /**
-     * This method generates the proper reply for a openADR message OadrCancelReport.
+     * This method generates the proper reply for an openADR message OadrCancelReport.
      * Return null, because there is no need to reply to this type of message.
      * @param obj generate reply for this message. The contained message type has to be OadrCancelReport.
      * @param responseCode
@@ -45,10 +45,10 @@ public class Process_OADRCancelReport extends ProcessorReceivedMsg {
 
     /**
      * This method returns an MsgInfo_OADRCancelReport object.
-     * This object contains all needful information for a engery consumer from an OadrCancelReport message.
+     * This object contains all needful information for an engery consumer from an OadrCancelReport message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrCancelReport.
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
@@ -69,11 +69,11 @@ public class Process_OADRCancelReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrCancelReport recMsg = (OadrCancelReport)obj.getMsg();
         String venID = recMsg.getVenID();
 
-        return checkConstraints(sendedMsgMap, true, null,
+        return checkConstraints(sentMsgMap, true, null,
                 null, venID, null);
     }
 
@@ -81,7 +81,7 @@ public class Process_OADRCancelReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
     }
 
     /**

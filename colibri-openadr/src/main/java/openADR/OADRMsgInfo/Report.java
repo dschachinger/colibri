@@ -288,14 +288,14 @@ public class Report{
     }
 
     public class SamplingRate{
-        // Minimum sampling period unit: seconds
+        // Minimum sampling period, unit: seconds
         private long minPeriondSec;
 
-        // Maximum sampling period unit: seconds
+        // Maximum sampling period, unit: seconds
         private long maxPeriondSec;
 
         /* If true then the data will be recorded when it changes, but at no
-            greater a frequency than that specified by minPeriod. */
+            greater frequency than the specified minPeriod. */
         boolean onChange;
 
         public SamplingRate() {

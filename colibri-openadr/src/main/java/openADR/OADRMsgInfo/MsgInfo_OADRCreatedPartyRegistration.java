@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrCreatedPartyRegistration message.
+ * This class holds the important information for an oadrCreatedPartyRegistration message.
  */
 public class MsgInfo_OADRCreatedPartyRegistration implements OADRMsgInfo {
     private List<String> transportMethods;

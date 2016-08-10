@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrDistributeEvent message.
+ * This class holds the important information for an oadrDistributeEvent message.
  */
 public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
 
@@ -66,9 +66,9 @@ public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
     public class Event{
         // identifier for this event
         private String eventID;
-        // Incremented each time an event is modified.
+        // Incremented each time when an event is modified.
         private long modificationNumber;
-        /* The priority of the event in relation to other events (The lower the number
+        /* The priority of the event in relation to other events (The lower the number the
             higher the priority. A value of zero (0) indicates no priority, which is the lowest priority
             by default). */
         private long priority;
@@ -91,13 +91,13 @@ public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
         private long toleranceSec;
         // A time period for an event
         private long durationSec;
-        // A duration before or after the event start time during which load shed should transit
+        // A duration before or after the event start time during load shed should transit
         private long rampUpSec;
-        // A duration before or after the event end time during which load shed should transit.
+        // A duration before or after the event end time during load shed should transit.
         private long recoverySec;
         // An object containing all the information for a single signal in an event
         private List<Signal> signals;
-        // The dateTime the payload was created
+        // The dateTime when the payload was created
         private Date createdDateTime;
         // identifier for the distribute message
         private String requestID;
@@ -250,7 +250,7 @@ public class MsgInfo_OADRDistributeEvent implements OADRMsgInfo {
     public class Signal{
         // An enumerated value describing the type of signal such as level or price
         private SignalTypeEnumeratedType signalType;
-        // One or more time intervals during which the DR event is active
+        // One or more time intervals during the DR event is active
         private List<Interval> intervals;
         // The payloadFloat value of the event interval currently executing.
         private float currentValue;

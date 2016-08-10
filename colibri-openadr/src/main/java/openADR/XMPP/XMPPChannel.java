@@ -60,10 +60,9 @@ public class XMPPChannel extends Channel {
 
         con.setFromMode(XMPPConnection.FromMode.USER);
 
-        // Create a new presence. Pass in false to indicate we're unavailable._
+        // set status to available
         Presence presence = new Presence(Presence.Type.available);
-        presence.setStatus("Gone fishing");
-        // Send the packet (assume we have an XMPPConnection instance called "con").
+        presence.setStatus("Fishing");
         con.sendStanza(presence);
 
     }
@@ -100,7 +99,7 @@ public class XMPPChannel extends Channel {
      */
     public void sendMsgObj(OADRMsgObject sendObj){
         if(sendObj.getID() != null){
-            sendedMsgMap.put(sendObj.getID(), sendObj);
+            sentMsgMap.put(sendObj.getID(), sendObj);
             timeoutWatcher.addMonitoredMsg(sendObj.getID());
         }
 
@@ -116,14 +115,14 @@ public class XMPPChannel extends Channel {
 
     /**
      * This method closes the xmpp channel by setting the openADR.XMPP-Status to unavailable and also
-     * inform smack to close the connection.
+     * informs smack to close the connection.
      */
     @Override
     public void close(){
         logger.info("close XMPP connection");
 
         Presence presence = new Presence(Presence.Type.unavailable);
-        presence.setStatus("Gone eating");
+        presence.setStatus("Eating");
         try {
             con.disconnect(presence);
         } catch (SmackException.NotConnectedException e) {

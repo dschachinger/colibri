@@ -48,7 +48,7 @@ public class OADRConInfo {
 
     /**
      * This method returns the next unique requestID
-     * @return
+     * @return unique request id
      */
     public static String getUniqueRequestId() {
         if(requestCounter == Integer.MAX_VALUE){

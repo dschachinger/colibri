@@ -27,7 +27,7 @@ public class CreateMsg_OADRUpdateReport extends CreateSendMsg {
 
     /**
      * Creates a message object with an openADR payload OadrRequestEvent in it.
-     * @param info message info: contains the needed information to create a openADR payload
+     * @param info message info: contains the needed information to create an openADR payload
      * @return
      */
     @Override
@@ -53,6 +53,11 @@ public class CreateMsg_OADRUpdateReport extends CreateSendMsg {
         return obj;
     }
 
+    /**
+     * This method transforms the given report list into an openADR understandable format.
+     * @param reports given report list
+     * @return list of reports in an openADR understandable format
+     */
     private List<OadrReport> generateOadrDataReport(List<Report> reports){
         ArrayList<OadrReport> oadrReports = new ArrayList<>();
         for (Report report : reports) {
@@ -120,7 +125,7 @@ public class CreateMsg_OADRUpdateReport extends CreateSendMsg {
 
     /**
      * This method returns the message type name for an oadrRequestEvent message
-     * @return supported messege type
+     * @return supported message type
      */
     @Override
     public String getMsgType() {

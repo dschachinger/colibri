@@ -28,18 +28,18 @@ public abstract class ProcessorReceivedMsg {
     public abstract OADRMsgObject genResponse(OADRMsgObject obj, String responseCode);
 
     /**
-     * This method returns an openADR.OADRMsgInfo object. This object contains all needful information for a engery consumer.
+     * This method returns an openADR.OADRMsgInfo object. This object contains all needful information for an engery consumer.
      * It also updates the internal data.
      * Should be called before the genResponse() method.
      * @param obj extract inforation out of this message object
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     public abstract OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party);
 
     /**
      * This method returns which received message type the class supports.
-     * @return supported messege type
+     * @return supported message type
      */
     public abstract String getMsgType();
 
@@ -48,32 +48,36 @@ public abstract class ProcessorReceivedMsg {
      * This means if you receive such a message and the method returns true
      * than the opposit party does not comply the openADR rules.
      * @param obj given received message object
-     * @param sendedMsgMap contains all sended Messages which have not received a reply
+     * @param sentMsgMap contains all sent Messages which have not received a reply
      * @return true...It violates constraints, false...It does not violate constraints.
      */
-    public abstract String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap);
+    public abstract String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap);
 
-    protected String checkConstraints(HashMap<String, OADRMsgObject> sendedMsgMap, boolean checkIfRegistered,
+    /**
+     * see second checkConstraintsExtendedOriginMsgTypes method.
+     * The only difference is that only one originMsgType instead of multiple types is checked.
+     */
+    protected String checkConstraints(HashMap<String, OADRMsgObject> sentMsgMap, boolean checkIfRegistered,
                                       String requestID, String originMsgType, String venID,
                                       String registrationID){
         List<String> originMsgTypes = new ArrayList<>();
         originMsgTypes.add(originMsgType);
 
-        return checkConstraintsExtendedOriginMsgTypes(sendedMsgMap, checkIfRegistered,requestID,originMsgTypes,venID,registrationID);
+        return checkConstraintsExtendedOriginMsgTypes(sentMsgMap, checkIfRegistered,requestID,originMsgTypes,venID,registrationID);
     }
 
     /**
-     * This method copes all similar constraints for the received messages.
-     * The parameter specify the needed constraints.
-     * @param sendedMsgMap contains all sended messages which are not acknowledged yet
+     * This method copes with all similar constraints checks for the received messages.
+     * The parameters specify the needed constraints.
+     * @param sentMsgMap contains all sent messages which are not acknowledged yet
      * @param checkIfRegistered true...check if the connector is registered, false..otherwise
-     * @param requestID check if there is an sended message which has the given message id, null means do not check this constraint
-     * @param originMsgTypes this paramter depends in the requestID parameter. If not null it checks if the sended message has this given type
+     * @param requestID check if there is a sent message which has the given message id, null means do not check this constraint
+     * @param originMsgTypes this parameter depends in the requestID parameter. If not null it checks if the sent message has this given type
      * @param venID check if this ven id matches with the registered one
      * @param registrationID check if this registration id matches with the registered one
-     * @return
+     * @return true...constraints are violated, otherwise...everything is fine
      */
-    protected String checkConstraintsExtendedOriginMsgTypes(HashMap<String, OADRMsgObject> sendedMsgMap, boolean checkIfRegistered,
+    protected String checkConstraintsExtendedOriginMsgTypes(HashMap<String, OADRMsgObject> sentMsgMap, boolean checkIfRegistered,
                                       String requestID, List<String> originMsgTypes, String venID,
                                       String registrationID){
         if(checkIfRegistered && OADRConInfo.getVENId() == null){
@@ -81,11 +85,11 @@ public abstract class ProcessorReceivedMsg {
         }
 
         if(requestID != null){
-            if(sendedMsgMap.get(requestID) == null) {
+            if(sentMsgMap.get(requestID) == null) {
                 return "452";
             }
 
-            OADRMsgObject originMsg = sendedMsgMap.get(requestID);
+            OADRMsgObject originMsg = sentMsgMap.get(requestID);
             boolean properType = false;
             for (String originMsgType : originMsgTypes){
                 if(originMsgType.equals(originMsg.getMsgType())){
@@ -112,11 +116,12 @@ public abstract class ProcessorReceivedMsg {
     }
 
     /**
-     * This method removes for a received reply the origin message from the given map
+     * The origin message from a received is removed from the given map by this method.
+     * This method should be called after no more methods are called from this class for a certain message.
      * @param obj reply
-     * @param sendedMsgMap given map
+     * @param sentMsgMap given map
      */
-    public abstract void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap);
+    public abstract void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap);
 
     //-------------------------------static part ------------------------------------------------//
     static public HashMap<String, String> respValueText;

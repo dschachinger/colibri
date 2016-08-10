@@ -32,19 +32,20 @@ public class ColibriClient {
     private ProcessReceivedMsg processMessage;
     // This object bridges the colibri part with the openADR part and vice-versa.
     private OpenADRColibriBridge bridge;
-    // This HaspMap stores all the sended messages as long as no reply is received
-    private Map<String, ColibriMessage> sendedMsgToColCore;
+    // This HaspMap stores all the sent messages as long as no reply is received
+    private Map<String, ColibriMessage> sentMsgToColCore;
     private JAXBContext jaxbContext;
     private Marshaller jaxbMarshaller;
     private Unmarshaller jaxbUnmarshaller;
-
+    // This object monitors the timing of the received messages.
     private TimeoutWatcher timeoutWatcher;
 
     private Logger logger = LoggerFactory.getLogger(ColibriClient.class);
 
-    /* This HashMap contains all services which the semantic core knows.
-        The key is the colibri core service and the value is the follow service for the connector.
-        This follow service is used the inform the connector how it should react on new information at the colibri core service. */
+    /* This HashMap contains all possible services.
+        The key is the colibri core service and the value is the service handler.
+        This handler stores if the core knows/observes a certain service, name of the follow service and
+        it is also responsible to inform the colibri core about new values from an observed service. */
     private HashMap<String, ServiceHandler> servicesMap;
 
     // true...when the connector is proper registered, false...otherwise
@@ -55,6 +56,7 @@ public class ColibriClient {
     // This string represents the base URL for all services
     private String serviceBaseURL;
 
+    // This url defines the web socket address to the colibri core
     String colibriCoreURL;
 
     private boolean localAtmosphereClient;
@@ -101,7 +103,7 @@ public class ColibriClient {
             e.printStackTrace();
         }
         genSendMessage = new GenerateSendMessage(jaxbMarshaller);
-        sendedMsgToColCore = Collections.synchronizedMap(new HashMap<String, ColibriMessage>());
+        sentMsgToColCore = Collections.synchronizedMap(new HashMap<String, ColibriMessage>());
         timeoutWatcher = TimeoutWatcher.initColibriTimeoutWatcher(timeoutSec*1000, this);
         this.processMessage = new ProcessReceivedMsg(this);
         this.bridge = bridge;
@@ -114,7 +116,7 @@ public class ColibriClient {
     }
 
     /**
-     * @return a list of all services which the colibri core observes.
+     * @return a map of all services handlers.
      */
     public HashMap<String, ServiceHandler> getServicesMap() {
         return servicesMap;
@@ -130,7 +132,7 @@ public class ColibriClient {
      */
     public void sendColibriMsg(ColibriMessage sendMsg){
         if(!sendMsg.getMsgType().equals(MsgType.STATUS)){
-            sendedMsgToColCore.put(sendMsg.getHeader().getMessageId(), sendMsg);
+            sentMsgToColCore.put(sendMsg.getHeader().getMessageId(), sendMsg);
             timeoutWatcher.addMonitoredMsg(sendMsg.getHeader().getMessageId());
         }
         try {
@@ -222,8 +224,8 @@ public class ColibriClient {
         sendColibriMsg(genSendMessage.gen_UPDATE(sparqlUpdate));
     }
 
-    public Map<String, ColibriMessage> getSendedMsgToColCore() {
-        return sendedMsgToColCore;
+    public Map<String, ColibriMessage> getSentMsgToColCore() {
+        return sentMsgToColCore;
     }
 
     public void setRegistered(boolean registered) {

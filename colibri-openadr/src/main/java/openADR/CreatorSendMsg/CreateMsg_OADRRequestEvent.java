@@ -15,7 +15,7 @@ public class CreateMsg_OADRRequestEvent extends CreateSendMsg {
 
     /**
      * Creates a message object with an openADR payload OadrRequestEvent in it.
-     * @param info message info: contains the needed information to create a openADR payload
+     * @param info message info: contains the needed information to create an openADR payload
      * @return
      */
     @Override
@@ -41,7 +41,7 @@ public class CreateMsg_OADRRequestEvent extends CreateSendMsg {
 
     /**
      * This method returns the message type name for an oadrRequestEvent message
-     * @return supported messege type
+     * @return supported message type
      */
     @Override
     public String getMsgType() {

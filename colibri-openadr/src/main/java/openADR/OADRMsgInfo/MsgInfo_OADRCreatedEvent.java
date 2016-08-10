@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrCreatedEvent message.
+ * This class holds the important information for an oadrCreatedEvent message.
  */
 public class MsgInfo_OADRCreatedEvent implements OADRMsgInfo {
     // optIn or optOut responses for received events
@@ -38,7 +38,7 @@ public class MsgInfo_OADRCreatedEvent implements OADRMsgInfo {
         private String requestID;
         // An ID value that identifies a specific DR event instance.
         private String eventID;
-        // Incremented each time an event is modified.
+        // Incremented each time when an event is modified.
         private long modificationNumber;
         // optIn or optOut of an event, or used to indicate the type of opt schedule
         private OptTypeType optType;

@@ -13,14 +13,14 @@ import java.util.Date;
 
 /**
  * Created by georg on 29.06.16.
- * This static class is used to establish a websocket connecton to the semantic core.
+ * This static class is used to establish a websocket connection to the semantic core.
  */
 public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
 
     private static Logger logger = LoggerFactory.getLogger(InitWebsocket.class);
 
     /**
-     * This static class is used to establish for a given colibri connector a websocket connecton to the semantic core.
+     * This static class is used to establish a websocket connection from the given colibri connector to the semantic core.
      * @param colClient given colibri connector
      * @return socket object to communicate with the core
      * @throws IOException
@@ -155,25 +155,5 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
 
 
         return socket;
-        /*
-        logger.info("Choose Name: ");
-        String name = null;
-        String a = "";
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (!(a.equals("quit"))) {
-            try {
-                a = br.readLine();
-
-                if (name == null) {
-                    name = a;
-                }
-                socket.fire(new Message(name, a));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        socket.close();
-        return null;
-        */
     }
 }

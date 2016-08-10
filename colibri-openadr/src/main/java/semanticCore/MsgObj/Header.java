@@ -6,12 +6,13 @@ import java.util.Date;
 
 /**
  * Created by georg on 28.06.16.
+ * Objects from this class represent the header of a colibri message.
  */
 public class Header {
     /* Message-Id (mandatory) is used to identify a message. This identifier is unique within the scope
         of the message sender. Any alphanumeric character (i.e. letters and digits) can be used. */
     private String messageId;
-    /* Content-Type (mandatory) represents the MIME type of the message content. Depending on the
+    /* Content-Type (mandatory) represents the MIME type of the message content. The allowed content type depends on the
         message type */
     private ContentType contentType;
     /* Date (optional) shows the date and time that the message was originated using ISO 8601. The
@@ -21,9 +22,9 @@ public class Header {
     /* Expires (optional) gives the date and time after which the message is run off. The format is the
         same as for the date header field. */
     private Date expires;
-    /* Reference-Id (optional/mandatory) is used to specify the identifier of a preceding message the
+    /* Reference-Id (optional/mandatory) is used to specify the identifier of a preceding message where the
         current message is referred to. For example, the reference identifier within an STA message
-        refers to the message that led to this status message. This header field is usually optional.
+        refers to the message that led to this status message. This header field usually is optional.
         However, if a message is sent in response to another message (e.g. PUT after a GET call, QRE in
         response to a QUE message), this header field is mandatory. */
     private String referenceId;

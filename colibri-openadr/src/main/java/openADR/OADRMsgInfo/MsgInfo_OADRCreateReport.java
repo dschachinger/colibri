@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrCreateReport message.
+ * This class holds the important information for an oadrCreateReport message.
  */
 public class MsgInfo_OADRCreateReport implements OADRMsgInfo {
     List<ReportRequest> reportRequests;

@@ -2,11 +2,11 @@ package openADR.OADRMsgInfo;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrRequestEvent message.
+ * This class holds the important information for an oadrRequestEvent message.
  */
 public class MsgInfo_OADRRequestEvent implements OADRMsgInfo {
 
-    // The highest amount of events which VTN will return in his oadrDistributeEvent message
+    // This varibale defines the highest amount of events which VTN will return in his oadrDistributeEvent message
     private Long replyLimit;
 
     public Long getReplyLimit() {

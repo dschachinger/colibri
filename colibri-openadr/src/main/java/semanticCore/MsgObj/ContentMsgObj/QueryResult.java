@@ -6,12 +6,13 @@ import java.util.List;
 
 /**
  * Created by georg on 25.07.16.
- * Objects from this class hold the result of an sparql query
+ * Objects from this class hold the result of a sparql query
  */
 public class QueryResult {
+    // all properties within a query result
     List<String> properties;
     List<Result> results;
-    // true...result is from an aks query (result is only true or false)
+    // true...result is from an ask query (result is only true or false)
     boolean isFromASKQuery;
     // ask query result, null or otherwise...no result,
     Boolean ASKQueryResult;

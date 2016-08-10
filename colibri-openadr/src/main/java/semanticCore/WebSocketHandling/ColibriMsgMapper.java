@@ -8,7 +8,7 @@ import semanticCore.MsgObj.MsgType;
 
 /**
  * Created by georg on 29.06.16.
- * This static class is used to transform a colibri message string into an colibri message object.
+ * This static class is used to transform a colibri message string into a colibri message object.
  * By the way, POJO stands for "pretty old java object"
  */
 public class ColibriMsgMapper {
@@ -17,7 +17,7 @@ public class ColibriMsgMapper {
     static String newLine = "\n";
 
     /**
-     * This static method transfoms a given colibri message string into an colibri message object.
+     * This static method transfoms a given colibri message string into a colibri message object.
      * @param msg given colibri message string
      * @return colibri message object
      */
@@ -59,16 +59,16 @@ public class ColibriMsgMapper {
     }
 
     /**
-     * This static method transfoms a given colibri message header string into an colibri message header object.
+     * This static method transfoms a given colibri message header string into a colibri message header object.
      * @param msg given colibri message header string
      * @return colibri message header object
      */
     private static Header parseMsgToHeader(String msg){
         Header header = new Header();
 
-        String[] splitedMsg = msg.split(newLine);
+        String[] splitMsg = msg.split(newLine);
 
-        for(String s : splitedMsg){
+        for(String s : splitMsg){
             String[] parts = s.split(":",2);
             String fieldType = parts[0].trim();
             String value = parts[1].trim();

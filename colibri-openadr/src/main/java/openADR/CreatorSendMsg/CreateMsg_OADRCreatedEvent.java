@@ -19,7 +19,7 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
 
     /**
      * Creates a message object with an openADR payload OadrCreatedEvent in it.
-     * @param info message info: contains the needed information to create a openADR payload
+     * @param info message info: contains the needed information to create an openADR payload
      * @return
      */
     @Override
@@ -27,7 +27,6 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
         MsgInfo_OADRCreatedEvent con_info = (MsgInfo_OADRCreatedEvent) info;
 
         OadrCreatedEvent msg = new OadrCreatedEvent();
-        // String reqID = OADRConInfo.getUniqueRequestId();
 
         msg.setSchemaVersion("2.0b");
 
@@ -65,7 +64,7 @@ public class CreateMsg_OADRCreatedEvent extends CreateSendMsg {
 
     /**
      * This method returns the message type name for an oadrCreatedEvent message
-     * @return supported messege type
+     * @return supported message type
      */
     @Override
     public String getMsgType() {

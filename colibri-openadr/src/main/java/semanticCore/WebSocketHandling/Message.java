@@ -17,9 +17,7 @@ public class Message {
     }
 
     public Message(String message) {
-        //this.author = author;
         this.message = message;
-        //this.time = new Date().getTime();
     }
 
     public String getMessage() {

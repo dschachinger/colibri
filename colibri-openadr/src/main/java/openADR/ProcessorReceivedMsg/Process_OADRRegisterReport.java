@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class Process_OADRRegisterReport extends ProcessorReceivedMsg {
 
     /**
-     * This method generates the proper reply for a openADR message OadrRegisterReport.
+     * This method generates the proper reply for an openADR message OadrRegisterReport.
      * Return null, because there is no need to reply to this type of message.
      * @param obj generate reply for this message. The contained message type has to be OadrRegisterReport.
      * @param responseCode
@@ -36,10 +36,10 @@ public class Process_OADRRegisterReport extends ProcessorReceivedMsg {
 
     /**
      * This method returns an MsgInfo_OADRRegisterReport object.
-     * This object contains all needful information for a engery consumer from an OadrRegisterReport message.
+     * This object contains all needful information for an engery consumer from an OadrRegisterReport message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrRegisterReport.
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
@@ -50,11 +50,11 @@ public class Process_OADRRegisterReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrRegisterReport recMsg = (OadrRegisterReport)obj.getMsg();
         String venID = recMsg.getVenID();
 
-        return checkConstraints(sendedMsgMap, true, null,
+        return checkConstraints(sentMsgMap, true, null,
                 null, venID, null);
     }
 
@@ -62,7 +62,7 @@ public class Process_OADRRegisterReport extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
     }
 
     /**

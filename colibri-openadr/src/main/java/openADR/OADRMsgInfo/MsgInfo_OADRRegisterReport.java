@@ -5,10 +5,10 @@ import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrRegisterReport message.
+ * This class holds the important information for an oadrRegisterReport message.
  */
 public class MsgInfo_OADRRegisterReport implements OADRMsgInfo {
-    // contains all the report capabilities
+    // This list contains all the report capabilities
     private List<Report> reports;
 
     public MsgInfo_OADRRegisterReport(){

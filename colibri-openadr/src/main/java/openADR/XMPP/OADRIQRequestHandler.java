@@ -12,15 +12,15 @@ import org.jivesoftware.smack.packet.IQ;
  * Objects from this class are used to take a specific received message type
  */
 public class OADRIQRequestHandler implements IQRequestHandler {
-    // This variable signalize the supported message type or in other words the root element of the openADR message
+    // This variable signalizes the supported message type or in other words the root element of the openADR message
     private String elemName;
-    // This variable signalize the supported message namespace
+    // This variable signalizes the supported message namespace
     private String namespace;
-    // This variable signalize the supported iq type
+    // This variable signalizes the supported iq type
     private IQ.Type type;
-    // This variable signalize the incoming messages are processed. asynchronously or synchronously
+    // This variable signalizes the incoming messages are processed. asynchronously or synchronously
     private Mode mode;
-    // Defines for which channel this OADRIQRequestHandler object is used
+    // Defines which channel uses this OADRIQRequestHandler object
     private XMPPChannel channel;
     // This manager transfoms XML messages into java objects
     protected JAXBManager jaxbManager;

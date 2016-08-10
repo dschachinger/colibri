@@ -30,7 +30,7 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
     private Logger logger = LoggerFactory.getLogger(Process_OADRDistributeEvent.class);
 
     /**
-     * This method generates the proper reply for a openADR message OadrDistributeEvent.
+     * This method generates the proper reply for an openADR message OadrDistributeEvent.
      * @param obj generate reply for this message. The contained message type has to be OadrDistributeEvent.
      * @param responseCode
      * @return proper reply
@@ -42,10 +42,10 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
 
     /**
      * This method returns an MsgInfo_OADRDistributeEvent object.
-     * This object contains all needful information for a engery consumer from an OadrDistributeEvent message.
+     * This object contains all needful information for an engery consumer from an OadrDistributeEvent message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrDistributeEvent.
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
@@ -108,7 +108,7 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrDistributeEvent recMsg = (OadrDistributeEvent)obj.getMsg();
         String requestID = recMsg.getEiResponse() != null ? recMsg.getEiResponse().getRequestID() : null;
         String originMsgType = "oadrRequestEvent";
@@ -116,7 +116,7 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
         if(!recMsg.getVtnID().equals(OADRConInfo.getVTNId())){
             return "452";
         }
-        return checkConstraints(sendedMsgMap, true, requestID,
+        return checkConstraints(sentMsgMap, true, requestID,
                 originMsgType, null, null);
     }
 
@@ -124,10 +124,10 @@ public class Process_OADRDistributeEvent extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
         OadrDistributeEvent recMsg = (OadrDistributeEvent)obj.getMsg();
         if(recMsg.getEiResponse() != null){
-            sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
+            sentMsgMap.remove(recMsg.getEiResponse().getRequestID());
         }
     }
 

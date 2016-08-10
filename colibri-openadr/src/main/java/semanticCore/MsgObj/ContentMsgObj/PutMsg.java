@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * Created by georg on 01.07.16.
- * Objects from this class represents the content of an ADD Message
+ * Objects from this class represent the content of a PUT Message
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="RDF")

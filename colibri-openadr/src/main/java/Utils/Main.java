@@ -149,7 +149,7 @@ public class Main {
                 case 54: ven.sendExampleOadrRequestEvent();
                     break;
                 case 55:
-                    // good possibility to check if correct registered
+                    // good possibility to check if correctly registered
                     logger.info("registraionID: " + OADRConInfo.getRegistrationId());
                     break;
                 case 56:
@@ -159,7 +159,7 @@ public class Main {
                     ven.sendExampleOadrUpdateReport();
                     break;
                 case 58:
-                    // good possibility to check if correct registered
+                    // good possibility to check if correctly registered
                     logger.info("openADR venID: " + OADRConInfo.getVENId());
                     break;
                 default:
@@ -257,95 +257,3 @@ public class Main {
 
     }
 }
-
-/*
-        Scanner reader = new Scanner(System.in);  // Reading from System.in
-
-        OADR2VEN ven = new OADR2VEN(bridge);
-
-        int n;
-        loop : while (true){
-            System.out.println("Enter a action number: ");
-            n = reader.nextInt();
-            switch (n){
-                case 1: ven.sendExampleOadrQueryRegistration();
-                    break;
-                case 2: ven.sendExampleOadrCreatePartyRegistration();
-                    break;
-                case 3: ven.sendExampleOadrCancelPartyRegistration();
-                    break;
-                case 4: ven.sendExampleOadrRequestEvent();
-                    break;
-                case 5:
-                    System.out.println("registraionID: " + OADRConInfo.getRegistrationId());
-                    break;
-                case 6:
-                    ven.sendExampleOadrRegisterReport();
-                    break;
-                case 7:
-                    ven.sendExampleOadrUpdateReport();
-                    break;
-                default:
-                    break loop;
-            }
-        }
-
-        ven.terminate();
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        try {
-            testDate = sdf.parse("2016-06-06T11:11:11Z");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        Date min1 = TimeDurationConverter.addDurationToDate(testDate, 60);
-        Date min2 = TimeDurationConverter.addDurationToDate(testDate, 120);
-        Date min3 = TimeDurationConverter.addDurationToDate(testDate, 180);
-        Date min4 = TimeDurationConverter.addDurationToDate(testDate, 240);
-        Date min5 = TimeDurationConverter.addDurationToDate(testDate, 360);
-        Date min6 = TimeDurationConverter.addDurationToDate(testDate, 420);
-        Date min7 = TimeDurationConverter.addDurationToDate(testDate, 480);
-        Date min8 = TimeDurationConverter.addDurationToDate(testDate, 540);
-
-        // logger.info("aussehen: " + sdf.format(min1));
-
-        MsgInfo_OADRDistributeEvent msgInfo_oadrDistributeEvent = new MsgInfo_OADRDistributeEvent();
-        Pair<Date, Date> inter1 = new Pair<>(min1, min2);
-        MsgInfo_OADRDistributeEvent.Event msg1 = msgInfo_oadrDistributeEvent.getNewEvent();
-        msg1.setEventID("1");
-        Pair<Date, Date> inter2 = new Pair<>(min3, min4);
-        MsgInfo_OADRDistributeEvent.Event msg2 = msgInfo_oadrDistributeEvent.getNewEvent();
-        msg2.setEventID("2");
-        Pair<Date, Date> inter3 = new Pair<>(min5, min6);
-        MsgInfo_OADRDistributeEvent.Event msg3 = msgInfo_oadrDistributeEvent.getNewEvent();
-        msg3.setEventID("3");
-
-        /*Pair<Date, Date> searchInter1 = new Pair<>(min1,min6);
-        Pair<Date, Date> searchInter2 = new Pair<>(min2,min6);
-        Pair<Date, Date> searchInter3 = new Pair<>(min3,min4);
-        Pair<Date, Date> searchInter4 = new Pair<>(min3,min5);
-        Pair<Date, Date> searchInter5 = new Pair<>(min3,null);
-        Pair<Date, Date> searchInter6 = new Pair<>(null,min5);
-
-        bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter1, msg1);
-        bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter2, msg2);
-        bridge.addOpenADREvent("http://www.colibri.org/openADRConnector/Price/Service", inter3, msg3);
-
-        bridge.getOpenADREvents("test", searchInter1);
-        bridge.getOpenADREvents("test", searchInter2);
-        bridge.getOpenADREvents("test", searchInter3);
-        bridge.getOpenADREvents("test", searchInter4);
-        bridge.getOpenADREvents("test", searchInter5);
-        bridge.getOpenADREvents("test", searchInter6);*/
-
-        /*TimeoutWatcher timeoutWatcher = new TimeoutWatcher(10000);
-        timeoutWatcher.addMonitoredMsg("1");
-        timeoutWatcher.addMonitoredMsg("2");
-        timeoutWatcher.replyReceivedForMsg("2");
-        timeoutWatcher.addMonitoredMsg("3");
-
-
-//System.exit(1);
-
- */

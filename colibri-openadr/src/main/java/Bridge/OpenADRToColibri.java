@@ -27,7 +27,7 @@ public class OpenADRToColibri {
     private Logger logger = LoggerFactory.getLogger(OpenADRToColibri.class);
 
     /**
-     * This method returns for a given openADR message the reply for the colibri side.
+     * For a given openADR message this method returns the reply for the colibri side.
      * This method is able to handle all openADR message types which are relevant for the colibri side.
      *
      * @param msg given openADR message
@@ -35,22 +35,22 @@ public class OpenADRToColibri {
      * @return list which contains all the colibri reply messages
      */
     public List<ColibriMessage> convertOpenADRMsg(OADRMsgInfo msg, OpenADRColibriBridge bridge){
-        List<ColibriMessage> sendToColibriMsges = null;
+        List<ColibriMessage> sendToColibriMessages = null;
 
         String type = msg.getMsgType();
 
         switch (type){
             case "oadrDistributeEvent":
-                sendToColibriMsges = handle_DistributeEvent(msg, bridge);
+                sendToColibriMessages = handle_DistributeEvent(msg, bridge);
                 break;
         }
 
-        return sendToColibriMsges;
+        return sendToColibriMessages;
 
     }
 
     /**
-     * This method returns for a given openADR message the reply for the colibri side.
+     * For a given openADR message this method returns the reply for the colibri side.
      * This method is able to handle the openADR distribute event message types.
      *
      * @param msg given openADR message
@@ -90,6 +90,12 @@ public class OpenADRToColibri {
         return colibriMessages;
     }
 
+    /**
+     * This method converts the given openADR events into the put message content format.
+     * @param events given openADR events
+     * @param bridge
+     * @return content for a put message
+     */
     public PutMsg convertOpenADREventsToColibriPUTContent(List<MsgInfo_OADRDistributeEvent.Event> events, OpenADRColibriBridge bridge){
         PutMsg putMsg = new PutMsg();
         int dataPointNumber = 1;
@@ -108,7 +114,7 @@ public class OpenADRToColibri {
 
             MsgInfo_OADRDistributeEvent.Signal signal = event.getSignals().get(0);
 
-            /* If there is a need to sort the intervals
+            /* If there is a need to sort the intervals use this code snippet.
             Collections.sort(signal.getIntervals(), new Comparator<Interval>() {
                 @Override
                 public int compare(Interval o1, Interval o2) {
@@ -125,9 +131,9 @@ public class OpenADRToColibri {
             descriptionDataValue = addFirstLevelDescElemToGivenPutMsg(putMsg, serviceBaseURL, event, eventType);
 
 
-            // insert for each openADR interval element the signal value and the time interval
+            // To insert the signal value and the time interval for each openADR interval element.
             for (Interval interval : signal.getIntervals()) {
-                // add reference for new datavalue element
+                // add reference for new data value element
                 descriptionDataValue.getHasDataValue().add(new HasProperty().withRessource(serviceBaseURL + "/" + eventType + "/" + "datavalue" + dataPointNumber));
                 date = addSecondLevelDescElemToGivenPutMsg(putMsg, serviceBaseURL, event.getEventID(), dataPointNumber, date, interval, eventType, signal);
                 dataPointNumber++;
@@ -136,6 +142,11 @@ public class OpenADRToColibri {
         return putMsg;
     }
 
+    /**
+     * This method detects which signal type was used and returns this inforamtion within an EventType object.
+     * @param signalType
+     * @return
+     */
     private EventType getEventTypeFromSignalType(SignalTypeEnumeratedType signalType){
         EventType eventType;
 
@@ -169,13 +180,22 @@ public class OpenADRToColibri {
                 eventType.setMode(EventType.Mode.MULTIPLIER);
                 break;
             default:
-                logger.error("openADR event type " + signalType + " not unknown, will not be forwared to colibri core");
+                logger.error("openADR event type " + signalType + " not unknown, will not be forwarded to colibri core");
                 return null;
         }
 
         return eventType;
     }
 
+    /**
+     * The message of a colibri put message contains nested data values.
+     * This method adds the first level data values into a given PUT message.
+     * @param putMsg given put message
+     * @param serviceBaseURL
+     * @param event gets the information for the data values from this event
+     * @param eventType
+     * @return the description element of the first level data value
+     */
     private Description addFirstLevelDescElemToGivenPutMsg(PutMsg putMsg, String serviceBaseURL, MsgInfo_OADRDistributeEvent.Event event, EventType eventType){
         Description descriptionDataValue = new Description();
         Description description;
@@ -190,20 +210,33 @@ public class OpenADRToColibri {
         // insert eventID
         description = new Description();
         description.setAbout(serviceBaseURL+ "/" + event.getEventID()+"/"+eventType+"/"+"value1");
-        description.setValue(new Value().withDatatype("&xsd;string").withValue(event.getEventID()));
+        description.setValue(new Value().withDataType("&xsd;string").withValue(event.getEventID()));
         description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+eventType+"/"+"ServiceParameter1-2"));
         putMsg.getDescriptions().add(description);
 
         // insert creation date of the openADR distribute message
         description = new Description();
         description.setAbout(serviceBaseURL+ "/" + event.getEventID()+"/"+eventType+"/"+"value2");
-        description.setValue(new Value().withDatatype("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(event.getCreatedDateTime()).toXMLFormat()));
+        description.setValue(new Value().withDataType("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(event.getCreatedDateTime()).toXMLFormat()));
         description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+eventType+"/"+"ServiceParameter1-2"));
         putMsg.getDescriptions().add(description);
 
         return descriptionDataValue;
     }
 
+    /**
+     * The message of a colibri put message contains nested data values.
+     * This method adds the second level data values into a given PUT message.
+     * @param putMsg given put message
+     * @param serviceBaseURL
+     * @param eventID the corresponding event id
+     * @param elemNumber the position number of the inserted elements
+     * @param startDate start date of the openADR signal interval
+     * @param interval duration of the interval
+     * @param eventType
+     * @param signal the corresponding openADR signal, which consists of multiple signal intervals
+     * @return the end date of the openADR signal interval
+     */
     private Date addSecondLevelDescElemToGivenPutMsg(PutMsg putMsg, String serviceBaseURL, String eventID, int elemNumber, Date startDate, Interval interval, EventType eventType, MsgInfo_OADRDistributeEvent.Signal signal){
         Description description;
 
@@ -232,16 +265,16 @@ public class OpenADRToColibri {
         // insert signal value
         description = new Description();
         description.setAbout(serviceBaseURL+ "/" + eventID+"/"+eventType+"/"+"value"+elemNumber+"-1");
-        description.setValue(new Value().withDatatype("&xsd;decimal").withValue(sigValue + ""));
+        description.setValue(new Value().withDataType("&xsd;decimal").withValue(sigValue + ""));
         description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+eventType+"/"+"ServiceParameter1-2"));
         putMsg.getDescriptions().add(description);
 
         // insert time interval
         description = new Description();
         description.setAbout(serviceBaseURL+ "/" + eventID+"/"+eventType+"/"+"value"+elemNumber+"-2");
-        description.setMin(new Value().withDatatype("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(startDate).toXMLFormat()));
+        description.setMin(new Value().withDataType("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(startDate).toXMLFormat()));
         startDate = TimeDurationConverter.addDurationToDate(startDate, interval.getDurationSec());
-        description.setMax(new Value().withDatatype("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(startDate).toXMLFormat()));
+        description.setMax(new Value().withDataType("&xsd;dateTime").withValue(TimeDurationConverter.date2Ical(startDate).toXMLFormat()));
         description.getHasParameter().add(new HasProperty().withRessource(serviceBaseURL+"/"+eventType+"/"+"ServiceParameter2-2"));
         putMsg.getDescriptions().add(description);
 

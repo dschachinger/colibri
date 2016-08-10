@@ -5,13 +5,14 @@ import java.util.List;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrUpdateReport message.
+ * This class holds the important information for an oadrUpdateReport message.
  */
 public class MsgInfo_OADRUpdateReport implements OADRMsgInfo {
 
+    // A meta report shows the report possibilities of an openADR party
     private boolean isMetareport = false;
 
-    // contains the data points and information about it (e.g. quality)
+    // This list contains the data points and information about it (e.g. quality)
     private List<Report> reports;
 
     public MsgInfo_OADRUpdateReport(){

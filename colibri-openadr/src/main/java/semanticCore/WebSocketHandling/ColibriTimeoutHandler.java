@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * Created by georg on 20.07.16.
-
+ * This class defines how to react after a colibri message timeout.
  */
 public class ColibriTimeoutHandler implements TimeoutHandler<ColibriClient, ColibriMessage> {
     private Logger logger = LoggerFactory.getLogger(ColibriTimeoutHandler.class);

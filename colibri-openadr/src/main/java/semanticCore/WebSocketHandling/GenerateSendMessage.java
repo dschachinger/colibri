@@ -24,6 +24,8 @@ public class GenerateSendMessage {
 
     Marshaller jaxbMarshaller;
     private Logger logger = LoggerFactory.getLogger(GenerateSendMessage.class);
+
+    // This variable is used to generate a unique message id.
     static int msgID = 0;
     
     public GenerateSendMessage(Marshaller jaxbMarshaller){
@@ -57,7 +59,7 @@ public class GenerateSendMessage {
         description.getType().add(type);
         Address connectorAddress = new Address();
         connectorAddress.setAddress(WebSocketConInfo.getRegConnectorAddress());
-        connectorAddress.setDatatype("&xsd;string");
+        connectorAddress.setDataType("&xsd;string");
         description.setConnectorAddress(connectorAddress);
         HasProperty hasTechnologyProtocol = new HasProperty();
         hasTechnologyProtocol.setResource(WebSocketConInfo.getRegTechnologyProtocolResourceName());
@@ -97,7 +99,7 @@ public class GenerateSendMessage {
     }
 
     /**
-     * This method returns a add service colibri message.
+     * This method returns an add service colibri message.
      *
      * This message is used to inform the receiver about new services that are
      * available at the sender of the message. This information can be used by the
@@ -133,12 +135,12 @@ public class GenerateSendMessage {
         serviceDescription.setAbout(serviceURL);
         serviceDescription.getType().add(new Type().withRessource("&colibri;GridData"));
         serviceDescription.getType().add(new Type().withRessource("&colibri;DataService"));
-        Address serviceAdress = new Address();
-        serviceAdress.setDatatype("&xsd;string");
-        serviceAdress.setAddress(XMPPConInfo.getVTNFullAdrName());
-        serviceDescription.setServiceAddress(serviceAdress);
+        Address serviceAddress = new Address();
+        serviceAddress.setDataType("&xsd;string");
+        serviceAddress.setAddress(XMPPConInfo.getVTNFullAdrName());
+        serviceDescription.setServiceAddress(serviceAddress);
         Address identifier = new Address();
-        identifier.setDatatype("&xsd;string");
+        identifier.setDataType("&xsd;string");
         identifier.setAddress("openADR_set"+serviceDataConfig.getEventType());
         serviceDescription.setIdentifier(identifier);
         serviceDescription.setHasDataConfiguration(new HasProperty().withRessource(serviceDataConfig.getServiceConfig()));
@@ -158,12 +160,12 @@ public class GenerateSendMessage {
         serviceDescription.setAbout(serviceDataConfig.getFollowUpServiceDataConfig().getServiceName());
         serviceDescription.getType().add(new Type().withRessource("&colibri;BuildingData"));
         serviceDescription.getType().add(new Type().withRessource("&colibri;DataService"));
-        serviceAdress = new Address();
-        serviceAdress.setDatatype("&xsd;string");
-        serviceAdress.setAddress(XMPPConInfo.getVTNFullAdrName());
-        serviceDescription.setServiceAddress(serviceAdress);
+        serviceAddress = new Address();
+        serviceAddress.setDataType("&xsd;string");
+        serviceAddress.setAddress(XMPPConInfo.getVTNFullAdrName());
+        serviceDescription.setServiceAddress(serviceAddress);
         identifier = new Address();
-        identifier.setDatatype("&xsd;string");
+        identifier.setDataType("&xsd;string");
         identifier.setAddress("openADR_accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType());
         serviceDescription.setIdentifier(identifier);
         serviceDescription.setHasDataConfiguration(
@@ -181,22 +183,27 @@ public class GenerateSendMessage {
         description.setAbout(serviceBaseURL+"/accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType()+"/"+"OptOut");
         description.getType().add(new Type().withRessource("&colibri;AbsoluteState"));
         description.getType().add(new Type().withRessource("&colibri;DiscreteState"));
-        description.setName(new Value().withValue("optOut").withDatatype("&xsd;string"));
-        description.setValue(new Value().withValue("false").withDatatype("&xsd;boolean"));
+        description.setName(new Value().withValue("optOut").withDataType("&xsd;string"));
+        description.setValue(new Value().withValue("false").withDataType("&xsd;boolean"));
         addMsg.getDescriptions().add(description);
 
         description = new Description();
         description.setAbout(serviceBaseURL+"/accept"+serviceDataConfig.getFollowUpServiceDataConfig().getEventType() +"/"+"OptIn");
         description.getType().add(new Type().withRessource("&colibri;AbsoluteState"));
         description.getType().add(new Type().withRessource("&colibri;DiscreteState"));
-        description.setName(new Value().withValue("optIn").withDatatype("&xsd;string"));
-        description.setValue(new Value().withValue("true").withDatatype("&xsd;boolean"));
+        description.setName(new Value().withValue("optIn").withDataType("&xsd;string"));
+        description.setValue(new Value().withValue("true").withDataType("&xsd;boolean"));
         addMsg.getDescriptions().add(description);
 
         ColibriMessage msg = new ColibriMessage(MsgType.ADD_SERVICE, header, transformPOJOToXML(addMsg), addMsg);
         return msg;
     }
 
+    /**
+     * This method adds from an given ServiceDataConfig the service description to a given add message.
+     * @param serviceDataConfig
+     * @param addMsg
+     */
     private void addServiceDescription(ServiceDataConfig serviceDataConfig, AddMsg addMsg){
         Description description = new Description();
         description.setAbout(serviceDataConfig.getServiceConfig());
@@ -211,6 +218,11 @@ public class GenerateSendMessage {
         addMsg.getDescriptions().add(description);
     }
 
+    /**
+     * This message adds from an given parameter list the resultant description to a given add message.
+     * @param parameters
+     * @param addMsg
+     */
     private void addParameter(List<ServiceDataConfig.Parameter> parameters, AddMsg addMsg){
         for(ServiceDataConfig.Parameter param : parameters){
             Description description = new Description();

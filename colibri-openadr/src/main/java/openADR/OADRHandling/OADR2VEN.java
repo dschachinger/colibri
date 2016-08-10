@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Created by georg on 02.06.16.
- * This class represents from the openADR standard the VEN party.
+ * This class represents the VEN party from the openADR standard.
  */
 public class OADR2VEN extends OADRParty {
 

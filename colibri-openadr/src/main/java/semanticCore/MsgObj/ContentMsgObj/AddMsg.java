@@ -21,7 +21,7 @@ public class AddMsg {
     @XmlElement(name = "Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private ServiceDescription normalServiceDescriptions;
 
-    // This describes a accept service on top level
+    // This describes an accept service on top level
     @XmlElement(name = "Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private ServiceDescription acceptServiceDescriptions;
 

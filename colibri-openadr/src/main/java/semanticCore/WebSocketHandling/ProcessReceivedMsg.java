@@ -50,20 +50,19 @@ public class ProcessReceivedMsg {
      */
     public Pair<Boolean, List<ColibriMessage>> processColMsg(ColibriMessage msg){
         MsgType type = msg.getMsgType();
-        boolean sendToOpenADR = false;
 
         ColibriMessage originMsg = null;
         if(msg.getHeader().getReferenceId() != null){
-            originMsg = colClient.getSendedMsgToColCore().get(msg.getHeader().getReferenceId());
+            originMsg = colClient.getSentMsgToColCore().get(msg.getHeader().getReferenceId());
             if (originMsg == null){
-                logger.error("unkown reference id");
+                logger.error("unknown reference id");
                 return new Pair<>(false, null);
             }
 
             if(!(msg.getMsgType().equals(MsgType.STATUS) &&
                     (originMsg.getMsgType().equals(MsgType.GET_DATA_VALUES) ||
                     originMsg.getMsgType().equals(MsgType.QUERY)))){
-                colClient.getSendedMsgToColCore().remove(msg.getHeader().getReferenceId());
+                colClient.getSentMsgToColCore().remove(msg.getHeader().getReferenceId());
             }
 
             msg.setOriginMessage(originMsg);
@@ -300,11 +299,11 @@ public class ProcessReceivedMsg {
             return new Pair<>(false, null);
         }
 
-
         List<String> reqProperties = new ArrayList<>();
 
         String originContent = msg.getOriginMessage().getContent().replace("\n", " ").replace("\r", " ");
 
+        // parse the requested properties from the sent query
         int index = originContent.toLowerCase().indexOf("select") + "select".length();
         int maxIndex = originContent.toLowerCase().indexOf("where");
         while (index != -1 && maxIndex != -1 && index < maxIndex){
@@ -316,7 +315,7 @@ public class ProcessReceivedMsg {
                     if (index < 0) {
                         break;
                     }
-                    // shift index to beginning of the property name
+                    // shift index to the beginning of the property name
                     index++;
 
                     int endIndex = originContent.indexOf(" ", index);
@@ -377,6 +376,11 @@ public class ProcessReceivedMsg {
         return reactMessages;
     }
 
+    /**
+     * This method finds its corresponding closing bracket for the first opening bracket in the given string.
+     * @param string
+     * @return
+     */
     private int endOuterBracketIndex(String string){
         int count = 0;
         for(int i = 0; i < string.length(); i++){
@@ -394,6 +398,13 @@ public class ProcessReceivedMsg {
         return -1;
     }
 
+    /**
+     * This method builds from a query result message a QueryResult object which allows an easy access to the information.
+     * @param msg query result message
+     * @param reactMessages This is a pair. The first element indicates if the openADR part should be informed about this message.
+     *                     The second element holds the messages which should be replied to the semantic core.
+     * @return QueryResult object
+     */
     public QueryResult convertQueryResult(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
         QueryResult queryResult = null;
         switch (msg.getHeader().getContentType()){
@@ -408,6 +419,14 @@ public class ProcessReceivedMsg {
         return queryResult;
     }
 
+    /**
+     * This method builds from a query result message where the content is in json format
+     *          a QueryResult object which allows an easy access to the information.
+     * @param msg query result message
+     * @param reactMessages This is a pair. The first element indicates if the openADR part should be informed about this message.
+     *                     The second element holds the messages which should be replied to the semantic core.
+     * @return QueryResult object
+     */
     private QueryResult handle_JSON_QUERY_RESULT(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
         logger.info("handle json");
 
@@ -430,12 +449,12 @@ public class ProcessReceivedMsg {
             }
 
             for(JsonElement jResult : jsonObject.getAsJsonObject("results").getAsJsonArray("bindings")){
-                JsonObject tupelObj = jResult.getAsJsonObject();
+                JsonObject tupleObj = jResult.getAsJsonObject();
                 Result result = new Result();
                 for(String property : queryResult.getProperties()){
-                    JsonObject tripel = tupelObj.getAsJsonObject(property);
-                    String propValue = tripel.getAsJsonPrimitive("value").getAsString();
-                    String propType = tripel.getAsJsonPrimitive("type").getAsString();
+                    JsonObject triple = tupleObj.getAsJsonObject(property);
+                    String propValue = triple.getAsJsonPrimitive("value").getAsString();
+                    String propType = triple.getAsJsonPrimitive("type").getAsString();
 
                     result.addBinding(property, propValue, propType);
 
@@ -456,6 +475,14 @@ public class ProcessReceivedMsg {
         return queryResult;
     }
 
+    /**
+     * This method builds from a query result message where the content is in xml format
+     *          a QueryResult object which allows an easy access to the information.
+     * @param msg query result message
+     * @param reactMessages This is a pair. The first element indicates if the openADR part should be informed about this message.
+     *                     The second element holds the messages which should be replied to the semantic core.
+     * @return QueryResult object
+     */
     private QueryResult handle_XML_QUERY_RESULT(ColibriMessage msg, Pair<Boolean, List<ColibriMessage>> reactMessages){
         logger.info("handle xml");
 

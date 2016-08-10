@@ -30,8 +30,8 @@ public class TimeDurationConverter {
 
 
     /**
-     * This method returns a Date object. This object is according to the values of the given XCal Date String assigned.
-     * The method expect that the XCal Date String is in UTC timezone.
+     * This method returns a Date object. This object is assigned according to the values of the given XCal Date String.
+     * The method expects that the XCal Date String is in UTC timezone.
      * @param icalDate ical Date String
      * @return date object
      */
@@ -51,6 +51,12 @@ public class TimeDurationConverter {
         return d;
     }
 
+    /**
+     * This method returns a Date object. This object is assigned according to the values of the given XCal time String.
+     * The method expects that the XCal Date String is in UTC timezone.
+     * @param icalDate ical Date String
+     * @return date object
+     */
     public static Date xmlTimeToDateObj(String xmlTime){
         DateFormat sdf = new SimpleDateFormat("HH:mm:ss'Z'");
         sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -66,7 +72,7 @@ public class TimeDurationConverter {
 
 
     /**
-     * This method transforms a given data object into an XMLGregorianCalendar.
+     * This method transforms a given data object into a XMLGregorianCalendar.
      * The returned time is in UTC timezone
      * @param date given data object
      * @return date in XCal Format in UTC
@@ -86,9 +92,9 @@ public class TimeDurationConverter {
     }
 
     /**
-     * Takes a long of seconds and converts it into an XCal string
+     * This method converts the given seconds into an XCal string
      *
-     * @param seconds - The number of seconds required by the String. Only positive allowed
+     * @param seconds - The number of seconds required by the String. Only positive values allowed
      * @return the String properly formatted for XCal with 0 values omitted
      */
     public static String createXCalString(long seconds){
@@ -164,9 +170,9 @@ public class TimeDurationConverter {
     }
 
     /**
-     * Get a diff between two dates
-     * @param date1 the oldest date
-     * @param date2 the newest date
+     * Get the difference between two dates
+     * @param date1 the older date
+     * @param date2 the newer date
      * @param timeUnit the unit in which you want the diff
      * @return the diff value, in the provided unit
      */
@@ -175,8 +181,14 @@ public class TimeDurationConverter {
         return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
     }
 
+    /**
+     * This method copies the given date, adds the given seconds to the new date and returns it.
+     * @param date given date
+     * @param durSec given seconds
+     * @return date with added seconds
+     */
     public static Date addDurationToDate(Date date, long durSec){
-        Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone and locale.
+        Calendar calendar = Calendar.getInstance(); // gets a calendar using the default time zone.
         calendar.setTime(date);
         calendar.add(Calendar.SECOND, (int) durSec);
 

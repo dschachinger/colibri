@@ -21,7 +21,7 @@ import java.util.List;
 public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
 
     /**
-     * This method generates the proper reply for a openADR message OadrCreatedPartyRegistration.
+     * This method generates the proper reply for an openADR message OadrCreatedPartyRegistration.
      * Return null, because there is no need to reply to this type of message.
      * @param obj generate reply for this message. The contained message type has to be OadrCreatedPartyRegistration.
      * @param responseCode
@@ -35,10 +35,10 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
 
     /**
      * This method returns an MsgInfo_OADRCreatedPartyRegistration object.
-     * This object contains all needful information for a engery consumer from an OadrCreatedPartyRegistration message.
+     * This object contains all needful information for an engery consumer from an OadrCreatedPartyRegistration message.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrCreatedPartyRegistration.
      * @param party
-     * @return  The openADR.OADRMsgInfo object contains all needful information for a engery consumer.
+     * @return  The openADR.OADRMsgInfo object contains all needful information for an engery consumer.
      */
     @Override
     public OADRMsgInfo extractInfo(OADRMsgObject obj, OADRParty party) {
@@ -70,7 +70,7 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
         String requestID = recMsg.getEiResponse().getRequestID();
         List<String> originMsgTypes = new ArrayList<>();
@@ -78,12 +78,12 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
         originMsgTypes.add("oadrQueryRegistration");
         String registrationID = recMsg.getRegistrationID();
 
-        String statusCode = checkConstraintsExtendedOriginMsgTypes(sendedMsgMap, false, requestID,
+        String statusCode = checkConstraintsExtendedOriginMsgTypes(sentMsgMap, false, requestID,
                 originMsgTypes, null, registrationID);
 
 
         if(statusCode.equals("200")){
-            OADRMsgObject originMsg = sendedMsgMap.get(recMsg.getEiResponse().getRequestID());
+            OADRMsgObject originMsg = sentMsgMap.get(recMsg.getEiResponse().getRequestID());
 
             if(originMsg.getMsgType().equals("oadrCreatePartyRegistration") &&
                     (recMsg.getVenID() == null ||
@@ -98,9 +98,9 @@ public class Process_OADRCreatedPartyRegistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
         OadrCreatedPartyRegistration recMsg = (OadrCreatedPartyRegistration)obj.getMsg();
-        sendedMsgMap.remove(recMsg.getEiResponse().getRequestID());
+        sentMsgMap.remove(recMsg.getEiResponse().getRequestID());
     }
 
     /**

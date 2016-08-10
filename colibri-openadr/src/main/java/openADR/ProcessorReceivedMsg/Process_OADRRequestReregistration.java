@@ -19,7 +19,7 @@ import java.util.HashMap;
 public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
 
     /**
-     * This method generates the proper reply for a openADR message OadrRequestReregistration.
+     * This method generates the proper reply for an openADR message OadrRequestReregistration.
      * @param obj generate reply for this message. The contained message type has to be OadrRequestReregistration.
      * @param responseCode
      * @return proper reply
@@ -39,7 +39,7 @@ public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
     }
 
     /**
-     * This method returns null because a oadrRequestReregistration contains no needful information for a engery consumer.
+     * This method returns null because an oadrRequestReregistration contains no needful information for an engery consumer.
      * @param obj extract inforation out of this message object. The contained message type has to be OadrRequestReregistration.
      * @param party
      * @return  null
@@ -57,11 +57,11 @@ public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap){
+    public String doRecMsgViolateConstraints(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap){
         OadrRequestReregistration recMsg = (OadrRequestReregistration)obj.getMsg();
         String venID = recMsg.getVenID();
 
-        return checkConstraints(sendedMsgMap, true, null,
+        return checkConstraints(sentMsgMap, true, null,
                 null, venID, null);
     }
 
@@ -69,7 +69,7 @@ public class Process_OADRRequestReregistration extends ProcessorReceivedMsg {
      * {@inheritDoc}
      */
     @Override
-    public void updateSendedMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sendedMsgMap) {
+    public void updateSentMsgMap(OADRMsgObject obj, HashMap<String, OADRMsgObject> sentMsgMap) {
     }
 
     /**

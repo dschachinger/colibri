@@ -2,7 +2,7 @@ package semanticCore.MsgObj;
 
 /**
  * Created by georg on 28.06.16.
- * Objects from this class represents a colibri message
+ * Objects from this class represent a colibri message
  */
 public class ColibriMessage {
     // Describes which message type it is
@@ -16,6 +16,7 @@ public class ColibriMessage {
     // This variable holds the message which leads to this ColibriMessage
     private ColibriMessage originMessage;
 
+    // This variable indicates how often a message was resent due to timeouts.
     private int resendIteration;
 
     public ColibriMessage(MsgType msgType, Header header, String content, Object contentObj){

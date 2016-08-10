@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Created by georg on 01.07.16.
- * Objects from this class represents the content of an ADD Message
+ * Objects from this class represent the content of a REGISTER Message
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name="RDF")

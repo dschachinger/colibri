@@ -9,17 +9,17 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Value {
     @XmlAttribute(namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
-    String datatype;
+    String dataType;
 
     @XmlValue
     String value;
 
-    public String getDatatype() {
-        return datatype;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setDatatype(String datatype) {
-        this.datatype = datatype;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     public String getValue() {
@@ -35,8 +35,8 @@ public class Value {
         return this;
     }
 
-    public Value withDatatype(String datatype){
-        this.datatype = datatype;
+    public Value withDataType(String dataType){
+        this.dataType = dataType;
         return this;
     }
 }

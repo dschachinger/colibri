@@ -2,7 +2,7 @@ package openADR.OADRMsgInfo;
 
 /**
  * Created by georg on 07.06.16.
- * This class holds the important information for a oadrCanceledReport message.
+ * This class holds the important information for an oadrCanceledReport message.
  */
 public class MsgInfo_OADRCanceledReport implements OADRMsgInfo {
 

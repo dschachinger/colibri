@@ -15,14 +15,19 @@ import java.util.concurrent.Executors;
 
 /**
  * Created by georg on 18.07.16.
- * Objects from this class are used to monitor if a reply is received within a need time.
- * This class is used for the colibri side an the openADR side.
+ * Objects from this class are used to monitor if a reply is received within a needed time.
+ * This class is used for the colibri side and the openADR side.
  */
 public class TimeoutWatcher<S, T> {
+    // timeout in milliseconds
     private int timeoutMilliSec;
+    /* Map which contains all the monitored sent messages.
+        If the proper reply is received the entry needs to be removed from the object which handles the message exchange. */
     private Map<String, T> monitoredMsg;
+    // A thread pool is used for monitoring to keep ressource usage low.
     private ExecutorService executor;
     private S medium;
+    // This objects defines how to react on a timeout.
     private TimeoutHandler<S, T> handler;
 
     private Logger logger = LoggerFactory.getLogger(TimeoutWatcher.class);
@@ -37,7 +42,7 @@ public class TimeoutWatcher<S, T> {
     }
 
     /**
-     * This method adds a message id to the watch list. The message id is the id from a sended message
+     * This method adds a message id to the watch list. The message id is the id from a sent message
      * @param msgID
      */
     public void addMonitoredMsg(String msgID){
@@ -48,7 +53,7 @@ public class TimeoutWatcher<S, T> {
     }
 
     /**
-     * This method initialize a colibri timeout watcher.
+     * This method initializes a colibri timeout watcher.
      * @param timeoutMilliSec time limit for receiving a reply
      * @param colClient colibri client
      * @return timeout watcher for a given colibri client
@@ -56,7 +61,7 @@ public class TimeoutWatcher<S, T> {
     public static TimeoutWatcher<ColibriClient, ColibriMessage> initColibriTimeoutWatcher(int timeoutMilliSec, ColibriClient colClient){
         TimeoutWatcher<ColibriClient, ColibriMessage> watcher =
                 new TimeoutWatcher<>(timeoutMilliSec);
-        watcher.monitoredMsg = colClient.getSendedMsgToColCore();
+        watcher.monitoredMsg = colClient.getSentMsgToColCore();
         watcher.medium = colClient;
         watcher.handler = new ColibriTimeoutHandler();
 
@@ -64,7 +69,7 @@ public class TimeoutWatcher<S, T> {
     }
 
     /**
-     * This method initialize a openADR timeout watcher.
+     * This method initializes an openADR timeout watcher.
      * @param timeoutMilliSec time limit for receiving a reply
      * @param channel openADR channel to transmit/receive messages
      * @return timeout watcher for a given openADR channel
@@ -72,7 +77,7 @@ public class TimeoutWatcher<S, T> {
     public static TimeoutWatcher<Channel, OADRMsgObject> initOpenADRTimeoutWatcher(int timeoutMilliSec, Channel channel){
         TimeoutWatcher<Channel, OADRMsgObject> watcher =
                 new TimeoutWatcher<>(timeoutMilliSec);
-        watcher.monitoredMsg = channel.getSendedMsgMap();
+        watcher.monitoredMsg = channel.getSentMsgMap();
         watcher.medium = channel;
         watcher.handler = new OpenADRTimeoutHandler();
 
@@ -80,7 +85,7 @@ public class TimeoutWatcher<S, T> {
     }
 
     /**
-     * Each objects is responsible to monitor the reply for one message
+     * Each object is responsible to monitor the reply for one message
      */
     class Watcher implements Runnable{
         String messageID;

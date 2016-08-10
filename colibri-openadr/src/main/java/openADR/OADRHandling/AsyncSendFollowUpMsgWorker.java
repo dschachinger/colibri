@@ -5,7 +5,7 @@ import openADR.Utils.FollowUpMsg;
 /**
  * Created by georg on 09.06.16.
  * This class is used to send an asynchronous follow-up reply message.
- * A seperate thread can be initiated to fulfil this task.
+ * A seperate thread can be initiated to fulfill this task.
  */
 public class AsyncSendFollowUpMsgWorker extends Thread {
 
@@ -15,7 +15,7 @@ public class AsyncSendFollowUpMsgWorker extends Thread {
     private FollowUpMsg followUpMsg;
 
     /**
-     * This instantiate a AsyncSendFollowUpMsgWorker object
+     * This instantiate an AsyncSendFollowUpMsgWorker object
      * @param party not null
      * @param followUpMsg not null
      */
@@ -30,6 +30,7 @@ public class AsyncSendFollowUpMsgWorker extends Thread {
      */
     public void run(){
         try {
+            // The delay prevents that the follow up message is transmitted before the first reply.
             Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
