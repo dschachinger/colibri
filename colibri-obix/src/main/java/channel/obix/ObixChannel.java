@@ -6,7 +6,9 @@ import org.eclipse.californium.core.coap.CoAP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.eclipse.californium.core.coap.MediaTypeRegistry.APPLICATION_XML;
 
@@ -153,11 +155,15 @@ public abstract class ObixChannel {
         if (uri.contains(":")) {
             uri = uri.split(":")[1];
         }
-        //TODO:Problems with % in path!
-        //% replaced with --    Only a workaround, has to be changed!!
+
+        // % replaced with ------ because of problems with californium
         if (uri.contains("%") || baseUri.contains("%")) {
             uri = uri.replace("%", "--");
-            baseUri = baseUri.replace("%", "--");
+            baseUri = baseUri.replace("%", "------");
+        }
+
+        if(uri.startsWith("/")) {
+            return uri;
         }
 
         String[] baseUriPaths = baseUri.split("/");

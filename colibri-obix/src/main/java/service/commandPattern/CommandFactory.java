@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * This class represents the command factory, which is used in the command pattern.
+ * This class represents a command factory, which is used in the command pattern.
  */
 public class CommandFactory {
 
@@ -41,8 +41,16 @@ public class CommandFactory {
      *                      Getter and Setter                         *
      ******************************************************************/
 
+    public void addCommand(String name, Command command) {
+        commands.put(name, command);
+    }
+
     public void addCommand(Command command) {
         commands.put(UUID.randomUUID().toString(), command);
+    }
+
+    public void removeCommand(String name) {
+        commands.remove(name);
     }
 
     public Set<String> listCommands() {

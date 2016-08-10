@@ -38,7 +38,7 @@ public class ObixObject {
     private Boolean observedByColibri;
     private String dataValueUri;
     private Boolean observesColibriActions;
-    private Boolean setByColibri;
+    private Boolean setByObix;
     private String connectorUri;
     private String obixUnitUri;
     private PutMessageToColibriTask putMessageToColibriTask;
@@ -55,7 +55,7 @@ public class ObixObject {
         this.addedAsService = false;
         this.observedByColibri = false;
         this.observesColibriActions = false;
-        this.setByColibri = false;
+        this.setByObix = false;
 
     }
 
@@ -260,12 +260,12 @@ public class ObixObject {
         return colibriBaseUri;
     }
 
-    public Boolean getSetByColibri() {
-        return setByColibri;
+    public Boolean getSetByObix() {
+        return setByObix;
     }
 
-    public void setSetByColibri(Boolean setByColibri) {
-        this.setByColibri = setByColibri;
+    public void setSetByObix(Boolean setByObix) {
+        this.setByObix = setByObix;
     }
 
     public String getConnectorUri() {

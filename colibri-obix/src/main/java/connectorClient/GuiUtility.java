@@ -1,6 +1,7 @@
 package connectorClient;
 
 import channel.Connector;
+import channel.obix.PutToObixTask;
 import service.commandPattern.CommandFactory;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.messageObj.Name;
@@ -36,7 +37,6 @@ public class GuiUtility {
     private JLabel titel;
     private JCheckBox registeredColibriChannelCheckBox;
     private UpdateThread updateThread;
-    private List<ObserveThread> observeThreads;
     private List<StateRepresentation> listOfStateRepresentations;
 
     private static final Logger logger = LoggerFactory.getLogger(GuiUtility.class);
@@ -45,8 +45,7 @@ public class GuiUtility {
         this.connector = connector;
         this.obixChannel = connector.getObixChannel();
         this.commandFactory = new CommandFactory();
-        this.observeThreads = Collections.synchronizedList(new ArrayList<>());;
-        this.listOfStateRepresentations = Collections.synchronizedList(new ArrayList<>());;
+        this.listOfStateRepresentations = Collections.synchronizedList(new ArrayList<>());
         this.updateThread = new UpdateThread(commandFactory);
         this.executor = connector.getExecutor();
     }
@@ -577,33 +576,23 @@ public class GuiUtility {
 
             representationRows.add(new RepresentationRow(uriLabel, observeObixCheckBox, textField, o, writableCheckBox,
                     getObixButton, getColibriButton, addServiceCheckbox, observedByColibriCheckBox, observeColibriActionsCheckbox));
-            ObserveThread thread = new ObserveThread(observeObixCheckBox, textField, o, connector);
-            executor.execute(thread);
-            connector.addRunAndStopAble(thread);
-            observeThreads.add(thread);
+            PutToObixTask putToObixTask = new PutToObixTask(o, connector.getColibriChannel(), connector.getObixChannel(), null);
+            connector.getColibriChannel().addPutToObixTask(o.getServiceUri(), putToObixTask);
+            ObixObservationUpdates observationUpdates = new ObixObservationUpdates(observeObixCheckBox, textField, o, connector);
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
-                    JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                         if (r.getObservedCheckBox().equals(observeObixCheckBox)) {
                             object = r.getObixObject();
-                            textF = r.getValueTextField();
                         }
                     }
-                    JTextField finalTextF = textF;
-                    ObixObject finalObject = object;
                     if (e.getStateChange() == ItemEvent.SELECTED) {
                         obixChannel.observe(object);
-                        // commandFactory.addCommand("observe", () -> finalTextF.setText(finalObject.toString()));
-
-
+                        commandFactory.addCommand(object.getObixUri() + "ObserveCommand", observationUpdates::run);
                     } else {
+                        commandFactory.removeCommand(object.getObixUri() + "ObserveCommand");
                         object.getRelation().proactiveCancel();
-                        // commandFactory.addCommand("observe", () -> finalTextF.setText("NOT OBSERVED"));
-                        synchronized (object) {
-                            object.notify();
-                        }
                     }
                 }
             });
@@ -830,7 +819,6 @@ public class GuiUtility {
     }
 
     public void close() {
-        observeThreads.forEach(ObserveThread::stop);
         updateThread.stop();
         connector.setRunning(false);
         connector.stop();

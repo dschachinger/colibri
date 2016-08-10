@@ -84,6 +84,7 @@ public class CoapChannel extends ObixChannel {
         if (r.getResponseText().contains("obix:BadUriErr")) {
             logger.info("BAD URI: " + uri);
         }
+        System.out.println(uri);
         return r.getResponseText();
     }
 
@@ -103,9 +104,7 @@ public class CoapChannel extends ObixChannel {
                         synchronized (notifier) {
                             notifier.notify();
                         }
-                        synchronized (o) {
-                            o.notify();
-                        }
+                        o.setSetByObix(true);
                     }
 
                     public void onError() {
@@ -145,7 +144,7 @@ public class CoapChannel extends ObixChannel {
     private CoapClient getCoapClientWithUri(String uri) throws IllegalArgumentException {
         CoapClient coapClient;
         coapClient = new CoapClient("coap", this.baseUri, this.port, trimBaseUri(this.baseUri, uri));
-        coapClient.setTimeout(2000);
+        coapClient.setTimeout(10000);
         return coapClient;
     }
 }

@@ -6,11 +6,11 @@ import channel.message.AtmosphereMessage;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.colibriMessage.ColibriMessageMapper;
 import channel.message.messageObj.MessageIdentifier;
+import channel.message.messageObj.PutMessageContent;
 import channel.message.messageObj.StatusCode;
 import channel.message.service.ColibriMessageContentCreator;
-import channel.message.messageObj.PutMessageContent;
 import channel.message.service.SparqlMsgService;
-import channel.obix.PutExecutionTask;
+import channel.obix.PutToObixTask;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.obix.ObixObject;
 import org.atmosphere.wasync.*;
@@ -48,25 +48,31 @@ public class ColibriChannel {
     private ExecutorService executor;
 
     /**
-     * A map with the message-ID as key. The values are messages which expect a response from the colibri semantic core
+     * A Map with the service URI of a {@link ObixObject}. The Values are the executor tasks for this object.
+     * The are used to send PUT messages to obix. This tasks can be scheduled.
+     */
+    private Map<String, PutToObixTask> putToObixExecutors;
+
+    /**
+     * A map with the message-ID as key. The values are {@link ColibriMessage} which expect a response from the colibri semantic core
      * but haven't received one.
      */
     private Map<String, ColibriMessage> messagesWithoutResponse;
 
     /**
-     * A map with the service URI of an ObixObject as key. The values are ObixObjects which are added as services to the
+     * A map with the service URI of an {@link ObixObject} as key. The values are {@link ObixObject} which are added as services to the
      * colibri semantic core and can therefore be observed by colibri.
      */
     private Map<String, ObixObject> observeAbleObjectsMap;
 
     /**
-     * A map with the service URI of an ObixObject as key. The values are ObixObjects which are currently observed by
+     * A map with the service URI of an {@link ObixObject} as key. The values are {@link ObixObject} which are currently observed by
      * the colibri semantic core.
      */
     private Map<String, ObixObject> observedObjectsMap;
 
     /**
-     * A map with the service URI of an ObixObject as key. The values are ObixObjects for which a GET message was sent
+     * A map with the service URI of an {@link ObixObject} as key. The values are {@link ObixObject} for which a GET message was sent
      * to the colibri semantic core.
      */
     private Map<String, ObixObject> requestedGetMessageMap;
@@ -74,25 +80,25 @@ public class ColibriChannel {
     private String lastMessageReceived = "No messages from Colibri Semantic Core received.";
 
     /**
-     * A map with the service URI of an ObixObject as key. The values are ObixObjects which observe actions performed
+     * A map with the service URI of an {@link ObixObject} as key. The values are {@link ObixObject} which observe actions performed
      * by the colibri semantic core. 
      */
     private Map<String, ObixObject> observedMessagesOfColibriMap;
 
     /**
-     * A list of tasks which are scheduled to resend messages if no fitting response was received to the initial or
+     * A list of tasks which are scheduled to resend {@link ColibriMessage} if no fitting response was received to the initial or
      * resent messages.
      */
     private List<ResendMessageTask> resendMessagesTasks;
 
     /**
-     * A map with a random ID as key. The values are times to send messages on a specific time to the colibri semantic
+     * A map with a random ID as key. The values are times to send {@link ColibriMessage} on a specific time to the colibri semantic
      * core, for example scheduled through a parameter in a received OBS message.
      */
     private Map<String, Timer> runningTimers;
 
     /**
-     * A map with the QUE message-ID as key. The values are QUE messages which expect a response from the colibri
+     * A map with the QUE message-ID as key. The values are QUE {@link ColibriMessage} which expect a response from the colibri
      * semantic core but haven't received one.
      */
     private Map<String, ColibriMessage> queryMessagesWithoutResponse;
@@ -117,6 +123,7 @@ public class ColibriChannel {
         this.resendMessagesTasks = Collections.synchronizedList(new ArrayList<>());
         this.queryMessagesWithoutResponse = Collections.synchronizedMap(new HashMap<>());
         this.runningTimers = new HashMap<>();
+        this.putToObixExecutors = Collections.synchronizedMap(new HashMap<>());
         this.executor = Executors.newCachedThreadPool();
     }
 
@@ -482,41 +489,7 @@ public class ColibriChannel {
             if (serviceObject == null) {
                 serviceObject = requestedGetMessageMap.get(content.getServiceUri());
             }
-            boolean setParam1 = false;
-            boolean setParam2 = false;
-            if (serviceObject != null) {
-                logger.info(serviceObject.getParameter1().getParameterUri());
-                if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
-                    if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                        serviceObject.setValueParameter1(content.getValue1());
-                        setParam1 = true;
-                    }
-                }
-                if (content.getValue1HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
-                    if (content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                        serviceObject.setValueParameter2(content.getValue1());
-                        setParam2 = true;
-                    }
-                }
-                if (content.getValue2HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
-                    if (content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())) {
-                        serviceObject.setValueParameter1(content.getValue2());
-                        setParam1 = true;
-                    }
-                }
-                if (content.getValue2HasParameterUri().equals(serviceObject.getParameter2().getParameterUri())) {
-                    if (content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())) {
-                        serviceObject.setValueParameter2(content.getValue2());
-                        setParam2 = true;
-                    }
-                }
-            }
-            if (setParam1 && setParam2) {
-                setTimerTask(serviceObject, message);
-            } else {
-                this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "PUT message to the service with this address is not possible." +
-                        "Please check if the service address is correct.", message.getHeader().getId()));
-            }
+            setTimerTask(serviceObject, message, content);
         } catch (JAXBException e) {
             this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!", message.getHeader().getId()));
         }
@@ -597,17 +570,33 @@ public class ColibriChannel {
      * parameter.
      *
      * @param serviceObject     The {@link ObixObject} of which the parameter is updated at the scheduled time.
+     * @param content           The {@link PutMessageContent} of the received PUT {@link ColibriMessage}.
      * @param message           The {@link ColibriMessage} which contains the updated value and the timing schedule.
      */
-    private void setTimerTask(ObixObject serviceObject, ColibriMessage message) {
-        //read optional timing for Put on Obix from parameter 2
-        PutExecutionTask executionTask = new PutExecutionTask(serviceObject, this, message.getHeader().getId());
+    private void setTimerTask(ObixObject serviceObject, ColibriMessage message, PutMessageContent content) {
+        PutToObixTask executionTask = putToObixExecutors.get(serviceObject.getServiceUri());
+        if(executionTask == null) {
+            logger.error("There is no obix service with the URI " + serviceObject.getServiceUri() + " available " +
+                    "which can receive a CoAP-PUT message");
+            return;
+        } else {
+            executionTask = new PutToObixTask(executionTask);
+        }
         java.util.Date paramDate;
         try {
-            if (serviceObject.getParameter1().isTimer()) {
-                paramDate = TimeDurationConverter.ical2Date(serviceObject.getParameter1().getValue().getValue());
-            } else if (serviceObject.getParameter2().isTimer()) {
-                paramDate = TimeDurationConverter.ical2Date(serviceObject.getParameter2().getValue().getValue());
+            //read optional timing for Put on Obix from parameter
+            if(content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())
+                    && serviceObject.getParameter1().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(content.getValue1().getValue());
+            } else if(content.getValue2Uri().equals(serviceObject.getParameter1().getValueUri())
+                    && serviceObject.getParameter1().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(content.getValue2().getValue());
+            } else if(content.getValue1Uri().equals(serviceObject.getParameter2().getValueUri())
+                    && serviceObject.getParameter2().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(content.getValue1().getValue());
+            } else if(content.getValue2Uri().equals(serviceObject.getParameter2().getValueUri())
+                    && serviceObject.getParameter2().isTimer()) {
+                paramDate = TimeDurationConverter.ical2Date(content.getValue2().getValue());
             } else {
                 paramDate = new Date();
             }
@@ -615,6 +604,8 @@ public class ColibriChannel {
             paramDate = new Date();
         }
         Timer timer = new Timer();
+        executionTask.setPutMessage(message);
+        executionTask.setObj(serviceObject);
         timer.schedule(executionTask, paramDate);
         requestedGetMessageMap.remove(serviceObject.getServiceUri());
     }
@@ -707,4 +698,7 @@ public class ColibriChannel {
         return requestedGetMessageMap;
     }
 
+    public void addPutToObixTask(String serviceUri, PutToObixTask putToObixTask) {
+        this.putToObixExecutors.put(serviceUri, putToObixTask);
+    }
 }
