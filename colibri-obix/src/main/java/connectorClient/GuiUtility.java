@@ -472,14 +472,14 @@ public class GuiUtility {
         c.gridy++;
         pane.add(acceptButton, c);
 
-        acceptButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
+        /**
+         * Accept button listener
+         */
+        Action acceptAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
                 for (StateRepresentation s : listOfStateRepresentations) {
                     if (s.getStateNameTextField().getText().isEmpty() ||
                             s.getStateUriTextField().getText().isEmpty() ||
@@ -528,13 +528,9 @@ public class GuiUtility {
                 //Display the window.
                 mainFrame.pack();
             }
+        };
+        acceptButton.addActionListener(acceptAction);
 
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
         return pane;
     }
 
@@ -723,14 +719,14 @@ public class GuiUtility {
                 }
             });
 
-            getObixButton.addMouseListener(new MouseListener() {
-                public void mouseClicked(MouseEvent e) {
-                }
-
-                public void mousePressed(MouseEvent e) {
-                }
-
-                public void mouseReleased(MouseEvent e) {
+            /**
+             * GET Obix button listener
+             */
+            Action getObixAction = new AbstractAction()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
                     JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
@@ -746,22 +742,17 @@ public class GuiUtility {
                         o.getPutMessageToColibriTask().execute(o);
                     }
                 }
+            };
+            getObixButton.addActionListener(getObixAction);
 
-                public void mouseEntered(MouseEvent e) {
-                }
-
-                public void mouseExited(MouseEvent e) {
-                }
-            });
-
-            getColibriButton.addMouseListener(new MouseListener() {
-                public void mouseClicked(MouseEvent e) {
-                }
-
-                public void mousePressed(MouseEvent e) {
-                }
-
-                public void mouseReleased(MouseEvent e) {
+            /**
+             * GET Colibri button listener
+             */
+            Action getColibriAction = new AbstractAction()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
                     JTextField textF = null;
                     for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
@@ -772,13 +763,9 @@ public class GuiUtility {
                     }
                     connector.getColibriChannel().send(ColibriMessage.createGetMessage(object));
                 }
+            };
+            getColibriButton.addActionListener(getColibriAction);
 
-                public void mouseEntered(MouseEvent e) {
-                }
-
-                public void mouseExited(MouseEvent e) {
-                }
-            });
 
             textField.addKeyListener(new KeyListener() {
                 public void keyTyped(KeyEvent e) {
@@ -842,42 +829,30 @@ public class GuiUtility {
         commandFactory.addCommand(() -> sendQueMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
         commandFactory.addCommand(() -> sendUpdMessageButton.setEnabled(connector.getColibriChannel().getRegistered()));
 
-        sendQueMessageButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-            }
 
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
+        /**
+         * QUE to Colibri button listener
+         */
+        Action sendQueMessageAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 connector.getColibriChannel().send(ColibriMessage.createQueryMessage(sendMessageArea.getText(), new ArrayList<>()));
             }
+        };
+        sendQueMessageButton.addActionListener(sendQueMessageAction);
 
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
-        sendUpdMessageButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
+        /**
+         * UPD to Colibri button listener
+         */
+        Action sendUpdMessageAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 connector.getColibriChannel().send(ColibriMessage.createUpdateMessage(sendMessageArea.getText()));
             }
-
-            public void mouseEntered(MouseEvent e) {
-            }
-
-            public void mouseExited(MouseEvent e) {
-            }
-        });
-
+        };
+        sendUpdMessageButton.addActionListener(sendUpdMessageAction);
         return pane;
     }
 
