@@ -1,0 +1,52 @@
+description = 'Commons library for Colibri project'
+
+eclipse
+{
+	project 
+	{
+		natures 'org.eclipse.pde.PluginNature'
+		buildCommand 'org.eclipse.pde.ManifestBuilder'
+		buildCommand 'org.eclipse.pde.SchemaBuilder'
+	}
+	
+	classpath
+	{
+		file
+		{
+			beforeMerged 
+			{ 
+				classpath -> classpath.entries.removeAll { entry -> entry.kind == 'con' } 
+			}
+			withXml
+			{
+				def node = it.asNode()
+				node.appendNode('classpathentry',[kind: 'con', path: 'org.eclipse.pde.core.requiredPlugins'])
+			}
+		}
+	}
+}
+
+jar 
+{
+	from 
+	{ 
+		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } 
+	}
+	
+	manifest 
+	{
+		attributes (   
+			"Manifest-Version": "1.0",
+			"Bundle-ManifestVersion": "2",
+			"Bundle-Name": "colibri-commons",
+			"Bundle-SymbolicName": "colibri-commons",
+			"Bundle-Version": "1.0.0",
+			"Bundle-Vendor": "Automation Systems Group, Institute of Computer Aided Automation, TU Wien, www.auto.tuwien.ac.at",
+			"Export-Package": "at.ac.tuwien.auto.colibri.connector, at.ac.tuwien.auto.colibri.data",
+		)
+	}
+}
+
+
+
+
