@@ -91,10 +91,19 @@ public class GuiUtility {
         pane.add(cards, BorderLayout.CENTER);
     }
 
-    private JPanel chooseComponents() {
-        int numRows = lobby.getObixObjects().size() + 2;
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    private Container chooseComponents() {
+        Container pane = new Container();
+        pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+        pane.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.insets = new Insets(5, 5, 5, 5);
+
         registeredColibriChannelCheckBox = new JCheckBox("IS REGISTERD ON COLIBRI SEMANTIC CORE");
         commandFactory.addCommand(() -> registeredColibriChannelCheckBox.setSelected(connector.getColibriChannel().getRegistered()));
         connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
@@ -113,48 +122,73 @@ public class GuiUtility {
                 }
             }
         });
+
+        pane.add(registeredColibriChannelCheckBox, c);
+
         Font titelF = new Font("Courier", Font.BOLD, 30);
         titel = new JLabel("Please choose the components you want to work with");
         titel.setFont(titelF);
-        panel.add(registeredColibriChannelCheckBox);
-        panel.add(titel);
-        panel.setLayout(new GridLayout(numRows + lobby.getObservedObjectsLists().keySet().size(), 1));
+
+        c.gridy++;
+        pane.add(titel, c);
+
+        /**
+         * Search function
+         */
+        JTextField searchTextField = new JTextField("Search for a component");
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridx++;
+        pane.add(searchTextField, c);
+
+        c.weightx = 0.25;
+        c.weighty = 0.25;
+        c.gridwidth = 1;
+        c.gridx++;
+        JButton searchButton = new JButton("Search");
+        pane.add(searchButton, c);
+
         for (String s : lobby.getObservedObjectsLists().keySet()) {
             if (!s.equals("all")) {
                 List<ObixObject> objects = lobby.getObservedObjectsLists().get(s);
                 JLabel header = new JLabel(s);
                 Font headerF = new Font("Courier", Font.BOLD, 25);
                 header.setFont(headerF);
-                panel.add(header);
+                c.gridx = 0;
+                c.gridy++;
+                pane.add(header, c);
                 for (ObixObject o : objects) {
                     JCheckBox chooseCheckBox = new JCheckBox(o.getObixUri());
                     JPanel innerPanel = new JPanel();
                     innerPanel.setLayout(new FlowLayout(0, 0, 0));
                     innerPanel.add(chooseCheckBox);
-                    panel.add(innerPanel);
+                    c.gridx = 0;
+                    c.gridwidth = 10;
+                    c.gridy++;
+                    pane.add(innerPanel, c);
                     representationRows.add(new RepresentationRow(o, chooseCheckBox));
                 }
             }
         }
         JButton acceptButton = new JButton("Accept");
-        panel.add(acceptButton);
+        c.gridx = 0;
+        c.gridy++;
+        pane.add(acceptButton, c);
 
-        acceptButton.addMouseListener(new MouseListener() {
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            public void mousePressed(MouseEvent e) {
-            }
-
-            public void mouseReleased(MouseEvent e) {
+        /**
+         * Accept button listener
+         */
+        Action acceptAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
                 List<ObixObject> chosenObjects = Collections.synchronizedList(new ArrayList<>());;
                 for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
                     if (r.getChooseCheckbox().isSelected()) {
                         chosenObjects.add(r.getObixObject());
                     }
                 }
-                //         updateThread.stop();
                 representationRows.clear();
                 cards.removeAll();
                 JScrollPane scrollPane = new JScrollPane(chooseParameters(chosenObjects));
@@ -164,16 +198,33 @@ public class GuiUtility {
                 //Display the window.
                 mainFrame.pack();
             }
+        };
+        acceptButton.addActionListener(acceptAction);
 
-            public void mouseEntered(MouseEvent e) {
-
+        /**
+         * Search function
+         */
+        Action searchAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String searchText = searchTextField.getText();
+                for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
+                    if (r.getChooseCheckbox().getText().contains(searchText)) {
+                        r.getChooseCheckbox().setForeground(Color.blue);
+                    } else {
+                        r.getChooseCheckbox().setForeground(Color.black);
+                    }
+                    r.getChooseCheckbox().revalidate();
+                    r.getChooseCheckbox().repaint();
+                }
             }
+        };
+        searchTextField.addActionListener(searchAction);
+        searchButton.addActionListener(searchAction);
 
-            public void mouseExited(MouseEvent e) {
-
-            }
-        });
-        return panel;
+        return pane;
     }
 
     private Container chooseParameters(List<ObixObject> chosenComponents) {
