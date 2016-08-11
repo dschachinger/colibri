@@ -27,16 +27,16 @@ public class Main {
         for (Connector connector : connectors) {
             ColibriChannel colibriChannel = connector.getColibriChannel();
             connector.setObixChannel(new ObixXmlChannelDecorator(connector.getObixChannel()));
-           try {
-               if (!colibriIsRunning) {
-                   colibriChannel.run();
-                   colibriIsRunning = true;
-               }
+            try {
+                if (!colibriIsRunning) {
+                    colibriChannel.run();
+                    colibriIsRunning = true;
+                }
             } catch (IOException e) {
                 logger.info(e.getMessage() + "\n" + "Please check the Colibri channel address in the config.properties file.");
                 colibriChannel.close();
             }
-             final GuiUtility guiUtility = new GuiUtility(connector);
+            final GuiUtility guiUtility = new GuiUtility(connector);
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     try {
@@ -50,7 +50,15 @@ public class Main {
                     }
                 }
             });
-       }
+        }
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                for (Connector c : connectors) {
+                    c.getColibriChannel().close();
+                }
+            }
+        });
         while (true) {
             try {
                 Thread.sleep(300);

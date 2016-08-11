@@ -235,18 +235,18 @@ public class ColibriChannel {
             socket.on("message", new Function<Message>() {
                 public void on(Message t) {
                     boolean receive = false;
-                    if(usingAtmosphereTestWebSocket && !t.getAuthor().equals(connectorName)) {
+         /*           if(usingAtmosphereTestWebSocket && !t.getAuthor().equals(connectorName)) {
                         receive = true;
                     } else if (!usingAtmosphereTestWebSocket)
                         receive = true;
-                    if (receive) {
+                    if (receive) { */
                         try {
                             messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                         } catch (IllegalArgumentException e) {
                             lastMessageReceived = e.getMessage();
                         }
                         lastMessageReceived = t.getMessage();
-                    }
+            //        }
                 }
             }).on(new Function<Throwable>() {
 

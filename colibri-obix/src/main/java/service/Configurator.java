@@ -228,7 +228,8 @@ public class Configurator {
      */
     public String getNewlineString() throws ConfigurationException {
         if (bundle.containsKey("newline")){
-            return bundle.getString("newline");
+            return "\n";
+           // return bundle.getString("newline");
         }else{
             throw new ConfigurationException("No newline representation given in the config file!");
         }
