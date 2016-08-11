@@ -540,15 +540,20 @@ public class ColibriChannel {
      * @param message   The {@link ColibriMessage} with {@link MessageIdentifier} PUT.
      */
     private void handlePutMessage(ColibriMessage message) {
+        ColibriMessage errorMsg = ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC,
+                "Unmarshalling PUT message failed!", message.getHeader().getId());
         try {
             PutMessageContent content = ColibriMessageContentCreator.getPutMessageContent(message);
             ObixObject serviceObject = observedMessagesOfColibriMap.get(content.getServiceUri());
             if (serviceObject == null) {
                 serviceObject = requestedGetMessageMap.get(content.getServiceUri());
             }
+            if(serviceObject == null) {
+                this.send(errorMsg);
+            }
             setTimerTask(serviceObject, message, content);
         } catch (JAXBException e) {
-            this.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!", message.getHeader().getId()));
+            this.send(errorMsg);
         }
     }
 

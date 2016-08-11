@@ -46,6 +46,14 @@ public class PutToObixTask extends TimerTask {
         }
         boolean setParam1 = false;
         boolean setParam2 = false;
+        if(!checkBooleanValuesForCorrectnes(content.getValue1().getDatatype(),
+                content.getValue1().getValue())
+            || !checkBooleanValuesForCorrectnes(content.getValue2().getDatatype(),
+                content.getValue2().getDatatype())) {
+            colibriChannel.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "One of the received " +
+                    "boolean values is neither true nor false in message: ", putMessage.getHeader().getId()));
+            return;
+        }
         if (serviceObject != null) {
             logger.info(serviceObject.getParameter1().getParameterUri());
             if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
@@ -82,6 +90,13 @@ public class PutToObixTask extends TimerTask {
                     "Please check if the service address is correct.", putMessage.getHeader().getId()));
         }
 
+    }
+
+    private boolean checkBooleanValuesForCorrectnes(String valueType, String valueToCheck) {
+        if(valueType.contains("boolean")) {
+            return ((valueToCheck.equals("true")) || (valueToCheck.equals("false")));
+        }
+        return true;
     }
 
     public ObixObject getObj() {
