@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Colibri Server</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript">
+        //var websocket = new WebSocket("ws://localhost:56502/Colibrii/chat");
+        var websocket = new WebSocket("ws://localhost:8080/Col-1.0/chat");
+        websocket.onmessage = function processData(message)
+        {
+            var jsonData = JSON.parse(message.data);
+            console.log(jsonData);
+            var abc;
+            abc = jsonData.message;
+            if (abc != null)
+                messagesTextArea.value += abc + "\n";
+        }
+        function sendMessage()
+        {
+            websocket.send(messageText.value);
+            messageText.value = "";
+        }
+    </script>
+</head>
+<body><input type="text" id="messageText" size="50" />
+<input type="button" value="Send" onclick="sendMessage();" />
+<center>
+    <textarea id = "messagesTextArea" readonly="readonly" rows="70" cols="85"></textarea><br/>
+</center>
+</body>
+</html>

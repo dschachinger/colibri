@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Col.iml" filepath="$PROJECT_DIR$/.idea/modules/Col.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Col_main.iml" filepath="$PROJECT_DIR$/.idea/modules/Col_main.iml" group="Col" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Col_test.iml" filepath="$PROJECT_DIR$/.idea/modules/Col_test.iml" group="Col" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ColibriServer/ColibriServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/ColibriServer/ColibriServer_main.iml" group="ColibriServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ColibriServer/ColibriServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/ColibriServer/ColibriServer_test.iml" group="ColibriServer" />
+    </modules>
+  </component>
+</project>
