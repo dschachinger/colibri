@@ -233,7 +233,7 @@ public class ColibriMessageContentCreator {
         ColibriMessage observeMsg = new ColibriMessage(MessageIdentifier.OBS, new ColibriMessageHeader(ContentType.TEXT_PLAIN),
                 new ColibriMessageContent("http://test.org/res1?freq=sad"));
 
-        ColibriChannel colibriChannel = new ColibriChannel("bla", "127.0.0.1", 6789);
+        ColibriChannel colibriChannel = new ColibriChannel("bla", "127.0.0.1", 6789, "http://127.0.0.1:6789/chat");
 
         String serviceUri = "";
         if (observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace().contains("?freq=")) {

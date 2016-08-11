@@ -2,7 +2,7 @@ package channel.colibri;
 
 import channel.colibri.taskServices.PutMessageToColibriTask;
 import channel.colibri.taskServices.ResendMessageTask;
-import channel.message.AtmosphereMessage;
+import channel.message.Message;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.colibriMessage.ColibriMessageMapper;
 import channel.message.messageObj.MessageIdentifier;
@@ -39,7 +39,7 @@ public class ColibriChannel {
      ******************************************************************/
 
     private final static ObjectMapper mapper = new ObjectMapper();
-    private AtmosphereClient client;
+    private Client client;
     private Socket socket;
     private String connectorName;
     private String host;
@@ -47,6 +47,11 @@ public class ColibriChannel {
     private Boolean registered;
     private ExecutorService executor;
 
+    /**
+     * The complete URL of the web socket endpoint to communicate with, for example:
+     * http://127.0.0.1:6789/chat
+     */
+    private String fullUrl;
     /**
      * A Map with the service URI of a {@link ObixObject}. The Values are the executor tasks for this object.
      * The are used to send PUT messages to obix. This tasks can be scheduled.
@@ -103,18 +108,24 @@ public class ColibriChannel {
      */
     private Map<String, ColibriMessage> queryMessagesWithoutResponse;
 
+    /**
+     * True, if the Atmosphere Web Socket Chat is used as endpoint for testing purposes, otherwise false.
+     */
+    private boolean usingAtmosphereTestWebSocket;
+
     private final static Logger logger = LoggerFactory.getLogger(ColibriChannel.class);
 
     /******************************************************************
      *                            Constructors                        *
      ******************************************************************/
 
-    public ColibriChannel(String connectorName, String host, int port) {
+    public ColibriChannel(String connectorName, String host, int port, String fullUrl) {
         this.connectorName = connectorName;
         this.host = host;
         this.port = port;
+        this.fullUrl = fullUrl;
+        this.usingAtmosphereTestWebSocket = fullUrl.equals("http://127.0.0.1:6789/chat");
         this.registered = false;
-        this.client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
         this.messagesWithoutResponse = Collections.synchronizedMap(new HashMap<>());
         this.observeAbleObjectsMap = Collections.synchronizedMap(new HashMap<>());
         this.observedObjectsMap = Collections.synchronizedMap(new HashMap<>());
@@ -132,74 +143,127 @@ public class ColibriChannel {
      ******************************************************************/
 
     public void run() throws IOException {
-        RequestBuilder request = client.newRequestBuilder()
-                .method(Request.METHOD.GET)
-                .uri("http://" + host + ":" + port + "/chat")
-                .trackMessageLength(true)
-                .encoder(new Encoder<AtmosphereMessage, String>() {
-                    public String encode(AtmosphereMessage data) {
-                        try {
-                            return mapper.writeValueAsString(data);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                    }
-                })
-                .decoder(new Decoder<String, AtmosphereMessage>() {
-                    public AtmosphereMessage decode(Event type, String data) {
-
-                        data = data.trim();
-
-                        // Padding
-                        if (data.length() == 0) {
-                            return null;
-                        }
-
-                        if (type.equals(Event.MESSAGE)) {
+        /**
+         * Using the Atmosphere Chat Web Socket endpoint for testing purposes
+         */
+        RequestBuilder request;
+        if (usingAtmosphereTestWebSocket) {
+            this.client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
+            request = ((AtmosphereClient)client).newRequestBuilder()
+                    .method(Request.METHOD.GET)
+                    .uri(fullUrl)
+                    .trackMessageLength(true)
+                    .encoder(new Encoder<Message, String>() {
+                        public String encode(Message data) {
                             try {
-                                return mapper.readValue(data, AtmosphereMessage.class);
+                                return mapper.writeValueAsString(data);
                             } catch (IOException e) {
-                                logger.info("Invalid message {}", data);
+                                throw new RuntimeException(e);
+                            }
+
+                        }
+                    })
+                    .decoder(new Decoder<String, Message>() {
+                        public Message decode(Event type, String data) {
+
+                            data = data.trim();
+
+                            // Padding
+                            if (data.length() == 0) {
                                 return null;
                             }
-                        } else {
-                            return null;
+
+                            if (type.equals(Event.MESSAGE)) {
+                                try {
+                                    return mapper.readValue(data, Message.class);
+                                } catch (IOException e) {
+                                    logger.info("Invalid message {}", data);
+                                    return null;
+                                }
+                            } else {
+                                return null;
+                            }
                         }
-                    }
-                })
-                .transport(Request.TRANSPORT.WEBSOCKET)
-                .transport(Request.TRANSPORT.LONG_POLLING);
-        socket = client.create();
-        socket.on("message", new Function<AtmosphereMessage>() {
-            public void on(AtmosphereMessage t) {
+                    })
+                    .transport(Request.TRANSPORT.WEBSOCKET)
+                    .transport(Request.TRANSPORT.LONG_POLLING);
+        }
+        /**
+         * Using a different Web Socket endpoint
+         */
+        else {
+            this.client = ClientFactory.getDefault().newClient();
+            request = client.newRequestBuilder()
+                    .method(Request.METHOD.GET)
+                    .uri(fullUrl)
+                    .encoder(new Encoder<Message, String>() {
+                        public String encode(Message data) {
+                            try {
+                                return mapper.writeValueAsString(data);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
 
-                //TODO: Check author again for wasync websocket
-                if (!t.getAuthor().equals(connectorName)) {
-                    try {
-                        messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
-                    } catch (IllegalArgumentException e) {
-                        lastMessageReceived = e.getMessage();
+                        }
+                    })
+                    .decoder(new Decoder<String, Message>() {
+                        public Message decode(Event type, String data) {
+
+                            data = data.trim();
+
+                            // Padding
+                            if (data.length() == 0) {
+                                return null;
+                            }
+
+                            if (type.equals(Event.MESSAGE)) {
+                                try {
+                                    return mapper.readValue(data, Message.class);
+                                } catch (IOException e) {
+                                    logger.info("Invalid message {}", data);
+                                    return null;
+                                }
+                            } else {
+                                return null;
+                            }
+                        }
+                    })
+                    .transport(Request.TRANSPORT.WEBSOCKET)
+                    .transport(Request.TRANSPORT.LONG_POLLING);
+        }
+            socket = client.create();
+            socket.on("message", new Function<Message>() {
+                public void on(Message t) {
+                    boolean receive = false;
+                    if(usingAtmosphereTestWebSocket && !t.getAuthor().equals(connectorName)) {
+                        receive = true;
+                    } else if (!usingAtmosphereTestWebSocket)
+                        receive = true;
+                    if (receive) {
+                        try {
+                            messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                        } catch (IllegalArgumentException e) {
+                            lastMessageReceived = e.getMessage();
+                        }
+                        lastMessageReceived = t.getMessage();
                     }
-                    lastMessageReceived = t.getMessage();
                 }
-            }
-        }).on(new Function<Throwable>() {
+            }).on(new Function<Throwable>() {
 
-            @Override
-            public void on(Throwable t) {
-                logger.info("Cannot interact with colibri, connection is faulty.");
-            }
+                @Override
+                public void on(Throwable t) {
+                    logger.info("Cannot interact with colibri, connection is faulty.");
+                }
 
-        }).on(Event.CLOSE.name(), new Function<String>() {
-            public void on(String t) {
-                logger.info("Connection closed");
-            }
-        }).on(Event.OPEN.name(), new Function<String>() {
-            public void on(String t) {
-                logger.info("Connection opened");
-            }
-        }).open(request.build());
+            }).on(Event.CLOSE.name(), new Function<String>() {
+                public void on(String t) {
+                    logger.info("Connection closed");
+                }
+            }).on(Event.OPEN.name(), new Function<String>() {
+                public void on(String t) {
+                    logger.info("Connection opened");
+                }
+            }).open(request.build());
     }
 
     /**
@@ -210,7 +274,7 @@ public class ColibriChannel {
     public void send(ColibriMessage msg) {
         logger.info("Send:" + msg.toString());
         try {
-            socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
+            socket.fire(new Message(connectorName, msg.toString()));
             if (msg.getMsgType().equals(MessageIdentifier.GET)) {
                 requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                         msg.getOptionalObixObject());
@@ -251,7 +315,7 @@ public class ColibriChannel {
         ColibriMessage resendMsg = ColibriMessage.createMessageWithNewId(msg);
         try {
             messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
-            socket.fire(new AtmosphereMessage(connectorName, resendMsg.toString()));
+            socket.fire(new Message(connectorName, resendMsg.toString()));
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
         }

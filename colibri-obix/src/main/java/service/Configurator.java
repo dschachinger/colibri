@@ -113,7 +113,7 @@ public class Configurator {
     private ColibriChannel getColibriChannel() throws ConfigurationException {
         if (bundle.containsKey("colibriChannel")){
             String[] channelParts = bundle.getString("colibriChannel").replaceAll("\\s+", "").split(",");
-            return new ColibriChannel("obixConnector", channelParts[0], Integer.parseInt(channelParts[1]));
+            return new ColibriChannel("obixConnector", channelParts[0], Integer.parseInt(channelParts[1]), channelParts[2]);
         }else{
             throw new ConfigurationException("No colibri channel URI in config file!");
         }
@@ -231,6 +231,22 @@ public class Configurator {
             return bundle.getString("newline");
         }else{
             throw new ConfigurationException("No newline representation given in the config file!");
+        }
+    }
+
+    /**
+     * This method returns a flag which is true, if the Atmosphere Web Socket Chat
+     * is used as endpoint for testing purposes.
+     *
+     * @return  True, if the Atmosphere Web Socket Chat is used as endpoint for testing purposes.
+     *          Otherwise set false.
+     * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
+     */
+    public Boolean getUsingAtmosphereTestWebSocket() throws ConfigurationException {
+        if (bundle.containsKey("usingAtmosphereTestWebSocket")){
+            return Boolean.parseBoolean(bundle.getString("usingAtmosphereTestWebSocket"));
+        }else{
+            throw new ConfigurationException("usingAtmosphereTestWebSocket is not given in the config file!");
         }
     }
 }

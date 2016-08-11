@@ -16,17 +16,17 @@ package channel.message;/*
 
 import java.util.Date;
 
-public class AtmosphereMessage {
+public class Message {
 
     private String message;
     private String author;
     private long time;
 
-    public AtmosphereMessage() {
+    public Message() {
         this("", "");
     }
 
-    public AtmosphereMessage(String author, String message) {
+    public Message(String author, String message) {
         this.author = author;
         this.message = message;
         this.time = new Date().getTime();
