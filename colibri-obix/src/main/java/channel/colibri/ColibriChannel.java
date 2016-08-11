@@ -198,29 +198,13 @@ public class ColibriChannel {
                     .uri(fullUrl)
                     .encoder(new Encoder<Message, String>() {
                         public String encode(Message data) {
-                                return data.toString();
+                                return data.getMessage();
                         }
                     })
                     .decoder(new Decoder<String, Message>() {
                         public Message decode(Event type, String data) {
 
-                            data = data.trim();
-
-                            // Padding
-                            if (data.length() == 0) {
-                                return null;
-                            }
-
-                            if (type.equals(Event.MESSAGE)) {
-                                try {
-                                    return mapper.readValue(data, Message.class);
-                                } catch (IOException e) {
-                                    logger.info("Invalid message {}", data);
-                                    return null;
-                                }
-                            } else {
-                                return null;
-                            }
+                            return new Message(data);
                         }
                     })
                     .transport(Request.TRANSPORT.WEBSOCKET)
