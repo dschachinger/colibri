@@ -84,7 +84,6 @@ public class GuiUtility {
         cards = new JPanel(new CardLayout());
         JScrollPane scrollPane = new JScrollPane(chooseComponents());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        //     scrollPane.setBorder(new EmptyBorder(20, 20, 0, 10));
 
         cards.add(scrollPane);
 
@@ -132,9 +131,6 @@ public class GuiUtility {
         c.gridy++;
         pane.add(titel, c);
 
-        /**
-         * Search function
-         */
         JTextField searchTextField = new JTextField("Search for a component");
         c.weightx = 1;
         c.weighty = 1;
@@ -147,6 +143,11 @@ public class GuiUtility {
         c.gridx++;
         JButton searchButton = new JButton("Search");
         pane.add(searchButton, c);
+
+        JCheckBox markAllCheckbox = new JCheckBox("Mark all components");
+        c.gridy++;
+        c.gridy++;
+        pane.add(markAllCheckbox, c);
 
         for (String s : lobby.getObservedObjectsLists().keySet()) {
             if (!s.equals("all")) {
@@ -202,7 +203,7 @@ public class GuiUtility {
         acceptButton.addActionListener(acceptAction);
 
         /**
-         * Search function
+         * Search function listener
          */
         Action searchAction = new AbstractAction()
         {
@@ -223,6 +224,21 @@ public class GuiUtility {
         };
         searchTextField.addActionListener(searchAction);
         searchButton.addActionListener(searchAction);
+
+        /**
+         * Mark all components function listener
+         */
+        Action markAllAction = new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                for (RepresentationRow r : GuiUtility.this.getRepresentationRows()) {
+                    r.getChooseCheckbox().setSelected(true);
+                }
+            }
+        };
+        markAllCheckbox.addActionListener(markAllAction);
 
         return pane;
     }
