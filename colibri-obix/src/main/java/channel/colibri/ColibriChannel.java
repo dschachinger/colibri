@@ -2,6 +2,7 @@ package channel.colibri;
 
 import channel.colibri.taskServices.PutMessageToColibriTask;
 import channel.colibri.taskServices.ResendMessageTask;
+import channel.message.AtmosphereMessage;
 import channel.message.Message;
 import channel.message.colibriMessage.ColibriMessage;
 import channel.message.colibriMessage.ColibriMessageMapper;
@@ -86,7 +87,7 @@ public class ColibriChannel {
 
     /**
      * A map with the service URI of an {@link ObixObject} as key. The values are {@link ObixObject} which observe actions performed
-     * by the colibri semantic core. 
+     * by the colibri semantic core.
      */
     private Map<String, ObixObject> observedMessagesOfColibriMap;
 
@@ -153,18 +154,17 @@ public class ColibriChannel {
                     .method(Request.METHOD.GET)
                     .uri(fullUrl)
                     .trackMessageLength(true)
-                    .encoder(new Encoder<Message, String>() {
-                        public String encode(Message data) {
+                    .encoder(new Encoder<AtmosphereMessage, String>() {
+                        public String encode(AtmosphereMessage data) {
                             try {
                                 return mapper.writeValueAsString(data);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
-
                         }
                     })
-                    .decoder(new Decoder<String, Message>() {
-                        public Message decode(Event type, String data) {
+                    .decoder(new Decoder<String, AtmosphereMessage>() {
+                        public AtmosphereMessage decode(Event type, String data) {
 
                             data = data.trim();
 
@@ -175,7 +175,7 @@ public class ColibriChannel {
 
                             if (type.equals(Event.MESSAGE)) {
                                 try {
-                                    return mapper.readValue(data, Message.class);
+                                    return mapper.readValue(data, AtmosphereMessage.class);
                                 } catch (IOException e) {
                                     logger.info("Invalid message {}", data);
                                     return null;
@@ -198,12 +198,7 @@ public class ColibriChannel {
                     .uri(fullUrl)
                     .encoder(new Encoder<Message, String>() {
                         public String encode(Message data) {
-                            try {
-                                return mapper.writeValueAsString(data);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-
+                                return data.toString();
                         }
                     })
                     .decoder(new Decoder<String, Message>() {
@@ -232,14 +227,9 @@ public class ColibriChannel {
                     .transport(Request.TRANSPORT.LONG_POLLING);
         }
             socket = client.create();
-            socket.on("message", new Function<Message>() {
+            socket.on(Event.MESSAGE, new Function<Message>() {
                 public void on(Message t) {
                     boolean receive = false;
-         /*           if(usingAtmosphereTestWebSocket && !t.getAuthor().equals(connectorName)) {
-                        receive = true;
-                    } else if (!usingAtmosphereTestWebSocket)
-                        receive = true;
-                    if (receive) { */
                         try {
                             messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                         } catch (IllegalArgumentException e) {
@@ -248,7 +238,18 @@ public class ColibriChannel {
                         lastMessageReceived = t.getMessage();
             //        }
                 }
-            }).on(new Function<Throwable>() {
+            }).on(Event.MESSAGE, new Function<AtmosphereMessage>() {
+            public void on(AtmosphereMessage t) {
+                boolean receive = false;
+                try {
+                    messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                } catch (IllegalArgumentException e) {
+                    lastMessageReceived = e.getMessage();
+                }
+                lastMessageReceived = t.getMessage();
+                //        }
+            }
+        }).on(new Function<Throwable>() {
 
                 @Override
                 public void on(Throwable t) {
@@ -274,7 +275,11 @@ public class ColibriChannel {
     public void send(ColibriMessage msg) {
         logger.info("Send:" + msg.toString());
         try {
-            socket.fire(new Message(connectorName, msg.toString()));
+            if(usingAtmosphereTestWebSocket) {
+                socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
+            } else {
+                socket.fire(new Message(msg.toString()));
+            }
             if (msg.getMsgType().equals(MessageIdentifier.GET)) {
                 requestedGetMessageMap.put(msg.getOptionalObixObject().getServiceUri(),
                         msg.getOptionalObixObject());
@@ -315,7 +320,11 @@ public class ColibriChannel {
         ColibriMessage resendMsg = ColibriMessage.createMessageWithNewId(msg);
         try {
             messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);
-            socket.fire(new Message(connectorName, resendMsg.toString()));
+            if(usingAtmosphereTestWebSocket) {
+                socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
+            } else {
+                socket.fire(new Message(msg.toString()));
+            }
         } catch (IOException e) {
             logger.info("Cannot interact with colibri, connection is faulty.");
         }

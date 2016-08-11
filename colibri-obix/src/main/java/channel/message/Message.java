@@ -19,10 +19,10 @@ public class Message {
     private String message;
 
     public Message() {
-        this("", "");
+        this("");
     }
 
-    public Message(String author, String message) {
+    public Message(String message) {
         this.message = message;
     }
 
