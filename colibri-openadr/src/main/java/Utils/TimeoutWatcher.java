@@ -12,6 +12,7 @@ import semanticCore.WebSocketHandling.ColibriTimeoutHandler;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by georg on 18.07.16.
@@ -84,6 +85,10 @@ public class TimeoutWatcher<S, T> {
         return watcher;
     }
 
+    public void shutdown(){
+        executor.shutdownNow();
+    }
+
     /**
      * Each object is responsible to monitor the reply for one message
      */
@@ -101,16 +106,19 @@ public class TimeoutWatcher<S, T> {
 
             try {
                 Thread.sleep(timeoutMilliSec);
+
+                if(monitoredMsg.containsKey(messageID)){
+                    logger.info("timeout for msg: " + messageID);
+                    // TODO insert to resend message after timeout handler.handleTimeout(medium, monitoredMsg, messageID);
+                } else {
+                    logger.info("timing is okay for msg: " + messageID);
+                }
+
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.info("thread interrupted --> can not wait until timeout");
             }
 
-            if(monitoredMsg.containsKey(messageID)){
-                logger.info("timeout for msg: " + messageID);
-                // TODO insert to resend message after timeout handler.handleTimeout(medium, monitoredMsg, messageID);
-            } else {
-                logger.info("timing is okay for msg: " + messageID);
-            }
+
 
             logger.info(Thread.currentThread().getName()+" End. MessageID = "+messageID + " threadID: " + Thread.currentThread().getId());
         }

@@ -119,6 +119,8 @@ public class XMPPChannel extends Channel {
      */
     @Override
     public void close(){
+        timeoutWatcher.shutdown();
+
         logger.info("close XMPP connection");
 
         Presence presence = new Presence(Presence.Type.unavailable);

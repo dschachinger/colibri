@@ -284,6 +284,9 @@ public class ColibriClient {
                 waitForDeregistration();
                 logger.info("go on with termination");
             }
+
+            timeoutWatcher.shutdown();
+
             logger.info("close websocket");
             socket.close();
             logger.info("finished close websocket");

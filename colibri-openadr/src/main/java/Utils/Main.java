@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,8 @@ public class Main {
 
     private static OADR2VEN ven;
     private static ColibriClient colClient;
+
+    private static AtomicBoolean alreadyTerminated = new AtomicBoolean(false);
 
     public static void main(String args[]){
         addExampleReportPossibility();
@@ -51,15 +54,7 @@ public class Main {
             public void run()
             {
                 logger.info("Shutdown hook ran!");
-                Main.ven.terminate();
-                // give colibri client termination thread time to terminate
-                try {
-                    Main.colClient.terminate().join();
-                } catch (InterruptedException e) {
-                    logger.error("can not shut down the colibri client properly");
-                }
-                logger.info("finished shutdown task");
-
+                Main.shutdown();
             }
         });
 
@@ -165,6 +160,21 @@ public class Main {
                 default:
                     break loop;
             }
+        }
+
+        Main.shutdown();
+    }
+
+    private static void shutdown(){
+        if(alreadyTerminated.compareAndSet(false, true)){
+            Main.ven.terminate();
+            // give colibri client termination thread time to terminate
+            try {
+                Main.colClient.terminate().join();
+            } catch (InterruptedException e) {
+                logger.error("can not shut down the colibri client properly");
+            }
+            logger.info("finished shutdown task");
         }
     }
 
