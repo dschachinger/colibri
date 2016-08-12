@@ -42,7 +42,7 @@ public class Main {
 
         final OpenADRColibriBridge bridge = new OpenADRColibriBridge();
 
-        ven = initOpenADRVEN(bridge);;
+        ven = initOpenADRVEN(bridge);
         bridge.setOadrVEN(ven);
 
         colClient = initColibriService(bridge);

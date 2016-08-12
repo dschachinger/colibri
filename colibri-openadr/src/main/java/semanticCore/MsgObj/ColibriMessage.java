@@ -74,7 +74,6 @@ public class ColibriMessage {
         out += msgType.toString() + "\n";
         out += header.toHeaderMsgString();
         if(content != null){
-            // TODO implement later out += "\r\n";
             out += "\n";
             out += content;
         }

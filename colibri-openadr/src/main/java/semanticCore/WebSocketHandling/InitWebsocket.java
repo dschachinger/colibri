@@ -81,34 +81,13 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                     .encoder(new Encoder<Message, String>() {
                         @Override
                         public String encode(Message data) {
-                            try {
-                                return mapper.writeValueAsString(data);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
+                            return data.getMessage();
                         }
                     })
                     .decoder(new Decoder<String, Message>() {
                         @Override
                         public Message decode(Event type, String data) {
-
-                            data = data.trim();
-
-                            // Padding from Atmosphere, skip
-                            if (data.length() == 0) {
-                                return null;
-                            }
-
-                            if (type.equals(Event.MESSAGE)) {
-                                try {
-                                    return mapper.readValue(data, Message.class);
-                                } catch (IOException e) {
-                                    logger.info("Invalid message {}", data);
-                                    return null;
-                                }
-                            } else {
-                                return null;
-                            }
+                            return new Message(data);
                         }
                     })
                     .transport(Request.TRANSPORT.WEBSOCKET)
@@ -123,20 +102,13 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
         socket.on(Event.MESSAGE, new Function<Message>() {
             @Override
             public void on(Message t) {
-                Date d = new Date(t.getTime());
-
                 ColibriMessage msg = ColibriMsgMapper.msgToPOJO(t.getMessage());
 
                 if(msg != null){
                     colClient.processReceivedMsg(msg);
                 }
 
-                if(colClient.isLocalAtmosphereClient()){
-                    logger.info("Author {}: {}", t.getAuthor() + "@ " + d.getHours() + ":" + d.getMinutes(), t.getMessage(
-                    ));
-                } else {
-                    logger.info("content : {}"/*, t.getAuthor() + "@ " + d.getHours() + ":" + d.getMinutes()*/, t.getMessage());
-                }
+                logger.info("message content : {}", t.getMessage());
 
             }
         }).on(new Function<Throwable>() {
