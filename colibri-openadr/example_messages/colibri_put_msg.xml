@@ -1,0 +1,43 @@
+PUT<br>
+Date: 2016-05-05T16:01:00Z<br>
+Message-Id: 11A1<br>
+Content-Type: application/rdf+xml<br><br>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rdf:RDF [
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+<!ENTITY colibri "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#" > ]>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:colibri ="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl">
+    <rdf:Description rdf:about="http://colibri.org/datavalue1">
+        <rdf:type rdf:resource="&colibri;DataValue"/>
+        <colibri:hasValue rdf:resource="http://colibri.org/value1-1"/>
+        <colibri:hasValue rdf:resource="http://colibri.org/value1-2"/>        
+    </rdf:Description>
+    <rdf:Description rdf:about="http://colibri.org/value1-1">
+        <colibri:value rdf:datatype="&xsd;string">Event_939393
+        </colibri:value>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/openADRConnector/acceptLoad/ServiceParameter1-1"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://colibri.org/value1-2">
+        <colibri:value rdf:datatype="&xsd;boolean">true
+        </colibri:value>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/openADRConnector/acceptLoad/ServiceParameter1-2"/>
+    </rdf:Description>
+        <rdf:Description rdf:about="http://colibri.org/datavalue2">
+        <rdf:type rdf:resource="&colibri;DataValue"/>
+        <colibri:hasValue rdf:resource="http://colibri.org/value2-1"/>
+        <colibri:hasValue rdf:resource="http://colibri.org/value2-2"/>        
+    </rdf:Description>
+    <rdf:Description rdf:about="http://colibri.org/value2-1">
+        <colibri:value rdf:datatype="&xsd;string">Event_939396
+        </colibri:value>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/openADRConnector/acceptLoad/ServiceParameter1-1"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://colibri.org/value2-2">
+        <colibri:value rdf:datatype="&xsd;boolean">true
+        </colibri:value>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/openADRConnector/acceptLoad/ServiceParameter1-2"/>
+    </rdf:Description>
+</rdf:RDF>
