@@ -28,29 +28,30 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
     public static Socket initWebSocket(final ColibriClient colClient) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
 
-        Client client;
+        Client client = ClientFactory.getDefault().newClient();;
         RequestBuilder request;
 
-        if(colClient.isLocalAtmosphereClient()){
-            client = ClientFactory.getDefault().newClient(AtmosphereClient.class);
-            request = ((AtmosphereClient)client).newRequestBuilder()
-                    .method(Request.METHOD.GET)
-                    .uri(colClient.getColibriCoreURL())
-                    .trackMessageLength(true)
-                    .encoder(new Encoder<Message, String>() {
-                        @Override
-                        public String encode(Message data) {
+        request = client.newRequestBuilder()
+                .method(Request.METHOD.GET)
+                .uri(colClient.getColibriCoreURL())
+                .encoder(new Encoder<Message, String>() {
+                    @Override
+                    public String encode(Message data) {
+                        if(colClient.isLocalAtmosphereClient()){
                             try {
                                 return mapper.writeValueAsString(data);
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
                             }
+                        } else {
+                            return data.getMessage();
                         }
-                    })
-                    .decoder(new Decoder<String, Message>() {
-                        @Override
-                        public Message decode(Event type, String data) {
-
+                    }
+                })
+                .decoder(new Decoder<String, Message>() {
+                    @Override
+                    public Message decode(Event type, String data) {
+                        if(colClient.isLocalAtmosphereClient()) {
                             data = data.trim();
 
                             // Padding from Atmosphere, skip
@@ -62,40 +63,19 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                                 try {
                                     return mapper.readValue(data, Message.class);
                                 } catch (IOException e) {
-                                    logger.info("Invalid message {}", data);
                                     return null;
                                 }
                             } else {
                                 return null;
                             }
-                        }
-                    })
-                    .transport(Request.TRANSPORT.WEBSOCKET)
-                    .transport(Request.TRANSPORT.SSE)
-                    .transport(Request.TRANSPORT.LONG_POLLING);
-        } else {
-            client = ClientFactory.getDefault().newClient();
-            request = client.newRequestBuilder()
-                    .method(Request.METHOD.GET)
-                    .uri(colClient.getColibriCoreURL())
-                    .encoder(new Encoder<Message, String>() {
-                        @Override
-                        public String encode(Message data) {
-                            return data.getMessage();
-                        }
-                    })
-                    .decoder(new Decoder<String, Message>() {
-                        @Override
-                        public Message decode(Event type, String data) {
+                        } else {
                             return new Message(data);
                         }
-                    })
-                    .transport(Request.TRANSPORT.WEBSOCKET)
-                    .transport(Request.TRANSPORT.SSE)
-                    .transport(Request.TRANSPORT.LONG_POLLING);
-        }
-
-
+                    }
+                })
+                .transport(Request.TRANSPORT.WEBSOCKET)
+                .transport(Request.TRANSPORT.SSE)
+                .transport(Request.TRANSPORT.LONG_POLLING);
 
         final Socket socket = client.create();
 

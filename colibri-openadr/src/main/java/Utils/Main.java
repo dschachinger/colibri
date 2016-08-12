@@ -60,38 +60,36 @@ public class Main {
 
         Scanner reader = new Scanner(System.in);  // Reading from System.in
 
+        printHelp();
+
         int n;
         loop : while (true){
-            logger.info("Enter an action number: ");
+            logger.info("\n ___      ___  ___  __           __  ___    __                           __   ___  __   \n" +
+                        "|__  |\\ |  |  |__  |__)     /\\  /  `  |  | /  \\ |\\ |    |\\ | |  |  |\\/| |__) |__  |__) .\n" +
+                        "|___ | \\|  |  |___ |  \\    /~~\\ \\__,  |  | \\__/ | \\|    | \\| \\__/  |  | |__) |___ |  \\ .\n" +
+                        "                                                                                        ");
             n = reader.nextInt();
             switch (n){
-                case 1: logger.info("websocket registered: " + colClient.isRegistered());
+                case 0: printHelp();
+                case 1: logger.info("colibri registered: " + colClient.isRegistered());
                     break;
                 case 2:
                     logger.info("colibri: send registration");
                     colClient.sendRegisterMessage();
                     break;
                 case 3:
-                    logger.info("ven: terminate");
-                    ven.terminate();
-                    break;
-                case 4:
-                    logger.info("colibri: terminate (can not used anymore)");
-                    colClient.terminate();
-                    break;
-                case 5:
                     logger.info("colibri: send deregistration");
                     colClient.sendDeregisterMessage();
                     break;
-                case 6:
+                case 4:
                     logger.info("colibri: add price service");
                     colClient.sendAddService(EventType.PRICE);
                     break;
-                case 7:
+                case 5:
                     logger.info("colibri: add load service");
                     colClient.sendAddService(EventType.LOAD);
                     break;
-                case 8:
+                case 6:
                     logger.info("added services:");
                     for(String service : colClient.getServicesMap().keySet()){
                         if(colClient.getServicesMap().get(service).isServiceAdded()){
@@ -99,7 +97,7 @@ public class Main {
                         }
                     }
                     break;
-                case 9:
+                case 7:
                     logger.info("observed services:");
                     for(String serviceURL : colClient.getServicesMap().keySet()){
                         if(colClient.getServicesMap().get(serviceURL).isServiceObserved()){
@@ -107,7 +105,7 @@ public class Main {
                         }
                     }
                     break;
-                case 10:
+                case 8:
                     logger.info("colibri: query message");
                     logger.info("\tEnter the query (end query input with \"?!?\"):");
                     {
@@ -121,7 +119,7 @@ public class Main {
                         colClient.sendQueryMessage(in);
                     }
                     break;
-                case 11:
+                case 9:
                     logger.info("colibri: update message");
                     logger.info("\tEnter the sparql-update (end sparql-update input with \"?!?\"):");
                     {
@@ -135,27 +133,35 @@ public class Main {
                         colClient.sendUpdateMessage(in);
                     }
                 break;
-                case 51: ven.sendExampleOadrQueryRegistration();
+                case 10:
+                    logger.info("colibri: terminate (can not used anymore)");
+                    colClient.terminate();
                     break;
-                case 52: ven.sendExampleOadrCreatePartyRegistration();
-                    break;
-                case 53: ven.sendExampleOadrCancelPartyRegistration();
-                    break;
-                case 54: ven.sendExampleOadrRequestEvent();
-                    break;
-                case 55:
+                case 21:
                     // good possibility to check if correctly registered
                     logger.info("registraionID: " + OADRConInfo.getRegistrationId());
                     break;
-                case 56:
-                    ven.sendExampleOadrRegisterReport();
-                    break;
-                case 57:
-                    ven.sendExampleOadrUpdateReport();
-                    break;
-                case 58:
+                case 22:
                     // good possibility to check if correctly registered
                     logger.info("openADR venID: " + OADRConInfo.getVENId());
+                    break;
+                case 23: ven.sendExampleOadrQueryRegistration();
+                    break;
+                case 24: ven.sendExampleOadrCreatePartyRegistration();
+                    break;
+                case 25: ven.sendExampleOadrCancelPartyRegistration();
+                    break;
+                case 26: ven.sendExampleOadrRequestEvent();
+                    break;
+                case 27:
+                    ven.sendExampleOadrRegisterReport();
+                    break;
+                case 28:
+                    ven.sendExampleOadrUpdateReport();
+                    break;
+                case 29:
+                    logger.info("ven: terminate (can not used anymore)");
+                    ven.terminate();
                     break;
                 default:
                     break loop;
@@ -163,6 +169,38 @@ public class Main {
         }
 
         Main.shutdown();
+    }
+
+    private static void printHelp(){
+        String bar = "--------------------------------------------------------------------";
+        String actions = "      __  ___    __        __   \n" +
+                " /\\  /  `  |  | /  \\ |\\ | /__` .\n" +
+                "/~~\\ \\__,  |  | \\__/ | \\| .__/ .\n" +
+                "                                ";
+        String colibri_part =
+                "\t\t1:\tprint if connector is registered\n" +
+                "\t\t2:\tregister the connector\n" +
+                "\t\t3:\tderegister the connector\n" +
+                "\t\t4:\tsend an add message for price events to the core\n" +
+                "\t\t5:\tsend an add message for load events to the core\n" +
+                "\t\t6:\tshow the added services\n" +
+                "\t\t7:\tshow the observed services\n" +
+                "\t\t8:\tsend query message to the core\n" +
+                "\t\t9:\tsend update message to the core\n" +
+                "\t\t10:\tterminate the connector\n";
+
+        String openADR_part =
+                "\t\t21:\tprint the registration id\n" +
+                "\t\t22:\tprint the ven id\n" +
+                "\t\t23:\tquery the VTN about registration information\n" +
+                "\t\t24:\tregister the VEN on the VTN party\n" +
+                "\t\t25:\tderegister the VEN on the VTN party\n" +
+                "\t\t26:\trequest for new events\n" +
+                "\t\t27:\tregister the VEN report possibilities on the VTN party\n" +
+                "\t\t28:\tsend new report data to the VTN party\n" +
+                "\t\t29:\tterminate the VEN\n";
+
+        logger.info("\n"+bar+"\n"+actions+"\n\t\t0:\tprints this help page again\n\n"+"\tcolibri actions:\n"+colibri_part+"\n\topenADR actions:\n"+openADR_part+"\n"+bar);
     }
 
     private static void shutdown(){
