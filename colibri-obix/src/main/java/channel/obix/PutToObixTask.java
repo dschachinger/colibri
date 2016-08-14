@@ -12,13 +12,28 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBException;
 import java.util.TimerTask;
 
+/**
+ * This class represents a task which is used for the scheduled sending of PUT-messages to an obix gateway.
+ */
 public class PutToObixTask extends TimerTask {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    /**
+     * The object which represents the service to which the PUT message is referring.
+     */
     private ObixObject serviceObject;
+
     private ColibriChannel colibriChannel;
     private ObixChannel obixChannel;
     private ColibriMessage putMessage;
     private static final Logger logger = LoggerFactory.getLogger(PutToObixTask.class);
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public PutToObixTask(ObixObject serviceObject, ColibriChannel colibriChannel, ObixChannel obixChannel, ColibriMessage putMessage) {
         this.serviceObject = serviceObject;
@@ -46,9 +61,9 @@ public class PutToObixTask extends TimerTask {
         }
         boolean setParam1 = false;
         boolean setParam2 = false;
-        if(!checkBooleanValuesForCorrectnes(content.getValue1().getDatatype(),
+        if(!checkBooleanValuesForCorrectness(content.getValue1().getDatatype(),
                 content.getValue1().getValue())
-            || !checkBooleanValuesForCorrectnes(content.getValue2().getDatatype(),
+            || !checkBooleanValuesForCorrectness(content.getValue2().getDatatype(),
                 content.getValue2().getDatatype())) {
             colibriChannel.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "One of the received " +
                     "boolean values is neither true nor false in message: ", putMessage.getHeader().getId()));
@@ -92,12 +107,23 @@ public class PutToObixTask extends TimerTask {
 
     }
 
-    private boolean checkBooleanValuesForCorrectnes(String valueType, String valueToCheck) {
+    /**
+     * This method returns true, if the given value and its type are correct booleans.
+     *
+     * @param valueType     The value type of the value which is checked.
+     * @param valueToCheck  The value which is checked.
+     * @return              True, if the given value and its type are correct booleans, otherwise false.
+     */
+    private boolean checkBooleanValuesForCorrectness(String valueType, String valueToCheck) {
         if(valueType.contains("boolean")) {
             return ((valueToCheck.equals("true")) || (valueToCheck.equals("false")));
         }
         return true;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public ObixObject getObj() {
         return serviceObject;
@@ -105,10 +131,6 @@ public class PutToObixTask extends TimerTask {
 
     public void setObj(ObixObject serviceObject) {
         this.serviceObject = serviceObject;
-    }
-
-    public ColibriMessage getPutMessage() {
-        return putMessage;
     }
 
     public void setPutMessage(ColibriMessage putMessage) {

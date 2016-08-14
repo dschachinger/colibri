@@ -18,13 +18,25 @@ import static org.eclipse.californium.core.coap.MediaTypeRegistry.APPLICATION_XM
  */
 public abstract class ObixChannel {
 
-    protected String baseUri;
-    protected String lobbyUri;
-    protected List<String> observedTypes;
-    protected Map<String, ObixObject> observedObjects = new HashMap<String, ObixObject>();
-    protected Integer port;
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    private String baseUri;
+    private String lobbyUri;
+
+    /**
+     * A list of obix types which can be observed, for example obix.Bool or obix.Real.
+     */
+    private List<String> observedTypes;
+    private Map<String, ObixObject> observedObjects = new HashMap<String, ObixObject>();
+    private Integer port;
 
     private static final Logger logger = LoggerFactory.getLogger(ObixChannel.class);
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public ObixChannel() {
     }
@@ -43,114 +55,25 @@ public abstract class ObixChannel {
         this.observedTypes = observedTypes;
     }
 
-    /**
-     * Requests the oBIX lobby with the lobby URI of the channel.
-     * Uses XML as messgae format.
-     *
-     * @return The oBIX lobby of the channel.
-     */
-    public ObixLobby getLobby() {
-        return this.getLobby(lobbyUri, APPLICATION_XML);
-    }
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
 
     /**
-     * Requests the oBIX lobby specified URI.
-     * Uses XML as messgae format.
+     * This method takes an relative URI and returns an absolute URI based on the {@link #getBaseUri()}.
      *
-     * @param uri The URI of the requested oBIX lobby.
-     * @return The oBIX lobby of the specified URI.
-     */
-    public ObixLobby getLobby(String uri) {
-        return this.getLobby(uri, APPLICATION_XML);
-    }
-
-    /**
-     * Observers data from the oBIX resource mapped to the oBIXObject.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param obj The oBIXObject which is observed.
-     * @return The observed oBIX Object with.
-     */
-    public ObixObject observe(ObixObject obj) {
-        return this.observe(obj, APPLICATION_XML);
-    }
-
-    /**
-     * Requests data from the oBIX resource with the specified URI.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param uri The URI of the requested oBIX resource.
-     * @return The oBIX Object with the specified URI.
-     */
-    public ObixObject get(String uri) {
-        return this.get(uri, APPLICATION_XML);
-    }
-
-    /**
-     * Modify an oBIX object with a put call.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param obj The oBIX object which is modified.
-     * @return The modified oBIX Object.
-     */
-    public ObixObject put(ObixObject obj) {
-        return this.put(obj, APPLICATION_XML);
-    }
-
-    /**
-     * Modify an oBIX object with a put call.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param obj       The oBIX object which is modified.
-     * @param mediaType The requested media type, for example APPLICATION_XML.
-     * @return The modified oBIX Object.
-     */
-    public abstract ObixObject put(ObixObject obj, int mediaType);
-
-    /**
-     * Requests the oBIX lobby specified URI.
-     * Uses XML as messgae format.
-     *
-     * @param uri       The URI of the requested oBIX lobby.
-     * @param mediaType The requested media type, for example APPLICATION_XML.
-     * @return The oBIX lobby of the specified URI.
-     */
-    public abstract ObixLobby getLobby(String uri, int mediaType);
-
-    /**
-     * Requests data from the oBIX resource with the specified URI.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param uri       The URI of the requested oBIX resource.
-     * @param mediaType The requested media type, for example APPLICATION_XML.
-     * @return The oBIX Objects with the specified URI.
-     */
-    public abstract ObixObject get(String uri, int mediaType);
-
-    /**
-     * Observers data from the oBIX resource mapped to the oBIXObject.
-     * <p>
-     * NOTE: ONLY XML SUPPORTED SO FAR.
-     *
-     * @param obj       The oBIXObject which is observed.
-     * @param mediaType The requested media type, for example APPLICATION_XML.
-     * @return The observed oBIX Object with.
-     */
-    public abstract ObixObject observe(ObixObject obj, int mediaType);
-
-    /**
-     * Normalizes the given URI against the CoAP-base URI of the channel
-     *
-     * @param uri The URI which should be normalized
-     * @return The normalized URI
+     * @param uri   The URI which should be normalized.
+     * @return      The normalized URI as a String.
      */
     public abstract String normalizeUri(String uri);
 
+    /**
+     * This method takes an relative URI and a base URI and returns an absolute URI.
+     *
+     * @param uri       The URI which should be normalized.
+     * @param baseUri   The base URI which is used to create an absolute URI.
+     * @return          The normalized URI as a String.
+     */
     public static String normalizeUri(String uri, String baseUri) {
         if (uri.contains(":")) {
             uri = uri.split(":")[1];
@@ -175,10 +98,98 @@ public abstract class ObixChannel {
     }
 
     /**
-     * Returns the base URI of the oBIX Connector
+     * This method sends a GET message with the obix lobby-URI of this channel and returns the response as an {@link ObixLobby}.
      *
-     * @return The base URI of the oBIX channel.
+     * @return      The requested {@link ObixLobby}.
      */
+    public ObixLobby getLobby() {
+        return this.getLobby(lobbyUri, APPLICATION_XML);
+    }
+
+    /**
+     * This method sends a GET message with the given obix lobby-URI and returns the response as an {@link ObixLobby}.
+     *
+     * @param uri   The URI of the requested oBIX lobby.
+     * @return      The requested {@link ObixLobby}.
+     */
+    public ObixLobby getLobby(String uri) {
+        return this.getLobby(uri, APPLICATION_XML);
+    }
+
+    /**
+     * This method sends a GET message with the given obix lobby-URI and returns the response as an {@link ObixLobby}.
+     *
+     * @param uri               The URI of the requested oBIX lobby.
+     * @param mediaType         The media type which is used for the GET message.
+     * @return                  The requested {@link ObixLobby}.
+     */
+    public abstract ObixLobby getLobby(String uri, int mediaType);
+
+    /**
+     * This method sends a GET message to the CoAP endpoint with the given URI and returns
+     * the response as an {@link ObixObject}.
+     *
+     * @param uri   The uri which is used for the GET message.
+     * @return      The response to the GET message.
+     */
+    public ObixObject get(String uri) {
+        return this.get(uri, APPLICATION_XML);
+    }
+
+    /**
+     * This method sends a GET message to the CoAP endpoint with the given URI and returns
+     * the response as an {@link ObixObject}.
+     *
+     * @param uri       The uri which is used for the GET message.
+     * @param mediaType The media type which is used for the GET message.
+     * @return          The response to the GET message.
+     */
+    public abstract ObixObject get(String uri, int mediaType);
+
+    /**
+     * This method observes an {@link ObixObject}.
+     *
+     * @param obj   The oBIXObject which is observed.
+     * @return      The observed {@link ObixObject} in form of an {@link ObixObject}.
+     */
+    public ObixObject observe(ObixObject obj) {
+        return this.observe(obj, APPLICATION_XML);
+    }
+
+    /**
+     * This method observes an {@link ObixObject}.
+     *
+     * @param obj       The oBIXObject which is observed.
+     * @param mediaType The media type which is used for the OBS message.
+     * @return          The observed {@link ObixObject} in form of an {@link ObixObject}.
+     */
+    public abstract ObixObject observe(ObixObject obj, int mediaType);
+
+    /**
+     * This method sends a PUT message to the CoAP endpoint with the given URI and returns
+     * the response as an {@link ObixObject}.
+     *
+     * @param obj   The {@link ObixObject} which is used for th PUT message.
+     * @return      The response to the PUT message.
+     */
+    public ObixObject put(ObixObject obj) {
+        return this.put(obj, APPLICATION_XML);
+    }
+
+    /**
+     * This method sends a PUT message to the CoAP endpoint with the given URI and returns
+     * the response as an {@link ObixObject}.
+     *
+     * @param obj       The {@link ObixObject} which is used for th PUT message.
+     * @param mediaType The media type which is used for the PUT message.
+     * @return          The response to the PUT message.
+     */
+    public abstract ObixObject put(ObixObject obj, int mediaType);
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
+
     public String getBaseUri() {
         return this.baseUri;
     }
@@ -197,10 +208,6 @@ public abstract class ObixChannel {
 
     public List<String> getObservedTypes() {
         return observedTypes;
-    }
-
-    public void setObservedTypes(List<String> observedTypes) {
-        this.observedTypes = observedTypes;
     }
 
     public Map<String, ObixObject> getObservedObjects() {

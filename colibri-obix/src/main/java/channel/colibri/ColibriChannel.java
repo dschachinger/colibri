@@ -276,7 +276,7 @@ public class ColibriChannel {
                     count++;
                     ResendMessageTask task = new ResendMessageTask(this, msg);
                     Timer timer = new Timer();
-                    long timing = conf.getTimeWaitingForStatusResponseInMilliseconds();
+                    long timing = conf.getTimeWaitingForResponseInMilliseconds();
                     timer.schedule(task, timing * count);
                     resendMessagesTasks.add(task);
                     runningTimers.put(UUID.randomUUID().toString(), timer);
@@ -742,18 +742,6 @@ public class ColibriChannel {
 
     public String getLastMessageReceived() {
         return lastMessageReceived;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public Map<String, ObixObject> getRequestedGetMessageMap() {
-        return requestedGetMessageMap;
     }
 
     public void addPutToObixTask(String serviceUri, PutToObixTask putToObixTask) {

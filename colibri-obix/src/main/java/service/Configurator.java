@@ -195,10 +195,10 @@ public class Configurator {
      * This method returns the time to wait for a Status Response in milliseconds which is specified in the
      * .properties file of the given bundle.
      *
-     * @return The Time to wait for a status response in milliseconds
+     * @return The Time to wait for a response in milliseconds
      * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
      */
-    public int getTimeWaitingForStatusResponseInMilliseconds() throws ConfigurationException {
+    public int getTimeWaitingForResponseInMilliseconds() throws ConfigurationException {
         if (bundle.containsKey("timeWaitingForResponseInMilliseconds")){
             return Integer.parseInt(bundle.getString("timeWaitingForResponseInMilliseconds"));
         }else{

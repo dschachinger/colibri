@@ -5,12 +5,28 @@ import model.obix.ObixObject;
 
 import java.util.Map;
 
+/**
+ * This class represents the decorator for obix channels, used in the decorator pattern.
+ */
 public abstract class ObixChannelDecorator extends ObixChannel{
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     protected ObixChannel channel;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     protected ObixChannelDecorator(ObixChannel channel) {
         this.channel = channel;
     }
+
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
 
     public ObixLobby getLobby() {
         return this.getLobby(channel.getLobbyUri());
