@@ -203,7 +203,6 @@ public class ColibriChannel {
                     })
                     .decoder(new Decoder<String, Message>() {
                         public Message decode(Event type, String data) {
-
                             return new Message(data);
                         }
                     })
@@ -213,25 +212,21 @@ public class ColibriChannel {
             socket = client.create();
             socket.on(Event.MESSAGE, new Function<Message>() {
                 public void on(Message t) {
-                    boolean receive = false;
                         try {
                             messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                         } catch (IllegalArgumentException e) {
                             lastMessageReceived = e.getMessage();
                         }
                         lastMessageReceived = t.getMessage();
-            //        }
                 }
             }).on(Event.MESSAGE, new Function<AtmosphereMessage>() {
             public void on(AtmosphereMessage t) {
-                boolean receive = false;
                 try {
                     messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
                 } catch (IllegalArgumentException e) {
                     lastMessageReceived = e.getMessage();
                 }
                 lastMessageReceived = t.getMessage();
-                //        }
             }
         }).on(new Function<Throwable>() {
 

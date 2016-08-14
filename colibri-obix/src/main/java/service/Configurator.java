@@ -66,6 +66,7 @@ public class Configurator {
                 ObixChannel channel;
                 if (uri.contains(",")) {
                     Integer port = Integer.parseInt(uri.split(",")[1]);
+                    uri = uri.split(",")[0];
                     channel = new CoapChannel(baseUri, uri, port, getObservedTypes());
                 } else {
                     channel = new CoapChannel(baseUri, uri, getObservedTypes());
