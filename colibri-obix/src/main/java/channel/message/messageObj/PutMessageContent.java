@@ -11,18 +11,33 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents the content of PUT messages used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 @XmlRootElement(name = "RDF" ,namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PutMessageContent {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     private static final Logger logger = LoggerFactory.getLogger(PutMessageContent.class);
 
     @XmlElement(name="Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private List<Description> descriptions;
 
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public PutMessageContent() {
         this.descriptions = Collections.synchronizedList(new ArrayList<>());;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public List<Description> getDescriptions() {
         return descriptions;

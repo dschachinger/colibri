@@ -1,5 +1,8 @@
 package channel.message.messageObj;
 
+/**
+ * This enum represents the message identifiers used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 public enum MessageIdentifier {
     STA("STA"),
     REG("REG"),
@@ -14,11 +17,23 @@ public enum MessageIdentifier {
     QRE("QRE"),
     UPD("UPD");
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     private String type;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     MessageIdentifier(String type) {
         this.type = type;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getIdentifier() {
         return type;

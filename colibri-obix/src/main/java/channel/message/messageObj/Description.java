@@ -5,9 +5,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents descriptions used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class Description {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     @XmlElement(name = "type", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private List<Type> types;
@@ -54,6 +61,10 @@ public class Description {
     @XmlElement(namespace = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
     private Name name;
 
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public Description() {
         this.types = Collections.synchronizedList(new ArrayList<>());
         this.hasParameters = Collections.synchronizedList(new ArrayList<>());
@@ -61,6 +72,10 @@ public class Description {
         this.hasStates = Collections.synchronizedList(new ArrayList<>());
         this.hasDataValues = Collections.synchronizedList(new ArrayList<>());
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public HasProperty getHasTechnologyProtocol() {
         return hasTechnologyProtocol;

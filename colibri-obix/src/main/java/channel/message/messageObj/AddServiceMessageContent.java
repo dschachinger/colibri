@@ -8,18 +8,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represents the content of ADD messages used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 @XmlRootElement(name = "RDF" ,namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class AddServiceMessageContent {
 
-    private String connectorAddress;
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     @XmlElement(name="Description", namespace = "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
     private List<Description> descriptions;
 
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public AddServiceMessageContent() {
         this.descriptions = Collections.synchronizedList(new ArrayList<>());;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public List<Description> getDescriptions() {
         return descriptions;

@@ -2,7 +2,14 @@ package channel.message.messageObj;
 
 import java.util.List;
 
+/**
+ * This class the descriptions of states used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 public class StateDescription {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     private String parameterType;
     private String stateDescriptionUri;
@@ -13,6 +20,10 @@ public class StateDescription {
     private Value value;
     private Name name;
 
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public StateDescription(String stateDescriptionUri, List<String> stateTypes, Value value, Name name) {
         this.parameterType = "&colibri;StateParameter";
         this.stateDescriptionUri = stateDescriptionUri;
@@ -20,6 +31,10 @@ public class StateDescription {
         this.value = value;
         this.name = name;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getStateDescriptionUri() {
         return stateDescriptionUri;
