@@ -489,6 +489,12 @@ public class GuiUtility {
                         return;
                     }
                 }
+
+                for(ObixObject o : chosenComponents) {
+                    o.getParameter1().getStateDescriptions().clear();
+                    o.getParameter2().getStateDescriptions().clear();
+                }
+
                 for (StateRepresentation s : listOfStateRepresentations) {
                     //Save created State
                     ArrayList<String> types = new ArrayList<String>();

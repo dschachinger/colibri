@@ -222,11 +222,12 @@ public class ColibriChannel {
             }).on(Event.MESSAGE, new Function<AtmosphereMessage>() {
             public void on(AtmosphereMessage t) {
                 try {
-                    messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                    if(!t.getAuthor().equals(connectorName)) {
+                        messageReceived(ColibriMessageMapper.msgToPOJO(t.getMessage()));
+                    }
                 } catch (IllegalArgumentException e) {
                     lastMessageReceived = e.getMessage();
                 }
-                lastMessageReceived = t.getMessage();
             }
         }).on(new Function<Throwable>() {
 

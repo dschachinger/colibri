@@ -22,10 +22,22 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * This class is used as a service for creating and processing SPARQL messages.
+ */
 public class SparqlMsgService {
 
     private static final Logger logger = LoggerFactory.getLogger(SparqlMsgService.class);
 
+    /**
+     * This method is used to process the result set from a given QRE {@link ColibriMessage} and checks
+     * if the result set matches the given expected vars.
+     * The results are printed through System.out.
+     * This method is only used as prove of concept and prints the parsed results.
+     *
+     * @param msg           The {@link ColibriMessage} which contains the result set.
+     * @param expectedVars  The expected vars in the result set.
+     */
     public static void processSparqlResultSetfromColibriMessage(ColibriMessage msg, List<String> expectedVars) {
         String resultSetString = msg.getContent().getContentWithoutBreaksAndWhiteSpace();
         InputStream stream = new ByteArrayInputStream(resultSetString.getBytes(StandardCharsets.UTF_8));
@@ -35,7 +47,7 @@ public class SparqlMsgService {
         } else if (msg.getHeader().getContentType().equals(ContentType.APPLICATION_SPARQL_RESULT_XML)) {
             set = ResultSetFactory.fromXML(stream);
         } else {
-            throw new IllegalArgumentException("QRE messsage content type of mesage with ID " + msg.getHeader().getId() + " not supported");
+            throw new IllegalArgumentException("QRE messsage content type of message with ID " + msg.getHeader().getId() + " not supported");
         }
         if(!ListHelper.listsUnorderedEqual(expectedVars, set.getResultVars())) {
             String message = "The SPARQL result set does not contain the expected result vars. Received Set: " +
@@ -61,6 +73,10 @@ public class SparqlMsgService {
         }
     }
 
+    /**
+     *
+     * @return  An example SPARQL query.
+     */
     public static String createExampleQuery() {
         return "PREFIX\n" +
                 "PREFIX\n" +
@@ -80,6 +96,10 @@ public class SparqlMsgService {
                 "?service colibri:identifier ?identifier}";
     }
 
+    /**
+     * This main method is only used for testing the creation an processing of {@link ColibriMessage} which have
+     * SPARQL content.
+     */
     public static void main (String[] args) {
         String resultSetJson = "{\n" +
                 "\"head\": { \"vars\": [ \"service\", \"identifier\" ] },\n" +
@@ -102,7 +122,6 @@ public class SparqlMsgService {
         expectedVars.add("service");
         expectedVars.add("identifier");
         processSparqlResultSetfromColibriMessage(msgJson, expectedVars);
-
 
 
         String resultSetXML = "<?xml version=\"1.0\"?>\n" +
@@ -161,5 +180,4 @@ public class SparqlMsgService {
         expectedVars2.add("friend");
         processSparqlResultSetfromColibriMessage(msgXml, expectedVars2);
     }
-
 }

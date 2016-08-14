@@ -1,19 +1,11 @@
 package channel.message.service;
 
 import channel.Connector;
-import channel.colibri.ColibriChannel;
-import channel.colibri.taskServices.PutMessageToColibriTask;
 import channel.message.colibriMessage.ColibriMessage;
-import channel.message.colibriMessage.ColibriMessageContent;
-import channel.message.colibriMessage.ColibriMessageHeader;
 import channel.message.messageObj.*;
-import channel.obix.CoapChannel;
-import channel.obix.ObixChannel;
-import channel.obix.ObixXmlChannelDecorator;
 import model.obix.ObixObject;
 import model.obix.parameter.Parameter;
 import service.Configurator;
-import service.TimeDurationConverter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -21,27 +13,29 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.ParseException;
-import java.time.Duration;
-import java.util.*;
+import java.util.List;
 
+/**
+ * This class includes methods to create the content used in {@link channel.message.colibriMessage.ColibriMessage}.
+ */
 public class ColibriMessageContentCreator {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     private static Marshaller jaxbMarshaller;
     private static Unmarshaller jaxbUnmarshaller;
-    private static boolean booleanStatesAlreadyReigstered;
     private static int dataValueCounter = 1;
 
     static {
         try {
-            booleanStatesAlreadyReigstered = false;
-
             JAXBContext jaxbContext = JAXBContext.newInstance(AddServiceMessageContent.class, PutMessageContent.class, RegisterMessageContent.class);
             JAXBContext jaxbUmarshallerContext = JAXBContext.newInstance(PutMessageContent.class);
             jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbUnmarshaller = jaxbUmarshallerContext.createUnmarshaller();
 
-            // output pretty printed
+            // output in pretty format
             jaxbMarshaller.setProperty("com.sun.xml.internal.bind.characterEscapeHandler", new DummyEscapeHandler());
             jaxbMarshaller.setProperty("com.sun.xml.internal.bind.xmlHeaders",
                     "\n<!DOCTYPE rdf:RDF [\n" +
@@ -52,9 +46,18 @@ public class ColibriMessageContentCreator {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-
     }
 
+    /******************************************************************
+     *                              Methdos                           *
+     ******************************************************************/
+
+    /**
+     * This method is used to create the content for an ADD {@link ColibriMessage}.
+     *
+     * @param obixObject    The object for which the service for the ADD message is created.
+     * @return              The created content for an ADD service message.
+     */
     public static String createAddServiceMessageContent(ObixObject obixObject) {
         AddServiceMessageContent addServiceMessageContent = new AddServiceMessageContent();
         //Description of the service
@@ -102,24 +105,11 @@ public class ColibriMessageContentCreator {
         addServiceMessageContent.addDescription(parameter2Description);
 
         //Description of possible states
-        List<StateDescription> list = obixObject.getParameter1().getStateDescriptions();
-        for (StateDescription des : obixObject.getParameter1().getStateDescriptions()) {
-            Description stateDescription = new Description();
-            stateDescription.setAbout(des.getStateDescriptionUri());
-            des.getStateTypes().forEach(stateDescription::addType);
-            stateDescription.setValue(des.getValue());
-            stateDescription.setName(des.getName());
-            addServiceMessageContent.addDescription(stateDescription);
-        }
+        addServiceMessageContent = addStateDescriptionsToAddServiceContent(addServiceMessageContent,
+                obixObject.getParameter1().getStateDescriptions());
 
-        for (StateDescription des : obixObject.getParameter2().getStateDescriptions()) {
-            Description stateDescription = new Description();
-            stateDescription.setAbout(des.getStateDescriptionUri());
-            des.getStateTypes().forEach(stateDescription::addType);
-            stateDescription.setValue(des.getValue());
-            stateDescription.setName(des.getName());
-            addServiceMessageContent.addDescription(stateDescription);
-        }
+        addServiceMessageContent = addStateDescriptionsToAddServiceContent(addServiceMessageContent,
+                obixObject.getParameter2().getStateDescriptions());
 
         StringWriter writer = new StringWriter();
 
@@ -131,6 +121,12 @@ public class ColibriMessageContentCreator {
         return writer.toString();
     }
 
+    /**
+     * This method is used to create the content for a PUT {@link ColibriMessage}.
+     *
+     * @param obixObjects   The list of {@link ObixObject} which is used to create the PUT message content.
+     * @return              The created content for a PUT message.
+     */
     public static String createPutMessageContent(List<ObixObject> obixObjects) {
         PutMessageContent putMessageContent = new PutMessageContent();
         //Description of the service
@@ -182,6 +178,12 @@ public class ColibriMessageContentCreator {
         return writer.toString();
     }
 
+    /**
+     * This method is used to create the content for a REG {@link ColibriMessage}.
+     *
+     * @param connector     The {@link Connector} which is used to create REG messages.
+     * @return              The created content for a REG message.
+     */
     public static String createRegisterMessageContent(Connector connector) {
         RegisterMessageContent registerMessageContent = new RegisterMessageContent();
         Description description = new Description();
@@ -202,66 +204,37 @@ public class ColibriMessageContentCreator {
         return writer.toString();
     }
 
+    /**
+     * This method is used to parse a {@link PutMessageContent} from a PUT {@link ColibriMessage}.
+     *
+     * @param putMsg            The PUT message which is parsed.
+     * @return                  The parsed PUT message content from the given PUT {@link ColibriMessage}.
+     * @throws JAXBException    Thrown, if the message parsing fails.
+     */
     public static PutMessageContent getPutMessageContent(ColibriMessage putMsg) throws JAXBException {
         StringReader reader = new StringReader(putMsg.getContent().getContentWithoutBreaks());
         return (PutMessageContent) jaxbUnmarshaller.unmarshal(reader);
     }
 
-    public static int increase() {
-        return dataValueCounter++;
-    }
-
-    public static void main(String[] args) {
-        ObixChannel channel = new ObixXmlChannelDecorator(new CoapChannel("localhost", "localhost/obix", Collections.synchronizedList(new ArrayList<>())));
-        ObixObject obj = channel.get("VirtualDevices/virtualTemperatureSensor/value");
-
-        System.out.println("------------------------------------------------------------------------------------------");
-        System.out.println("ADD SERVICE MESSAGE");
-
-        System.out.println(ColibriMessageContentCreator.createAddServiceMessageContent(obj));
-
-        System.out.println("------------------------------------------------------------------------------------------");
-        System.out.println("PUT MESSAGE");
-
-        List<ObixObject> putObjectList = Collections.synchronizedList(new ArrayList<>());;
-        putObjectList.add(obj);
-        System.out.println(ColibriMessageContentCreator.createPutMessageContent(putObjectList));
-
-        System.out.println("------------------------------------------------------------------------------------------");
-        System.out.println("RECEIVED PUT MESSAGE");
-
-        ColibriMessage observeMsg = new ColibriMessage(MessageIdentifier.OBS, new ColibriMessageHeader(ContentType.TEXT_PLAIN),
-                new ColibriMessageContent("http://test.org/res1?freq=sad"));
-
-        ColibriChannel colibriChannel = new ColibriChannel("bla", "127.0.0.1", 6789, "http://127.0.0.1:6789/chat");
-
-        String serviceUri = "";
-        if (observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace().contains("?freq=")) {
-            String[] content = observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace().split("\\?freq=");
-            Date dateNow = new Date();
-            String icalTemp = TimeDurationConverter.date2Ical(dateNow).toString();
-            Timer timer = new Timer();
-            PutMessageToColibriTask executionTask = new PutMessageToColibriTask(obj, colibriChannel, observeMsg.getHeader().getId());
-            try {
-                Date d = (TimeDurationConverter.ical2Date(icalTemp.split("T")[0] + "T" + content[1]));
-
-                /**
-                 * Send Put once a day at the specified time
-                 */
-                timer.schedule(executionTask, d, 24 * 60 * 60 * 1000);
-            } catch (ParseException e) {
-                Duration duration = Duration.parse(content[1]);
-                /**
-                 * Send Put with the specified duration
-                 */
-                timer.schedule(executionTask, duration.toMillis());
-
-            }
-        } else {
-            serviceUri = observeMsg.getContent().getContentWithoutBreaksAndWhiteSpace();
+    /**
+     * This method is used to add the given {@link StateDescription} to the given {@link AddServiceMessageContent}.
+     *
+     * @param addServiceMessageContent  The {@link AddServiceMessageContent} to which the
+     *                                  {@link StateDescription} are added.
+     * @param stateDescriptions         The list of {@link StateDescription} which is added to the
+     *                                  {@link AddServiceMessageContent}.
+     * @return  The {@link AddServiceMessageContent} with the added {@link StateDescription}.
+     */
+    private static AddServiceMessageContent addStateDescriptionsToAddServiceContent(
+            AddServiceMessageContent addServiceMessageContent, List<StateDescription> stateDescriptions) {
+        for (StateDescription des : stateDescriptions) {
+            Description stateDescription = new Description();
+            stateDescription.setAbout(des.getStateDescriptionUri());
+            des.getStateTypes().forEach(stateDescription::addType);
+            stateDescription.setValue(des.getValue());
+            stateDescription.setName(des.getName());
+            addServiceMessageContent.addDescription(stateDescription);
         }
-        while (true) {
-
-        }
+        return addServiceMessageContent;
     }
 }

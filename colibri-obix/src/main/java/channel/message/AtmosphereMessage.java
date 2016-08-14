@@ -2,10 +2,22 @@ package channel.message;
 
 import java.util.Date;
 
+/**
+ * This class represents messages which are sent to the atmosphere web socket chat-server.
+ */
 public class AtmosphereMessage {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     private String message;
     private String author;
     private long time;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public AtmosphereMessage() {
         this("", "");
@@ -16,6 +28,10 @@ public class AtmosphereMessage {
         this.message = message;
         this.time = new Date().getTime();
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getMessage() {
         return message;

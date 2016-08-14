@@ -14,9 +14,20 @@ package channel.message;/*
  * the License.
  */
 
+/**
+ * This class represents messages which are sent to the colibri web socket.
+ */
 public class Message {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     private String message;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public Message() {
         this("");
@@ -25,6 +36,10 @@ public class Message {
     public Message(String message) {
         this.message = message;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getMessage() {
         return message;
