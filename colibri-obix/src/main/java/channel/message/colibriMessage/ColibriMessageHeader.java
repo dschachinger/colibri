@@ -7,15 +7,49 @@ import service.TimeDurationConverter;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * This class represents the header of a {@link ColibriMessage}.
+ */
 public class ColibriMessageHeader {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    /**
+     * The message-id.
+     */
     private String id;
+
+    /**
+     * The {@link ContentType} of the message.
+     */
     private ContentType contentType;
+
+    /**
+     * The date when the message was sent.
+     */
     private Date date;
+
+    /**
+     * The message-id to which this message header is referencing.
+     */
     private String refenceId;
+
+    /**
+     * The date when the message expires.
+     */
     private Date expires;
+
+    /**
+     * The message-header as a String.
+     */
     private String headerAsString;
     private static final String newLine = Configurator.getInstance().getNewlineString();
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public ColibriMessageHeader(String headerAsString) {
         this.headerAsString = headerAsString;
@@ -35,6 +69,10 @@ public class ColibriMessageHeader {
         this.date = new Date();
         this.refenceId = refenceId;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getId() {
         return id;

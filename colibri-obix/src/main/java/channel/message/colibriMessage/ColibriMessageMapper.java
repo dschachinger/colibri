@@ -9,12 +9,30 @@ import service.TimeDurationConverter;
 
 import java.text.ParseException;
 
+/**
+ * This class is used to map a message from a String to {@link ColibriMessage}.
+ */
 public class ColibriMessageMapper {
 
-    static String newLine = Configurator.getInstance().getNewlineString();
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
+    static String newLine = Configurator.getInstance().getNewlineString();
     private static final Logger logger = LoggerFactory.getLogger(ColibriMessageMapper.class);
 
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
+
+    /**
+     * This method returns a {@link ColibriMessage} parsed from the given String.
+     *
+     * @param msg   The String which is parsed to get the {@link ColibriMessage}.
+     *
+     * @return                          The parsed {@link ColibriMessage}.
+     * @throws IllegalArgumentException Is thrown if the message parsing fails.
+     */
     public static ColibriMessage msgToPOJO(String msg) throws IllegalArgumentException{
 
         try {
@@ -33,6 +51,14 @@ public class ColibriMessageMapper {
         }
     }
 
+    /**
+     * This method returns the header of a {@link ColibriMessage} parsed from the given String.
+     *
+     * @param msg   The String which is parsed to get the {@link ColibriMessageHeader}.
+     *
+     * @return                          The parsed {@link ColibriMessageHeader}.
+     * @throws IllegalArgumentException Is thrown if the message-header parsing fails.
+     */
     private static ColibriMessageHeader parseMsgToHeader(String msg) {
         ColibriMessageHeader header = new ColibriMessageHeader(msg);
 
@@ -66,9 +92,5 @@ public class ColibriMessageMapper {
             }
         }
         return header;
-    }
-
-    public static String POJOToMsg(ColibriMessage msg) {
-        return null;
     }
 }
