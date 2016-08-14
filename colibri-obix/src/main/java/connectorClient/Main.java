@@ -2,6 +2,7 @@ package connectorClient;
 
 import channel.Connector;
 import channel.colibri.ColibriChannel;
+import channel.message.colibriMessage.ColibriMessage;
 import channel.obix.ObixXmlChannelDecorator;
 import exception.CoapException;
 import org.slf4j.Logger;
@@ -23,7 +24,7 @@ public class Main {
         Configurator configurator = Configurator.getInstance();
         List<Connector> connectors = configurator.getConnectors();
         boolean colibriIsRunning = false;
-
+        boolean registerMessageSendt = false;
         for (Connector connector : connectors) {
             ColibriChannel colibriChannel = connector.getColibriChannel();
             connector.setObixChannel(new ObixXmlChannelDecorator(connector.getObixChannel()));
@@ -50,7 +51,12 @@ public class Main {
                     }
                 }
             });
+            if(!registerMessageSendt) {
+                connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
+                registerMessageSendt = true;
+            }
         }
+
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {

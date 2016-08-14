@@ -105,7 +105,7 @@ public class GuiUtility {
 
         registeredColibriChannelCheckBox = new JCheckBox("IS REGISTERD ON COLIBRI SEMANTIC CORE");
         commandFactory.addCommand(() -> registeredColibriChannelCheckBox.setSelected(connector.getColibriChannel().getRegistered()));
-        connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
+       // connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
         Font regF = new Font("Courier", Font.BOLD, 40);
         registeredColibriChannelCheckBox.setFont(regF);
         registeredColibriChannelCheckBox.addItemListener(new ItemListener() {
