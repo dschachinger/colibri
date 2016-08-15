@@ -56,8 +56,9 @@ These are possible actions with the action number and description:
 ## Software architecture
 
 The following class diagram should give an overview about the software architecture. It is not complete it and therefore it is used to get an idea about the rough functionality.
+The yellow classes are related to the colibri part, the orange classes belongs to the openADR part and the gray ones bridges the colibri part with the openADR part.
 
-![class_diagram](https://cloud.githubusercontent.com/assets/17991420/17661759/78d9da38-62e1-11e6-83ad-b58a2ef15900.png)
+![class_diagram](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/diagrams/class_diagram.png)
 
 ## Used technologies
 
