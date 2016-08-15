@@ -6,7 +6,7 @@ This connector acts as a link between the colibri environment and the openADR en
 
 Run the command **gradle -q run** in the colibri-openadr folder
 
-### How to simulate a openADR server (VTN...virutal top node)
+### How to simulate a openADR server (VTN...virtual top node)
 
 Therefore a XMPP client with an XMPP-Console is used. e.g. [Pidgin](https://www.pidgin.im/)
 The XMPP-Console enables to send/receive all XMPP messages types with arbitrary content.
