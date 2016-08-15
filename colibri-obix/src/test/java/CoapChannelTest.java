@@ -10,6 +10,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Tests the connection to obix using CoAP.
+ * The test cases only succeed if a fitting obix lobby is available.
+ */
 public class CoapChannelTest {
 
     private ObixChannel undecoratedCoapChannel;

@@ -9,7 +9,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-
+/**
+ * Tests decoding and encoding of xml-Strings and {@link model.obix.ObixObject}.
+ */
 public class XmlChannelDecoratorTest {
 
     @Before

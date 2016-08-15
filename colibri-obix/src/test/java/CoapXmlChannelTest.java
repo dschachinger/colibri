@@ -14,6 +14,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tests the connection to obix using the xml-format and CoAP.
+ * The test cases only succeed if a fitting obix lobby is available.
+ */
 public class CoapXmlChannelTest {
 
     private ObixChannel channel;
