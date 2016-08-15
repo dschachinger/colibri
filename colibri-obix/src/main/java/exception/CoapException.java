@@ -4,11 +4,22 @@ import javax.xml.ws.http.HTTPException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * This class represents exceptions which are thrown if CoAP interactions are faulty.
+ */
 public class CoapException extends HTTPException {
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public CoapException(int statusCode) {
         super(statusCode);
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     @Override
     public int getStatusCode() {
