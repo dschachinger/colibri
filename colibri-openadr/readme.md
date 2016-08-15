@@ -65,7 +65,7 @@ This shuts down the openADR part of the connector. This means it closes the open
 
 The following class diagram should give an overview about the software architecture. It is not complete it and therefore it is used to get an idea about the rough functionality.
 
-//TODO add diagram
+![class_diagram](https://cloud.githubusercontent.com/assets/17991420/17661759/78d9da38-62e1-11e6-83ad-b58a2ef15900.png)
 
 ## Used technologies
 
