@@ -14,17 +14,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
+/**
+ * This class is used to represent obix datapoints gathered from an obix lobby.
+ */
 public class ObixObject {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     /**
-     * This String represents the oBIX object.
-     * For example, the object can be in XML-Format. In this case, the objectAsString variable will be the XML-String
+     * This String represents the {@link ObixObject}.
+     * For example, the object can be in xml-format. In this case, the objectAsString variable will be the xml-String
      * which represents the object.
      * The objectAsString variable can be null.
      */
-
     private String objAsString;
-
     private String obixUri;
     private String colibriBaseUri;
     private Obj obj;
@@ -44,6 +49,10 @@ public class ObixObject {
     private PutMessageToColibriTask putMessageToColibriTask;
     private int obixChannelPort;
 
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public ObixObject(String uri, int obixChannelPort) {
         this.connectorUri = Configurator.getInstance().getConnectorAddress();
         this.obixChannelPort = obixChannelPort;
@@ -56,8 +65,47 @@ public class ObixObject {
         this.observedByColibri = false;
         this.observesColibriActions = false;
         this.setByObix = false;
-
     }
+
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
+
+    /**
+     * This class is used to create a boolean state description for parameters of {@link ObixObject}.
+     *
+     * @param param The parameter, to which the boolean state description is added.
+     */
+    private void createBooleanStateDescriptions(Parameter param) {
+        java.util.List<String> types = Collections.synchronizedList(new ArrayList<>());
+        types.add("&colibri;AbsoluteState");
+        types.add("&colibri;DiscreteState");
+
+        //true state
+        String stateTrueUri = connectorUri + "/" + "trueState";
+        Value valTrue = new Value();
+        valTrue.setDatatype("&xsd;boolean");
+        valTrue.setValue("true");
+        Name nameTrue = new Name();
+        nameTrue.setName("on");
+        param.addStateDescription(new StateDescription(stateTrueUri, types, valTrue, nameTrue));
+
+        //false state
+        String stateFalseUri = connectorUri + "/" + "falseState";
+        Value valFalse= new Value();
+        valFalse.setDatatype("&xsd;boolean");
+        valFalse.setValue("false");
+        Name nameFalse = new Name();
+        nameFalse.setName("off");
+        param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse));
+
+        //link states to parameter
+        param.setParameterType("&colibri;StateParameter");
+    }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getObixUri() {
         return obixUri;
@@ -286,33 +334,6 @@ public class ObixObject {
 
     public void setPutMessageToColibriTask(PutMessageToColibriTask putMessageToColibriTask) {
         this.putMessageToColibriTask = putMessageToColibriTask;
-    }
-
-    private void createBooleanStateDescriptions(Parameter param) {
-        java.util.List<String> types = Collections.synchronizedList(new ArrayList<>());
-        types.add("&colibri;AbsoluteState");
-        types.add("&colibri;DiscreteState");
-
-        //true state
-        String stateTrueUri = connectorUri + "/" + "trueState";
-        Value valTrue = new Value();
-        valTrue.setDatatype("&xsd;boolean");
-        valTrue.setValue("true");
-        Name nameTrue = new Name();
-        nameTrue.setName("on");
-        param.addStateDescription(new StateDescription(stateTrueUri, types, valTrue, nameTrue));
-
-        //false state
-        String stateFalseUri = connectorUri + "/" + "falseState";
-        Value valFalse= new Value();
-        valFalse.setDatatype("&xsd;boolean");
-        valFalse.setValue("false");
-        Name nameFalse = new Name();
-        nameFalse.setName("off");
-        param.addStateDescription(new StateDescription(stateFalseUri, types, valFalse, nameFalse));
-
-        //link states to parameter
-        param.setParameterType("&colibri;StateParameter");
     }
 
     public int getObixChannelPort() {

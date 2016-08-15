@@ -7,19 +7,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used to represent obix lobbies which consist of {@link ObixObject}.
+ */
 public class ObixLobby {
 
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
     /**
-     * This String represents the oBIX lobby.
-     * For example, the lobby can be in XML-Format. In this case, the lobbyAsString variable will be the XML-String
+     * This String represents the {@link ObixLobby}.
+     * The lobby can be in xml-format. In this case, the lobbyAsString variable will be the xml-String
      * which represents the lobby.
      * The lobbyAsString variable can be null.
      */
-
     private String lobbyAsString;
-
     private String lobbyUri;
-
     private List<ObixObject> obixObjects = new ArrayList<ObixObject>();
     private List<ObixObject> abstimes = new ArrayList<ObixObject>();
     private List<ObixObject> reltimes = new ArrayList<ObixObject>();
@@ -37,6 +41,10 @@ public class ObixLobby {
     private List<ObixObject> errs = new ArrayList<ObixObject>();
     private Map<String, List<ObixObject>> observedObjectsLists = new HashMap<String, List<ObixObject>>();
     private Obj obj;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     private ObixLobby(List<String> observedObjects) {
         if(observedObjects != null) {
@@ -81,6 +89,10 @@ public class ObixLobby {
         this(observedObjects);
         this.lobbyUri = uri;
     }
+
+    /******************************************************************
+     *                            Methods                             *
+     ******************************************************************/
 
     private void matchObixObjectsToLists() {
         for(ObixObject obj : obixObjects) {
@@ -130,6 +142,10 @@ public class ObixLobby {
             }
         }
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public String getLobbyUri() {
         return lobbyUri;
