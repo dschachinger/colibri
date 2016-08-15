@@ -19,15 +19,15 @@ These are possible actions with the action number and description:
 
 #### General actions
 
-| Number| Usage| Description|
-|:-:|:-|:-|
+|Number|Usage|Description|
+| :-------------: |:-------------| :-----|
 |0 | print a help page | This prints a help page which contains all possible actions plus a short description |
 |30|shutdown connector |This shuts down the whole connector. The connector consists of the openADR VEN part and the colibri client part.|
 
 #### Colibri related actions
 
 | Number| Usage| Description|
-|:-:|:-|:-|
+| :-------------: |:-------------| :-----|
 |1 | print if connector is registered| This indicates if the connector is registered on the colibri side. The connector is only successful registerd if the core sends an 200 ok status message back.  
 |2 | register the connector| This issues an register message to the core. After that the connector waits for an status message.|
 |3 | deregister the connector| This issues an deregister message to the core. After that the connector waits for an status message.|
@@ -42,7 +42,7 @@ These are possible actions with the action number and description:
 #### OpenADR related
 
 | Number| Usage| Description|
-|:-:|:-|:-|
+| :-------------: |:-------------| :-----|
 |21|print the registration id|This prints the given registration id. The VTN chose this ID during the registration phase. If it is not null it indicates, that the VEN is successful registered.|
 |22|print the ven id|This prints the given ven id. The VTN chose this ID during the registration phase. If it is not null it indicates, that the VEN is successful registered.|
 |23|query the VTN about registration information|This issues an oadrQueryRegistration message. The VTN replies with an oadrCreatedPartyRegistration. This reply informs the VEN what what profiles, transports, and extensions the VTN supports. This does not register the VEN.|
