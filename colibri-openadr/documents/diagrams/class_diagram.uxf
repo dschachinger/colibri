@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="12.2">
+  <zoom_level>11</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1133</x>
+      <y>583</y>
+      <w>231</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>OADRHandling::Controller
+--
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1188</x>
+      <y>770</y>
+      <w>594</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+CreatorSendMsg::CreateSendMsg
+--
+--
+/genSendMsg(info: OADRMsgInfo): OADRMsgObject/
+/getMsgType(): String/
+/doSendMsgViolateMsgOrder(info: OADRMsgInfo): boolean/
+checkConstraints(info: OADRMsgInfo,checkIfRegistered: boolean): boolean
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>671</x>
+      <y>979</y>
+      <w>605</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CreattorSendMsg::CreateMsg_OADRCancelPartyRegistration
+--
+--
+genSendMsg(info: OADRMsgInfo): OADRMsgObject
+getMsgType(): String
+doSendMsgViolateMsgOrder(info: OADRMsgInfo): boolean
+checkConstraints(info: OADRMsgInfo,checkIfRegistered: boolean): boolean
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>957</x>
+      <y>836</y>
+      <w>252</w>
+      <h>164</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+bg=orange</panel_attributes>
+    <additional_attributes>231;33;33;143</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1254</x>
+      <y>1012</y>
+      <w>230</w>
+      <h>54</h>
+    </coordinates>
+    <panel_attributes>lt=.
+bg=orange</panel_attributes>
+    <additional_attributes>33;33;209;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1474</x>
+      <y>979</y>
+      <w>605</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CreattorSendMsg::CreateMsg_OADRUpdateReport
+--
+--
+genSendMsg(info: OADRMsgInfo): OADRMsgObject
+getMsgType(): String
+doSendMsgViolateMsgOrder(info: OADRMsgInfo): boolean
+checkConstraints(info: OADRMsgInfo,checkIfRegistered: boolean): boolean
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1661</x>
+      <y>869</y>
+      <w>120</w>
+      <h>131</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+bg=orange</panel_attributes>
+    <additional_attributes>33;33;99;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1078</x>
+      <y>594</y>
+      <w>297</w>
+      <h>197</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=  1
+m2=    0..n
+generates send messages with&gt;
+bg=orange</panel_attributes>
+    <additional_attributes>154;33;154;176</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1683</x>
+      <y>550</y>
+      <w>671</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+ProcessorReceivedMsg::ProcessorReceivedMsg
+--
+--
+/genResponse(obj: OADRMsgObject, responseCode: String): OADRMsgObject/
+/extractInfo(obj: OADRMsgObject, party: OADRParty): OADRMsgInfo/
+/getMsgType(): String/
+/doRecMsgViolateConstraints(obj: OADRMsgObject, sentMsgMap: HashMap): String/
+/updateSentMsgMap(obj: OADRMsgObject, sentMsgMap: HashMap)/
+checkConstraints(...): String
+checkConstraintsExtendedOriginMsgTypes(...): String
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1826</x>
+      <y>462</y>
+      <w>54</w>
+      <h>109</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+bg=orange</panel_attributes>
+    <additional_attributes>33;88;33;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1804</x>
+      <y>330</y>
+      <w>682</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>ProcessorReceivedMsg::Process_OADRCanceledPartyRegistration
+--
+--
+genResponse(obj: OADRMsgObject, responseCode: String): OADRMsgObject
+extractInfo(obj: OADRMsgObject, party: OADRParty): OADRMsgInfo
+getMsgType(): String
+doRecMsgViolateConstraints(obj: OADRMsgObject, sentMsgMap: HashMap): String
+updateSentMsgMap(obj: OADRMsgObject, sentMsgMap: HashMap)
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1815</x>
+      <y>803</y>
+      <w>682</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>ProcessorReceivedMsg::Process_OADRUpdatedReport
+--
+--
+genResponse(obj: OADRMsgObject, responseCode: String): OADRMsgObject
+extractInfo(obj: OADRMsgObject, party: OADRParty): OADRMsgInfo
+getMsgType(): String
+doRecMsgViolateConstraints(obj: OADRMsgObject, sentMsgMap: HashMap): String
+updateSentMsgMap(obj: OADRMsgObject, sentMsgMap: HashMap)
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1837</x>
+      <y>704</y>
+      <w>54</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.
+bg=orange</panel_attributes>
+    <additional_attributes>33;33;33;99</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1331</x>
+      <y>561</y>
+      <w>373</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=0..n
+process received messages with&gt;
+bg=orange</panel_attributes>
+    <additional_attributes>33;55;352;55</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1177</x>
+      <y>198</y>
+      <w>451</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+OADRHandling::Channel
+--
+--
+/sendMsg(sendInfo: OADRMsgInfo)/
+/sendMsgObj(sendObj: OADRMsgObject)/
+/processPacket(obj: OADRMsgObject): OADRMsgObject/
+/close()/
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1056</x>
+      <y>297</y>
+      <w>254</w>
+      <h>307</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=  1
+m2=  1
+handels messages with &gt;
+bg=orange</panel_attributes>
+    <additional_attributes>132;286;132;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1309</x>
+      <y>385</y>
+      <w>451</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>XMPP::XMPPChannel
+--
+--
+sendMsg(sendInfo: OADRMsgInfo)
+sendMsgObj(sendObj: OADRMsgObject)
+processPacket(obj: OADRMsgObject): OADRMsgObject
+close()
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1496</x>
+      <y>297</y>
+      <w>54</w>
+      <h>109</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+bg=orange</panel_attributes>
+    <additional_attributes>33;33;33;88</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>2398</x>
+      <y>484</y>
+      <w>54</w>
+      <h>329</h>
+    </coordinates>
+    <panel_attributes>lt=.
+bg=orange</panel_attributes>
+    <additional_attributes>33;308;33;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>891</x>
+      <y>352</y>
+      <w>231</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+OADRHandling::OADRParty
+--
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1045</x>
+      <y>220</y>
+      <w>153</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+bg=orange</panel_attributes>
+    <additional_attributes>33;132;132;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>968</x>
+      <y>242</y>
+      <w>54</w>
+      <h>131</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-
+bg=orange</panel_attributes>
+    <additional_attributes>33;110;33;33</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>891</x>
+      <y>242</y>
+      <w>231</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>OADRHandling::OADR2VEN
+--
+--
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>506</x>
+      <y>473</y>
+      <w>506</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>Bridge::OpenADRColibriBridge
+--
+-id: Long
+_-ClassAttribute: Long_
+--
+informationFlowFromOpenADRToColibri(info: OADRMsgInfo)
+informationFlowFromColibriToOpenADR(info: ColibriMessage)
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>704</x>
+      <y>0</y>
+      <w>352</w>
+      <h>209</h>
+    </coordinates>
+    <panel_attributes>WebSocketHandling::ColibriClient
+--
+--
+sendRegisterMessage()
+...
+sendUpdateMessage(sparqlUpdate: String)
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>11</y>
+      <w>418</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>WebSocketHandling::GenerateSendMessage
+--
+--
+gen_REGISTER(): ColibriMessage
+...
+gen_STATUS(statusCode: String, referenceId: String)
+          : ColibriMessage
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>385</x>
+      <y>22</y>
+      <w>330</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+&lt;generates send messages with
+bg=yellow</panel_attributes>
+    <additional_attributes>33;55;319;55</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>154</y>
+      <w>418</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>WebSocketHandling::GenerateSendMessage
+--
+--
+processColMsg(msg: ColibriMessage)
+          : Pair&lt;Boolean, List&lt;ColibriMessage&gt;&gt;
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>385</x>
+      <y>121</y>
+      <w>340</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+&lt;process received messages with
+bg=yellow</panel_attributes>
+    <additional_attributes>33;55;319;55</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>0</x>
+      <y>308</y>
+      <w>638</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>WebSocketHandling::ServiceHandler implements Runnable
+--
+bufferedEvents: LinkedBlockingQueue&lt;MsgInfo_OADRDistributeEvent.Event&gt;
+--
+addEvent(event: MsgInfo_OADRDistributeEvent.Event)
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>561</x>
+      <y>176</y>
+      <w>236</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=  1
+m2=    0..n
+handels services with&gt;
+bg=yellow</panel_attributes>
+    <additional_attributes>165;33;77;132</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>231</x>
+      <y>671</y>
+      <w>583</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Bridge::ColibriToOpenADR
+--
+--
+convertColibriMsg(msg: ColibriMessage, bridge: OpenADRColibriBridge)
+          : Pair&lt;ColibriMessage, OADRMsgInfo&gt;
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>462</x>
+      <y>792</y>
+      <w>583</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Bridge::OpenADRToColibri
+--
+--
+convertOpenADRMsg(msg: OADRMsgInfo, bridge: OpenADRColibriBridge)
+          : List&lt;ColibriMessage&gt;
+bg=light_gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>550</x>
+      <y>561</y>
+      <w>54</w>
+      <h>131</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1= 1
+m2= 1
+bg=light_gray</panel_attributes>
+    <additional_attributes>33;33;33;110</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>869</x>
+      <y>561</y>
+      <w>54</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1= 1
+m2= 1
+bg=light_gray</panel_attributes>
+    <additional_attributes>33;33;33;231</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>803</x>
+      <y>165</y>
+      <w>65</w>
+      <h>329</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=  1
+m2=  1
+bg=light_gray</panel_attributes>
+    <additional_attributes>44;33;33;308</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>946</x>
+      <y>374</y>
+      <w>54</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1= 1
+m2= 1
+bg=orange</panel_attributes>
+    <additional_attributes>33;99;33;33</additional_attributes>
+  </element>
+</diagram>
