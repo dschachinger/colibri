@@ -10,8 +10,10 @@ import com.colibri.message.Header.Header;
 import com.colibri.message.Header.Identifier;
 import com.colibri.message.Header.StatusCodes;
 import com.colibri.message.Validator.Validate;
+import com.java.connector.Client;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,11 +22,14 @@ import java.util.StringTokenizer;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonWriter;
+import javax.websocket.DeploymentException;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -44,7 +49,7 @@ public class Colibri {
     Validate v = new Validate();
     static Set<Session> chatUsers = Collections.synchronizedSet(new HashSet<Session>());
     @OnOpen
-    public void handleOpen (Session userSession)
+    public void handleOpen (Session userSession) throws IOException
     {
         chatUsers.add(userSession);
     }
@@ -57,10 +62,12 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
-            String msg;
-            msg = Identifier.DRE + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/TC"+ "<br>";
-            breakStatus(msg);
-            tc = "";
+                String id = Header.getId();
+                Header.setId(id);
+                String msg;
+                msg = Identifier.DRE + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/TC"+ "<br>";
+                breakStatus(msg);
+                tc = "";
             }
             else
                 breakStatus("Error: Cannot Deregister the connector as Technology Connecter is not registered");
@@ -69,8 +76,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
+            msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
             if (addt.equalsIgnoreCase("addt"))
             {
                 breakStatus(msg);
@@ -87,8 +96,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = "OBST<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
+            msg = "OBST<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
             if (addt.equalsIgnoreCase("addt"))
             {
                 breakStatus(msg);
@@ -105,8 +116,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
+            msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>";
             if (obst.equalsIgnoreCase("obst") && addt.equalsIgnoreCase("addt"))
             {
                 breakStatus(msg);
@@ -125,7 +138,9 @@ public class Colibri {
             {
             if (addt.equalsIgnoreCase("addt"))
             {
-                breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>");
+                String id = Header.getId();
+                Header.setId(id);
+                breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br>");
                 obst = "";
                 sta = "";
             }
@@ -139,8 +154,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
+            msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
             if (addl.equalsIgnoreCase("addl"))
             {
                 breakStatus(msg);
@@ -157,8 +174,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = "OBSL<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
+            msg = "OBSL<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
             if (addl.equalsIgnoreCase("addl"))
             {
                 breakStatus(msg);
@@ -175,8 +194,10 @@ public class Colibri {
         {
             if (tc.equalsIgnoreCase("TC"))
             {
+                String id = Header.getId();
+                Header.setId(id);
             String msg;
-            msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
+            msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
             if (obsl.equalsIgnoreCase("obsl") && addl.equalsIgnoreCase("addl"))
             {
                 breakStatus(msg);
@@ -195,7 +216,9 @@ public class Colibri {
             {
             if (addl.equalsIgnoreCase("addl"))
             {
-                breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + Header.getId() + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>");
+                String id = Header.getId();
+                Header.setId(id);
+                breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id:" + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>");
                 obsl = "";
                 sta = "";
             }
@@ -227,14 +250,6 @@ public class Colibri {
         String[] lines = message.split("<br>");
             for(String ss:lines)
             {
-                if (ss.contains("Message-Id:"))
-                {
-                    StringTokenizer st =  new StringTokenizer(ss,"Message-Id:");
-                    while (st.hasMoreTokens())
-                    {
-                        msg_id = st.nextToken();
-                    }
-                }
                 if (ss.equals("REG"))
                 {
                     temp = "REG";
@@ -253,7 +268,7 @@ public class Colibri {
                 iterator.next().getBasicRemote().sendText(buildJSONData(ss));
             }
     }
-        String status = sta(msg_id);
+        String status = sta(Header.getRefId());
         breakStatus(status);
     }
     @OnClose
