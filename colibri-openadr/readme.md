@@ -19,7 +19,7 @@ These are possible actions with the action number and description:
 
 #### General actions
 
-|Number|Usage|Description|
+| Number| Usage| Description|
 | :-------------: |:-------------| :-----|
 |0 | print a help page | This prints a help page which contains all possible actions plus a short description |
 |30|shutdown connector |This shuts down the whole connector. The connector consists of the openADR VEN part and the colibri client part.|
@@ -109,13 +109,21 @@ These points are specific to this connector:
 
 #### openADR part related
 
-The openADR standard is very sophisticated. Therefore it was not possible to implement the full standard within one [Google Summer of Code period](https://summerofcode.withgoogle.com/projects/#5501542597656576). During this project the current OpenADR 2.0 Profile Specification B Profile has the revision 1.1 .
+The openADR standard is very sophisticated. Therefore it was not possible to implement the full standard within one [Google Summer of Code period](https://summerofcode.withgoogle.com/projects/#5501542597656576). During this project the current OpenADR 2.0 Profile Specification B Profile has the revision 1.1 .  
+For support and guiding during the implementation phase use cases were defined at the beginning of the Google Summer of Code project. These are stored in this [file](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf).
 
 ##### What is inside
+
+[Use case 1-14 implemented](link)
 
 ##### TODO
 
 According to the conformance rule 510 in the Specification the points are minimum needed to be implemented to have a valid VEN.
 
-* 
+* A VEN MUST be capable of producing TELEMETRY_USAGE reports, at least for certification (and MAY offer it in deployments). The device MUST be able to send some telemetry data (i.e., in case it does not have any metering resources attached, it MUST provide sample data).
+* A VEN MUST be capable of utilizing the EiOpt service to further qualify the
+opt state of an event. [Use case 15-16 needed](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf)
 
+The reports mechanism ([Use case 10-14](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf)) is implemented generally but most of the message element values are hard coded:  
+* If the report functionalities needs to be changed look at addExampleReportPossibility in the 	Main class.
+* send the proper query to the colibri core → insert received result values to the openADR 	message type oadrUpdateReport. (place to change: Class OpenADRColibriBridge Method: queryColibriCoreForOpenADRReportData)
