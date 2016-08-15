@@ -4,8 +4,16 @@ import model.obix.parameter.Parameter;
 
 import javax.swing.*;
 
+/**
+ * This class is used to represent states of parameters of {@link model.obix.ObixObject} in the GUI.
+ */
 public class StateRepresentation {
-    private JButton addButon;
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    private JButton addButton;
     private JButton deleteButton;
     private JLabel stateNameLabel;
     private JTextField stateNameTextField;
@@ -17,11 +25,15 @@ public class StateRepresentation {
     private Box containerVBox;
     private JSeparator horizontalLine;
 
-    public StateRepresentation(JButton addButon, JButton deleteButton, JLabel stateNameLabel, JTextField stateNameTextField,
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
+    public StateRepresentation(JButton addButton, JButton deleteButton, JLabel stateNameLabel, JTextField stateNameTextField,
                                JLabel stateValueLabel, JTextField stateValueTextField,
                                JLabel stateUriLabel, JTextField stateUriTextField, JSeparator horizontalLine,
                                Box containerVBox, Parameter parameter) {
-        this.addButon = addButon;
+        this.addButton = addButton;
         this.deleteButton = deleteButton;
         this.stateNameLabel = stateNameLabel;
         this.stateNameTextField = stateNameTextField;
@@ -34,12 +46,16 @@ public class StateRepresentation {
         this.parameter = parameter;
     }
 
-    public JButton getAddButon() {
-        return addButon;
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
+
+    public JButton getAddButton() {
+        return addButton;
     }
 
-    public void setAddButon(JButton addButon) {
-        this.addButon = addButon;
+    public void setAddButton(JButton addButton) {
+        this.addButton = addButton;
     }
 
     public JButton getDeleteButton() {

@@ -25,21 +25,69 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
+/**
+ * This class is used to render the GUI of an obix connector.
+ */
 public class GuiUtility {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
+
+    /**
+     * The {@link Connector}for which this GUI is used.
+     */
     private Connector connector;
+
+    /**
+     * The {@link ObixChannel} of the connector.
+     */
     private ObixChannel obixChannel;
+
+    /**
+     * The main frame of the GUI.
+     */
     private JFrame mainFrame;
+
+    /**
+     * A row which represents an obix service.
+     */
     private List<RepresentationRow> representationRows = new ArrayList<RepresentationRow>();
     private ExecutorService executor;
+
+    /**
+     * The {@link ObixLobby} which is shown in the GUI.
+     */
     private ObixLobby lobby;
+
     private JPanel cards;
+
+    /**
+     * Command factory used for executing commands later.
+     */
     private CommandFactory commandFactory;
-    private JLabel titel;
+    private JLabel title;
+
+    /**
+     * Checked, if the connector is registered at the colibri channel.
+     */
     private JCheckBox registeredColibriChannelCheckBox;
+
+    /**
+     * Thread which is used for updating the GUI.
+     */
     private UpdateThread updateThread;
+
+    /**
+     * List {@link StateRepresentation} used for rperesenting states in the GUI.
+     */
     private List<StateRepresentation> listOfStateRepresentations;
 
     private static final Logger logger = LoggerFactory.getLogger(GuiUtility.class);
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public GuiUtility(Connector connector) {
         this.connector = connector;
@@ -50,6 +98,15 @@ public class GuiUtility {
         this.executor = connector.getExecutor();
     }
 
+    /******************************************************************
+     *                           Methods                              *
+     ******************************************************************/
+
+    /**
+     * This method starts the GUI.
+     *
+     * @throws CoapException    Thrown, if the connection to obix via CoAP fails.
+     */
     public void runGui() throws CoapException {
         this.lobby = obixChannel.getLobby(obixChannel.getLobbyUri());
         //Create and set up the window.
@@ -78,6 +135,11 @@ public class GuiUtility {
         mainFrame.setVisible(true);
     }
 
+    /**
+     * This method is used to add obix components to a container pane in the GUI.
+     *
+     * @param pane  The pane, to which the obix Components are added.
+     */
     private void addComponentToPane(Container pane) {
 
         //Create the panel that contains the "cards".
@@ -90,6 +152,11 @@ public class GuiUtility {
         pane.add(cards, BorderLayout.CENTER);
     }
 
+    /**
+     * This method represents the window in which the preferred obix components can be chosen.
+     *
+     * @return  The container in which the preferred obix components can be chosen.
+     */
     private Container chooseComponents() {
         Container pane = new Container();
         pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -105,9 +172,12 @@ public class GuiUtility {
 
         registeredColibriChannelCheckBox = new JCheckBox("IS REGISTERD ON COLIBRI SEMANTIC CORE");
         commandFactory.addCommand(() -> registeredColibriChannelCheckBox.setSelected(connector.getColibriChannel().getRegistered()));
-       // connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
         Font regF = new Font("Courier", Font.BOLD, 40);
         registeredColibriChannelCheckBox.setFont(regF);
+
+        /**
+         * Listener for the checkbox which indicates, if the obix connector is registered at colibri.
+         */
         registeredColibriChannelCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -125,11 +195,11 @@ public class GuiUtility {
         pane.add(registeredColibriChannelCheckBox, c);
 
         Font titelF = new Font("Courier", Font.BOLD, 30);
-        titel = new JLabel("Please choose the components you want to work with");
-        titel.setFont(titelF);
+        title = new JLabel("Please choose the components you want to work with");
+        title.setFont(titelF);
 
         c.gridy++;
-        pane.add(titel, c);
+        pane.add(title, c);
 
         JTextField searchTextField = new JTextField("Search for a component");
         c.weightx = 1;
@@ -243,20 +313,26 @@ public class GuiUtility {
         return pane;
     }
 
+    /**
+     * This method represents the window in which the preferred parameters for the obix components can be chosen.
+     *
+     * @param chosenComponents  The list of {@link ObixObject} which have been chosen in the previous window.
+     * @return                  The container in which the preferred parameters for the obix components can be chosen.
+     */
     private Container chooseParameters(List<ObixObject> chosenComponents) {
         Container pane = new Container();
         pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         Font titelF = new Font("Courier", Font.BOLD, 30);
-        titel = new JLabel("Please choose the appropriate Parameters for the datapoints");
-        titel.setFont(titelF);
+        title = new JLabel("Please choose the appropriate Parameters for the datapoints");
+        title.setFont(titelF);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridwidth = 10;
         c.gridx = 0;
         c.gridy = 0;
-        pane.add(titel, c);
+        pane.add(title, c);
 
         List<String> parametersList = Configurator.getInstance().getAvailableParameterTypes();
         String[] parameterTypes = new String[parametersList.size()];
@@ -349,6 +425,9 @@ public class GuiUtility {
             addParameterBoxListener(parameter1comboBox, param1UnitLabelxPosition, param1UnitLabelyPosition,
                     parameter1UnitLabel, parameter1UnitTextField, pane, param1AddStateButton, vBox1);
 
+            /**
+             * Add state to parameter 1 function listener
+             */
             param1AddStateButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -420,6 +499,9 @@ public class GuiUtility {
             addParameterBoxListener(parameter2comboBox, param2UnitLabelxPosition, param2UnitLabelyPosition,
                     parameter2UnitLabel, parameter2UnitTextField, pane, param2AddStateButton, vBox2);
 
+            /**
+             * Add state to parameter 2 function listener
+             */
             param2AddStateButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -527,7 +609,7 @@ public class GuiUtility {
                 }
                 representationRows.clear();
                 cards.removeAll();
-                JScrollPane scrollPane = new JScrollPane(displayObixData(chosenObjects));
+                JScrollPane scrollPane = new JScrollPane(interactionWindow(chosenObjects));
                 scrollPane.getVerticalScrollBar().setUnitIncrement(16);
                 scrollPane.setBorder(new EmptyBorder(20, 20, 20, 20));
                 cards.add(scrollPane);
@@ -540,8 +622,15 @@ public class GuiUtility {
         return pane;
     }
 
-
-    private Container displayObixData(List<ObixObject> chosenComponents) {
+    /**
+     * This method is used to display the window to interact with obix as well as colibri.
+     *
+     * @param chosenComponents  The {@link ObixObject} which have been chosen in the previous windows.
+     *
+     * @return                  The container which contains all elemtents that are used for interacting
+     *                          with obix as well as colibri.
+     */
+    private Container interactionWindow(List<ObixObject> chosenComponents) {
         Container pane = new Container();
         pane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
@@ -648,6 +737,10 @@ public class GuiUtility {
             PutToObixTask putToObixTask = new PutToObixTask(o, connector.getColibriChannel(), connector.getObixChannel(), null);
             connector.getColibriChannel().addPutToObixTask(o.getServiceUri(), putToObixTask);
             ObixObservationUpdates observationUpdates = new ObixObservationUpdates(observeObixCheckBox, textField, o, connector);
+
+            /**
+             * Listener for the checkbox which indicates, if an {@link ObixObject] is observed by the obix connector.
+             */
             observeObixCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
@@ -666,6 +759,9 @@ public class GuiUtility {
                 }
             });
 
+            /**
+             * Listener for the checkbox which indicates, if an {@link ObixObject] is writeable.
+             */
             writableCheckBox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
@@ -685,6 +781,9 @@ public class GuiUtility {
                 }
             });
 
+            /**
+             * Listener for the checkbox which indicates, if an {@link ObixObject] is added as a service at colibri.
+             */
             addServiceCheckbox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
@@ -705,6 +804,10 @@ public class GuiUtility {
                 }
             });
 
+            /**
+             * Listener for the checkbox which indicates, if the connector observes the actions that the colibri
+             * semantic core performs on an {@link ObixObject].
+             */
             observeColibriActionsCheckbox.addItemListener(new ItemListener() {
                 public void itemStateChanged(ItemEvent e) {
                     ObixObject object = new ObixObject("", o.getObixChannelPort());
@@ -772,7 +875,10 @@ public class GuiUtility {
             };
             getColibriButton.addActionListener(getColibriAction);
 
-
+            /**
+             * Listener for the textfield connected with an {@link ObixObject}, to send PUT messages to obix on
+             * <Enter>.
+             */
             textField.addKeyListener(new KeyListener() {
                 public void keyTyped(KeyEvent e) {
                     //intentionally empty
@@ -862,16 +968,20 @@ public class GuiUtility {
         return pane;
     }
 
-    private List<RepresentationRow> getRepresentationRows() {
-        return representationRows;
-    }
-
+    /**
+     * This method closes the GUI.
+     */
     public void close() {
         updateThread.stop();
         connector.setRunning(false);
         connector.stop();
     }
 
+    /**
+     * This method is used to add delete listeners for {@link StateRepresentation} in the GUI.
+     *
+     * @param s The {@link StateRepresentation} to which the delete listener is added.
+     */
     private void addDeleteStateListener(StateRepresentation s) {
         s.getDeleteButton().addActionListener(new ActionListener() {
             @Override
@@ -891,6 +1001,19 @@ public class GuiUtility {
         });
     }
 
+    /**
+     * This method is used to add a listner for a combobox to choose the type of the parameters
+     * of an {@link ObixObject} in the GUI.
+     *
+     * @param parameterComboBox         The combobox to which the listener is added.
+     * @param paramUnitLabelxPosition   The x position of the unit label of the parameter.
+     * @param paramUnitLabelyPosition   The y position of the unit label of the parameter.
+     * @param parameterUnitLabel        The unit label of the parameter.
+     * @param parameterUnitTextField    The unit textfield of the parameter.
+     * @param pane                      The pane to which sates are added.
+     * @param paramAddStateButton       The button which is used to add states to the pane.
+     * @param vbox                      The vbox in which the states are added.
+     */
     private void addParameterBoxListener(JComboBox parameterComboBox, int paramUnitLabelxPosition,
                                          int paramUnitLabelyPosition, JLabel parameterUnitLabel,
                                          JTextField parameterUnitTextField, Container pane,
@@ -916,7 +1039,7 @@ public class GuiUtility {
                     Iterator<StateRepresentation> iter = listOfStateRepresentations.iterator();
                     while (iter.hasNext()) {
                         StateRepresentation s = iter.next();
-                        if (paramAddStateButton.equals(s.getAddButon())) {
+                        if (paramAddStateButton.equals(s.getAddButton())) {
                             vbox.removeAll();
                             pane.remove(s.getContainerVBox());
                             iter.remove();
@@ -931,4 +1054,14 @@ public class GuiUtility {
             }
         });
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
+
+    private List<RepresentationRow> getRepresentationRows() {
+        return representationRows;
+    }
+
+
 }

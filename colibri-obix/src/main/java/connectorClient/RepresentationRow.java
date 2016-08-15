@@ -4,7 +4,14 @@ import model.obix.ObixObject;
 
 import javax.swing.*;
 
+/**
+ * This class represents rows in the GUI. This rows represent {@link ObixObject} to interact with them.
+ */
 public class RepresentationRow {
+
+    /******************************************************************
+     *                            Variables                           *
+     ******************************************************************/
 
     private JLabel uriLabel;
     private JCheckBox observedCheckBox;
@@ -21,6 +28,10 @@ public class RepresentationRow {
     private JComboBox param2TypeComboBox;
     private JTextField param1UnitTextField;
     private JTextField param2UnitTextField;
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
 
     public RepresentationRow(JLabel uriLabel, JCheckBox observedCheckBox, JTextField valueTextField,
                              ObixObject obixObject, JCheckBox writableCheckbox, JButton getObixButton, JButton getColibriButton,
@@ -50,6 +61,10 @@ public class RepresentationRow {
         this.param1UnitTextField = param1UnitTextField;
         this.param2UnitTextField = param2UnitTextField;
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     public JLabel getUriLabel() {
         return uriLabel;
