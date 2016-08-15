@@ -193,14 +193,18 @@ public class Main {
                 "\t\t21:\tprint the registration id\n" +
                 "\t\t22:\tprint the ven id\n" +
                 "\t\t23:\tquery the VTN about registration information\n" +
-                "\t\t24:\tregister the VEN on the VTN party\n" +
-                "\t\t25:\tderegister the VEN on the VTN party\n" +
+                "\t\t24:\tregister the VEN at the VTN party\n" +
+                "\t\t25:\tderegister the VEN at the VTN party\n" +
                 "\t\t26:\trequest for new events\n" +
-                "\t\t27:\tregister the VEN report possibilities on the VTN party\n" +
+                "\t\t27:\tregister the VEN report possibilities at the VTN party\n" +
                 "\t\t28:\tsend new report data to the VTN party\n" +
                 "\t\t29:\tterminate the VEN\n";
 
-        logger.info("\n"+bar+"\n"+actions+"\n\t\t0:\tprints this help page again\n\n"+"\tcolibri actions:\n"+colibri_part+"\n\topenADR actions:\n"+openADR_part+"\n"+bar);
+        logger.info("\n"+bar+"\n"+actions+
+                "\n\t\t0:\tprint this help page again\n"+"" +
+                "\t\t30:\tshutdown connector\n\n"+
+                "\tcolibri actions:\n"+colibri_part+
+                "\n\topenADR actions:\n"+openADR_part+"\n"+bar);
     }
 
     private static void shutdown(){
