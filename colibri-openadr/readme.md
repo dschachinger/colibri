@@ -8,7 +8,8 @@ This connector acts as a link between the colibri environment and the openADR en
 
 ## How to use this connector
 
-Run the command **gradle -q run** in the colibri-openadr folder
+1.) Modify the config files "colibriCore.properties" and "openADRConfig.properties" to the given enviroment.  
+2.) Run the command **gradle -q run** in the colibri-openadr folder
 
 ### How to simulate a openADR server (VTN...virtual top node)
 
