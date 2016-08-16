@@ -25,7 +25,7 @@ public class Obj
 
   /**
    * Get an Obj Class for specified element name or return
-   * null if not a oBIX element name.
+   * null if not a OBIX element name.
    */
   public static Class toClass(String elemName)
   {
@@ -43,7 +43,7 @@ public class Obj
 
   /**
    * Convenience for <code>toClass(elemName).newInstance()</code>.
-   * This method will return null if elemName is not a oBIX
+   * This method will return null if elemName is not a OBIX
    * element name.
    */
   public static Obj toObj(String elemName)

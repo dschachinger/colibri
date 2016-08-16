@@ -21,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) {
         /*
-            Load configuration from config.properties file. For example all oBIX Lobbies
+            Load configuration from config.properties file. For example all OBIX Lobbies
          */
         Configurator configurator = Configurator.getInstance();
         List<Connector> connectors = configurator.getConnectors();
@@ -53,15 +53,15 @@ public class Main {
                     try {
                         guiUtility.runGui();
                     } catch (CoapException e) {
-                        logger.info("Cannot connect to oBIX Lobby of host " + connector.getObixChannel().getBaseUri() +
+                        logger.info("Cannot connect to OBIX Lobby of host " + connector.getObixChannel().getBaseUri() +
                                 " with the CoAP port " + connector.getObixChannel().getPort() + ". " +
                                 "Maybe the lobby URI in the config.properties file is wrong, " +
-                                "or the oBIX server is not online.");
+                                "or the OBIX server is not online.");
                         guiUtility.close();
                     }
                 }
             });
-            if(!registerMessageSendt) {
+            if(!registerMessageSendt && connector.getObixChannel().getLobby() != null) {
                 connector.getColibriChannel().send(ColibriMessage.createRegisterMessage(connector));
                 registerMessageSendt = true;
             }

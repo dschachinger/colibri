@@ -163,7 +163,7 @@ public class Obixc
     
     // check for covariance, we start off assuming that
     // the getter will use the same Java class as the child
-    // object; however oBIX might covariantly narrow the
+    // object; however OBIX might covariantly narrow the
     // child in sub-contracts.  Java 1.5 will allow this, but
     // for now let's make this code work with 1.4 
     child.retClassName = child.className;

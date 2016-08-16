@@ -253,7 +253,7 @@ public class ColibriChannel {
      * @param msg   The message which should be sent.
      */
     public void send(ColibriMessage msg) {
-        logger.info("Send:" + msg.toString());
+        logger.info("Send: \n" + msg.toString());
         try {
             if(usingAtmosphereTestWebSocket) {
                 socket.fire(new AtmosphereMessage(connectorName, msg.toString()));
@@ -296,7 +296,7 @@ public class ColibriChannel {
      * @return      The resent message.
      */
     public ColibriMessage resend(ColibriMessage msg) {
-        logger.info("Resend: " + msg.toString());
+        logger.info("Resend: \n" + msg.toString());
         ColibriMessage resendMsg = ColibriMessage.createMessageWithNewId(msg);
         try {
             messagesWithoutResponse.put(resendMsg.getHeader().getId(), resendMsg);

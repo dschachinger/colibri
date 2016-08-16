@@ -6,7 +6,7 @@ package obix;
 /**
  * Reltime models a relative duration of time as a 64-bit number of
  * milliseconds. We ignore values with greater precision when parsing.
- * The oBIX reltime is based on xs:duration, exception we disallow year 
+ * The OBIX reltime is based on xs:duration, exception we disallow year
  * or month periods which just create confusion.  
  *
  * @author    Brian Frank

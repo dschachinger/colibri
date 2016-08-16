@@ -107,7 +107,7 @@ public class CoapChannel extends ObixChannel {
     /**
      * This method sends a GET message with the given obix lobby-URI and returns the response as an {@link ObixLobby}.
      *
-     * @param uri   The URI of the requested oBIX lobby.
+     * @param uri   The URI of the requested OBIX lobby.
      * @return      The requested {@link ObixLobby}.
      */
     public ObixLobby getLobby(String uri) {
@@ -117,7 +117,7 @@ public class CoapChannel extends ObixChannel {
     /**
      * This method sends a GET message with the given obix lobby-URI and returns the response as an {@link ObixLobby}.
      *
-     * @param uri               The URI of the requested oBIX lobby.
+     * @param uri               The URI of the requested OBIX lobby.
      * @param mediaType         The media type which is used for the GET message.
      * @return                  The requested {@link ObixLobby}.
      * @throws CoapException    Thrown, if no response is received.
@@ -199,7 +199,7 @@ public class CoapChannel extends ObixChannel {
     /**
      * This method observes an {@link ObixObject}.
      *
-     * @param obj   The oBIXObject which is observed.
+     * @param obj   The OBIXObject which is observed.
      * @return      The observed {@link ObixObject} in form of an {@link ObixObject}.
      */
     public ObixObject observe(ObixObject obj) {
@@ -209,7 +209,7 @@ public class CoapChannel extends ObixChannel {
     /**
      * This method observes an {@link ObixObject}.
      *
-     * @param obj       The oBIXObject which is observed.
+     * @param obj       The OBIXObject which is observed.
      * @param mediaType The media type which is used for the OBS message.
      * @return          The observed {@link ObixObject} in form of an {@link ObixObject}.
      */

@@ -121,7 +121,7 @@ public class ObixAssembler
     // check if there is a contract field that we can
     // use to initialize the child object - if a contract 
     // field is specified it must be a string constant with 
-    // the actual oBIX XML used to initialize the field; an
+    // the actual OBIX XML used to initialize the field; an
     // example from obix:Unit:
     //
     //   interface Unit extends IObj

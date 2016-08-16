@@ -51,15 +51,15 @@ public class Configurator {
      * specified in the .properties file of the given bundle.
      *
      * @return The List of {@link ObixChannel}
-     * @throws ConfigurationException Is thrown, if there is no oBIX Lobby provided in the parsed .properties file.
+     * @throws ConfigurationException Is thrown, if there is no OBIX Lobby provided in the parsed .properties file.
      */
     private List<ObixChannel> getObixCoapChannels() throws ConfigurationException {
-        List<ObixChannel> oBIXchannels = new ArrayList<ObixChannel>();
+        List<ObixChannel> obixchannels = new ArrayList<ObixChannel>();
         int i = 1;
         Enumeration<String> keys = bundle.getKeys();
         while (keys.hasMoreElements()) {
             String key = keys.nextElement();
-            if (key.contains("oBIXLobby")) {
+            if (key.contains("OBIXLobby")) {
                 String uri = bundle.getString(key);
                 uri = uri.replaceAll("\\s+", "");
                 String baseUri = uri.split("/")[0];
@@ -71,19 +71,19 @@ public class Configurator {
                 } else {
                     channel = new CoapChannel(baseUri, uri, getObservedTypes());
                 }
-                oBIXchannels.add(channel);
+                obixchannels.add(channel);
             }
         }
 
-        if (oBIXchannels.size() == 0) {
-            throw new ConfigurationException("No oBIXLobby URI in config file!");
+        if (obixchannels.size() == 0) {
+            throw new ConfigurationException("No OBIXLobby URI in config file!");
         }
 
-        return oBIXchannels;
+        return obixchannels;
     }
 
     /**
-     * This method returns a list of Strings which represent the types which will be observed from oBIX.
+     * This method returns a list of Strings which represent the types which will be observed from OBIX.
      *
      * @return The list of observed types.
      * @throws ConfigurationException Is thrown, if there are no types provided in the parsed .properties file.
@@ -140,7 +140,7 @@ public class Configurator {
     }
 
     /**
-     * This method returns the address of the oBIX Connector in the .properties file of the given bundle.
+     * This method returns the address of the OBIX Connector in the .properties file of the given bundle.
      *
      * @return The parsed address of the obix Connector.
      * @throws ConfigurationException Is thrown, if there is no obix Connector address provided in the parsed .properties file.
@@ -154,7 +154,7 @@ public class Configurator {
     }
 
     /**
-     * This method returns the IP address of the oBIX Connector in the .properties file of the given bundle.
+     * This method returns the IP address of the OBIX Connector in the .properties file of the given bundle.
      *
      * @return The parsed IP address of the obix Connector.
      * @throws ConfigurationException Is thrown, if there is no obix Connector IP address provided in the parsed .properties file.

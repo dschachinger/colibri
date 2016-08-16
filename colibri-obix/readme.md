@@ -1,5 +1,5 @@
 # Description
-The OBIX Connector is intended to connect the OASIS OBIX platform to Colibris semantic interface. The Colibri smart energy management system is able to subscribe to different resources in building automation systems behind an OBIX gateway. This enables the connector to gather specific information from these resources. The connector provides technology-independent and generic communication with building automation resources. It also simplifies the communication and interconnection between Colibri and high-level integration OBIX gateways as subsystems behind the OBIX gateways are hidden and encapsulated form the Colibri semantic interface.
+The OBIX Connector is intended to connect the OASIS OBIX platform to Colibris semantic interface. The Colibri smart energy management system is able to subscribe to different resources in building automation systems behind an OBIX gateway. This enables the connector to gather specific information from these resources. The connector provides technology-independent and generic communication with building automation resources. It also simplifies the communication and interconnection between Colibri and high-level integration OBIX gateways as subsystems behind the OBIX gateways are hidden and encapsulated from the Colibri semantic interface.
 
 # Google Summer of Code specific information
 
@@ -7,19 +7,19 @@ The following link leads to all commits from Josef Wechselauer (goJoWe16) for th
 
 # Design
 
-The OBIX Connector consists of multiple OBIX channels and one Colibri channel. The OBIX channels are used to communicate with OBIX gateways and interact with OBIX datapoints registered in a OBIX lobby. The Colibri channel is used to interact with the web socket endpoint of the Colibri semantic core. OBIX channels are designed using the decorater design pattern to make them easily extensible. For now, communication is only possible using the CoAP protocol and the xml-format for OBIX objects.
+The OBIX Connector consists of multiple OBIX channels and one Colibri channel. The OBIX channels are used to communicate with OBIX gateways and the interaction with OBIX datapoints registered in an OBIX lobby. The Colibri channel is used for the interaction with the web socket endpoint of the Colibri semantic core. OBIX channels are designed using the decorater design pattern to make them easily extensible. For now, communication is only possible using the CoAP protocol and the xml-format for OBIX objects.
 
-For testing the OBIX connector without Colibri, a wAsync-chat-distribution was used to simulate sending and receiving messages ton and from Colibri. The OBIX connector is still able to communicate with both, the wAsync-chat-distribution and with the Colibri semantic core.
+For testing the OBIX connector without Colibri, a wAsync-chat-distribution was used to simulate sending and receiving messages to and from Colibri. The OBIX connector is still able to communicate with both, the wAsync-chat-distribution and with the Colibri semantic core.
 
 # Usage
 
-To start the OBIX connector, download or clone the *colibri-obix* package and run `gradle build` in the colibri-OBIX folder. Then start the connector through the **Main.java** class located in the *colibri-obix.src.main.java.connectorClient* package or execute the command `gradle -q run` in the *colbri-obix* package. The OBIX connector will start with the properties provided in the **config.properties** file located in the *colibri-obix.src.main.resources* package.
+To start the OBIX connector, download or clone the *colibri-obix* package and run `gradle build` in the colibri-OBIX folder. Then start the connector through the **Main.java** class which is located in the *colibri-obix.src.main.java.connectorClient* package or execute the command `gradle -q run` in the *colbri-obix* package. The OBIX connector will start with the properties provided in the **config.properties** file which is located in the *colibri-obix.src.main.resources* package.
 
-Some examples for possible propertie configurations are already included in the **config.properties** file, but they may have to be adjusted. The URLs of the OBIX lobbies are very likely to be wrong and have to be changed to the specific OBIX lobbies in use. The connector will terminate immediately if non of the given OBIX lobbies is reachable, but it will not terminate if the Colibri channel cannot be reached.
+Some examples for possible property configurations are already included in the **config.properties** file, but they may have to be adjusted. The URLs of the OBIX lobbies are very likely to be wrong and have to be changed to the specific OBIX lobbies in use. The connector will terminate immediately if none of the given OBIX lobbies is reachable, but it will not terminate if the Colibri channel cannot be reached.
 
 ## IOTSyS
 
-You can use [IOTSyS](https://github.com/mjung85/iotsys) to simulate an OBIX gateway with which the OBIX connector can interact.
+In order to simulate an OBIX gateway which can be used by the OBIX connector, the [IOTSyS](https://github.com/mjung85/iotsys) integration middleware can be used.
 
 # GUI
 
@@ -29,29 +29,29 @@ In the first screen of the GUI, all components gathered from an OBIX lobby as co
 
 ## Second Window
 
-The second screen helps the user to adjust the parameters of the gathered OBIX datapoints and proceed by clicking accept. For example, if a *StateParameter* is chosen, additional, but optional states can be added to the parameter description of an OBIX datapoint.
+The second screen helps the user to adjust the parameters of the gathered OBIX datapoints and proceed by clicking accept. For example, if a *StateParameter* is chosen, additional but optional states can be added to the parameter description of an OBIX datapoint.
 
 ## Third Window
 
-In the third screen the OBIX connector user can interact with the OBIX gateway as well with the Colibri semantic core. The Colibri can only observe an OBIX datapoint if the OBIX connector is registered at Colibri and the datapoint is added as a service at Colibri. OBIX can also observe PUT messages from the Colibri semantic core through the OBIX connector.
+In the third screen the OBIX connector user can interact with the OBIX gateway as well as with the Colibri semantic core. Colibri can only observe an OBIX datapoint if the OBIX connector is registered at Colibri and the datapoint is added as a service at Colibri. The OBIX gateway can also observe PUT messages from the Colibri semantic core through the OBIX connector.
 
 # Open Issues
 
-*   The OBIX connector only uses a plain CoAP channels without encryption and authentication to communicate with OBIX gateways. This connection should be upgraded in the future. The [Scandium (SC) - project](https://github.com/eclipse/californium/tree/master/scandium-core), a sub-project of the Californium (Cf) Coap Framework, should be used for this, as Californium is used for CoAP communication in this connector.
-*   The OBIX connector does not use a secure web socket, but only a plain web socket to communicate with Colibri. This web socket communication should be upgraded in the future.
-*   Histories, alarms and watches as specified in OBIX v1.1 are not handled by the oBIX connector, as they are not so important for Colibri. For full conformance with the OBIX standard, the handling of this objects should be included in the OBIX connector.
+*   The OBIX connector only uses plain CoAP channels without encryption and authentication to communicate with OBIX gateways. This connection should be upgraded in future. The [Scandium (SC) - project](https://github.com/eclipse/californium/tree/master/scandium-core), a sub-project of the Californium (Cf) Coap Framework, should be used for this, as Californium is used for CoAP communication in this connector.
+*   The OBIX connector does not use a secure web socket, but only a plain web socket to communicate with Colibri. This web socket communication should be upgraded in future.
+*   Histories, alarms and watches as specified in OBIX v1.1 are not handled by the OBIX connector, as they are not extremely important for Colibri. For full conformance with the OBIX standard, the handling of these objects should be included in the OBIX connector.
 *   For now, the OBIX connector can only handle OBIX messages in xml-format. The connector should be extended to handle json and other formats.
-*   The connector should send SPARQL query messages to the Colibri semantic core to request specific data from the OBIX onthology, for example available parameter types or units. Then the connector should process the received SPARQL result sets and execute the according actions. This feature is so far only included as a proof of concept with queries saved as Strings, but not with communication to a real onthology.
+*   The connector should send SPARQL query messages to the Colibri semantic core to request specific data from the OBIX ontology, for example available parameter types or units. Afterwards, the connector should process the received SPARQL result sets and execute the according actions. So far, ths feature is only included as a proof of concept with queries saved as Strings, but not with communication to a real ontology.
 
 # Tips
 
-* It may happen that URI's in OBIX lobbies are not correct. In this case, the OBIX connector receives an 'Err' OBIX Object and the wrong URI is logged in some form lik this:  `INFO channel.OBIX.CoapChannel - BAD URI: units/lux`. Have a look at the log of the OBIX connector if you are missing OBIX datapoints or units.
-* Sometimes the response time of an OBIX gateway can be very long. It may occur that the OBIX connector terminates because no response was received from the OBIX gateway, even if the gateway is running and correctly configured in the **config.properties** file. In this case, increase the property **timeWaitingForResponseInMilliseconds** in the **config.properties** by a few seconds to give the OBIX gateway more time for a response.
+* It may happen that URI's in OBIX lobbies are not correct. In this case, the OBIX connector receives an 'Err' OBIX Object and the wrong URI is logged in some form like this:  `INFO channel.OBIX.CoapChannel - BAD URI: units/lux`. Have a look at the log of the OBIX connector if you are missing OBIX datapoints or units.
+* Sometimes the response time of an OBIX gateway can be very long. It may occur that the OBIX connector terminates because no response was received from the OBIX gateway, even if the gateway is running and correctly configured in the **config.properties** file. In this case, increase the property **timeWaitingForResponseInMilliseconds** in the **config.properties** file by a few seconds to give the OBIX gateway more time for a response.
 
 # External libraries and frameworks in use
 ## Obix Java Toolkit
 
-The [oBIX toolkit](https://sourceforge.net/projects/obix/) provides a Java software library for implementing oBIX enabled applications. The toolkit contains a data model for obj trees, XML encoder/decoder, REST session management, and a Swing diagnostics tool.
+The [OBIX toolkit](https://sourceforge.net/projects/obix/) provides a Java software library for implementing OBIX enabled applications. The toolkit contains a data model for obj trees, XML encoder/decoder, REST session management, and a Swing diagnostics tool.
 
 *   included as uncompiled source code
 

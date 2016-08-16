@@ -355,7 +355,7 @@ public class GuiUtility {
             c.gridy++;
             pane.add(parameter1Label, c);
 
-            JLabel parameter1ObixUnitLabel = new JLabel("oBIX unit: " + o.getObixUnitUri());
+            JLabel parameter1ObixUnitLabel = new JLabel("OBIX unit: " + o.getObixUnitUri());
             c.gridx++;
             pane.add(parameter1ObixUnitLabel, c);
 
@@ -646,7 +646,7 @@ public class GuiUtility {
         c.gridy++;
         pane.add(registeredColibriChannelCheckBox, c);
 
-        JLabel label = new JLabel("oBIX Components");
+        JLabel label = new JLabel("OBIX Components");
         Font headerF = new Font("Courier", Font.BOLD, 25);
         label.setFont(headerF);
         c.gridy++;
@@ -691,7 +691,7 @@ public class GuiUtility {
             pane.add(unitLabel, c);
 
 
-            final JButton getObixButton = new JButton("GET from oBIX");
+            final JButton getObixButton = new JButton("GET from OBIX");
             c.gridx++;
             pane.add(getObixButton, c);
 

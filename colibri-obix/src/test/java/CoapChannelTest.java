@@ -35,7 +35,7 @@ public class CoapChannelTest {
     }
 
     /**
-     * A local oBIX server has to be running in order to pass this test.
+     * A local OBIX server has to be running in order to pass this test.
      *
      * The IoTSYS System can be used for this: https://github.com/mjung85/iotsys/
      */

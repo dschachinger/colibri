@@ -36,7 +36,7 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
     /**
      * This method sends a GET message with the given obix lobby-URI and returns the response as an {@link ObixLobby}.
      *
-     * @param uri   The URI of the requested oBIX lobby.
+     * @param uri   The URI of the requested OBIX lobby.
      * @return      The requested {@link ObixLobby}.
      */
     @Override

@@ -4,7 +4,7 @@ apply plugin: 'maven'
 group = 'at.ac.tuwien.auto.colibr'
 version = '1.0-SNAPSHOT'
 
-description = "colibri oBIX Connector"
+description = "colibri OBIX Connector"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
