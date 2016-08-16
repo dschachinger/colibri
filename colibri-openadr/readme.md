@@ -1,6 +1,10 @@
+# Colibri openADR connector
+
+Google Summer of Code submission link: https://github.com/faustmann/colibri/commits/master?author=faustmann
+
 ## Short introduction
 
-This connector acts as a link between the colibri environment and the openADR environment. Therefore it has a colibri client and an openADR client, namely virtual end node (VEN) implemented.
+This connector acts as a link between the colibri environment and the openADR environment. Therefore it has a colibri client and an openADR client, namely virtual end node (VEN), implemented.
 
 ## How to use this connector
 
@@ -10,7 +14,7 @@ Run the command **gradle -q run** in the colibri-openadr folder
 
 Therefore a XMPP client with an XMPP-Console is used. e.g. [Pidgin](https://www.pidgin.im/)
 The XMPP-Console enables to send/receive all XMPP messages types with arbitrary content.
-[This file](https://github.com/faustmann/colibri/blob/master/colibri-openadr/example_messages/example_messages.xml) contains some exampel messages.
+[This file](https://github.com/faustmann/colibri/blob/master/colibri-openadr/example_messages/example_messages.xml) contains  exampel XMPP openADR messages.
 
 ### Action commands:
 
@@ -21,7 +25,7 @@ These are possible actions with the action number and description:
 
 | Number| Usage| Description|
 | :-------------: |:-------------| :-----|
-|0 | print a help page | This prints a help page which contains all possible actions plus a short description |
+|0 | print a help page | This prints a help page which contains all possible actions with a short description |
 |30|shutdown connector |This shuts down the whole connector. The connector consists of the openADR VEN part and the colibri client part.|
 
 #### Colibri related actions
@@ -35,9 +39,9 @@ These are possible actions with the action number and description:
 |5 | send an add message for load events to the core| This informs the core about the load service by an add message. This service will inform the core about new load events from the openADR side.|
 |6 | show the added services| This prints these services which the colibri core knows by an add message.|
 |7 | show the observed services| This prints these services which the colibri core observes by an observe message.|
-|8 | send query message to the core| This issues an query message to the core. After entering the action number it needed to enter the sparql query. This is the content of the message.|
-|9 | send update message to the core| This issues an update message to the core. After entering the action number it needed to enter the SPARQL update. 	This is the content of the message.|
-|10| terminate the connector| This shuts down the colibri part of the connector. This means it closes the opened socket and if needed it also deregisters the connector on the colibri core side.|
+|8 | send query message to the core| This issues an query message to the core. After entering the action number it is needed to enter the sparql query. This is the content of the message.|
+|9 | send update message to the core| This issues an update message to the core. After entering the action number it is needed to enter the SPARQL update. 	This is the content of the message.|
+|10| terminate the connector| This shuts down the colibri part of the connector. This means it closes the opened socket and if needed it also deregisters the connector at the colibri core side.|
 
 #### OpenADR related
 
@@ -46,7 +50,7 @@ These are possible actions with the action number and description:
 |21|print the registration id|This prints the given registration id. The VTN chose this ID during the registration phase. If it is not null it indicates, that the VEN is successful registered.|
 |22|print the ven id|This prints the given ven id. The VTN chose this ID during the registration phase. If it is not null it indicates, that the VEN is successful registered.|
 |23|query the VTN about registration information|This issues an oadrQueryRegistration message. The VTN replies with an oadrCreatedPartyRegistration. This reply informs the VEN what what profiles, transports, and extensions the VTN supports. This does not register the VEN.|
-|24|register the VEN at the VTN party|This issues an oadrCreatePartyRegistration message. The VTN replies with an oadrCreatedPartyRegistration. This reply contains the given VEN ID and the registration ID. This means this registers the VEN.|
+|24|register the VEN at the VTN party|This issues an oadrCreatePartyRegistration message. The VTN replies with an oadrCreatedPartyRegistration. This reply contains the given VEN ID and the registration ID. This registers the VEN.|
 |25|deregister the VEN at the VTN party|This issues an oadrCancelPartyRegistration message. The VTN replies with an oadrCanceledPartyRegistration. This reply inidcates if the VTN successfully deregistered the VEN.|
 |26|request for new events|This issues an oadrRequestEvent message to the VTN. This message acquires events from the VTN.|
 |27|register the VEN report possibilities at the VTN party|This isses an oadrRegisterReport. This message is used to publish the reporting capabilities in a metadata report. So to say it informs the VTN party about the VEN party report possibilities.|
@@ -55,19 +59,19 @@ These are possible actions with the action number and description:
 
 ## Software architecture
 
-The following class diagram should give an overview about the software architecture. It is not complete it and therefore it is used to get an idea about the rough functionality.
+The following class diagram should give an overview about the software architecture. It is not complete. It is used to get an idea about the rough functionality.
 The yellow classes are related to the colibri part, the orange classes belongs to the openADR part and the gray ones bridges the colibri part with the openADR part.
 
 ![class_diagram](https://raw.githubusercontent.com/faustmann/colibri/master/colibri-openadr/documents/diagrams/class_diagram.png)
 
 ## Used technologies
 
-In the following all the used technoligies are listed with the general usage and the with the project related one.
+In the following all the used technoligies are listed with the general usage and its project related one.
 
 #### Jackson
 Jackson is a suite of data-processing tools for Java (and the JVM platform), including the flagship streaming JSON parser / generator library, matching data-binding library (POJOs to and from JSON) and additional data format modules to process data encoded in Avro, BSON, CBOR, CSV, Smile, Protobuf, XML or YAML; and even the large set of data format modules to support data types of widely used data types such as Joda, Guava and many, many more.
 
-Only used for atmosphere test WebSocket server. This technology can be removed after the atmosphere is not used anymore.
+This is only used in combination with the atmosphere test WebSocket server. This technology can be removed after the atmosphere is not used anymore.
 
 #### Wasync
 wAsync is a Java based library allowing asynchronous communication with any WebServer supporting the WebSocket or Http Protocol. wAsync can be used with Node.js, Android, Atmosphere or any WebSocket Framework.
@@ -77,7 +81,7 @@ Wasync is used as an interface to communicate with the colibri core via WebSocke
 #### Atmosphere-runtime
 The Atmosphere Framework contains client and server side components for building Asynchronous Web Applications. The majority of popular frameworks are either supporting Atmosphere or supported natively by the framework. The Atmosphere Framework supports all major Browsers and Servers.
 
-This technology is responsible to handle the actually WebSocket communication
+This technology is responsible to handle the actually WebSocket communication.
 
 #### Slf4j
 The Simple Logging Facade for Java (SLF4J) serves as a simple facade or abstraction for various logging frameworks (e.g. java.util.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
@@ -87,37 +91,42 @@ This technology is used to print logging messages.
 #### Gson
 Gson is a Java library that can be used to convert Java Objects into their JSON representation. It can also be used to convert a JSON string to an equivalent Java object. Gson can work with arbitrary Java objects including pre-existing objects that you do not have source-code of.
 
-This technology makes the parsing of a json formatted Sparql query result easy. This result is send from the colibri core to this connector after an query message.
+This technology makes the parsing of a json formatted Sparql query result easy. This result is sent to this connector after an query message by the colibri core.
 
 #### Smack
 Smack is an Open Source XMPP (Jabber) client library for instant messaging and presence. A pure Java library, it can be embedded into your applications to create anything from a full XMPP client to simple XMPP integrations such as sending notification messages and presence-enabling devices.
 
-The openADR client (VEN short from for virtual end node) communicates eiter over HTTP or over XMPP with the openADR server (VTN short from for virtual top node). I picked the XMPP protocol. Smack handles this XMPP communication.
+The openADR client (VEN short from for virtual end node) communicates eiter over HTTP or over XMPP with the openADR server (VTN short from for virtual top node). For now the XMPP protocol is implemented. So Smack handles this XMPP communication.
 
 #### Jaxb
 This plugin generates Java code from schema files (see com.sun.tools.xjc.XJCTask) or schema files from existing Java code.
 
 Jaxb generates Java Objects out of the openADR schema files. This  schema files specify how openADR messages look like.
 
-### Specialties of this connector
+### Specialties of this connector: Colibri part related
 
-#### Colibri part related
+#### What is inside
 
 This implementation is fully comply with the Colibri semantic core: Interface Version 1.2.1 . Nevertheless  there is some space for interpretation.  
 These points are specific to this connector:
 * If the core sends a GET message to gather information about load or price events, then the connector will reply a PUT message which contains the next upcoming event. But when the connector does not received an openADR event before,  then it will reply an empty PUT message.  
 * If the core requests in his observe message to receive the related PUT messages cyclically -this can be achieved with the „freq“ parameter-, but no new information related to this service were received, then the connector replies an empty PUT message.
 
-#### openADR part related
+#### TO DO
+
+* No secure websocket is used.
+* Send customized query messages to the core to gather information for an openADR report. e.g. current energy consumption
+
+### Specialties of this connector: openADR part related
 
 The openADR standard is very sophisticated. Therefore it was not possible to implement the full standard within one [Google Summer of Code period](https://summerofcode.withgoogle.com/projects/#5501542597656576). During this project the current OpenADR 2.0 Profile Specification B Profile has the revision 1.1 .  
-For support and guiding during the implementation phase use cases were defined at the beginning of the Google Summer of Code project. These are stored in this [file](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf).
+For support and guiding during the implementation phase we defined use cases at the beginning of the Google Summer of Code project. These are stored in this [file](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf).
 
-##### What is inside
+#### What is inside
 
 [Use case 1-14 implemented](link)
 
-##### TODO
+#### TO DO
 
 According to the conformance rule 510 in the Specification the points are minimum needed to be implemented to have a valid VEN.
 
@@ -125,6 +134,6 @@ According to the conformance rule 510 in the Specification the points are minimu
 * A VEN MUST be capable of utilizing the EiOpt service to further qualify the
 opt state of an event. [Use case 15-16 needed](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf)
 
-The reports mechanism ([Use case 10-14](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf)) is implemented generally but most of the message element values are hard coded:  
+The reports mechanism ([Use case 10-14](https://github.com/faustmann/colibri/blob/master/colibri-openadr/documents/openADR_use%20cases_V2.pdf)) is implemented generally but most of the message information are hard coded:  
 * If the report functionalities needs to be changed look at addExampleReportPossibility in the 	Main class.
 * send the proper query to the colibri core → insert received result values to the openADR 	message type oadrUpdateReport. (place to change: Class OpenADRColibriBridge Method: queryColibriCoreForOpenADRReportData)

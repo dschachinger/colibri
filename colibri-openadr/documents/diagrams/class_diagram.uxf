@@ -361,8 +361,6 @@ bg=orange</panel_attributes>
     </coordinates>
     <panel_attributes>Bridge::OpenADRColibriBridge
 --
--id: Long
-_-ClassAttribute: Long_
 --
 informationFlowFromOpenADRToColibri(info: OADRMsgInfo)
 informationFlowFromColibriToOpenADR(info: ColibriMessage)
@@ -409,7 +407,7 @@ bg=yellow</panel_attributes>
     <coordinates>
       <x>385</x>
       <y>22</y>
-      <w>330</w>
+      <w>340</w>
       <h>77</h>
     </coordinates>
     <panel_attributes>lt=-
@@ -425,7 +423,7 @@ bg=yellow</panel_attributes>
       <x>0</x>
       <y>154</y>
       <w>418</w>
-      <h>99</h>
+      <h>77</h>
     </coordinates>
     <panel_attributes>WebSocketHandling::GenerateSendMessage
 --
@@ -545,15 +543,15 @@ bg=light_gray</panel_attributes>
     <type>com.umlet.element.Relation</type>
     <coordinates>
       <x>803</x>
-      <y>165</y>
-      <w>65</w>
-      <h>329</h>
+      <y>176</y>
+      <w>54</w>
+      <h>318</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=  1
 m2=  1
 bg=light_gray</panel_attributes>
-    <additional_attributes>44;33;33;308</additional_attributes>
+    <additional_attributes>33;33;33;297</additional_attributes>
   </element>
   <element>
     <type>com.umlet.element.Relation</type>
