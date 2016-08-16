@@ -1,5 +1,3 @@
-<img width="380px" src='http://www.auto.tuwien.ac.at/~dschachinger/Colibri/logo_full.png'/>
-
 # Description
 The OBIX Connector is intended to connect the OASIS OBIX platform to Colibris semantic interface. The Colibri smart energy management system is able to subscribe to different resources in building automation systems behind an OBIX gateway. This enables the connector to gather specific information from these resources. The connector provides technology-independent and generic communication with building automation resources. It also simplifies the communication and interconnection between Colibri and high-level integration OBIX gateways as subsystems behind the OBIX gateways are hidden and encapsulated form the Colibri semantic interface.
 
@@ -23,21 +21,21 @@ Some examples for possible propertie configurations are already included in the 
 
 You can use [IOTSyS](https://github.com/mjung85/iotsys) to simulate an OBIX gateway with which the OBIX connector can interact.
 
-## GUI
+# GUI
 
-# First Window
+## First Window
 
 In the first screen of the GUI, all components gathered from an OBIX lobby as configured in the **config.properties** file are listed. In this window, the user of the OBIX connector can choose which components should interact with Colibri and proceed by clicking accept.
 
-# Second Window
+## Second Window
 
 The second screen helps the user to adjust the parameters of the gathered OBIX datapoints and proceed by clicking accept. For example, if a *StateParameter* is chosen, additional, but optional states can be added to the parameter description of an OBIX datapoint.
 
-# Third Window
+## Third Window
 
 In the third screen the OBIX connector user can interact with the OBIX gateway as well with the Colibri semantic core. The Colibri can only observe an OBIX datapoint if the OBIX connector is registered at Colibri and the datapoint is added as a service at Colibri. OBIX can also observe PUT messages from the Colibri semantic core through the OBIX connector.
 
-## Open Issues
+# Open Issues
 
 *   The OBIX connector only uses a plain CoAP channels without encryption and authentication to communicate with OBIX gateways. This connection should be upgraded in the future. The [Scandium (SC) - project](https://github.com/eclipse/californium/tree/master/scandium-core), a sub-project of the Californium (Cf) Coap Framework, should be used for this, as Californium is used for CoAP communication in this connector.
 *   The OBIX connector does not use a secure web socket, but only a plain web socket to communicate with Colibri. This web socket communication should be upgraded in the future.
@@ -45,12 +43,12 @@ In the third screen the OBIX connector user can interact with the OBIX gateway a
 *   For now, the OBIX connector can only handle OBIX messages in xml-format. The connector should be extended to handle json and other formats.
 *   The connector should send SPARQL query messages to the Colibri semantic core to request specific data from the OBIX onthology, for example available parameter types or units. Then the connector should process the received SPARQL result sets and execute the according actions. This feature is so far only included as a proof of concept with queries saved as Strings, but not with communication to a real onthology.
 
-## Tips
+# Tips
 
 * It may happen that URI's in OBIX lobbies are not correct. In this case, the OBIX connector receives an 'Err' OBIX Object and the wrong URI is logged in some form lik this:  `INFO channel.OBIX.CoapChannel - BAD URI: units/lux`. Have a look at the log of the OBIX connector if you are missing OBIX datapoints or units.
 * Sometimes the response time of an OBIX gateway can be very long. It may occur that the OBIX connector terminates because no response was received from the OBIX gateway, even if the gateway is running and correctly configured in the **config.properties** file. In this case, increase the property **timeWaitingForResponseInMilliseconds** in the **config.properties** by a few seconds to give the OBIX gateway more time for a response.
 
-## External libraries and frameworks in use
+# External libraries and frameworks in use
 ## Obix Java Toolkit
 
 The [oBIX toolkit](https://sourceforge.net/projects/obix/) provides a Java software library for implementing oBIX enabled applications. The toolkit contains a data model for obj trees, XML encoder/decoder, REST session management, and a Swing diagnostics tool.
