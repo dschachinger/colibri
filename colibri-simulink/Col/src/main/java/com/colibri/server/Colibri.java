@@ -43,12 +43,14 @@ public class Colibri {
     static String qre = "";
     static String put = "";
     static String id = "";
+    static Session conId;
     Validate v = new Validate();
     static Set<Session> chatUsers = Collections.synchronizedSet(new HashSet<Session>());
     @OnOpen
     public void handleOpen (Session userSession) throws IOException
     {
         chatUsers.add(userSession);
+        conId = userSession;
     }
     @OnMessage
     public void handleMessage (String message, Session userSession) throws IOException
@@ -63,6 +65,7 @@ public class Colibri {
                 msg = Identifier.DRE + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/TC"+ "<br><br>";
                 breakStatus(msg);
                 tc = "";
+                chatUsers.remove(conId);
             }
             else
                 breakStatus("Error: Cannot Deregister the connector as Technology Connecter is not registered");
