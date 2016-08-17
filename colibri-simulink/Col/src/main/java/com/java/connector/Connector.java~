@@ -58,6 +58,10 @@ public class Connector {
                     abc = Client.getlight(ss, Header.getRefId());
                     sendMessage(abc);
                 }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DRE"))
+                {
+                    Client.dre();
+                }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETT"))
                 {
                     abc = Client.gettemp(ss, Header.getRefId());

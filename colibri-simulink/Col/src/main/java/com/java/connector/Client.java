@@ -35,7 +35,9 @@ import org.xml.sax.SAXException;
 public class Client {
     static ServerSocket serverSocket;
     static int port = 8888;
+    static String dre = "";
     private static Socket socket = new Socket();
+    static String reconnect = "temp";
     public static void main(String args[]) throws URISyntaxException, DeploymentException, IOException, SAXException, ParserConfigurationException
     {
         Connector con = new Connector();
@@ -49,6 +51,7 @@ public class Client {
         String msg;
         msg = Identifier.REG + "<br>Content-Type:" + ContentType.APPLICATION_RDF_XML + "<br>Message-Id:"+ Header.getId() +"<br>Date:" + Header.getDate() + "<br><br>";
         msg += v.get("reg.xml", "", "");
+        dre = "dre";
         con.sendMessage(msg);
         while (true)
         {
@@ -81,8 +84,23 @@ public class Client {
                 msgs += "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#><br>PREFIX colibri: <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#><br>INSERT DATA { <http://www.colibri-samples.org/main-building> rdf:type<br>colibri:OfficeBuilding }";
                 con.sendMessage(msgs);
             }
-            //message = br.readLine();
-            //con.sendMessage(message);
+            if (message.equalsIgnoreCase("REG") && dre.equals("") && reconnect.equals("temp"))
+            {
+                String msgs;
+                msgs = Identifier.REG + "<br>Content-Type:" + ContentType.APPLICATION_RDF_XML + "<br>Message-Id:"+ Header.getId() +"<br>Date:" + Header.getDate() + "<br><br>";
+                msgs += v.get("reg.xml", "", "");
+                dre = "dre";
+                con.sendMessage(msgs);
+            }
+            if (message.equalsIgnoreCase("REG") && reconnect.equals(""))
+            {
+                Connector c = new Connector();
+                String msgs;
+                msgs = Identifier.REG + "<br>Content-Type:" + ContentType.APPLICATION_RDF_XML + "<br>Message-Id:"+ Header.getId() +"<br>Date:" + Header.getDate() + "<br><br>";
+                msgs += v.get("reg.xml", "", "");
+                reconnect = "temp";
+                con.sendMessage(msgs);
+            }
         }
     }
     public static String gettemp(String message, String token) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException
@@ -102,7 +120,7 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br><br>";
-        return msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br>--------------------------<br>";
+        return msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
     }
 
     static String getlight(String ss, String token) throws IOException, SAXException, ParserConfigurationException {
@@ -185,5 +203,10 @@ public class Client {
         }, 0,
         25000 
 );
+    }
+
+    static void dre() throws URISyntaxException, DeploymentException, IOException {
+        dre = "";
+        reconnect = "";
     }
 }
