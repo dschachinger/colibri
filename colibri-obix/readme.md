@@ -7,7 +7,7 @@ The following link leads to all commits from Josef Wechselauer (goJoWe16) for th
 
 # Design
 
-The OBIX Connector consists of multiple OBIX channels and one Colibri channel. The OBIX channels are used to communicate with OBIX gateways and the interaction with OBIX datapoints registered in an OBIX lobby. The Colibri channel is used for the interaction with the web socket endpoint of the Colibri semantic core. OBIX channels are designed using the decorater design pattern to make them easily extensible. For now, communication is only possible using the CoAP protocol and the xml-format for OBIX objects.
+The OBIX Connector consists of multiple OBIX channels and one Colibri channel. The OBIX channels are used to communicate with OBIX gateways and the interaction with OBIX datapoints registered in an OBIX lobby. The Colibri channel is used for the interaction with the web socket endpoint of the Colibri semantic core. OBIX channels are designed using the decorater design pattern to make them easily extensible. For now, communication is only possible using the CoAP protocol and the XML-format for OBIX objects.
 
 For testing the OBIX connector without Colibri, a wAsync-chat-distribution was used to simulate sending and receiving messages to and from Colibri. The OBIX connector is still able to communicate with both, the wAsync-chat-distribution and with the Colibri semantic core.
 
@@ -40,12 +40,12 @@ In the third screen the OBIX connector user can interact with the OBIX gateway a
 *   The OBIX connector only uses plain CoAP channels without encryption and authentication to communicate with OBIX gateways. This connection should be upgraded in future. The [Scandium (SC) - project](https://github.com/eclipse/californium/tree/master/scandium-core), a sub-project of the Californium (Cf) Coap Framework, should be used for this, as Californium is used for CoAP communication in this connector.
 *   The OBIX connector does not use a secure web socket, but only a plain web socket to communicate with Colibri. This web socket communication should be upgraded in future.
 *   Histories, alarms and watches as specified in OBIX v1.1 are not handled by the OBIX connector, as they are not extremely important for Colibri. For full conformance with the OBIX standard, the handling of these objects should be included in the OBIX connector.
-*   For now, the OBIX connector can only handle OBIX messages in xml-format. The connector should be extended to handle json and other formats.
+*   For now, the OBIX connector can only handle OBIX messages in XML-format. The connector should be extended to handle JSON and other formats.
 *   The connector should send SPARQL query messages to the Colibri semantic core to request specific data from the OBIX ontology, for example available parameter types or units. Afterwards, the connector should process the received SPARQL result sets and execute the according actions. So far, ths feature is only included as a proof of concept with queries saved as Strings, but not with communication to a real ontology.
 
 # Tips
 
-* It may happen that URI's in OBIX lobbies are not correct. In this case, the OBIX connector receives an 'Err' OBIX Object and the wrong URI is logged in some form like this:  `INFO channel.OBIX.CoapChannel - BAD URI: units/lux`. Have a look at the log of the OBIX connector if you are missing OBIX datapoints or units.
+* It may happen that URIs in OBIX lobbies are not correct. In this case, the OBIX connector receives an 'Err' OBIX Object and the wrong URI is logged in some form like this:  `INFO channel.OBIX.CoapChannel - BAD URI: units/lux`. Have a look at the log of the OBIX connector if you are missing OBIX datapoints or units.
 * Sometimes the response time of an OBIX gateway can be very long. It may occur that the OBIX connector terminates because no response was received from the OBIX gateway, even if the gateway is running and correctly configured in the **config.properties** file. In this case, increase the property **timeWaitingForResponseInMilliseconds** in the **config.properties** file by a few seconds to give the OBIX gateway more time for a response.
 
 # External libraries and frameworks in use
@@ -93,4 +93,6 @@ The Simple Logging Facade for Java [(SLF4J)](http://www.slf4j.org/) serves as a 
 
 Java Architecture for XML Binding [(JAXB)](https://docs.oracle.com/javase/tutorial/jaxb/intro/) provides a fast and convenient way to bind XML schemas and Java representations, making it easy for Java developers to incorporate XML data and processing functions in Java applications. As part of this process, JAXB provides methods for unmarshalling (reading) XML instance documents into Java content trees, and then marshalling (writing) Java content trees back into XML instance documents. JAXB also provides a way to generate XML schema from Java objects.
 
+## License
 
+This colibri subproject (colibri-obix), referred as OBIX connector, is published under the BSD 3-Clause [License}(https://github.com/goJoWe16/colibri/blob/master/LICENSE).
