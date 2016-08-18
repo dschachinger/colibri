@@ -1,6 +1,5 @@
 package semanticCore.WebSocketHandling;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.atmosphere.wasync.*;
 import org.atmosphere.wasync.impl.AtmosphereClient;
 import org.atmosphere.websocket.WebSocketStreamingHandlerAdapter;
@@ -26,8 +25,6 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
      * @throws IOException
      */
     public static Socket initWebSocket(final ColibriClient colClient) throws IOException {
-        final ObjectMapper mapper = new ObjectMapper();
-
         Client client = ClientFactory.getDefault().newClient();;
         RequestBuilder request;
 
@@ -37,40 +34,13 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                 .encoder(new Encoder<Message, String>() {
                     @Override
                     public String encode(Message data) {
-                        if(colClient.isLocalAtmosphereClient()){
-                            try {
-                                return mapper.writeValueAsString(data);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        } else {
-                            return data.getMessage();
-                        }
+                        return data.getMessage();
                     }
                 })
                 .decoder(new Decoder<String, Message>() {
                     @Override
                     public Message decode(Event type, String data) {
-                        if(colClient.isLocalAtmosphereClient()) {
-                            data = data.trim();
-
-                            // Padding from Atmosphere, skip
-                            if (data.length() == 0) {
-                                return null;
-                            }
-
-                            if (type.equals(Event.MESSAGE)) {
-                                try {
-                                    return mapper.readValue(data, Message.class);
-                                } catch (IOException e) {
-                                    return null;
-                                }
-                            } else {
-                                return null;
-                            }
-                        } else {
-                            return new Message(data);
-                        }
+                        return new Message(data);
                     }
                 })
                 .transport(Request.TRANSPORT.WEBSOCKET)
@@ -104,7 +74,6 @@ public class InitWebsocket extends WebSocketStreamingHandlerAdapter {
                 logger.info("Connection closed");
             }
         }).open(request.build());
-
 
         return socket;
     }

@@ -16,7 +16,7 @@ public class Header {
         message type */
     private ContentType contentType;
     /* Date (optional) shows the date and time that the message was originated using ISO 8601. The
-        used format is “<date>T<time>Z” with date format “YYYY-MM-DD” and time format “hh:mm:ss”.
+        used format is "<date>T<time>Z" with date format "YYYY-MM-DD" and time format "hh:mm:ss".
         The value is given in UTC. */
     private Date date;
     /* Expires (optional) gives the date and time after which the message is run off. The format is the

@@ -59,8 +59,6 @@ public class ColibriClient {
     // This url defines the web socket address to the colibri core
     String colibriCoreURL;
 
-    private boolean localAtmosphereClient;
-
     public ColibriClient(OpenADRColibriBridge bridge, String serviceBaseURL, String colibriCoreURL, int timeoutSec){
         try {
             jaxbContext = JAXBContext.newInstance(RegisterMsg.class, AddMsg.class, PutMsg.class);
@@ -83,8 +81,6 @@ public class ColibriClient {
 
         this.serviceBaseURL = serviceBaseURL;
         this.colibriCoreURL = colibriCoreURL;
-
-        localAtmosphereClient = colibriCoreURL.equals("http://127.0.0.1:8080/chat");
 
         servicesMap = new HashMap<>();
 
@@ -246,10 +242,6 @@ public class ColibriClient {
 
     public String getColibriCoreURL() {
         return colibriCoreURL;
-    }
-
-    public boolean isLocalAtmosphereClient() {
-        return localAtmosphereClient;
     }
 
     public ProcessReceivedMsg getProcessMessage() {

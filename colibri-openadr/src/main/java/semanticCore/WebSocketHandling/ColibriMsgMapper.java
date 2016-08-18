@@ -13,7 +13,6 @@ import semanticCore.MsgObj.MsgType;
  */
 public class ColibriMsgMapper {
 
-    //static String newLine = "<br>";
     static String newLine = "\n";
 
     /**
@@ -22,13 +21,6 @@ public class ColibriMsgMapper {
      * @return colibri message object
      */
     public static ColibriMessage msgToPOJO(String msg){
-        // TODO implement later because dummy server replies also the received messages
-        /*if(msg.contains("\n")){
-            return null;
-        }
-        */
-
-
         try{
             int endCommandPos = msg.indexOf(newLine);
 
