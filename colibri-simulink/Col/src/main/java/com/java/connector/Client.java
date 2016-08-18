@@ -103,7 +103,7 @@ public class Client {
             }
         }
     }
-    public static String gettemp(String message, String token) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException
+    public static String gettemp(String token) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException
     {
         Validate v = new Validate();
         OutputStream os1 = socket.getOutputStream();
@@ -123,13 +123,12 @@ public class Client {
         return msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
     }
 
-    static String getlight(String ss, String token) throws IOException, SAXException, ParserConfigurationException {
+    static String getlight(String token) throws IOException, SAXException, ParserConfigurationException {
         Validate v = new Validate();
         OutputStream os1 = socket.getOutputStream();
         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
         BufferedWriter bw1 = new BufferedWriter(osw1);
 	bw1.write("2"+"\n");
-	System.out.println("Sent 1");
 	bw1.flush();
 	InputStream is = socket.getInputStream();
 	InputStreamReader isr = new InputStreamReader(is);
@@ -139,26 +138,21 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-<<<<<<< HEAD
-        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br>--------------------------<br>";
-=======
         return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     }
 
-    static String obstemp(String ss, String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
+    static String obstemp(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
         Validate v = new Validate();
         ObsTempThread(token);
 	return "";
     }
 
-    static String obslight(String ss, String token) throws IOException, SAXException, ParserConfigurationException {
+    static String obslight(String token) throws IOException, SAXException, ParserConfigurationException {
         Validate v = new Validate();
         OutputStream os1 = socket.getOutputStream();
         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
         BufferedWriter bw1 = new BufferedWriter(osw1);
 	bw1.write("2"+"\n");
-	System.out.println("Sent 1");
 	bw1.flush();
 	InputStream is = socket.getInputStream();
 	InputStreamReader isr = new InputStreamReader(is);
@@ -168,11 +162,7 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-<<<<<<< HEAD
-        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br>--------------------------<br>";
-=======
         return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     }
     public static void ObsTempThread(String token) throws URISyntaxException, DeploymentException, IOException
     {
@@ -187,7 +177,6 @@ public class Client {
                     OutputStreamWriter osw1 = new OutputStreamWriter(os1);
                     BufferedWriter bw1 = new BufferedWriter(osw1);
                     bw1.write("1"+"\n");
-                    System.out.println("Sent 1");
                     bw1.flush();
                     InputStream is = socket.getInputStream();
                     InputStreamReader isr = new InputStreamReader(is);
@@ -198,11 +187,7 @@ public class Client {
                     Date date = new Date();
                     String msg;
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-<<<<<<< HEAD
-                    msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br>--------------------------<br>";
-=======
                     msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                     con.sendMessage(msg);
                 } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
