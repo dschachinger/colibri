@@ -40,7 +40,7 @@ public class Connector {
     int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:56502/Colibrii/chat");
+        URI uri = new URI("ws://localhost:8080/Col-1.0/chat");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
         
     }
