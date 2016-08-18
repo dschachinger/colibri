@@ -36,9 +36,11 @@ import org.xml.sax.SAXException;
 public class Connector {
     Session session;
     String abc = "";
+    String token = "";
+    int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:8080/Col-1.0/chat");
+        URI uri = new URI("ws://localhost:56502/Colibrii/chat");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
         
     }
@@ -55,30 +57,62 @@ public class Connector {
             {
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETL"))
                 {
-                    abc = Client.getlight(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 1;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DRE"))
                 {
-                    Client.dre();
+                    commandCode = 2;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETT"))
                 {
-                    abc = Client.gettemp(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 3;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("OBST"))
                 {
-                    abc = Client.obstemp(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 4;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("OBSL"))
                 {
-                    abc = Client.obslight(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 5;
                 }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").contains("Message-Id:"))
+                {
+                    StringTokenizer st = new StringTokenizer(ss, ":");
+                    while (st.hasMoreTokens())
+                    {
+                        token = st.nextToken();
+                    }
+               }
                 System.out.println(Json.createReader(new StringReader(ss)).readObject().getString("message"));
             }
+        switch (commandCode) {
+            case 1:
+                abc = Client.getlight(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 2:
+                Client.dre();
+                commandCode = 0;
+                break;
+            case 3:
+                abc = Client.gettemp(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 4:
+                abc = Client.obstemp(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 5:
+                abc = Client.obslight(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            default:
+                break;
+        }
     }
     public void sendMessage(String message) throws IOException
     {
