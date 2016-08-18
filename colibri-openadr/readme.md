@@ -145,4 +145,4 @@ The reports mechanism ([Use case 10-14](https://github.com/faustmann/colibri/blo
 
 ### LICENSE
 
-This Colibri connector is published under the BSD 3-Clause License.
+This Colibri connector is published under the [BSD 3-Clause License](https://github.com/faustmann/colibri/blob/master/colibri-openadr/LICENSE).
