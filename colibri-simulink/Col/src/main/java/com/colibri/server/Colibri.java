@@ -42,6 +42,10 @@ public class Colibri {
     static String que = "";
     static String qre = "";
     static String put = "";
+<<<<<<< HEAD
+=======
+    static String get = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     static String id = "";
     static String err = "";
     static Session conId;
@@ -67,6 +71,11 @@ public class Colibri {
                 breakStatus(msg);
                 tc = "";
                 chatUsers.remove(conId);
+<<<<<<< HEAD
+=======
+                get = "";
+                put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
             }
             else
             {
@@ -87,6 +96,11 @@ public class Colibri {
                     breakStatus(msg);
                     addt = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -113,6 +127,11 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "obst";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -139,6 +158,11 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -163,7 +187,12 @@ public class Colibri {
                     breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>");
                     obst = "";
                     sta = "";
+<<<<<<< HEAD
                     put = "put";
+=======
+                    get = "get";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -190,6 +219,11 @@ public class Colibri {
                     breakStatus(msg);
                     addl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -216,6 +250,11 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "obsl";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -242,6 +281,11 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -266,6 +310,11 @@ public class Colibri {
                     breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br><br>");
                     obsl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "get";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -312,6 +361,13 @@ public class Colibri {
                     temp = "REG";
                     tc = "TC";
                 }
+<<<<<<< HEAD
+=======
+                if (ss.equals("PUT"))
+                {
+                    put = "put";
+                }
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 if (ss.equals("QUE"))
                 {
                     que = "que";
@@ -331,7 +387,15 @@ public class Colibri {
                 }
             }
         }
+<<<<<<< HEAD
         if (!id.equals("") && !err.equals("err"))
+=======
+<<<<<<< HEAD
+        if (!id.equals("") && !err.equals("err"))
+=======
+        if (!id.equals("") && !err.equals("err") && (!get.equals("get") || put.equals("put") ))
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
+>>>>>>> 70609417318ceca907ba40721a988158ea2158e8
         {
             String status = sta(id);
             breakStatus(status);
