@@ -42,10 +42,7 @@ public class Colibri {
     static String que = "";
     static String qre = "";
     static String put = "";
-<<<<<<< HEAD
-=======
     static String get = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     static String id = "";
     static String err = "";
     static Session conId;
@@ -67,15 +64,12 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.DRE + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/TC"+ "<br><br>";
+                msg = Identifier.DRE + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/TC"+ "<br><br>";
                 breakStatus(msg);
                 tc = "";
                 chatUsers.remove(conId);
-<<<<<<< HEAD
-=======
                 get = "";
                 put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
             }
             else
             {
@@ -90,17 +84,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
+                msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
                 if (addt.equalsIgnoreCase("addt"))
                 {
                     breakStatus(msg);
                     addt = "";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -121,17 +112,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = "OBST<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
+                msg = "OBST<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
                 if (addt.equalsIgnoreCase("addt"))
                 {
                     breakStatus(msg);
                     obst = "obst";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -152,17 +140,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
+                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
                 if (obst.equalsIgnoreCase("obst") && addt.equalsIgnoreCase("addt"))
                 {
                     breakStatus(msg);
                     obst = "";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -187,12 +172,8 @@ public class Colibri {
                     breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>");
                     obst = "";
                     sta = "";
-<<<<<<< HEAD
-                    put = "put";
-=======
                     get = "get";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -213,17 +194,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
+                msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br>";
                 if (addl.equalsIgnoreCase("addl"))
                 {
                     breakStatus(msg);
                     addl = "";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -244,17 +222,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = "OBSL<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br>";
+                msg = "OBSL<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br>";
                 if (addl.equalsIgnoreCase("addl"))
                 {
                     breakStatus(msg);
                     obsl = "obsl";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -275,17 +250,14 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br><br>";
+                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br><br>";
                 if (obsl.equalsIgnoreCase("obsl") && addl.equalsIgnoreCase("addl"))
                 {
                     breakStatus(msg);
                     obsl = "";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -307,14 +279,11 @@ public class Colibri {
                 {
                     id = Header.getId();
                     Header.setId(id);
-                    breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br><br>");
+                    breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br><br>");
                     obsl = "";
                     sta = "";
-<<<<<<< HEAD
-=======
                     get = "get";
                     put = "";
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
                 {
@@ -361,13 +330,10 @@ public class Colibri {
                     temp = "REG";
                     tc = "TC";
                 }
-<<<<<<< HEAD
-=======
                 if (ss.equals("PUT"))
                 {
                     put = "put";
                 }
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 if (ss.equals("QUE"))
                 {
                     que = "que";
@@ -387,15 +353,7 @@ public class Colibri {
                 }
             }
         }
-<<<<<<< HEAD
-        if (!id.equals("") && !err.equals("err"))
-=======
-<<<<<<< HEAD
-        if (!id.equals("") && !err.equals("err"))
-=======
         if (!id.equals("") && !err.equals("err") && (!get.equals("get") || put.equals("put") ))
->>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
->>>>>>> 70609417318ceca907ba40721a988158ea2158e8
         {
             String status = sta(id);
             breakStatus(status);
