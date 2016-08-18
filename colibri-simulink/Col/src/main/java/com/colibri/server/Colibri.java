@@ -42,6 +42,7 @@ public class Colibri {
     static String que = "";
     static String qre = "";
     static String put = "";
+    static String get = "";
     static String id = "";
     static String err = "";
     static Session conId;
@@ -67,6 +68,8 @@ public class Colibri {
                 breakStatus(msg);
                 tc = "";
                 chatUsers.remove(conId);
+                get = "";
+                put = "";
             }
             else
             {
@@ -87,6 +90,8 @@ public class Colibri {
                     breakStatus(msg);
                     addt = "";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -113,6 +118,8 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "obst";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -139,6 +146,8 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -163,7 +172,8 @@ public class Colibri {
                     breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>");
                     obst = "";
                     sta = "";
-                    put = "put";
+                    get = "get";
+                    put = "";
                 }
                 else
                 {
@@ -190,6 +200,8 @@ public class Colibri {
                     breakStatus(msg);
                     addl = "";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -216,6 +228,8 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "obsl";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -242,6 +256,8 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "";
                     sta = "";
+                    get = "";
+                    put = "";
                 }
                 else
                 {
@@ -266,6 +282,8 @@ public class Colibri {
                     breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br><br>");
                     obsl = "";
                     sta = "";
+                    get = "get";
+                    put = "";
                 }
                 else
                 {
@@ -312,6 +330,10 @@ public class Colibri {
                     temp = "REG";
                     tc = "TC";
                 }
+                if (ss.equals("PUT"))
+                {
+                    put = "put";
+                }
                 if (ss.equals("QUE"))
                 {
                     que = "que";
@@ -331,7 +353,7 @@ public class Colibri {
                 }
             }
         }
-        if (!id.equals("") && !err.equals("err"))
+        if (!id.equals("") && !err.equals("err") && (!get.equals("get") || put.equals("put") ))
         {
             String status = sta(id);
             breakStatus(status);
