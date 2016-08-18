@@ -139,7 +139,11 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+<<<<<<< HEAD
         return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br>--------------------------<br>";
+=======
+        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     }
 
     static String obstemp(String ss, String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
@@ -164,7 +168,11 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+<<<<<<< HEAD
         return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br>--------------------------<br>";
+=======
+        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     }
     public static void ObsTempThread(String token) throws URISyntaxException, DeploymentException, IOException
     {
@@ -190,7 +198,11 @@ public class Client {
                     Date date = new Date();
                     String msg;
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+<<<<<<< HEAD
                     msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br>--------------------------<br>";
+=======
+                    msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                     con.sendMessage(msg);
                 } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
