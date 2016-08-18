@@ -42,7 +42,12 @@ public class Colibri {
     static String que = "";
     static String qre = "";
     static String put = "";
+<<<<<<< HEAD
+=======
+    static String get = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
     static String id = "";
+    static String err = "";
     static Session conId;
     Validate v = new Validate();
     static Set<Session> chatUsers = Collections.synchronizedSet(new HashSet<Session>());
@@ -66,9 +71,17 @@ public class Colibri {
                 breakStatus(msg);
                 tc = "";
                 chatUsers.remove(conId);
+<<<<<<< HEAD
+=======
+                get = "";
+                put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
             }
             else
+            {
                 breakStatus("Error: Cannot Deregister the connector as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("REMT"))
         {
@@ -83,12 +96,23 @@ public class Colibri {
                     breakStatus(msg);
                     addt = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot remove service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Remove service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("OBST"))
         {
@@ -103,12 +127,23 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "obst";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot observe service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Observe service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("DETT"))
         {
@@ -123,12 +158,23 @@ public class Colibri {
                     breakStatus(msg);
                     obst = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot dettach service as service is not observed");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Dettach service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("GETT"))
         {
@@ -141,13 +187,24 @@ public class Colibri {
                     breakStatus("GETT<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>");
                     obst = "";
                     sta = "";
+<<<<<<< HEAD
                     put = "put";
+=======
+                    get = "get";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot get the service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Get the service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("REML"))
         {
@@ -162,12 +219,23 @@ public class Colibri {
                     breakStatus(msg);
                     addl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot remove service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Remove service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("OBSL"))
         {
@@ -182,12 +250,23 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "obsl";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot observe service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Observe service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("DETL"))
         {
@@ -202,12 +281,23 @@ public class Colibri {
                     breakStatus(msg);
                     obsl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot dettach service as service is not observed");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Dettach service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("GETL"))
         {
@@ -220,12 +310,23 @@ public class Colibri {
                     breakStatus("GETL<br>GET" + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br>http://www.colibri-samples.org/lightservice"+ "<br><br>");
                     obsl = "";
                     sta = "";
+<<<<<<< HEAD
+=======
+                    get = "get";
+                    put = "";
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 }
                 else
+                {
                     breakStatus("Error: Cannot get the service as service is not added");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot Get the service as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else if (message.equalsIgnoreCase("QRE"))
         {
@@ -239,10 +340,16 @@ public class Colibri {
                     breakStatus(msg);
                 }
                 else
+                {
                     breakStatus("Error: Result without query");
+                    err = "err";
+                }
             }
             else
+            {
                 breakStatus("Error: Cannot send QRE result as Technology Connecter is not registered");
+                err = "err";
+            }
         }
         else
         {
@@ -254,6 +361,13 @@ public class Colibri {
                     temp = "REG";
                     tc = "TC";
                 }
+<<<<<<< HEAD
+=======
+                if (ss.equals("PUT"))
+                {
+                    put = "put";
+                }
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
                 if (ss.equals("QUE"))
                 {
                     que = "que";
@@ -273,7 +387,15 @@ public class Colibri {
                 }
             }
         }
-        if (!id.equals(""))
+<<<<<<< HEAD
+        if (!id.equals("") && !err.equals("err"))
+=======
+<<<<<<< HEAD
+        if (!id.equals("") && !err.equals("err"))
+=======
+        if (!id.equals("") && !err.equals("err") && (!get.equals("get") || put.equals("put") ))
+>>>>>>> caaa2430bd935e9509309a41bb13d4a142b61b87
+>>>>>>> 70609417318ceca907ba40721a988158ea2158e8
         {
             String status = sta(id);
             breakStatus(status);
@@ -306,6 +428,8 @@ public class Colibri {
     
     private String sta(String msg_id) {
         String msg;
+        id = "";
+        err = "";
         msg = Identifier.STA + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + Header.getId() + "<br>Reference-Id:" + msg_id + "<br>Date:" + Header.getDate() + "<br><br>" +StatusCodes.OK + "<br><br>";
         return msg;
     }
