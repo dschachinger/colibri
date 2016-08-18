@@ -6,4 +6,4 @@ Guidelines:
 
 For complete documentation click [here](ProjectReport.pdf)
 
-For the list of commits click [here](https://github.com/PratyushTalreja/colibri/commits/master)
+For the list of commits click [here](https://github.com/PratyushTalreja/colibri/commits/master?author=PratyushTalreja)
