@@ -1,7 +1,7 @@
 Colibri: Matlab Simulink connector
 
 Guidelines:
-* The Col folder contains the Colibri server code and the Conenctor code
+* The Col folder contains the Colibri server code and the Connector code
 * The Matlab-Simulink folder contains the MATLAB script and the Simulink model
 
 For complete documentation click [here](ProjectReport.pdf)
