@@ -95,4 +95,4 @@ Java Architecture for XML Binding [(JAXB)](https://docs.oracle.com/javase/tutori
 
 ## License
 
-This colibri subproject (colibri-obix), referred as OBIX connector, is published under the BSD 3-Clause [License}(https://github.com/goJoWe16/colibri/blob/master/LICENSE).
+This colibri subproject (colibri-obix), referred as OBIX connector, is published under the BSD 3-Clause [License](https://github.com/goJoWe16/colibri/blob/master/LICENSE).
