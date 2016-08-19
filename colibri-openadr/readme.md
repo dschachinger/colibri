@@ -143,6 +143,6 @@ The reports mechanism ([Use case 10-14](https://github.com/faustmann/colibri/blo
 * If the report functionalities need to be changed, look at addExampleReportPossibility in the 	Main class.
 * send the proper query to the Colibri core → insert received result values to the openADR 	message type oadrUpdateReport. (place to change: Class OpenADRColibriBridge Method: queryColibriCoreForOpenADRReportData)
 
-### LICENSE
+## LICENSE
 
 This Colibri connector is published under the [BSD 3-Clause License](https://github.com/faustmann/colibri/blob/master/colibri-openadr/LICENSE).
