@@ -22,6 +22,8 @@ import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.websocket.DeploymentException;
@@ -147,29 +149,18 @@ public class Client {
 	return "";
     }
 
-    static String obslight(String token) throws IOException, SAXException, ParserConfigurationException {
+    static String obslight(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
         Validate v = new Validate();
-        OutputStream os1 = socket.getOutputStream();
-        OutputStreamWriter osw1 = new OutputStreamWriter(os1);
-        BufferedWriter bw1 = new BufferedWriter(osw1);
-	bw1.write("2"+"\n");
-	bw1.flush();
-	InputStream is = socket.getInputStream();
-	InputStreamReader isr = new InputStreamReader(is);
-        BufferedReader br = new BufferedReader(isr);
-        String number = br.readLine();
-	DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	Date date = new Date();
-        String msg;
-        msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+        ObsLightThread(token);
+        return "";
+        
     }
     public static void ObsTempThread(String token) throws URISyntaxException, DeploymentException, IOException
     {
         Connector con = new Connector();
         Validate v = new Validate();
-        new java.util.Timer().schedule( 
-        new java.util.TimerTask() {
+        Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 try {
@@ -197,13 +188,61 @@ public class Client {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
-        }, 0,
-        25000 
-);
-    }
+        };
+        if (token.equalsIgnoreCase("dettach"))
+        {
+            tt.cancel();
+            t.cancel();
+            t.purge();
+        }
+        else
+        t.schedule(tt, 0, 15000);
+}
 
     static void dre() throws URISyntaxException, DeploymentException, IOException {
         dre = "";
         reconnect = "";
+    }
+
+    static void ObsLightThread(String token) throws URISyntaxException, DeploymentException, IOException {
+        Connector con = new Connector();
+        Validate v = new Validate();
+        Timer t = new Timer();
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                        OutputStream os1 = socket.getOutputStream();
+                        OutputStreamWriter osw1 = new OutputStreamWriter(os1);
+                        BufferedWriter bw1 = new BufferedWriter(osw1);
+                        bw1.write("2"+"\n");
+                        bw1.flush();
+                        InputStream is = socket.getInputStream();
+                        InputStreamReader isr = new InputStreamReader(is);
+                        BufferedReader br = new BufferedReader(isr);
+                        String number = br.readLine();
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        String msg;
+                        msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+                        msg =  msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+                        con.sendMessage(msg);
+                    } catch (SAXException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ParserConfigurationException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+        };
+        if (token.equalsIgnoreCase("dettach"))
+        {
+            tt.cancel();
+            t.cancel();
+            t.purge();
+        }
+        else
+        t.schedule(tt, 0, 15000);
     }
 }
