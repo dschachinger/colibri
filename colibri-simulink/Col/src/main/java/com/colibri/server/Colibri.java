@@ -140,7 +140,7 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
+                msg = "DETT<br>" + Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
                 if (obst.equalsIgnoreCase("obst") && addt.equalsIgnoreCase("addt"))
                 {
                     breakStatus(msg);
@@ -250,7 +250,7 @@ public class Colibri {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
-                msg = Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br><br>";
+                msg = "DETL" + Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br><br>";
                 if (obsl.equalsIgnoreCase("obsl") && addl.equalsIgnoreCase("addl"))
                 {
                     breakStatus(msg);
