@@ -40,6 +40,8 @@ public class Client {
     static String dre = "";
     private static Socket socket = new Socket();
     static String reconnect = "temp";
+    static String oldtemp = "";
+    static String oldlight = "";
     public static void main(String args[]) throws URISyntaxException, DeploymentException, IOException, SAXException, ParserConfigurationException
     {
         Connector con = new Connector();
@@ -177,9 +179,13 @@ public class Client {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     Date date = new Date();
                     String msg;
+                    if (!number.equals(oldtemp))
+                    {
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                     msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
+                    oldtemp = number;
                     con.sendMessage(msg);
+                    }
                 } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -224,9 +230,13 @@ public class Client {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date date = new Date();
                         String msg;
+                        if (!number.equals(oldlight))
+                        {
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                         msg =  msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+                        oldlight = number;
                         con.sendMessage(msg);
+                        }
                     } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
