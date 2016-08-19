@@ -1,13 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'colibri-obix'
+group = 'at.ac.tuwien.auto.colibr'
 version = '1.0-SNAPSHOT'
 
-description = "colibri oBIX Connector"
+description = "colibri OBIX Connector"
 
-sourceCompatibility = 1.5
-targetCompatibility = 1.5
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+apply plugin: 'application'
+mainClassName = "connectorClient.Main"
 
 repositories {
         
@@ -15,17 +18,30 @@ repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 
-jar 
-{
-	manifest 
-	{
-		attributes( "Import-Package": 
-						"org.eclipse.californium.core, org.osgi.framework" )
-	}
-}
-		
+
 dependencies {
-	provided project (':colibri-osgi')
+    compile group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.5'
+    compile group: 'org.atmosphere', name: 'wasync', version: '2.1.2'
     compile group: 'org.eclipse.californium', name: 'californium-core', version:'1.0.0'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
     testCompile group: 'junit', name: 'junit', version:'4.12'
+    compile group: 'org.apache.jena', name: 'jena-arq', version: '3.1.0'
+}
+
+compileJava {
+    options.compilerArgs << '-XDignore.symbol.file'
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+build.dependsOn.add(':felix')
+build.dependsOn.add(':osgi')
+
+run {
+    doFirst {println    '-------------------------------\n' +
+                        '| Starting the OBIX Connector |\n' +
+                        '-------------------------------'
+    }
 }

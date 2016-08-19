@@ -3,7 +3,15 @@ package exception;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
+/**
+ * This class represents exceptions which are thrown if parsing configuration files is faulty.
+ */
 public class ConfigurationException extends IllegalArgumentException{
+
+    /******************************************************************
+     *                            Constructors                        *
+     ******************************************************************/
+
     public ConfigurationException() {
         super();
     }
@@ -19,6 +27,10 @@ public class ConfigurationException extends IllegalArgumentException{
     public ConfigurationException(Throwable cause) {
         super(cause);
     }
+
+    /******************************************************************
+     *                      Getter and Setter                         *
+     ******************************************************************/
 
     @Override
     public String getMessage() {

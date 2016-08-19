@@ -4,7 +4,7 @@
 package obix.io;
 
 /**
- * BinObix defines the binary byte codes for the oBIX-binary encoding.
+ * BinObix defines the binary byte codes for the OBIX-binary encoding.
  *
  * @author    Brian Frank
  * @creation  1 Sep 09

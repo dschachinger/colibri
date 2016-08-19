@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: org.atmosphere:atmosphere-runtime:2.4.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.atmosphere/atmosphere-runtime/2.4.0/280d3d606867bf6b161cf6b6394137a6be6d22f6/atmosphere-runtime-2.4.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.atmosphere/atmosphere-runtime/2.4.0/c02feb20fafd82b196073482f2791f502b73701/atmosphere-runtime-2.4.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

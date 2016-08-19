@@ -1,4 +1,4 @@
-import channel.ObixXmlChannelDecorator;
+import channel.obix.ObixXmlChannelDecorator;
 import obix.Err;
 import obix.Obj;
 import org.hamcrest.CoreMatchers;
@@ -6,9 +6,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 
-
+/**
+ * Tests decoding and encoding of xml-Strings and {@link model.obix.ObixObject}.
+ */
 public class XmlChannelDecoratorTest {
 
     @Before

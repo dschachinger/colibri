@@ -53,7 +53,7 @@ public class ObixSession
    * URL of a obix server.  For example lobby typically
    * looks like "http://foo/obix".  Username and password
    * provide the credentials needed to access the server.
-   * @param lobbyUri URI of oBIX Lobby
+   * @param lobbyUri URI of OBIX Lobby
    * @param username
    * @param password
    * @param timeout the timeout used for both connectTimeout and readTimeout (default is 0).

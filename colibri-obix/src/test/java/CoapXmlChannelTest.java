@@ -1,10 +1,9 @@
-import channel.CoapChannel;
-import channel.ObixChannel;
-import channel.ObixXmlChannelDecorator;
-import model.ObixLobby;
-import model.ObixObject;
+import channel.obix.CoapChannel;
+import channel.obix.ObixChannel;
+import channel.obix.ObixXmlChannelDecorator;
+import model.obix.ObixLobby;
+import model.obix.ObixObject;
 import obix.Int;
-import obix.Obj;
 import org.eclipse.californium.core.CoapClient;
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -15,8 +14,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
+/**
+ * Tests the connection to obix using the xml-format and CoAP.
+ * The test cases only succeed if a fitting obix lobby is available.
+ */
 public class CoapXmlChannelTest {
 
     private ObixChannel channel;
@@ -43,8 +44,7 @@ public class CoapXmlChannelTest {
         ObixLobby lobby = channel.getLobby();
         String ret = "";
         for(ObixObject o : lobby.getObixObjects()) {
-            System.out.println(o.getObj().getName() + ": " + o.getUri());
-            ret += o.getUri();
+            ret += o.getObixUri();
         }
         Assert.assertThat(ret, CoreMatchers.containsString("roomIllumination"));
         Assert.assertThat(ret, CoreMatchers.containsString("tempOutside"));
@@ -57,7 +57,7 @@ public class CoapXmlChannelTest {
         //False, if the coap client is offline
         org.junit.Assume.assumeTrue(coapClient.ping());
         ObixObject object = channel.get("VirtualDevices/sunblindMiddleA/moveDownValue");
-        Assert.assertThat(object.getUri(), CoreMatchers.containsString("moveDownValue"));
+        Assert.assertThat(object.getObixUri(), CoreMatchers.containsString("moveDownValue"));
         Assert.assertTrue(object.getObj().isBool());
         Assert.assertTrue(object.getObj().isWritable());
     }
@@ -73,7 +73,7 @@ public class CoapXmlChannelTest {
         i.set(77);
         object.setObj(i);
         ObixObject newO = channel.put(object);
-        Assert.assertThat(newO.getUri(), CoreMatchers.containsString("virtualBrightnessActuator"));
+        Assert.assertThat(newO.getObixUri(), CoreMatchers.containsString("virtualBrightnessActuator"));
         Assert.assertTrue(newO.getObj().isInt());
         Assert.assertEquals(newO.getObj().getInt(), 77);
     }

@@ -134,7 +134,7 @@ public class Abstime
    */
   public long getMillis2000()
   {                             
-    // subtract Java 1970 epoch to get oBIX 2000 epoch
+    // subtract Java 1970 epoch to get OBIX 2000 epoch
     return millis - JAVA_2000;
   }
 
