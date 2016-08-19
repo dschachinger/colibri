@@ -93,6 +93,6 @@ The Simple Logging Facade for Java [(SLF4J)](http://www.slf4j.org/) serves as a 
 
 Java Architecture for XML Binding [(JAXB)](https://docs.oracle.com/javase/tutorial/jaxb/intro/) provides a fast and convenient way to bind XML schemas and Java representations, making it easy for Java developers to incorporate XML data and processing functions in Java applications. As part of this process, JAXB provides methods for unmarshalling (reading) XML instance documents into Java content trees, and then marshalling (writing) Java content trees back into XML instance documents. JAXB also provides a way to generate XML schema from Java objects.
 
-## License
+# License
 
 This colibri subproject (colibri-obix), referred as OBIX connector, is published under the BSD 3-Clause [License](https://github.com/goJoWe16/colibri/tree/master/colibri-obix/LICENSE).

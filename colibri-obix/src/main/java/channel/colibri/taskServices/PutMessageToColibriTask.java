@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.TimerTask;
 
 /**
- * Represents Tasks for (un)scheduled sending of PUT messages to the colibri web socket endpoint.
+ * Represents Tasks for (un)scheduled sending of PUT messages to the Colibri web socket endpoint.
+ * PUT messages can be scheduled through additional informations in OBS messages from Colibri.
+ * This tasks are scheduled in the {@link ColibriChannel} through timers.
  */
 public class PutMessageToColibriTask extends TimerTask {
 
@@ -19,7 +21,7 @@ public class PutMessageToColibriTask extends TimerTask {
      ******************************************************************/
 
     /**
-     * List of {@link ObixObject} which represents all value changes of a specific obix service since the last PUT message.
+     * List of {@link ObixObject} which represents all value changes of a specific OBIX service since the last PUT message.
      */
     private List<ObixObject> bundledObjects;
 
@@ -70,13 +72,15 @@ public class PutMessageToColibriTask extends TimerTask {
      */
     public void execute(ObixObject obj) {
         addObjectToBundle(obj);
+
+        //If the task is not scheduled, send the PUT message immediately.
         if(!scheduled) {
             sendPutMessage();
         }
     }
 
     /**
-     * Sends a PUT message to the colibri semantic core.
+     * Sends a PUT message to the Colibri semantic core.
      */
     private void sendPutMessage() {
         if (bundledObjects.isEmpty()) {

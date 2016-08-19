@@ -234,20 +234,4 @@ public class Configurator {
             throw new ConfigurationException("No newline representation given in the config file!");
         }
     }
-
-    /**
-     * This method returns a flag which is true, if the Atmosphere Web Socket Chat
-     * is used as endpoint for testing purposes.
-     *
-     * @return  True, if the Atmosphere Web Socket Chat is used as endpoint for testing purposes.
-     *          Otherwise set false.
-     * @throws ConfigurationException Is thrown, if the property is not provided in the parsed .properties file.
-     */
-    public Boolean getUsingAtmosphereTestWebSocket() throws ConfigurationException {
-        if (bundle.containsKey("usingAtmosphereTestWebSocket")){
-            return Boolean.parseBoolean(bundle.getString("usingAtmosphereTestWebSocket"));
-        }else{
-            throw new ConfigurationException("usingAtmosphereTestWebSocket is not given in the config file!");
-        }
-    }
 }

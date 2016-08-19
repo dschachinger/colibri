@@ -46,6 +46,9 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         lobby.setObj(root);
         List<ObixObject> obixObjects = new ArrayList<ObixObject>();
         for(Obj o : root.list()) {
+            /**
+             * Recursively gather all OBIX datapoints in the list of the OBIX datapoint with {@link uri}.
+             */
             List<ObixObject> listOfObjects = new ArrayList<ObixObject>();
             obixObjects.addAll(getNeededObixLobbyObjectsRecursively(o.getHref().get(), channel.getLobbyUri(), listOfObjects));
         }
@@ -127,6 +130,10 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
         String u = normalizeUri(uri, baseUri);
         ObixObject object = this.get(u);
         Obj tempOb = object.getObj();
+        /**
+         *  Only add the OBIX datapoint if its not already in the list of gathered datapoints and if they are intersting
+         *  for Colibri according to {@link #getObservedObjects()}.
+         */
         if(channel.getObservedTypes().contains(tempOb.getClass().getName()) && !list.contains(object)) {
             list.add(object);
         }
@@ -156,6 +163,9 @@ public class ObixXmlChannelDecorator extends ObixChannelDecorator {
                 unitUri = i.getUnit().toString();
             }
         }
+        /**
+         * Set the unit to dimensionless and overwrite it, if a unit can be parsed from the OBIX datapoint.
+         */
         object.setObixUnitUri("dimensionless");
         if(unitUri != null) {
             if(unitUri.contains(":")) {

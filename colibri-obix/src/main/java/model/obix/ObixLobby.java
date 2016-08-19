@@ -18,12 +18,16 @@ public class ObixLobby {
 
     /**
      * This String represents the {@link ObixLobby}.
-     * The lobby can be in xml-format. In this case, the lobbyAsString variable will be the xml-String
+     * The lobby can be in XML-format. In this case, the lobbyAsString variable will be the xml-String
      * which represents the lobby.
      * The lobbyAsString variable can be null.
      */
     private String lobbyAsString;
     private String lobbyUri;
+
+    /**
+     * Lists for {@link ObixObject} which contain the objects depending on their type.
+     */
     private List<ObixObject> obixObjects = new ArrayList<ObixObject>();
     private List<ObixObject> abstimes = new ArrayList<ObixObject>();
     private List<ObixObject> reltimes = new ArrayList<ObixObject>();
@@ -94,6 +98,10 @@ public class ObixLobby {
      *                            Methods                             *
      ******************************************************************/
 
+    /**
+     * This method parses the type of all {@link ObixObject} in the {@link ObixLobby} and puts the objects in the
+     * according list.
+     */
     private void matchObixObjectsToLists() {
         for(ObixObject obj : obixObjects) {
             if(obj.getObj().isAbstime()) {

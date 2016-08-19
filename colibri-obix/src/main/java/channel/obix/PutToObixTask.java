@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 import java.util.TimerTask;
 
 /**
- * This class represents a task which is used for the scheduled sending of PUT-messages to an obix gateway.
+ * This class represents a task which is used for the scheduled sending of PUT-messages to an OBIX gateway.
  */
 public class PutToObixTask extends TimerTask {
 
@@ -51,8 +51,14 @@ public class PutToObixTask extends TimerTask {
 
     @Override
     public void run() {
+        /**
+         * If the PUT message received from Colibri contains a time parameter to schedule a PUT message to OBIX,
+         * this parameter is parsed in {@link ColibriChannel#setTimerTask(ObixObject, ColibriMessage, PutMessageContent)}.
+         * The run() method in {@link PutToObixTask} is then executed according to the parsed schedule.
+         */
         PutMessageContent content;
         try {
+            // parse the PUT message content
             content = ColibriMessageContentCreator.getPutMessageContent(putMessage);
         } catch (JAXBException e) {
             colibriChannel.send(ColibriMessage.createStatusMessage(StatusCode.ERROR_SEMANTIC, "Unmarshalling PUT message failed!",
@@ -61,6 +67,12 @@ public class PutToObixTask extends TimerTask {
         }
         boolean setParam1 = false;
         boolean setParam2 = false;
+        /**
+         * Check if there are boolean values in the received
+         * PUT {@link channel.message.colibriMessage.ColibriMessageContent}.
+         * If there are boolean values, than check if they are correct boolean values,
+         * i.e. if they are either "true" or "false".
+         */
         if(!checkBooleanValuesForCorrectness(content.getValue1().getDatatype(),
                 content.getValue1().getValue())
             || !checkBooleanValuesForCorrectness(content.getValue2().getDatatype(),
@@ -70,6 +82,10 @@ public class PutToObixTask extends TimerTask {
             return;
         }
         if (serviceObject != null) {
+            /**
+             * Parse the parameters of the received PUT message and check if the parameters are fitting the
+             * {@link ObixObject}  serviceObject.
+             */
             logger.info(serviceObject.getParameter1().getParameterUri());
             if (content.getValue1HasParameterUri().equals(serviceObject.getParameter1().getParameterUri())) {
                 if (content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())) {
@@ -97,6 +113,10 @@ public class PutToObixTask extends TimerTask {
             }
         }
         if (setParam1 && setParam2) {
+            /**
+             * The parameters in the PUT message were successfully parsed and are fitting the according
+             * {@link ObixObject} serviceObject.
+             */
             obixChannel.put(serviceObject);
             colibriChannel.send(ColibriMessage.createStatusMessage(StatusCode.OK, "Successfully send PUT message to obix.",
                     putMessage.getHeader().getId()));

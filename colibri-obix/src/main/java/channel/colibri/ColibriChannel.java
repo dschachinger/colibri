@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 
 /**
  * This class represents a channel for sending and receiving {@link ColibriMessage} to and from the
- * colibri semantic core configured by the {@link Configurator}.
+ * Colibri semantic core configured by the {@link Configurator}.
  */
 public class ColibriChannel {
 
@@ -146,6 +146,8 @@ public class ColibriChannel {
     public void run() throws IOException {
         /**
          * Using the Atmosphere Chat Web Socket endpoint for testing purposes
+         * For communication with the Atmosphere Chat Web Socket, the {@link AtmosphereMessage} class is used for
+         * sending and receiving messages.
          */
         RequestBuilder request;
         if (usingAtmosphereTestWebSocket) {
@@ -189,7 +191,9 @@ public class ColibriChannel {
                     .transport(Request.TRANSPORT.LONG_POLLING);
         }
         /**
-         * Using a different Web Socket endpoint
+         * Using the a different web socket endpoint, for example Colibris websocket.
+         * For this communication, the {@link Message} class is used for
+         * sending and receiving messages.
          */
         else {
             this.client = ClientFactory.getDefault().newClient();
@@ -230,10 +234,9 @@ public class ColibriChannel {
                 }
             }
         }).on(new Function<Throwable>() {
-
                 @Override
                 public void on(Throwable t) {
-                    logger.info("Cannot interact with colibri, connection is faulty.");
+                    logger.info("Cannot interact with Colibri, connection is faulty.");
                 }
 
             }).on(Event.CLOSE.name(), new Function<String>() {
@@ -248,7 +251,7 @@ public class ColibriChannel {
     }
 
     /**
-     * Method for sending messages to the colibri web socket endpoint configured through the {@link Configurator}.
+     * Method for sending messages to the Ccolibri web socket endpoint configured through the {@link Configurator}.
      *
      * @param msg   The message which should be sent.
      */
@@ -266,7 +269,10 @@ public class ColibriChannel {
             }
             else if (msg.getMsgType().equals(MessageIdentifier.QUE)) {
                 queryMessagesWithoutResponse.put(msg.getHeader().getId(), msg);
-            } else if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
+            }
+            else if (!msg.getMsgType().equals(MessageIdentifier.STA) && !msg.getMsgType().equals(MessageIdentifier.PUT)) {
+                //Add message to list for resending messages, if no response is received.
+                //Only done for REG, DRE, OBS, DET and UPD messages.
                 this.addMessageWithoutResponse(msg);
                 int count = 0;
                 Configurator conf = Configurator.getInstance();
@@ -277,20 +283,19 @@ public class ColibriChannel {
                     ResendMessageTask task = new ResendMessageTask(this, msg);
                     Timer timer = new Timer();
                     long timing = conf.getTimeWaitingForResponseInMilliseconds();
+                    //Schedule the task for resending multiple messages times as configured in the config.properties file.
                     timer.schedule(task, timing * count);
                     resendMessagesTasks.add(task);
                     runningTimers.put(UUID.randomUUID().toString(), timer);
                 }
             }
-            //TODO: remove this line, only for testing with FAKE response
-           // handleStatusMessagesFAKE(msg);
         } catch (IOException e) {
-            logger.info("Cannot interact with colibri, connection is faulty.");
+            logger.info("Cannot interact with Colibri, connection is faulty.");
         }
     }
 
     /**
-     * Method for resending messages to the colibri web socket endpoint configured through the {@link Configurator}.
+     * Method for resending messages to the Colibri web socket endpoint configured through the {@link Configurator}.
      *
      * @param msg   The message which should be resent.
      * @return      The resent message.
@@ -312,7 +317,7 @@ public class ColibriChannel {
     }
 
     /**
-     * Method for closing the colibri channel.
+     * Method for closing the Colibri channel.
      */
     public void close() {
         runningTimers.values().forEach(Timer::cancel);
@@ -322,7 +327,9 @@ public class ColibriChannel {
 
     /**
      * Method for receiving messages and starting according handler methods.
-     * @param message   The message which was received from colibri.
+     * Depending on the {@link MessageIdentifier}, different response-handler methods are executed.
+     *
+     * @param message   The message which was received from Colibri.
      */
     private void messageReceived(ColibriMessage message) {
         for (ResendMessageTask task : resendMessagesTasks) {
@@ -360,6 +367,10 @@ public class ColibriChannel {
     private void handleStatusMessages(ColibriMessage message) {
         ColibriMessage requestMsg = messagesWithoutResponse.get(message.getHeader().getRefenceId());
         if (requestMsg != null) {
+            /**
+             * The STA message is handled differently, depending on the {@link MessageIdentifier} of the message the
+             * STA message is referring to.
+              */
             if (message.getContent().getContent().contains(StatusCode.OK.toString())) {
                 if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
                     this.registered = true;
@@ -428,6 +439,9 @@ public class ColibriChannel {
         ObixObject obj;
         boolean successful = true;
         if (msgContent.contains("?freq=")) {
+            /**
+             * If present, handle timing parameters in the OBS message.
+             */
             String[] content = msgContent.split("\\?freq=");
             serviceUri = content[0];
             obj = observeAbleObjectsMap.get(serviceUri);
@@ -436,7 +450,7 @@ public class ColibriChannel {
                 successful = false;
             } else {
                 /*
-                 * Set timers for execution messages if given in the OBS message.
+                 * If present, set timers for scheduled sending of PUT messages to Colibri.
                  */
                 Date dateNow = new Date();
                 String icalTemp = TimeDurationConverter.date2Ical(dateNow).toString();
@@ -452,6 +466,7 @@ public class ColibriChannel {
                     executionTask.setScheduled(true);
                     /*
                      * Send Put once a day at the specified time
+                     * 24*60*60*1000 equals one day in milliseconds
                      */
                     timer.schedule(executionTask, d, 24 * 60 * 60 * 1000);
                     obj.setPutMessageToColibriTask(executionTask);
@@ -459,11 +474,11 @@ public class ColibriChannel {
                     try {
                         java.time.Duration duration = java.time.Duration.parse(content[1]);
                         executionTask.setScheduled(true);
-                        /*
-                         * Send Put with the specified duration
+                        /**
+                          * If a duration is present in OBS message, send scheduled PUT messages to Colibri
+                          * with the specified duration
                          */
                         timer.schedule(executionTask, duration.toMillis(), duration.toMillis());
-
                         obj.setPutMessageToColibriTask(executionTask);
                     } catch (DateTimeParseException ex) {
                         successful = false;
@@ -472,6 +487,9 @@ public class ColibriChannel {
                 runningTimers.put(serviceUri, timer);
             }
         } else {
+            /**
+             * No time parameters are present in the OBS message, send PUT messages unscheduled.
+             */
             serviceUri = msgContent;
             obj = observeAbleObjectsMap.get(serviceUri);
             if (obj == null) {
@@ -479,6 +497,7 @@ public class ColibriChannel {
             } else {
                 PutMessageToColibriTask executionTask = new PutMessageToColibriTask(obj, this, message.getHeader().getId());
                 obj.setPutMessageToColibriTask(executionTask);
+                //indicates the the task is not scheduled
                 executionTask.setScheduled(false);
             }
         }
@@ -547,6 +566,7 @@ public class ColibriChannel {
             if(serviceObject == null) {
                 this.send(errorMsg);
             }
+            // Schedule PUT to OBIX
             setTimerTask(serviceObject, message, content);
         } catch (JAXBException e) {
             this.send(errorMsg);
@@ -599,26 +619,6 @@ public class ColibriChannel {
         return ColibriMessage.createStatusMessage(StatusCode.OK, "Received QRE message", message.getHeader().getId());
     }
 
-    //TODO: ONLY FOR TESTING PURPOSES --> has to be deleted
-    private void handleStatusMessagesFAKE(ColibriMessage requestMsg) {
-        if (requestMsg.getMsgType().equals(MessageIdentifier.REG)) {
-            this.registered = true;
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.DRE)) {
-            this.registered = false;
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.ADD)) {
-            requestMsg.getOptionalObixObject().setAddedAsService(true);
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-            observeAbleObjectsMap.put(requestMsg.getOptionalObixObject().getServiceUri(),
-                    requestMsg.getOptionalObixObject());
-        } else if (requestMsg.getMsgType().equals(MessageIdentifier.REM)) {
-            requestMsg.getOptionalObixObject().setAddedAsService(false);
-            observeAbleObjectsMap.remove(requestMsg.getOptionalObixObject().getServiceUri());
-            messagesWithoutResponse.remove(requestMsg.getHeader().getRefenceId());
-        }
-    }
-
     /******************************************************************
      *                            Helpers                             *
      ******************************************************************/
@@ -642,7 +642,10 @@ public class ColibriChannel {
         }
         java.util.Date paramDate;
         try {
-            //read optional timing for Put on Obix from parameter
+            /**
+             * Read an optional time parameter in PUT message from Colibri. Then schedule PUT messages to OBIX according
+             * to this time parameter.
+             */
             if(content.getValue1Uri().equals(serviceObject.getParameter1().getValueUri())
                     && serviceObject.getParameter1().isTimer()) {
                 paramDate = TimeDurationConverter.ical2Date(content.getValue1().getValue());
@@ -656,6 +659,9 @@ public class ColibriChannel {
                     && serviceObject.getParameter2().isTimer()) {
                 paramDate = TimeDurationConverter.ical2Date(content.getValue2().getValue());
             } else {
+                /**
+                 * Send the PUT message to OBIX immediately if no time parameter is provided.
+                 */
                 paramDate = new Date();
             }
         } catch (ParseException e) {

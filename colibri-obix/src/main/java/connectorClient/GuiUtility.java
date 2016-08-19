@@ -114,14 +114,12 @@ public class GuiUtility {
         mainFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setUndecorated(false);
-
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 close();
             }
         });
-
 
         Container contentPane = mainFrame.getContentPane();
 
@@ -142,11 +140,10 @@ public class GuiUtility {
      */
     private void addComponentToPane(Container pane) {
 
-        //Create the panel that contains the "cards".
+        // Create the panel that contains the "cards" for the CardsLayout.
         cards = new JPanel(new CardLayout());
         JScrollPane scrollPane = new JScrollPane(chooseComponents());
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         cards.add(scrollPane);
 
         pane.add(cards, BorderLayout.CENTER);
