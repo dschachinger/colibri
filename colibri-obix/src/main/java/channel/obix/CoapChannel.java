@@ -95,6 +95,9 @@ public class CoapChannel extends ObixChannel {
         coapClient = getCoapClientWithUri(uri);
         CoapResponse r = coapClient.get(mediaType);
         if (r == null) {
+            /**
+             * No response was received with this uri and mediaType.
+             */
             throw new CoapException(HttpStatus.SC_BAD_REQUEST);
         }
 
@@ -167,6 +170,11 @@ public class CoapChannel extends ObixChannel {
         Object notifier = new Object();
         CoapObserveRelation relation = coapClient.observeAndWait(
                 new CoapHandler() {
+                    /**
+                     * Asynchronous reception of messages from OBIX usin CoAP.
+                     *
+                     * @param response  The response from CoAP to the observation of an OBIX datapoint.
+                     */
                     public void onLoad(CoapResponse response) {
                         String content = response.getResponseText();
                         ObixObject o = getObservedObjects().get(uri);

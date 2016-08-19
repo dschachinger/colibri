@@ -279,16 +279,12 @@ public class ColibriMessage {
                 return ColibriMessage.createDeregisterMessage(oldMessage.getOptionalConnector());
             case ADD:
                 return ColibriMessage.createAddServiceMessage(oldMessage.getOptionalObixObject());
-
             case REM:
                 return ColibriMessage.createAddServiceMessage(oldMessage.getOptionalObixObject());
-
             case OBS:
                 return ColibriMessage.createObserveServiceMessage(oldMessage.getOptionalObixObject());
-
             case DET:
                 return ColibriMessage.createDetachServiceMessage(oldMessage.getOptionalObixObject());
-
             case STA:
                 if(oldMessage.getHeader().hasReferenceId()) {
                     return new ColibriMessage(oldMessage.getMsgType(), new ColibriMessageHeader(ContentType.TEXT_PLAIN,
@@ -296,15 +292,12 @@ public class ColibriMessage {
                 } else {
                     return new ColibriMessage(oldMessage.getMsgType(), new ColibriMessageHeader(ContentType.TEXT_PLAIN), oldMessage.getContent());
                 }
-
             case PUT:
                 List<ObixObject> bundledObjects = Collections.synchronizedList(new ArrayList<>());;
                 bundledObjects.add(oldMessage.getOptionalObixObject());
                 return ColibriMessage.createPutMessage(bundledObjects);
-
             case GET:
                 return ColibriMessage.createGetMessage(oldMessage.getOptionalObixObject());
-
             default:
                 return ColibriMessage.createStatusMessage(StatusCode.ERROR_PROCESSING, "Error creating message with new ID");
 

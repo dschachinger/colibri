@@ -35,6 +35,11 @@ public class UpdateThread implements RunAndStopAble {
     public void run() {
         while (!stopped) {
             try {
+                /**
+                 * Every 300 milliseconds, all commands stored in the {@link #commandFactory} are executed.
+                 * The {@link #commandFactory} contains commands to update the GUI of the OBIX connector and
+                 * the {@link model.obix.ObixObject} presented in the GUI.
+                 */
                 Thread.sleep(300);
                 for (String command : commandFactory.listCommands()) {
                     commandFactory.executeCommand(command);

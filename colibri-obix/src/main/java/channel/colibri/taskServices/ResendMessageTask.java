@@ -14,8 +14,9 @@ import java.util.List;
 import java.util.TimerTask;
 
 /**
- * Represents Tasks for (un)scheduled resending of a {@link ColibriMessage} to the colibri web socket endpoint
+ * Represents Tasks for resending a {@link ColibriMessage} to the Colibri web socket endpoint
  * if no fitting response was received.
+ * This resending is scheduled through timers in the {@link ColibriChannel}.
  */
 public class ResendMessageTask extends TimerTask {
 
@@ -26,7 +27,7 @@ public class ResendMessageTask extends TimerTask {
     private ColibriChannel channel;
 
     /**
-     * The {@link ColibriMessage} which needs a fitting response from colibri.
+     * The {@link ColibriMessage} which needs a fitting response from Colibri.
      */
     private ColibriMessage waitingForResponse;
 
@@ -74,7 +75,9 @@ public class ResendMessageTask extends TimerTask {
             return;
         }
 
+        // Only send the message again if it wasn't sent to often.
         if ((countTimesSentThisMessage()) < Configurator.getInstance().getTimesToResendMessage()) {
+            // Check if one of the received messages fits the sent message.
             for (ColibriMessage msg : responseMessages) {
                 if (msg.getMsgType().equals(MessageIdentifier.STA)
                         && (msg.getHeader().getRefenceId().equals(waitingForResponse.getHeader().getId()))) {

@@ -150,6 +150,9 @@ public class ObixObject {
     public void setUnit(Unit unit) {
         this.unit = unit;
         if (unit != null) {
+            /**
+             * If present, parse the unit of the object and set a fitting parameterType.
+             */
             if (unit.getName().equals("celsius")) {
                 parameter1.setParameterUnit(connectorUri + "/" + "degree-celsius");
                 parameter1.setParameterType("&colibri;TemperatureParameter");
@@ -189,6 +192,9 @@ public class ObixObject {
     }
 
     private void setParameter1() {
+        /**
+         * Set the first parameter of the {@link ObixObject} depending on the parameterType.
+         */
         if (getObj().isAbstime()) {
             Abstime abstime = (Abstime) getObj();
             parameter1 = new Parameter(colibriBaseUri, 1, new Date(abstime.get()));
@@ -275,6 +281,9 @@ public class ObixObject {
     }
 
     public void setValueParameter1(Value value) {
+        /**
+         * Set the value of parameter1 depending on its valueType.
+         */
         if (value.getDatatype().contains("long")) {
             this.getObj().setInt(Long.parseLong(value.getValue()));
         } else if (value.getDatatype().contains("double")) {
@@ -288,6 +297,9 @@ public class ObixObject {
     }
 
     public void setValueParameter1(String value) {
+        /**
+         * Set the value of parameter1 depending on its valueType.
+         */
         if (parameter1.getValueType().equals("&xsd;long")) {
             this.getObj().setInt(Integer.parseInt(value));
         } else if (parameter1.getValueType().equals("&xsd;double")) {
