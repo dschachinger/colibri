@@ -1,0 +1,90 @@
+plugins {
+    id "com.intershop.gradle.jaxb" version "1.0.0"
+}
+
+description = 'openADR connector bundle for Colibri project'
+
+group 'at.ac.tuwien.auto.colibri'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+
+apply plugin: 'java'
+
+apply plugin: 'application'
+mainClassName = "Utils.Main"
+
+sourceCompatibility = 1.7
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'
+    compile group: 'org.atmosphere', name: 'wasync', version: '2.1.2'
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.6.1'
+    compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+
+    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+
+    compile 'org.codehaus.groovy:groovy-all:2.3.11'
+
+    compile "org.igniterealtime.smack:smack-java7:4.1.0"
+    // Optional for XMPPTCPConnection
+    compile "org.igniterealtime.smack:smack-tcp:4.1.0"
+    // Optional for openADR.XMPP-IM (RFC 6121) support (Roster, Threaded Chats, …)
+    compile "org.igniterealtime.smack:smack-im:4.1.0"
+    // Optional for openADR.XMPP extensions support
+    compile "org.igniterealtime.smack:smack-extensions:4.1.0"
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+jaxb {
+    // generate java code from schema
+    javaGen {
+        //generates a 'project' schema file from existing java code
+        adr2a {
+            outputDir = file('generated/jaxb/java/')
+            schemas = fileTree(dir: 'src/main/resources/schema/2.0a', include: '*.xsd')
+            binding = file('src/main/resources/binding/oadr20a.xjb.xml')
+            catalog = file('src/main/resources/catalog.xml')
+            packageName = 'com.enernoc.open.oadr2.model'
+            strictValidation = false
+            extension = true
+        }
+        adr2b {
+            outputDir = file('generated/jaxb/java/')
+            schemas = fileTree(dir: 'src/main/resources/schema/2.0b', include: '*.xsd')
+            binding = file('src/main/resources/binding/oadr20b.xjb.xml')
+            catalog = file('src/main/resources/catalog.xml')
+            strictValidation = false
+            extension = true
+            arg('-XautoNameResolution')
+        }
+
+    }
+}
+
+compileJava {
+    // This only works when forking and passing 'javac' as an executable
+    options.compilerArgs << '-XDignore.symbol.file'
+    options.fork = true
+    options.forkOptions.executable = 'javac'
+}
+
+run {
+    doFirst {println '                                                     _____  _____                                    _             \n' +
+            '                                               /\\   |  __ \\|  __ \\                                  | |            \n' +
+            '  _ __ _   _ _ __     ___  _ __   ___ _ __    /  \\  | |  | | |__) |   ___ ___  _ __  _ __   ___  ___| |_ ___  _ __ \n' +
+            ' | \'__| | | | \'_ \\   / _ \\| \'_ \\ / _ \\ \'_ \\  / /\\ \\ | |  | |  _  /   / __/ _ \\| \'_ \\| \'_ \\ / _ \\/ __| __/ _ \\| \'__|\n' +
+            ' | |  | |_| | | | | | (_) | |_) |  __/ | | |/ ____ \\| |__| | | \\ \\  | (_| (_) | | | | | | |  __/ (__| || (_) | |   \n' +
+            ' |_|   \\__,_|_| |_|  \\___/| .__/ \\___|_| |_/_/    \\_\\_____/|_|  \\_\\  \\___\\___/|_| |_|_| |_|\\___|\\___|\\__\\___/|_|   \n' +
+            '                          | |                                                                                      \n' +
+            '                          |_|                                                                                      '}
+    standardInput = System.in
+
+}

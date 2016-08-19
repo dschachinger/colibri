@@ -1,0 +1,41 @@
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#">
+    <rdf:Description rdf:about="http://www.colibri.org/openADRConnector/priceService">
+        <rdf:type rdf:resource="&colibri;BuildingData"/>
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">openADR_VTN_ID
+        </colibri:serviceAddress>
+        <colibri:identifier rdf:datatype="&xsd;string">openADR_acceptPrice
+        </colibri:identifier>
+        <colibri:hasDataConfiguration rdf:resource="http://www.colibri.org/openADRConnector/acceptPriceServiceConfiguration"/>
+        <colibri:hasTechnologyConnector rdf:resource="http://www.colibri.org/openADRConnector"/>
+        <colibri:isPrecededBy rdf:resource="http://www.colibri.org/openADRConnector/priceService"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/openADRConnector/acceptPriceServiceConfiguration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/acceptPriceServiceParameter1-1"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/acceptPriceServiceParameter1-2"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri-samples.org/acceptPriceServiceParameter1-1">
+        <rdf:type rdf:resource="&colibri;InformationParamter"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/acceptPriceServiceParameter1-2">
+        <rdf:type rdf:resource="http://www.colibri.org/StateParameter"/>
+        <colibri:hasState rdf:resource="http://www.colibri.org/OptIn"/>
+        <colibri:hasState rdf:resource="http://www.colibri.org/OptOut"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/OptOut">
+		<rdf:type rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#AbsoluteState"/>
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DiscreteState"/>
+        <name>optOut</name>
+        <value rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</value>
+	</rdf:Description>
+	<rdf:Description rdf:about="http://www.colibri.org/OptIn">
+		<rdf:type rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#AbsoluteState"/>
+        <rdf:type rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DiscreteState"/>
+        <name>optIn</name>
+        <value rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</value>
+	</rdf:Description>
+</rdf:RDF>

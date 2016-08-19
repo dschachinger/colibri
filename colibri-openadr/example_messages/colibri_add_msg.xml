@@ -1,0 +1,40 @@
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#">
+    <rdf:Description rdf:about="http://www.colibri.org/openADRConnector/priceService">
+        <rdf:type rdf:resource="&colibri;GridData"/>
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">openADR_VTN_ID
+        </colibri:serviceAddress>
+        <colibri:identifier rdf:datatype="&xsd;string">openADR_setPrice
+        </colibri:identifier>
+        <colibri:hasDataConfiguration rdf:resource="http://www.colibri.org/openADRConnector/priceServiceConfiguration"/>
+        <colibri:hasTechnologyConnector rdf:resource="http://www.colibri.org/openADRConnector"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/openADRConnector/priceServiceConfiguration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/priceServiceParameter1-1"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/priceServiceParameter1-2"/>
+        <colibri:hasDataConfiguration rdf:resource="http://www.colibri.org/openADRConnector/priceServiceConfiguration2"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri-samples.org/priceServiceParameter1-1">
+        <rdf:type rdf:resource="&colibri;InformationParamter"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/priceServiceParameter1-2">
+        <rdf:type rdf:resource="&colibri;TimeParameter"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/openADRConnector/priceServiceConfiguration2">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/priceServiceParameter2-1"/>
+        <colibri:hasParameter rdf:resource="http://www.colibri.org/priceServiceParameter2-2"/>
+    </rdf:Description>
+    <rdf:Description rdf:about="http://www.colibri.org/priceServiceParameter2-1">
+        <rdf:type rdf:resource="&colibri;CostParameter"/>
+		<colibri:hasCurrency rdf:resource="http://www.colibri.org/Euro"/>        
+    </rdf:Description>
+        <rdf:Description rdf:about="http://www.colibri.org/priceServiceParameter2-2">
+        <rdf:type rdf:resource="&colibri;IntervalParameter"/>
+        <rdf:type rdf:resource="&colibri;TimeParameter"/>
+    </rdf:Description>
+</rdf:RDF>
