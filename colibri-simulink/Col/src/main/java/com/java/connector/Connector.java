@@ -25,13 +25,6 @@ import org.xml.sax.SAXException;
  *
  * @author codelife
  */
-
-
-/**
- * ChatServer Client
- *
- * @author codelife
- */
 @ClientEndpoint
 public class Connector {
     Session session;
@@ -40,7 +33,7 @@ public class Connector {
     int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:8080/Col-1.0/chat");
+        URI uri = new URI("ws://localhost:56502/Colibrii/chat");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
         
     }
@@ -75,6 +68,14 @@ public class Connector {
                 {
                     commandCode = 5;
                 }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DETT"))
+                {
+                    commandCode = 6;
+                }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DETL"))
+                {
+                    commandCode = 7;
+                }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").contains("Message-Id:"))
                 {
                     StringTokenizer st = new StringTokenizer(ss, ":");
@@ -82,7 +83,7 @@ public class Connector {
                     {
                         token = st.nextToken();
                     }
-               }
+                }
                 System.out.println(Json.createReader(new StringReader(ss)).readObject().getString("message"));
             }
         switch (commandCode) {
@@ -108,6 +109,14 @@ public class Connector {
             case 5:
                 abc = Client.obslight(token);
                 sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 6:
+                Client.ObsTempThread("dettach");
+                commandCode = 0;
+                break;
+            case 7:
+                Client.ObsLightThread("dettach");
                 commandCode = 0;
                 break;
             default:
