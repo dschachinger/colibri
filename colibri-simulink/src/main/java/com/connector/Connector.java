@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.java.connector;
+package com.connector;
 
-import com.colibri.message.Header.Header;
+import com.colibri.Header.Header;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
@@ -33,9 +33,8 @@ public class Connector {
     int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:8080/Col-1.0/chat");
+        URI uri = new URI("ws://localhost:8080/colibri-simulink-1.0/chat");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
-        
     }
     @OnOpen
     public void processOpen (Session session) throws IOException

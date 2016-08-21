@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE rdf:RDF [
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+<!ENTITY colibri "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#">]>
+<rdf:RDF xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+<rdf:Description rdf:about="http://www.colibri-samples.org/temperatureservice">
+<rdf:type rdf:resource="&colibri;BuildingData"/>
+<rdf:type rdf:resource="&colibri;DataService"/>
+<colibri:identifier rdf:datatype="&xsd;float">temp
+</colibri:identifier>
+<colibri:hasDataConfiguration rdf:resource="http://www.colibri-samples.org/config1"/>
+<colibri:hasTechnologyConnector rdf:resource="http://www.colibri-samples.org/TC"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/config1">
+<rdf:type rdf:resource="&colibri;DataConfiguration"/>
+<colibri:hasParameter
+rdf:resource="http://www.colibri-samples.org/parameter1"/>
+<colibri:hasParameter
+rdf:resource="http://www.colibri-samples.org/parameter2"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/parameter1">
+<rdf:type rdf:resource="&colibri;TemperatureParameter"/>
+<colibri:hasUnit rdf:resource="&colibri;degree-celsius"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/parameter2">
+<rdf:type rdf:resource="&colibri;TimeParameter"/>
+</rdf:Description>
+</rdf:RDF>

@@ -5,11 +5,11 @@
  */
 package com.colibri.server;
 
-import com.colibri.Header.ContentType;
-import com.colibri.Header.Header;
-import com.colibri.Header.Identifier;
-import com.colibri.Header.StatusCodes;
-import com.colibri.Validator.Validate;
+import com.colibri.message.Header.ContentType;
+import com.colibri.message.Header.Header;
+import com.colibri.message.Header.Identifier;
+import com.colibri.message.Header.StatusCodes;
+import com.colibri.message.Validator.Validate;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collections;

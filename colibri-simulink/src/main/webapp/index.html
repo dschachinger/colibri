@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript">
         //var websocket = new WebSocket("ws://localhost:8080/Col-1.0/chat");
-        var websocket = new WebSocket("ws://localhost:8080/Col-1.0/chat");
+        var websocket = new WebSocket("ws://localhost:8080/colibri-simulink-1.0/chat");
         websocket.onmessage = function processData(message)
         {
             var jsonData = JSON.parse(message.data);

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.java.connector;
+package com.connector;
 
-import com.colibri.message.Header.ContentType;
-import com.colibri.message.Header.Header;
-import com.colibri.message.Header.Identifier;
-import com.colibri.message.Validator.Validate;
+import com.colibri.Header.ContentType;
+import com.colibri.Header.Header;
+import com.colibri.Header.Identifier;
+import com.colibri.Validator.Validate;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -40,8 +40,6 @@ public class Client {
     static String dre = "";
     private static Socket socket = new Socket();
     static String reconnect = "temp";
-    static String oldtemp = "";
-    static String oldlight = "";
     public static void main(String args[]) throws URISyntaxException, DeploymentException, IOException, SAXException, ParserConfigurationException
     {
         Connector con = new Connector();
@@ -157,7 +155,7 @@ public class Client {
         return "";
         
     }
-    public static void ObsTempThread(String token) throws URISyntaxException, DeploymentException, IOException
+    public static void ObsTempThread(final String token) throws URISyntaxException, DeploymentException, IOException
     {
         Connector con = new Connector();
         Validate v = new Validate();
@@ -179,13 +177,9 @@ public class Client {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     Date date = new Date();
                     String msg;
-                    if (!number.equals(oldtemp))
-                    {
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                     msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
-                    oldtemp = number;
                     con.sendMessage(msg);
-                    }
                 } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -210,7 +204,7 @@ public class Client {
         reconnect = "";
     }
 
-    static void ObsLightThread(String token) throws URISyntaxException, DeploymentException, IOException {
+    static void ObsLightThread(final String token) throws URISyntaxException, DeploymentException, IOException {
         Connector con = new Connector();
         Validate v = new Validate();
         Timer t = new Timer();
@@ -230,13 +224,9 @@ public class Client {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date date = new Date();
                         String msg;
-                        if (!number.equals(oldlight))
-                        {
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                         msg =  msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
-                        oldlight = number;
                         con.sendMessage(msg);
-                        }
                     } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {

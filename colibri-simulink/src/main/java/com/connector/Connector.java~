@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.java.connector;
+package com.connector;
 
-import com.colibri.message.Header.Header;
+import com.colibri.Header.Header;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.URI;
@@ -25,20 +25,15 @@ import org.xml.sax.SAXException;
  *
  * @author codelife
  */
-
-
-/**
- * ChatServer Client
- *
- * @author codelife
- */
 @ClientEndpoint
 public class Connector {
     Session session;
     String abc = "";
+    String token = "";
+    int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:56502/Colibrii/chat");
+        URI uri = new URI("ws://localhost:8080/colibri-simulink-1.0/chat");
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
         
     }
@@ -55,30 +50,78 @@ public class Connector {
             {
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETL"))
                 {
-                    abc = Client.getlight(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 1;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DRE"))
                 {
-                    Client.dre();
+                    commandCode = 2;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETT"))
                 {
-                    abc = Client.gettemp(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 3;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("OBST"))
                 {
-                    abc = Client.obstemp(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 4;
                 }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("OBSL"))
                 {
-                    abc = Client.obslight(ss, Header.getRefId());
-                    sendMessage(abc);
+                    commandCode = 5;
+                }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DETT"))
+                {
+                    commandCode = 6;
+                }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("DETL"))
+                {
+                    commandCode = 7;
+                }
+                if (Json.createReader(new StringReader(ss)).readObject().getString("message").contains("Message-Id:"))
+                {
+                    StringTokenizer st = new StringTokenizer(ss, ":");
+                    while (st.hasMoreTokens())
+                    {
+                        token = st.nextToken();
+                    }
                 }
                 System.out.println(Json.createReader(new StringReader(ss)).readObject().getString("message"));
             }
+        switch (commandCode) {
+            case 1:
+                abc = Client.getlight(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 2:
+                Client.dre();
+                commandCode = 0;
+                break;
+            case 3:
+                abc = Client.gettemp(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 4:
+                abc = Client.obstemp(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 5:
+                abc = Client.obslight(token);
+                sendMessage(abc);
+                commandCode = 0;
+                break;
+            case 6:
+                Client.ObsTempThread("dettach");
+                commandCode = 0;
+                break;
+            case 7:
+                Client.ObsLightThread("dettach");
+                commandCode = 0;
+                break;
+            default:
+                break;
+        }
     }
     public void sendMessage(String message) throws IOException
     {
