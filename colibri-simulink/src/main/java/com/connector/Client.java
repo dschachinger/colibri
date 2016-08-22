@@ -40,6 +40,9 @@ public class Client {
     static String dre = "";
     private static Socket socket = new Socket();
     static String reconnect = "temp";
+    public static volatile boolean running = true;
+    public static String temperature = "";
+    public static String light = "";
     public static void main(String args[]) throws URISyntaxException, DeploymentException, IOException, SAXException, ParserConfigurationException
     {
         Connector con = new Connector();
@@ -144,12 +147,14 @@ public class Client {
     }
 
     static String obstemp(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
+	running = true;
         Validate v = new Validate();
         ObsTempThread(token);
 	return "";
     }
 
     static String obslight(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
+	running = true;
         Validate v = new Validate();
         ObsLightThread(token);
         return "";
@@ -177,9 +182,13 @@ public class Client {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                     Date date = new Date();
                     String msg;
+		    if (!temperature.equalsIgnoreCase(number))
+		    {
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                     msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
                     con.sendMessage(msg);
+		    temperature = number;
+		    }
                 } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
@@ -189,14 +198,15 @@ public class Client {
                 }
         }
         };
-        if (token.equalsIgnoreCase("dettach"))
-        {
-            tt.cancel();
-            t.cancel();
-            t.purge();
-        }
-        else
-        t.schedule(tt, 0, 15000);
+        while (running)
+	{
+		tt.run();
+		try {
+                Thread.sleep(15000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+	}
 }
 
     static void dre() throws URISyntaxException, DeploymentException, IOException {
@@ -224,9 +234,13 @@ public class Client {
                         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
                         Date date = new Date();
                         String msg;
+			if (!light.equalsIgnoreCase(number))
+			{
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
                         msg =  msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
                         con.sendMessage(msg);
+			light = number;
+			}
                     } catch (SAXException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (IOException ex) {
@@ -236,13 +250,20 @@ public class Client {
                     }
             }
         };
-        if (token.equalsIgnoreCase("dettach"))
-        {
-            tt.cancel();
-            t.cancel();
-            t.purge();
-        }
-        else
-        t.schedule(tt, 0, 15000);
+        while (running)
+	{
+		tt.run();
+		try {
+                Thread.sleep(15000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+	}
     }
+
+	static void terminate()
+	{
+		running = false;	
+	}
 }
+

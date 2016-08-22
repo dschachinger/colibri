@@ -111,11 +111,11 @@ public class Connector {
                 commandCode = 0;
                 break;
             case 6:
-                Client.ObsTempThread("dettach");
+                Client.terminate();
                 commandCode = 0;
                 break;
             case 7:
-                Client.ObsLightThread("dettach");
+                Client.terminate();
                 commandCode = 0;
                 break;
             default:
