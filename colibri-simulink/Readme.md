@@ -2,7 +2,7 @@
 
 Guidelines:
 * The Matlab-Simulink folder contains the MATLAB script and the Simulink model
-* The other files contain the code for the Colibri connector as well as the code for a **_TEST_** server endpoint
+* The other files contain the code for the Colibri connector as well as the code for a demo server endpoint
 
 For complete documentation click [here](ProjectReport.pdf)
 
