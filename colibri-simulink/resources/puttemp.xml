@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE rdf:RDF [
+<!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+<!ENTITY colibri "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#">]>
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#">
+<rdf:Description rdf:about="http://www.colibri-samples.org/temperatureservice">
+<colibri:hasDataValue rdf:resource="http://www.colibri-samples.org/data-value1"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/data-value1">
+<rdf:type rdf:resource="&colibri;DataValue"/>
+<colibri:hasValue rdf:resource="http://www.colibri-samples.org/value1"/>
+<colibri:hasValue rdf:resource="http://www.colibri-samples.org/value2"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/value1">
+<rdf:type rdf:resource="&colibri;Value"/>
+<colibri:value rdf:datatype="&xsd;float">25</colibri:value>
+<colibri:hasParameter rdf:resource="http://www.colibri-samples.org/parameter1"/>
+</rdf:Description>
+<rdf:Description rdf:about="http://www.colibri-samples.org/value2">
+<rdf:type rdf:resource="&colibri;Value"/>
+<colibri:value rdf:datatype="&xsd;dateTime">2016-07-20T15:27:00Z</colibri:value>
+<colibri:hasParameter rdf:resource="http://www.colibri-samples.org/parameter2"/>
+</rdf:Description>
+</rdf:RDF>
