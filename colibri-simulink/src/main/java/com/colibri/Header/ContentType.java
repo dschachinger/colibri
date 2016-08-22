@@ -1,5 +1,5 @@
 package com.colibri.Header;
-
+// This class provides the different content-type for Message Header
 /**
  * Created by codelife on 12/8/16.
  */

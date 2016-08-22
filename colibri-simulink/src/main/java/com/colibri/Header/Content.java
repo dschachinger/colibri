@@ -1,5 +1,5 @@
 package com.colibri.Header;
-
+// This class is used to clean the message
 /**
  * Created by codelife on 12/8/16.
  */
@@ -26,7 +26,6 @@ public class Content {
         while(content.contains(" <")) {
             content = content.replaceAll(" <", "<");
         }
-        //    content = content.replace("\"", "\\\"");
         return content;
     }
 

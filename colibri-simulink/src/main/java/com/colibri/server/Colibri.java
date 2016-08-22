@@ -4,8 +4,7 @@
  * and open the template in the editor.
  */
 package com.colibri.server;
-
-
+//This class is the demo server backend which handles the incoming and outgoing messages
 import com.colibri.Header.ContentType;
 import com.colibri.Header.Header;
 import com.colibri.Header.Identifier;
@@ -58,9 +57,9 @@ public class Colibri {
     @OnMessage
     public void handleMessage (String message, Session userSession) throws IOException
     {
-        if (message.equalsIgnoreCase("DRE"))
+        if (message.equalsIgnoreCase("DRE")) // DRE stands for deregistering the connector
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
@@ -78,15 +77,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("REMT"))
+        else if (message.equalsIgnoreCase("REMT")) // REMT stands for removing the temperature service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
-                if (addt.equalsIgnoreCase("addt"))
+                if (addt.equalsIgnoreCase("addt")) // This checks if a temperature service is added
                 {
                     breakStatus(msg);
                     addt = "";
@@ -106,15 +105,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("OBST"))
+        else if (message.equalsIgnoreCase("OBST")) // OBST stands for observing the temperature service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = "OBST<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
-                if (addt.equalsIgnoreCase("addt"))
+                if (addt.equalsIgnoreCase("addt")) // This checks if a temperature service is added
                 {
                     breakStatus(msg);
                     obst = "obst";
@@ -134,15 +133,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("DETT"))
+        else if (message.equalsIgnoreCase("DETT")) // DETT stands for dettaching the temperature service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = "DETT<br>" + Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/temperatureservice"+ "<br><br>";
-                if (obst.equalsIgnoreCase("obst") && addt.equalsIgnoreCase("addt"))
+                if (obst.equalsIgnoreCase("obst") && addt.equalsIgnoreCase("addt")) // This checks if a temperature service is added and observed
                 {
                     breakStatus(msg);
                     obst = "";
@@ -162,11 +161,11 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("GETT"))
+        else if (message.equalsIgnoreCase("GETT")) // GETT stands for getting the temperature value
         {
-            if (tc.contentEquals("TC"))
+            if (tc.contentEquals("TC")) // This checks if a connector is registered
             {
-                if (addt.equalsIgnoreCase("addt"))
+                if (addt.equalsIgnoreCase("addt")) // This checks if a temperature service is added
                 {
                     id = Header.getId();
                     Header.setId(id);
@@ -188,15 +187,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("REML"))
+        else if (message.equalsIgnoreCase("REML")) // REML stands for removing the light service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = Identifier.REM + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br>";
-                if (addl.equalsIgnoreCase("addl"))
+                if (addl.equalsIgnoreCase("addl")) // This checks if a light service is added
                 {
                     breakStatus(msg);
                     addl = "";
@@ -216,15 +215,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("OBSL"))
+        else if (message.equalsIgnoreCase("OBSL")) //OBSL stands for observing the light service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = "OBSL<br>" + Identifier.OBS + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br>";
-                if (addl.equalsIgnoreCase("addl"))
+                if (addl.equalsIgnoreCase("addl")) // This checks if a light service is added
                 {
                     breakStatus(msg);
                     obsl = "obsl";
@@ -244,15 +243,15 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("DETL"))
+        else if (message.equalsIgnoreCase("DETL")) // DETL stands for dettaching the light service
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
                 id = Header.getId();
                 Header.setId(id);
                 String msg;
                 msg = "DETL" + Identifier.DET + "<br>Content-Type:" + ContentType.TEXT_PLAIN + "<br>Message-Id: " + id + "<br>Date:"+ Header.getDate() +"<br><br>http://www.colibri-samples.org/lightservice"+ "<br><br>";
-                if (obsl.equalsIgnoreCase("obsl") && addl.equalsIgnoreCase("addl"))
+                if (obsl.equalsIgnoreCase("obsl") && addl.equalsIgnoreCase("addl")) // This checks if a light service is added and observed
                 {
                     breakStatus(msg);
                     obsl = "";
@@ -272,11 +271,11 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("GETL"))
+        else if (message.equalsIgnoreCase("GETL")) // GETL stands for getting the light value
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
-                if (addl.equalsIgnoreCase("addl"))
+                if (addl.equalsIgnoreCase("addl")) // This checks if a light service is added
                 {
                     id = Header.getId();
                     Header.setId(id);
@@ -298,11 +297,11 @@ public class Colibri {
                 err = "err";
             }
         }
-	else if (message.equalsIgnoreCase("PUTON"))
+	else if (message.equalsIgnoreCase("PUTON")) // PUTON stands for PUT message to ON the light
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
-		if (addl.equalsIgnoreCase("addl"))
+		if (addl.equalsIgnoreCase("addl")) // This checks if a light service is added
                 {
 		breakStatus("PUTON");
 		}
@@ -318,11 +317,11 @@ public class Colibri {
                 err = "err";
             }
         }
-	else if (message.equalsIgnoreCase("PUTOFF"))
+	else if (message.equalsIgnoreCase("PUTOFF")) // PUTOFF stands for PUT message to off the light
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
-		if (addl.equalsIgnoreCase("addl"))
+		if (addl.equalsIgnoreCase("addl")) // This checks if a light service is added
                 {
 		breakStatus("PUTOFF");
 		}
@@ -338,11 +337,11 @@ public class Colibri {
                 err = "err";
             }
         }
-        else if (message.equalsIgnoreCase("QRE"))
+        else if (message.equalsIgnoreCase("QRE")) // QRE stands for query string
         {
-            if (tc.equalsIgnoreCase("TC"))
+            if (tc.equalsIgnoreCase("TC")) // This checks if a connector is registered
             {
-                if (que.equalsIgnoreCase("QUE") && qre.equalsIgnoreCase(""))
+                if (que.equalsIgnoreCase("QUE") && qre.equalsIgnoreCase("")) // This checks if a query has been received and result is to be sent
                 {
                     String msg;
                     msg = Identifier.QRE + "<br>Content-Type: " + ContentType.APPLICATION_RESULT + "<br>Message-Id: random26<br>Reference-Id: random25<br>";
@@ -406,6 +405,8 @@ public class Colibri {
         chatUsers.remove(userSession);
     }
 
+
+// Message is sent in the form of the JSON data
     public String buildJSONData(String message) {
         JsonObject jsonObject = Json.createObjectBuilder().add("message", message).build();
         StringWriter sw = new StringWriter();
@@ -413,6 +414,7 @@ public class Colibri {
         return sw.toString();
     }
 
+// breakStatus sends the message to the clients
     private void breakStatus(String message) throws IOException {
         String[] lines = message.split("<br>");
         for(String ss:lines)
@@ -424,7 +426,8 @@ public class Colibri {
             }
         }
     }
-    
+
+// sta sends the status message
     private String sta(String msg_id) {
         String msg;
         id = "";

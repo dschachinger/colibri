@@ -5,10 +5,8 @@
  */
 package com.colibri.Validator;
 
-/**
- *
- * @author codelife
- */
+// This class is used to validate the xml messages
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;

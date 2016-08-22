@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package com.colibri.Header;
-
+// This class provides the random message id and date for the Message Header
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

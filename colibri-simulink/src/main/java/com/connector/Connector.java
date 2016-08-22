@@ -5,6 +5,8 @@
  */
 package com.connector;
 
+// This class is the connector backend to handle the messages from the demo server
+
 import com.colibri.Header.Header;
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,7 +35,7 @@ public class Connector {
     int commandCode = 0;
     public Connector() throws URISyntaxException, DeploymentException, IOException
     {
-        URI uri = new URI("ws://localhost:8080/colibri-simulink-1.0/chat");
+        URI uri = new URI("ws://localhost:8080/colibri-simulink-1.0/chat"); // connects to demo server using WebSocket communication
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
     }
     @OnOpen
@@ -42,7 +44,7 @@ public class Connector {
         this.session = session;
     }
     @OnMessage
-    public void processMessage (String message) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException
+    public void processMessage (String message) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException // This message handles the different types of message
     {
         String[] lines = message.split("<br>");
             for(String ss:lines)
@@ -138,6 +140,7 @@ public class Connector {
                 break;
         }
     }
+
     public void sendMessage(String message) throws IOException
     {
         session.getBasicRemote().sendText(message);

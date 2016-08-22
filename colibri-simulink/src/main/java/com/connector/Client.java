@@ -5,6 +5,8 @@
  */
 package com.connector;
 
+// This class is the main class for the connector
+
 import com.colibri.Header.ContentType;
 import com.colibri.Header.Header;
 import com.colibri.Header.Identifier;
@@ -36,7 +38,7 @@ import org.xml.sax.SAXException;
  */
 public class Client {
     static ServerSocket serverSocket;
-    static int port = 8888;
+    static int port = 8888; // Opens up the port number 8888 for the matlab client to connect using Socket communication
     static String dre = "";
     private static Socket socket = new Socket();
     static String reconnect = "temp";
@@ -45,14 +47,14 @@ public class Client {
     public static String light = "";
     public static void main(String args[]) throws URISyntaxException, DeploymentException, IOException, SAXException, ParserConfigurationException
     {
-        Connector con = new Connector();
+        Connector con = new Connector(); // connects to the demo server using websocket communication
         Validate v = new Validate();
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String message = null;
         serverSocket = new ServerSocket(port);
         System.out.println("Server Started and listening to the port 8888");
         socket = serverSocket.accept();
-        System.out.println("MATLAB Connected");
+        System.out.println("MATLAB Connected"); // As soon as the MATLAB connects, REG message is sent
         String msg;
         msg = Identifier.REG + "<br>Content-Type:" + ContentType.APPLICATION_RDF_XML + "<br>Message-Id:"+ Header.getId() +"<br>Date:" + Header.getDate() + "<br><br>";
         msg += v.get("reg.xml", "", "");
@@ -108,6 +110,8 @@ public class Client {
             }
         }
     }
+
+// getTemp is used to get the temperature value
     public static String gettemp(String token) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException
     {
         Validate v = new Validate();
@@ -115,7 +119,6 @@ public class Client {
         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
         BufferedWriter bw1 = new BufferedWriter(osw1);
 	bw1.write("1"+"\n");
-	System.out.println("Sent 1");
 	bw1.flush();
 	InputStream is = socket.getInputStream();
 	InputStreamReader isr = new InputStreamReader(is);
@@ -128,6 +131,7 @@ public class Client {
         return msg + v.get("resources/puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
     }
 
+// getLight is used to get the light status
     static String getlight(String token) throws IOException, SAXException, ParserConfigurationException {
         Validate v = new Validate();
         OutputStream os1 = socket.getOutputStream();
@@ -146,20 +150,22 @@ public class Client {
         return msg + v.get("resources/putoff.xml", number, dateFormat.format(date)) + "<br><br>";
     }
 
+// obsTemp is used to check if there is a change in temperature values and if the temperature value changes then it is sent to the demo server
     static String obstemp(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
 	running = true;
         Validate v = new Validate();
         ObsTempThread(token);
 	return "";
     }
-
+// obsLight is used to check if there is a change in light status and if the light status changes then it is sent to the demo server
     static String obslight(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
 	running = true;
         Validate v = new Validate();
         ObsLightThread(token);
         return "";
-        
     }
+
+// obsTempThread is started when temperature is observed
     public static void ObsTempThread(final String token) throws URISyntaxException, DeploymentException, IOException
     {
         final Connector con = new Connector();
@@ -209,11 +215,13 @@ public class Client {
 	}
 }
 
+// dre is used to deregister the connector
     static void dre() throws URISyntaxException, DeploymentException, IOException {
         dre = "";
         reconnect = "";
     }
 
+// obsLightThread is started when light is observed
     static void ObsLightThread(final String token) throws URISyntaxException, DeploymentException, IOException {
         final Connector con = new Connector();
         final Validate v = new Validate();
@@ -260,10 +268,14 @@ public class Client {
             }
 	}
     }
+
+//terminate is called when DETT or DETL message is received to stop the respective threads
 	static void terminate()
 	{
 		running = false;	
 	}
+
+//sendPut is used to send the PUT message from demo server to MATLAB
 	static void sendPut(String message) throws IOException, URISyntaxException, ParserConfigurationException, DeploymentException, SAXException
 	{
 		if (message.equalsIgnoreCase("true"))
