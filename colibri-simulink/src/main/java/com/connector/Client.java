@@ -264,10 +264,18 @@ public class Client {
 	{
 		running = false;	
 	}
-	static void sendPut(String message) throws IOException
+	static void sendPut(String message) throws IOException, URISyntaxException, ParserConfigurationException, DeploymentException, SAXException
 	{
 		if (message.equalsIgnoreCase("true"))
 		{
+			Validate v = new Validate();
+			Connector con = new Connector();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        String msg;
+                        msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+                        msg =  msg + v.get("puton.xml", "", "") + "<br><br>";
+                        con.sendMessage(msg);
 			OutputStream os1 = socket.getOutputStream();
                         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
                         BufferedWriter bw1 = new BufferedWriter(osw1);
@@ -276,6 +284,14 @@ public class Client {
 		}
 		if (message.equalsIgnoreCase("false"))
 		{
+			Validate v = new Validate();
+			Connector con = new Connector();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                        Date date = new Date();
+                        String msg;
+                        msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
+                        msg =  msg + v.get("putoff.xml", "", "") + "<br><br>";
+                        con.sendMessage(msg);
 			OutputStream os1 = socket.getOutputStream();
                         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
                         BufferedWriter bw1 = new BufferedWriter(osw1);

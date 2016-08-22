@@ -5,6 +5,7 @@
  */
 package com.colibri.server;
 
+
 import com.colibri.Header.ContentType;
 import com.colibri.Header.Header;
 import com.colibri.Header.Identifier;
@@ -294,6 +295,46 @@ public class Colibri {
             else
             {
                 breakStatus("Error: Cannot Get the service as Technology Connecter is not registered");
+                err = "err";
+            }
+        }
+	else if (message.equalsIgnoreCase("PUTON"))
+        {
+            if (tc.equalsIgnoreCase("TC"))
+            {
+		if (addl.equalsIgnoreCase("addl"))
+                {
+		breakStatus("PUTON");
+		}
+		else
+		{
+			breakStatus("Error: Cannot put message as service is not added");
+			err = "err";
+		}
+            }
+            else
+            {
+                breakStatus("Error: Cannot Put the message as Technology Connecter is not registered");
+                err = "err";
+            }
+        }
+	else if (message.equalsIgnoreCase("PUTOFF"))
+        {
+            if (tc.equalsIgnoreCase("TC"))
+            {
+		if (addl.equalsIgnoreCase("addl"))
+                {
+		breakStatus("PUTOFF");
+		}
+		else
+		{
+			breakStatus("Error: Cannot put message as service is not added");
+			err = "err";
+		}
+            }
+            else
+            {
+                breakStatus("Error: Cannot put message as Technology Connecter is not registered");
                 err = "err";
             }
         }
