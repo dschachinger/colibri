@@ -9,14 +9,11 @@ try
     tc = now;
     set_param(bdroot,'SimulationCommand','start');
     host = 'localhost';
-    port = 7777;
+    port = 8888;
     address = InetAddress.getByName(host);
     socket = Socket(address, port);
     os = socket.getOutputStream;
-    %osw = OutputStreamWriter(os);
     bw = PrintWriter(os, true);
-    %bw = BufferedWriter(osw);
- 	%Get the return message from the server
     while A ~= 5
     is = socket.getInputStream;
     isr = InputStreamReader(is);
@@ -30,24 +27,18 @@ try
     end
     disp(['Message received from the server : ' char(message)]);
     switch A
-        case 1
+        case 1 % This means get the temperature value
             tc = now;
             set_param(bdroot,'SimulationCommand','update');
             pause(3);
-            %if na == 3
-                %block = 'models/New_temperature1';
-            %else
-                block = 'models/To Workspace';
-            %end
-            rto = get_param(block, 'RuntimeObject');
-            %disp(rto.InputPort(1).Data);
+            block = 'models/To Workspace';
+            rto = get_param(block, 'RuntimeObject'); % This gets the value during runtime
             t = rto.InputPort(1).Data;
             disp(t);
-            bw.println(num2str(t));
-            %disp(['Message sent to the server : ' char(t)]);
-        case 2
+            bw.println(num2str(t)); % Send the value to the connector
+        case 2 % This means switch on the light
             temp = t;
-            tl = now;
+            tl = now; % Time is saved in TL to check for the increase in the temperature
             tx = 0;
             set_param(bdroot,'SimulationCommand','update');
             pause(3);
@@ -56,9 +47,8 @@ try
             t = rto.InputPort(1).Data;
 	    lightstatus = 'on';
             disp(t);
-            bw.println(t);
-            %disp(['Message sent to the server : ' char(t)]);
-        case 3
+            bw.println(t); % Send the light status back to the Connector
+        case 3 % This means switch off the light
             temp = t;
             tx = now;
             tl = 0;
@@ -69,9 +59,8 @@ try
             rto = get_param(block, 'RuntimeObject');
             disp(rto.InputPort(1).Data);
             t = rto.InputPort(1).Data;
-            bw.println(t);
-            %disp(['Message sent to the server : ' char(t)]);
-        case 4
+            bw.println(t); % Send the light status back to the connector
+        case 4 % This means get the light status
             bw.println(lightstatus);
 	case 5
             socket.close();
