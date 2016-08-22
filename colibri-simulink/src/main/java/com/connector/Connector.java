@@ -75,6 +75,14 @@ public class Connector {
                 {
                     commandCode = 7;
                 }
+		if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("PUTON"))
+                {
+                    commandCode = 8;
+                }
+		if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("PUTOFF"))
+                {
+                    commandCode = 9;
+                }
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").contains("Message-Id:"))
                 {
                     StringTokenizer st = new StringTokenizer(ss, ":");
@@ -116,6 +124,14 @@ public class Connector {
                 break;
             case 7:
                 Client.terminate();
+                commandCode = 0;
+                break;
+	    case 8:
+                Client.sendPut("true");
+                commandCode = 0;
+                break;
+	    case 9:
+                Client.sendPut("false");
                 commandCode = 0;
                 break;
             default:

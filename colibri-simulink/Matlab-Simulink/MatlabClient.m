@@ -3,6 +3,7 @@ import java.net.*;
 try
     A = 1;
     temp = 25;
+    lightstatus = 'off';
     tl = 0;
     tx = 0;
     tc = now;
@@ -16,7 +17,7 @@ try
     bw = PrintWriter(os, true);
     %bw = BufferedWriter(osw);
  	%Get the return message from the server
-    while A ~= 4
+    while A ~= 5
     is = socket.getInputStream;
     isr = InputStreamReader(is);
     br = BufferedReader(isr);
@@ -53,6 +54,7 @@ try
             block = 'models/To Workspace1';
             rto = get_param(block, 'RuntimeObject');
             t = rto.InputPort(1).Data;
+	    lightstatus = 'on';
             disp(t);
             bw.println(t);
             %disp(['Message sent to the server : ' char(t)]);
@@ -62,6 +64,7 @@ try
             tl = 0;
             set_param(bdroot,'SimulationCommand','update');
             pause(3);
+	    lightstatus = 'off';
             block = 'models/To Workspace2';
             rto = get_param(block, 'RuntimeObject');
             disp(rto.InputPort(1).Data);
@@ -69,7 +72,8 @@ try
             bw.println(t);
             %disp(['Message sent to the server : ' char(t)]);
         case 4
-            bw.println('4.0');
+            bw.println(lightstatus);
+	case 5
             socket.close();
     end
     end

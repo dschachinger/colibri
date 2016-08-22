@@ -133,7 +133,7 @@ public class Client {
         OutputStream os1 = socket.getOutputStream();
         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
         BufferedWriter bw1 = new BufferedWriter(osw1);
-	bw1.write("2"+"\n");
+	bw1.write("4"+"\n");
 	bw1.flush();
 	InputStream is = socket.getInputStream();
 	InputStreamReader isr = new InputStreamReader(is);
@@ -225,7 +225,7 @@ public class Client {
                         OutputStream os1 = socket.getOutputStream();
                         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
                         BufferedWriter bw1 = new BufferedWriter(osw1);
-                        bw1.write("2"+"\n");
+                        bw1.write("4"+"\n");
                         bw1.flush();
                         InputStream is = socket.getInputStream();
                         InputStreamReader isr = new InputStreamReader(is);
@@ -260,10 +260,27 @@ public class Client {
             }
 	}
     }
-
 	static void terminate()
 	{
 		running = false;	
 	}
+	static void sendPut(String message) throws IOException
+	{
+		if (message.equalsIgnoreCase("true"))
+		{
+			OutputStream os1 = socket.getOutputStream();
+                        OutputStreamWriter osw1 = new OutputStreamWriter(os1);
+                        BufferedWriter bw1 = new BufferedWriter(osw1);
+                        bw1.write("2"+"\n");
+                        bw1.flush();
+		}
+		if (message.equalsIgnoreCase("false"))
+		{
+			OutputStream os1 = socket.getOutputStream();
+                        OutputStreamWriter osw1 = new OutputStreamWriter(os1);
+                        BufferedWriter bw1 = new BufferedWriter(osw1);
+                        bw1.write("3"+"\n");
+                        bw1.flush();
+		}
+	}
 }
-
