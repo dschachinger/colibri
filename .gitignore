@@ -1,0 +1,9 @@
+.gradle
+.settings
+.classpath
+.project
+.idea
+bin
+build
+felix-framework-5.4.0
+catalog-v001.xml

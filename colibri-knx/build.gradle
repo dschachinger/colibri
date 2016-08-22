@@ -1,88 +1,84 @@
-description = 'KNX connector bundle for Colibri project'
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+ 
+description = 'Colibri - KNX connector'
 
 eclipse
 {
-	project 
-	{
-		natures 'org.eclipse.pde.PluginNature'
-		buildCommand 'org.eclipse.pde.ManifestBuilder'
-		buildCommand 'org.eclipse.pde.SchemaBuilder'
-	}
-	
 	classpath
 	{
-		file
+		file 
 		{
-			beforeMerged 
-			{ 
-				classpath -> classpath.entries.removeAll { entry -> entry.kind == 'con' } 
-			}
-			withXml
+			withXml 
 			{
 				def node = it.asNode()
-				node.appendNode('classpathentry',[kind: 'con', path: 'org.eclipse.pde.core.requiredPlugins'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-calimero', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
 			}
 		}
 	}
 }
 
-configurations 
-{
-	provided
-}
-
-sourceSets
-{
-	main { compileClasspath += configurations.provided }
+dependencies 
+{		
+	provided project (':colibri-commons')
+	provided project (':colibri-calimero')
+	provided project (':colibri-osgi')
 }
 
 jar 
 {
-	from 
-	{ 
-		configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } 
-	}
-	
 	manifest 
 	{
-		attributes (   
-			"Manifest-Version": "1.0",
-			"Bundle-ManifestVersion": "2",
-			"Bundle-Name": "colibri-knx",
-			"Bundle-SymbolicName": "colibri-knx",
-			"Bundle-Version": "1.0.0",
-			"Bundle-Activator": "at.ac.tuwien.auto.colibri.connector.knx.KNXBundleActivator",
-			"Bundle-Vendor": "Automation Systems Group, Institute of Computer Aided Automation, TU Wien, www.auto.tuwien.ac.at",
-			"Import-Package": "at.ac.tuwien.auto.colibri.semantics, "+
-								"at.ac.tuwien.auto.colibri.connector, "+
-								"tuwien.auto.calimero,"+ 
-								"tuwien.auto.calimero.buffer,"+
-								"tuwien.auto.calimero.buffer.cache,"+
-								"tuwien.auto.calimero.cemi,"+
-								"tuwien.auto.calimero.datapoint,"+
-								"tuwien.auto.calimero.dptxlator,"+
-								"tuwien.auto.calimero.exception,"+
-								"tuwien.auto.calimero.internal,"+
-								"tuwien.auto.calimero.knxnetip,"+
-								"tuwien.auto.calimero.knxnetip.servicetype,"+ 
-								"tuwien.auto.calimero.knxnetip.util,"+
-								"tuwien.auto.calimero.link,"+
-								"tuwien.auto.calimero.link.medium,"+
-								"tuwien.auto.calimero.log,"+
-								"tuwien.auto.calimero.mgmt,"+
-								"tuwien.auto.calimero.process,"+
-								"tuwien.auto.calimero.serial,"+ 
-								"tuwien.auto.calimero.xml,"+
-								"tuwien.auto.calimero.xml.def, "+
-								"at.ac.tuwien.auto.colibri.data, "+
-								"org.osgi.framework;version='1.3.0'"
-		)
+		attributes ( "Import-Package": 
+							"tuwien.auto.calimero,"+ 
+							"tuwien.auto.calimero.buffer,"+
+							"tuwien.auto.calimero.buffer.cache,"+
+							"tuwien.auto.calimero.cemi,"+
+							"tuwien.auto.calimero.datapoint,"+
+							"tuwien.auto.calimero.dptxlator,"+
+							"tuwien.auto.calimero.exception,"+
+							"tuwien.auto.calimero.internal,"+
+							"tuwien.auto.calimero.knxnetip,"+
+							"tuwien.auto.calimero.knxnetip.servicetype,"+ 
+							"tuwien.auto.calimero.knxnetip.util,"+
+							"tuwien.auto.calimero.link,"+
+							"tuwien.auto.calimero.link.medium,"+
+							"tuwien.auto.calimero.log,"+
+							"tuwien.auto.calimero.mgmt,"+
+							"tuwien.auto.calimero.process,"+
+							"tuwien.auto.calimero.serial,"+ 
+							"tuwien.auto.calimero.xml,"+
+							"tuwien.auto.calimero.xml.def, "+
+							"at.ac.tuwien.auto.colibri.data, "+
+							"at.ac.tuwien.auto.colibri.connector, "+
+							"org.osgi.framework" )
 	}
 }
-
-dependencies 
-{		
-	compile group: 'org.apache.commons', name: 'commons-jexl', version: '2.1.1'   
-}
-
-
