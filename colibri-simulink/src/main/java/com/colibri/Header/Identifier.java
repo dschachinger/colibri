@@ -1,8 +1,6 @@
 package com.colibri.Header;
 // This class provides the message identifiers for recognizing the message
-/**
- * Created by codelife on 12/8/16.
- */
+
 public enum Identifier {
     STA("STA"),
     REG("REG"),

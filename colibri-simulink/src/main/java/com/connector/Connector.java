@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.connector;
 
 // This class is the connector backend to handle the messages from the demo server
@@ -27,13 +22,13 @@ import org.xml.sax.SAXException;
  *
  * @author codelife
  */
-@ClientEndpoint
+@ClientEndpoint // This line shows that Connector acts as the ClientEndpoint for the demo server
 public class Connector {
     Session session;
     String abc = "";
     String token = "";
     int commandCode = 0;
-    public Connector() throws URISyntaxException, DeploymentException, IOException
+    public Connector() throws URISyntaxException, DeploymentException, IOException // called from Client.java
     {
         URI uri = new URI("ws://localhost:8080/colibri-simulink-1.0/chat"); // connects to demo server using WebSocket communication
         ContainerProvider.getWebSocketContainer().connectToServer(this, uri);
@@ -46,7 +41,7 @@ public class Connector {
     @OnMessage
     public void processMessage (String message) throws IOException, URISyntaxException, DeploymentException, SAXException, ParserConfigurationException // This message handles the different types of message
     {
-        String[] lines = message.split("<br>");
+        String[] lines = message.split("<br>"); //Every line in the XML message is separated by <br> so when message is received consisting of <br> then we use split method to display the message without <br>
             for(String ss:lines)
             {
                 if (Json.createReader(new StringReader(ss)).readObject().getString("message").equalsIgnoreCase("GETL"))
@@ -93,9 +88,9 @@ public class Connector {
                         token = st.nextToken();
                     }
                 }
-                System.out.println(Json.createReader(new StringReader(ss)).readObject().getString("message"));
+                System.out.println(Json.createReader(new StringReader(ss)).readObject().getString("message")); // Prints the message received
             }
-        switch (commandCode) {
+        switch (commandCode) { // based upon the commandCode values, different functions are called in the connector class
             case 1:
                 abc = Client.getlight(token);
                 sendMessage(abc);
@@ -141,7 +136,7 @@ public class Connector {
         }
     }
 
-    public void sendMessage(String message) throws IOException
+    public void sendMessage(String message) throws IOException // sends the messages back to the demo server
     {
         session.getBasicRemote().sendText(message);
     }

@@ -1,8 +1,6 @@
 package com.colibri.Header;
 // This class is used to clean the message
-/**
- * Created by codelife on 12/8/16.
- */
+
 public class Content {
     private String content;
     private final String newLine = "<br>";

@@ -1,8 +1,5 @@
 package com.colibri.Header;
 // This class provides the different status codes which is sent after the reception of the message
-/**
- * Created by codelife on 12/8/16.
- */
 public enum StatusCodes {
     OK(200),
     ERROR_STRUCTURE(300), ERROR_SYNTACTIC(400),

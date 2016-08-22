@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.colibri.server;
 //This class is the demo server backend which handles the incoming and outgoing messages
 import com.colibri.Header.ContentType;

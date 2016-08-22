@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.colibri.Validator;
 
 // This class is used to validate the xml messages
@@ -23,11 +18,7 @@ import org.xml.sax.SAXException;
  */
 public class Validate {
 
-    /**
-     * @param args the command line arguments
-     */
     public static String get(String xml, String value, String dates) throws SAXException, IOException, ParserConfigurationException {
-        // TODO code application logic here
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(false);
         factory.setNamespaceAware(true);
@@ -36,7 +27,6 @@ public class Validate {
         builder.setErrorHandler(new SimpleErrorHandler());    
         // the "parse" method also validates XML, will throw an exception if misformatted
         Document document = builder.parse(new InputSource("resources/reg.xml"));
-        //System.out.println(document.getXmlEncoding());
         return(readFile(xml, value, dates));
     }
     public static String readFile(String path, String value, String dates) throws IOException{
@@ -53,7 +43,6 @@ public class Validate {
         else
             sb.append(sCurrentLine);
         sb.append("\n");
-        //System.out.println("Returned Value =  "+ value + ", Date =  "+ dates);
     }
           return sb.toString();
     }
