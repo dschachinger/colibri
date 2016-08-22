@@ -37,7 +37,7 @@ public class Validate {
         DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setErrorHandler(new SimpleErrorHandler());    
         // the "parse" method also validates XML, will throw an exception if misformatted
-        Document document = builder.parse(new InputSource("reg.xml"));
+        Document document = builder.parse(new InputSource("resources/reg.xml"));
         //System.out.println(document.getXmlEncoding());
         return(readFile(xml, value, dates));
     }

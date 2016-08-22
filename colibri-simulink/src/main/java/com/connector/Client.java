@@ -125,7 +125,7 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br><br>";
-        return msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
+        return msg + v.get("resources/puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
     }
 
     static String getlight(String token) throws IOException, SAXException, ParserConfigurationException {
@@ -143,7 +143,7 @@ public class Client {
 	Date date = new Date();
         String msg;
         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-        return msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+        return msg + v.get("resources/putoff.xml", number, dateFormat.format(date)) + "<br><br>";
     }
 
     static String obstemp(String token) throws IOException, SAXException, ParserConfigurationException, URISyntaxException, DeploymentException {
@@ -185,7 +185,7 @@ public class Client {
 		    if (!temperature.equalsIgnoreCase(number))
 		    {
                     msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-                    msg = msg + v.get("puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
+                    msg = msg + v.get("resources/puttemp.xml", number, dateFormat.format(date).toString()) + "<br><br>";
                     con.sendMessage(msg);
 		    temperature = number;
 		    }
@@ -237,7 +237,7 @@ public class Client {
 			if (!light.equalsIgnoreCase(number))
 			{
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() +"<br>Reference-Id:" + token + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-                        msg =  msg + v.get("putlight.xml", number, dateFormat.format(date)) + "<br><br>";
+                        msg =  msg + v.get("resources/putoff.xml", number, dateFormat.format(date)) + "<br><br>";
                         con.sendMessage(msg);
 			light = number;
 			}
@@ -274,7 +274,7 @@ public class Client {
                         Date date = new Date();
                         String msg;
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-                        msg =  msg + v.get("puton.xml", "", "") + "<br><br>";
+                        msg =  msg + v.get("resources/puton.xml", "", "") + "<br><br>";
                         con.sendMessage(msg);
 			OutputStream os1 = socket.getOutputStream();
                         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
@@ -290,7 +290,7 @@ public class Client {
                         Date date = new Date();
                         String msg;
                         msg = Identifier.PUT+"<br>Message-Id:"+ Header.getId() + "<br>Content-Type: "+ContentType.APPLICATION_RDF_XML+"<br>Date:" + Header.getDate() +"<br>";
-                        msg =  msg + v.get("putoff.xml", "", "") + "<br><br>";
+                        msg =  msg + v.get("resources/putoff.xml", "", "") + "<br><br>";
                         con.sendMessage(msg);
 			OutputStream os1 = socket.getOutputStream();
                         OutputStreamWriter osw1 = new OutputStreamWriter(os1);
