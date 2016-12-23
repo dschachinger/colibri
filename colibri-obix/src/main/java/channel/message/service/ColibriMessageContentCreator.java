@@ -41,7 +41,7 @@ public class ColibriMessageContentCreator {
                     "\n<!DOCTYPE rdf:RDF [\n" +
                             "<!ENTITY xsd \"http://www.w3.org/2001/XMLSchema#\" >\n" +
                             "<!ENTITY rdf \"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" >\n" +
-                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl\">]>");
+                            "<!ENTITY colibri \"https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#\">]>");
 
         } catch (JAXBException e) {
             e.printStackTrace();

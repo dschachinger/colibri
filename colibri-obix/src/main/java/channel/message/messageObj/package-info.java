@@ -8,7 +8,7 @@
         xmlns = {
                 @XmlNs(prefix="rdf", namespaceURI="http://www.w3.org/1999/02/22-rdf-syntax-ns#"),
                 @XmlNs(prefix="xsd", namespaceURI="http://www.w3.org/2001/XMLSchema#"),
-                @XmlNs(prefix="colibri", namespaceURI="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl")
+                @XmlNs(prefix="colibri", namespaceURI="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#")
         }
 )
 package channel.message.messageObj;
