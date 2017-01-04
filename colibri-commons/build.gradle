@@ -27,19 +27,50 @@
  * SUCH DAMAGE.
  *************************************************************************************************/
  
- description = 'Colibri - Commons'
+description = 'Colibri - Commons'
 
-dependencies
-{
-	// none
+task clear(type: Delete) {
+
+	doFirst
+	{
+		delete fileTree(dir: "src/main/resources", exclude: "colibri.owl")
+	}
 }
 
-jar 
+clear.description 'Deletes temporary files.'
+
+compileJava.dependsOn clear
+
+dependencies 
 {
+	compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.0'
+	compile group: 'org.apache.jena', name:'jena-tdb', version:'3.1.0'
+	compile group: 'org.apache.jena', name:'jena-arq', version:'3.1.0'
+}
+
+jar
+{		
 	manifest 
 	{
-		attributes ( "Export-Package": 
-						"at.ac.tuwien.auto.colibri.data, " +
-						"at.ac.tuwien.auto.colibri.connector" )
+		attributes ("Export-Package":
+		 
+						"at.ac.tuwien.auto.colibri.commons, "+
+						
+						"org.apache.jena.tdb, " +
+						"org.apache.jena.update, " +
+						"org.apache.jena.sparql.core, " +
+						"org.apache.jena.sparql.util, " +
+						"org.apache.jena.util, " +
+						"org.apache.jena.graph, " +
+						"org.apache.jena.reasoner, " +
+						"org.apache.jena.ontology, " +
+						"org.apache.jena.vocabulary, " +
+						"org.apache.jena.query, " +
+						"org.apache.jena.rdf.model",						
+						
+					"Import-Package":
+					
+						"javax.security.auth.x500, " +
+						"javax.net.ssl " )
 	}
 }

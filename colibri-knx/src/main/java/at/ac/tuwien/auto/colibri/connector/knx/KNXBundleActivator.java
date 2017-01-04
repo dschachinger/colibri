@@ -33,8 +33,6 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import at.ac.tuwien.auto.colibri.data.AccessService;
-
 /**
  * This class is the activator for this OSGi bundle.
  * 
@@ -46,11 +44,6 @@ public class KNXBundleActivator implements BundleActivator
 	 * Defines a reference to the registered access service
 	 */
 	private ServiceReference serviceReference;
-
-	/**
-	 * Access service implementation
-	 */
-	private AccessService access;
 
 	/**
 	 * Connector main object
@@ -65,12 +58,12 @@ public class KNXBundleActivator implements BundleActivator
 		// log message
 		System.out.println("KNX bundle is running");
 
-		// get service for accessing data store
-		serviceReference = context.getServiceReference(AccessService.class.getName());
-		access = (AccessService) context.getService(serviceReference);
-
-		// instantiate main connector class
-		main = new KNXConnector(access, "168.127.0.36", "localhost", 7032);
+		// // get service for accessing data store
+		// serviceReference = context.getServiceReference(AccessService.class.getName());
+		// access = (AccessService) context.getService(serviceReference);
+		//
+		// // instantiate main connector class
+		// main = new KNXConnector(access, "168.127.0.36", "localhost", 7032);
 	}
 
 	/**

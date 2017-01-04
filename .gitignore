@@ -2,8 +2,15 @@
 .settings
 .classpath
 .project
+.metadata
+.recommenders
 .idea
+
 bin
 build
+
 felix-framework-5.4.0
+
 catalog-v001.xml
+
+/colibri-core/src/main/resources/postgresql-9.4.1209.jar

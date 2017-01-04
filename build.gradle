@@ -73,6 +73,17 @@ subprojects {
 		println "copying jar from $jar.archivePath to $felixBundleDir"
 		ant.copy(file:jar.archivePath, todir:felixBundleDir)
 	}
+	
+	eclipse
+	{
+		classpath
+		{
+			file
+			{
+				whenMerged { classpath -> classpath.entries.findAll { entry -> entry.kind == 'lib' }*.exported = true }
+			}
+		}
+	}
 }
 
 ext {	
@@ -113,7 +124,7 @@ task felix {
 		if(!felix.exists())
 		{
 			println "download Felix 5.4.0 distribution"
-			ant.get(src:"ftp://gd.tuwien.ac.at/pub/infosys/servers/http/apache/dist//felix/org.apache.felix.main.distribution-5.4.0.zip", dest:"org.apache.felix.main.distribution-5.4.0.zip", verbose:true)
+			ant.get(src:"https://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.main.distribution/5.4.0/org.apache.felix.main.distribution-5.4.0.zip", dest:"org.apache.felix.main.distribution-5.4.0.zip", verbose:true)
 			ant.unzip(src:"org.apache.felix.main.distribution-5.4.0.zip", dest:file('.').absolutePath)
 			ant.delete(file:"org.apache.felix.main.distribution-5.4.0.zip")
 		}

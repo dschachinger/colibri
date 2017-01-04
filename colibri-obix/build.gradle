@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 
-group = 'at.ac.tuwien.auto.colibr'
+group = 'at.ac.tuwien.auto.colibri'
 version = '1.0-SNAPSHOT'
 
 description = "colibri OBIX Connector"

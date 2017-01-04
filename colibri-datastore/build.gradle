@@ -38,43 +38,56 @@ eclipse
 			withXml 
 			{
 				def node = it.asNode()
+				
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-interface', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-reasoner', exported:'true'])
 			}
 		}
 	}
 }
 
-repositories 
-{
-	flatDir { dirs 'src/main/resources' }
-}
-
 dependencies
 {
+	provided project(':colibri-osgi')
+	provided project(':colibri-reasoner')
 	provided project(':colibri-commons')
+	provided project(':colibri-interface')
 	
-	compile ':aterm-java-1.6:'
-	compile ':jgrapht-jdk1.5:'
-	compile ':pellet-core:'
-	compile ':pellet-datatypes:'
-	compile ':pellet-el:'
-	compile ':pellet-modularity:'
-	compile ':pellet-owlapiv3:'
-	compile ':pellet-query:'
-	compile ':pellet-rules:'
-	compile ':relaxngDatatype:'
-	
-	compile group: 'edu.stanford.protege', name: 'org.semanticweb.owl.owlapi', version: '3.4.4'	
-	compile group: 'org.apache.jena', name:'jena-tdb', version:'3.1.0'
+	compile group: 'edu.stanford.protege', name: 'org.semanticweb.owl.owlapi', version: '3.4.4' 
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.4-1206-jdbc4'
+	compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.21'
 }
 
 jar 
 {
 	manifest 
 	{
-		attributes( "Export-Package":
+		attributes ("Main-Class": "at.ac.tuwien.auto.colibri.core.datastore.ColibriDatastore",
+		
+					"Export-Package":
+					
 						"at.ac.tuwien.auto.colibri.core.datastore",
+									
 					"Import-Package":
-						"at.ac.tuwien.auto.colibri.data" )
+						
+						"at.ac.tuwien.auto.colibri.commons, " +
+						
+						"at.ac.tuwien.auto.colibri.core.messaging, " +						
+						"at.ac.tuwien.auto.colibri.core.datastore.reasoner, " +
+												
+						"javax.management, " +
+						"javax.xml.bind, " +
+						"javax.sql, " +
+						"javax.net.ssl, " +
+						
+						"org.apache.jena.query, " +
+						"org.apache.jena.tdb, " +
+						"org.apache.jena.util, " +
+						"org.apache.jena.sparql.util, " +
+						"org.apache.jena.rdf.model, " +
+						
+						"org.osgi.framework" )
 	}
 }

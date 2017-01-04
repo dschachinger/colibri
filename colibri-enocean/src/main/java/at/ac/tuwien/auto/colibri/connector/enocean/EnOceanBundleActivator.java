@@ -33,8 +33,6 @@ import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 
-import at.ac.tuwien.auto.colibri.data.AccessService;
-
 /**
  * This class is the activator for this OSGi bundle.
  * 
@@ -48,12 +46,6 @@ public class EnOceanBundleActivator implements BundleActivator
 	private ServiceReference serviceReference;
 
 	/**
-	 * Access service implementation
-	 */
-	@SuppressWarnings("unused")
-	private AccessService access;
-
-	/**
 	 * OSGi start method
 	 */
 	public void start(BundleContext context) throws Exception
@@ -62,8 +54,8 @@ public class EnOceanBundleActivator implements BundleActivator
 		System.out.println("EnOcean bundle is running");
 
 		// get service for accessing data store
-		serviceReference = context.getServiceReference(AccessService.class.getName());
-		access = (AccessService) context.getService(serviceReference);
+		// serviceReference = context.getServiceReference(AccessService.class.getName());
+		// access = (AccessService) context.getService(serviceReference);
 
 		// TODO add EnOcean connector
 

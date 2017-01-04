@@ -37,10 +37,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import at.ac.tuwien.auto.colibri.connector.ConnectionType;
-import at.ac.tuwien.auto.colibri.connector.Connector;
 import at.ac.tuwien.auto.colibri.connector.knx.datapoint.DPST_1_1;
-import at.ac.tuwien.auto.colibri.data.AccessService;
 import tuwien.auto.calimero.CloseEvent;
 import tuwien.auto.calimero.FrameEvent;
 import tuwien.auto.calimero.GroupAddress;
@@ -53,13 +50,8 @@ import tuwien.auto.calimero.link.medium.TPSettings;
 import tuwien.auto.calimero.process.ProcessCommunicator;
 import tuwien.auto.calimero.process.ProcessCommunicatorImpl;
 
-public class KNXConnector implements Connector
+public class KNXConnector // implements Connector
 {
-	/**
-	 * Access interface
-	 */
-	private AccessService access;
-
 	/**
 	 * Own IP address
 	 */
@@ -113,9 +105,9 @@ public class KNXConnector implements Connector
 	 * @param hostname
 	 * @param port
 	 */
-	public KNXConnector(AccessService access, String address, String hostname, int port)
+	public KNXConnector(String address, String hostname, int port)
 	{
-		this.access = access;
+		// this.access = access;
 		this.address = address;
 		this.port = port;
 		this.hostname = hostname;
@@ -142,7 +134,6 @@ public class KNXConnector implements Connector
 		return pc;
 	}
 
-	@Override
 	public void closeConnection()
 	{
 		test = null;
@@ -151,11 +142,10 @@ public class KNXConnector implements Connector
 
 	}
 
-	@Override
 	public void openConnection()
 	{
 		// open connection to data store
-		access.open(address);
+		// access.open(address);
 
 		// open connection to KNX bus
 		try
@@ -238,8 +228,7 @@ public class KNXConnector implements Connector
 		}
 	}
 
-	@Override
-	public boolean testConnection(ConnectionType type)
+	public boolean testConnection()
 	{
 		// TODO test connection
 

@@ -29,7 +29,58 @@
  
 description = 'Colibri - Semantic interface'
 
-dependencies
+eclipse
 {
-	// none
+	classpath
+	{
+		file 
+		{
+			withXml 
+			{
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+			}
+		}
+	}
+}
+
+dependencies 
+{	
+	provided project(':colibri-osgi')
+	provided project(':colibri-commons')
+}
+
+jar 
+{
+	manifest 
+	{
+		attributes ("Export-Package":
+		
+						"at.ac.tuwien.auto.colibri.core.messaging, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.queue, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.tasks, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.types ",						
+						
+					"Import-Package":
+																	
+						"at.ac.tuwien.auto.colibri.commons, " +
+						
+						"org.apache.jena.rdf.model, " + 
+						"org.apache.jena.update, " +
+						"org.apache.jena.sparql.core, " +
+						"org.apache.jena.reasoner, " +
+						"org.apache.jena.graph, " +
+						"org.apache.jena.query, " +
+						"org.apache.jena.ontology, " +
+						"org.apache.jena.vocabulary, " +
+											
+						"org.osgi.framework, "+
+						
+						"javax.xml.datatype, " +
+						"javax.management, " +
+						"javax.xml.bind " )						
+	}
 }

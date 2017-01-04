@@ -1,0 +1,6 @@
+<Context>
+	<Resource name="jdbc/colibri" auth="Container" type="javax.sql.DataSource"
+		username="postgres" password="sa" driverClassName="org.postgresql.Driver"
+		url="jdbc:postgresql://localhost:5432/colibri" maxTotal="20"
+		maxIdle="3" />
+</Context>

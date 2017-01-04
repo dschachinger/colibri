@@ -1,3 +1,32 @@
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+ 
 description = 'Colibri - Semantic core'
 
 eclipse
@@ -9,27 +38,94 @@ eclipse
 			withXml 
 			{
 				def node = it.asNode()
-				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-datastore', exported:'true'])
+				
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-datastore', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-interface', exported:'true'])
 			}
 		}
 	}
 }
 
-dependencies 
-{	
+configurations
+{
+	libs
+}
+
+dependencies
+{
 	provided project(':colibri-osgi')
 	provided project(':colibri-datastore')
+	provided project(':colibri-interface')
+		
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '8.0.36'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: '8.0.36'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-jasper', version: '8.0.36'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-logging-juli', version: '8.0.36'
+	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: '8.0.36'
+	compile group: 'org.apache.tomcat', name: 'tomcat-dbcp', version: '8.0.36'
+	
+	libs group: 'org.postgresql', name: 'postgresql', version: '9.4.1209'
+}
+
+task copyLibs(type: Copy) {
+	into "bin"
+	from configurations.libs
+}
+
+copyLibs.description 'Copies runtime libs for Tomcat execution.'
+copyLibs.doFirst { mkdir 'bin' }
+
+tasks.eclipse{}.doLast{
+	tasks.copyLibs.execute()
 }
 
 jar 
 {
+    into('') 
+	{
+        from configurations.libs
+    }
 	
 	manifest 
 	{
-		attributes( "Bundle-Activator": "at.ac.tuwien.auto.colibri.core.integration.IntegrationLayerActivator",
+		attributes ("Main-Class": "at.ac.tuwien.auto.colibri.core.server.ColibriCore",
+		
+					"Bundle-Activator": "at.ac.tuwien.auto.colibri.core.server.ColibriCoreActivator",
+					
 					"Import-Package":
-						"at.ac.tuwien.auto.colibri.core.datastore, "+						
+											
+						"at.ac.tuwien.auto.colibri.core.messaging, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.queue, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.tasks, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.types, " +
+						
+						"at.ac.tuwien.auto.colibri.core.datastore, " +	
+										
+						"javax.management, " +
+						"javax.management.modelmbean, " +
+						"javax.naming, " +
+						"javax.naming.spi, " +
+						"javax.net.ssl, " +
+						"javax.sql, " +
+						"javax.xml.parsers, " +
+						"javax.xml.transform, " +
+						"javax.security.auth.login, " + 
+						"javax.security.auth.callback, " +
+						
+						"org.apache.jena.rdf.model, " + 
+						"org.apache.jena.update, " +
+						"org.apache.jena.sparql.core, " +
+						"org.apache.jena.graph, " +
+						"org.apache.jena.query, " +
+												
+						"org.ietf.jgss, " +
+						"org.w3c.dom, "+
+						"org.xml.sax, " +
+						"org.xml.sax.ext, " +
+						"org.xml.sax.helpers, " +						
 						"org.osgi.framework" )
 	}
 }

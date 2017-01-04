@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>WebSocket test client</title>
+    <style type="text/css">
+		<![CDATA[
+			#connect-container 
+			{
+				float: left;
+				width: 500px				
+			}
+
+			#console-container 
+			{
+				float: left;
+				width: 500px;
+			}
+
+			#console 
+			{
+				border: 1px solid #999999;
+				height: 730px;
+				overflow-y: scroll;				
+				width: 100%;
+			}
+
+			#console p 
+			{
+				padding: 0;
+				margin: 0;
+			}
+		]]>
+	</style>
+    <script type="application/javascript">
+		<![CDATA[
+
+			var socket = null;
+
+			function setConnected(connected) 
+			{
+				document.getElementById('connect').disabled = connected;
+				document.getElementById('disconnect').disabled = !connected;
+				document.getElementById('send').disabled = !connected;
+			}
+
+			function connect() 
+			{
+				var endpoint = document.getElementById('endpoint').value;
+				if (endpoint == '') 
+				{
+					alert('Set server endpoint!');
+					return;
+				}
+				
+				if ('WebSocket' in window) 
+				{
+					socket = new WebSocket(endpoint);
+				} 
+				else if ('MozWebSocket' in window) 
+				{
+					socket = new MozWebSocket(endpoint);
+				} 
+				else 
+				{
+					alert('WebSocket is not supported!');
+					return;
+				}
+				
+				socket.onopen = function () 
+				{
+					setConnected(true);
+					log('Info: WebSocket connection opened');
+				};
+				
+				socket.onmessage = function (event) 
+				{
+					log('Received: ' + event.data);
+				};
+				
+				socket.onclose = function (event) 
+				{
+					setConnected(false);
+					log('Info: WebSocket connection closed (Code: ' + event.code + ')');
+				};
+			}
+
+			function disconnect() 
+			{
+				if (socket != null) 
+				{
+					socket.close();
+					socket = null;
+				}
+				setConnected(false);
+			}
+
+			function send() 
+			{
+				if (socket != null) 
+				{
+					var message = document.getElementById('message').value;
+					//log('Sent: ' + message);
+					socket.send(message);
+				} 
+				else 
+				{
+					alert('WebSocket connection is not established!');
+				}
+			}
+
+			function set() 
+			{
+				var endpoint = '/colibri';
+			
+				if (window.location.protocol == 'http:') 
+					document.getElementById('endpoint').value = 'ws://' + window.location.host + endpoint;
+				else 
+					document.getElementById('endpoint').value = 'wss://' + window.location.host + endpoint;
+			}
+
+			function log(message) 
+			{
+				var console = document.getElementById('console');
+				var p = document.createElement('p');
+				
+				if (console.hasChildNodes())
+					console.removeChild(console.childNodes[0]);
+				
+				p.style.wordWrap = 'break-word';
+				p.appendChild(document.createTextNode(message));
+					
+				console.appendChild(p);
+				console.scrollTop = console.scrollHeight;
+			}
+
+			document.addEventListener("DOMContentLoaded", function() 
+			{
+				var noscripts = document.getElementsByClassName("noscript");
+				for (var i = 0; i < noscripts.length; i++) 
+				{
+					noscripts[i].parentNode.removeChild(noscripts[i]);
+				}
+			}, false);
+		]]>
+	</script>
+</head>
+<body onload="set();">
+	<div class="noscript">
+		<h2 style="color: #ff0000">WebSockets need enabled Javascript!</h2>
+	</div>
+	<div>
+		<div id="connect-container">        
+			<div>
+				<input id="endpoint" type="text" size="60" style="width: 470px"/>
+			</div>        
+			<div>
+				<textarea id="message" style="width: 470px; height: 700px"></textarea>
+			</div>
+			<div>
+				<button id="connect" onclick="connect();">Connect</button>
+				<button id="disconnect" onclick="disconnect();" disabled="disabled" >Disconnect</button>
+				<button id="send" onclick="send();" disabled="disabled">Send</button>
+			</div>
+		</div>
+		<div id="console-container">
+			<div id="console"/>
+		</div>
+	</div>
+</body>
+</html>
