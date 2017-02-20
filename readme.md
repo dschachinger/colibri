@@ -1,4 +1,4 @@
-<img width="380px" src='http://www.auto.tuwien.ac.at/~dschachinger/colibri/logo_full.png'/>
+<img width="380px" src='https://raw.githubusercontent.com/dschachinger/colibri/master/misc/img/logo_full.png'/>
 
 # Introduction
 
@@ -12,15 +12,15 @@ Development of Colibri is partially supported by [netidee](https://www.netidee.a
 
 ## Architecture
 
-The main components of Colibri are the Colibri optimizer in the form of a building energy management system (BEMS) and the Colibri semantic core, which stores all relevant information. This data store is based on an [ontology](https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl) and is surrounded by a uniform [interface](http://www.auto.tuwien.ac.at/~dschachinger/colibri/semantic_interface.pdf), which manages the access to the information. Many different systems and system components can be connected to this interface to provide the BEMS with additional knowledge necessary to optimize building energy usage. Examples are Web service providers for weather data or agents of the smart grid, such as energy retailers publishing energy price information. In addition, building automation systems (BASs) need to be linked to Colibri in order to implement the elaborated measures and provide data from the individual devices within the building.
+The main components of Colibri are the Colibri optimizer in the form of a building energy management system (BEMS) and the Colibri semantic core, which stores all relevant information. This data store is based on an [ontology](https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl) and is surrounded by a uniform [interface](https://raw.githubusercontent.com/dschachinger/colibri/master/misc/docs/interface.pdf), which manages the access to the information. Many different systems and system components can be connected to this interface to provide the BEMS with additional knowledge necessary to optimize building energy usage. Examples are Web service providers for weather data or agents of the smart grid, such as energy retailers publishing energy price information. In addition, building automation systems (BASs) need to be linked to Colibri in order to implement the elaborated measures and provide data from the individual devices within the building.
 
-<img width="40%" src='http://www.auto.tuwien.ac.at/~dschachinger/colibri/common_architecture.png'/>
+<img width="40%" src='https://raw.githubusercontent.com/dschachinger/colibri/master/misc/img/common_architecture.png'/>
 
 ## Application
 
 In the following figure, a simple test bed is sketched. This test bed consists of two rooms with three devices. The temperature sensor TempOut and a radiator are connected to an OBIX gateway, and the TempIn temperature sensor is part of a pure KNX network. Both segments are connected to the Colibri platform (i.e. the Colibri semantic core) by the utilization of corresponding connectors. The connectors establish a connection to the interface, which manages the access to the underlying data store. In addition, the Colibri optimization component is connected to the Colibri semantic core. Here, the new control values for the building automation devices are computed in order to satisfy user needs and preferences. In this example, indoor and outdoor temperature data are used to switch the radiator on or off.
 
-<img width="40%" src='http://www.auto.tuwien.ac.at/~dschachinger/colibri/example_application.png'/>
+<img width="40%" src='https://raw.githubusercontent.com/dschachinger/colibri/master/misc/img/example_application.png'/>
 
 # License
 

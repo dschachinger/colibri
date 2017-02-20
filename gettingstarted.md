@@ -1,4 +1,4 @@
-<img width="380px" src='http://www.auto.tuwien.ac.at/~dschachinger/colibri/logo_full.png'/>
+<img width="380px" src='https://raw.githubusercontent.com/dschachinger/colibri/master/misc/img/logo_full.png'/>
 
 # Getting started
 
