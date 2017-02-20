@@ -6,6 +6,8 @@ Intelligent control strategies for efficient operation of residential as well as
 
 Colibri project was launched in 2016 by the [Automation Systems Group](http://www.auto.tuwien.ac.at/) at [TU Wien](http://www.tuwien.ac.at/). The development of this smart building energy management system is, amongst others, intended to act as proof-of-concept prototype within several research projects. 
 
+Development of Colibri is partially supported by [netidee](https://www.netidee.at/). News and updates are published on the [netidee page](https://beta.netidee.at/node/330) as well as on [blogspot](http://colibri-suite.blogspot.co.at/).
+
 # Design
 
 ## Architecture
@@ -30,4 +32,4 @@ Colibri consists of multiple projects and components that are partly based on ex
 
 # Contact
 
-[Daniel Schachinger](https://www.auto.tuwien.ac.at/people/view/Daniel_Schachinger/)
+[Daniel Schachinger](https://www.auto.tuwien.ac.at/index.php/projectsites/195-daniel-schachinger)
