@@ -55,8 +55,7 @@ jar
 {
 	manifest 
 	{
-		attributes ( "Import-Package": 
-						"at.ac.tuwien.auto.colibri.data, " +
+		attributes ( "Import-Package": 						
 						"org.osgi.framework" )
 	}
 }

@@ -77,8 +77,6 @@ jar
 							"tuwien.auto.calimero.serial,"+ 
 							"tuwien.auto.calimero.xml,"+
 							"tuwien.auto.calimero.xml.def, "+
-							"at.ac.tuwien.auto.colibri.data, "+
-							"at.ac.tuwien.auto.colibri.connector, "+
 							"org.osgi.framework" )
 	}
 }

@@ -6,9 +6,6 @@ version = '1.0-SNAPSHOT'
 
 description = "colibri OBIX Connector"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
 apply plugin: 'application'
 mainClassName = "connectorClient.Main"
 
@@ -18,6 +15,21 @@ repositories {
      maven { url "http://repo.maven.apache.org/maven2" }
 }
 
+
+eclipse {
+	classpath {
+
+		file {
+			whenMerged { classpath ->
+				classpath.entries.removeAll {
+					entry -> entry.path.contains('JavaSE')
+				}
+			}
+		}
+		
+		containers 'org.eclipse.jdt.launching.JRE_CONTAINER'
+    }
+}
 
 dependencies {
     compile group: 'org.atmosphere', name: 'atmosphere-runtime', version: '2.4.0'

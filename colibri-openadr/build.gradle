@@ -14,10 +14,32 @@ apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = "Utils.Main"
 
-sourceCompatibility = 1.7
+sourceCompatibility = '1.7'
+targetCompatibility = '1.7'
+
+eclipse {
+	classpath {
+
+		file {
+			whenMerged { classpath ->
+				classpath.entries.removeAll {
+					entry -> entry.path.contains('JavaSE')
+				}
+			}
+		}
+		
+		containers 'org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7'
+    }
+}
 
 repositories {
     mavenCentral()
+}
+
+sourceSets {
+	main { 
+		java { srcDirs 'generated/jaxb/java' } 
+	}
 }
 
 dependencies {
@@ -65,7 +87,6 @@ jaxb {
             extension = true
             arg('-XautoNameResolution')
         }
-
     }
 }
 
@@ -74,6 +95,7 @@ compileJava {
     options.compilerArgs << '-XDignore.symbol.file'
     options.fork = true
     options.forkOptions.executable = 'javac'
+	jaxb
 }
 
 run {
