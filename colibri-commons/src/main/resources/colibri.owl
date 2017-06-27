@@ -14,7 +14,7 @@
     <owl:Ontology rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl">
         <owl:versionIRI rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl"/>
         <license xml:lang="en">This work is licensed under a Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/).</license>
-        <rdfs:comment xml:lang="en">This ontology describes the semantic energy management system information model for Colibri.</rdfs:comment>
+        <rdfs:comment xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</rdfs:comment>
     </owl:Ontology>
     
 
@@ -302,6 +302,14 @@
 
     <owl:ObjectProperty rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter">
         <rdfs:range rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Parameter"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasPriority -->
+
+    <owl:ObjectProperty rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasPriority">
+        <rdfs:range rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DataService"/>
     </owl:ObjectProperty>
     
 
