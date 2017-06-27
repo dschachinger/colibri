@@ -1819,6 +1819,14 @@
     
 
 
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#ElectricEnergy -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#ElectricEnergy">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnergyForm"/>
+    </owl:Class>
+    
+
+
     <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnOceanConnector -->
 
     <owl:Class rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnOceanConnector">
@@ -1898,6 +1906,12 @@
             </owl:Restriction>
         </rdfs:subClassOf>
     </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnergyForm -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnergyForm"/>
     
 
 
@@ -3698,6 +3712,14 @@
 
     <owl:Class rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#TemperatureSensor">
         <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#BuildingAutomationDevice"/>
+    </owl:Class>
+    
+
+
+    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#ThermalEnergy -->
+
+    <owl:Class rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#ThermalEnergy">
+        <rdfs:subClassOf rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#EnergyForm"/>
     </owl:Class>
     
 
