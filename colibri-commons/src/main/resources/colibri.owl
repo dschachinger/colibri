@@ -82,6 +82,10 @@
 
     <owl:ObjectProperty rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#covers">
         <owl:inverseOf rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#isCoveredBy"/>
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#covers"/>
+            <rdf:Description rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#contains"/>
+        </owl:propertyChainAxiom>
     </owl:ObjectProperty>
     
 
