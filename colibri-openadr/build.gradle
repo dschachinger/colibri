@@ -25,6 +25,7 @@ eclipse {
 				classpath.entries.removeAll {
 					entry -> entry.path.contains('JavaSE')
 				}
+				classpath.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('generated/jaxb/java', null) )
 			}
 		}
 		
