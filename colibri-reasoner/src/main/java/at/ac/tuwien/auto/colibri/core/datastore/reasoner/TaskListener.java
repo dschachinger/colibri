@@ -29,7 +29,9 @@
 
 package at.ac.tuwien.auto.colibri.core.datastore.reasoner;
 
+import org.apache.jena.rdf.model.Model;
+
 public interface TaskListener
 {
-	public void threadFinished(Runnable r);
+	public void threadFinished(Runnable r, Model model);
 }

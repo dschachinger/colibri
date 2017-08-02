@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!--
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+-->
+
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="684279510" name="matlaboptimizer" preferred-package-type="package.type.exe" target="target.ezdeploy.library" target-name="Library Compiler">
+    <param.appname>matlaboptimizer</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\matlaboptimizer\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.target.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\..\lib\matlaboptimizer\for_redistribution_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\..\lib\matlaboptimizer\for_redistribution</param.output>
+    <param.logdir>${PROJECT_ROOT}\..\lib\matlaboptimizer</param.logdir>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.target.type>subtarget.java.package</param.target.type>
+    <param.support.packages />
+    <param.namespace />
+    <param.classorg />
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <param.user.only.registration>false</param.user.only.registration>
+    <param.net.framework>option.net.framework.default</param.net.framework>
+    <param.assembly.type>false</param.assembly.type>
+    <param.encryption.key.file />
+    <param.net.enable.remoting>false</param.net.enable.remoting>
+    <param.net.tsa.enable>false</param.net.tsa.enable>
+    <param.net.tsa.assembly />
+    <param.net.tsa.interface />
+    <param.net.tsa.namespace />
+    <param.net.tsa.superclass>MatlabOptimizer</param.net.tsa.superclass>
+    <param.net.tsa.metadata />
+    <param.net.tsa.metadata.assembly>C:\Windows\system32</param.net.tsa.metadata.assembly>
+    <param.net.saved.interface />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.target.install.notes />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.embed.ctf />
+      <param.support.packages />
+      <param.namespace />
+      <param.classorg />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+      <param.user.only.registration />
+      <param.net.framework />
+      <param.assembly.type />
+      <param.encryption.key.file />
+      <param.net.enable.remoting />
+      <param.net.tsa.enable />
+      <param.net.tsa.assembly />
+      <param.net.tsa.interface />
+      <param.net.tsa.namespace />
+      <param.net.tsa.superclass />
+      <param.net.tsa.metadata />
+      <param.net.tsa.metadata.assembly />
+      <param.net.saved.interface />
+    </unset>
+    <fileset.exports>
+      <file>${PROJECT_ROOT}\combine.m</file>
+      <file>${PROJECT_ROOT}\construct.m</file>
+      <file>${PROJECT_ROOT}\create.m</file>
+      <file>${PROJECT_ROOT}\crossover.m</file>
+      <file>${PROJECT_ROOT}\design.m</file>
+      <file>${PROJECT_ROOT}\improve.m</file>
+      <file>${PROJECT_ROOT}\initconstraints.m</file>
+      <file>${PROJECT_ROOT}\initdata.m</file>
+      <file>${PROJECT_ROOT}\initinput.m</file>
+      <file>${PROJECT_ROOT}\inittraining.m</file>
+      <file>${PROJECT_ROOT}\model.m</file>
+      <file>${PROJECT_ROOT}\move.m</file>
+      <file>${PROJECT_ROOT}\mutate.m</file>
+      <file>${PROJECT_ROOT}\optimize.m</file>
+      <file>${PROJECT_ROOT}\predict.m</file>
+      <file>${PROJECT_ROOT}\print.m</file>
+      <file>${PROJECT_ROOT}\select.m</file>
+      <file>${PROJECT_ROOT}\simulate.m</file>
+      <file>${PROJECT_ROOT}\split.m</file>
+      <file>${PROJECT_ROOT}\validate.m</file>
+    </fileset.exports>
+    <fileset.classes>
+      <entity.package name="">
+        <entity.class name="MatlabOptimizer">
+               <file>${PROJECT_ROOT}\combine.m</file>
+			   <file>${PROJECT_ROOT}\construct.m</file>
+			   <file>${PROJECT_ROOT}\create.m</file>
+			   <file>${PROJECT_ROOT}\crossover.m</file>
+			   <file>${PROJECT_ROOT}\design.m</file>
+			   <file>${PROJECT_ROOT}\improve.m</file>
+			   <file>${PROJECT_ROOT}\initconstraints.m</file>
+			   <file>${PROJECT_ROOT}\initdata.m</file>
+			   <file>${PROJECT_ROOT}\initinput.m</file>
+			   <file>${PROJECT_ROOT}\inittraining.m</file>
+			   <file>${PROJECT_ROOT}\model.m</file>
+			   <file>${PROJECT_ROOT}\move.m</file>
+			   <file>${PROJECT_ROOT}\mutate.m</file>
+			   <file>${PROJECT_ROOT}\optimize.m</file>
+			   <file>${PROJECT_ROOT}\predict.m</file>
+			   <file>${PROJECT_ROOT}\print.m</file>
+			   <file>${PROJECT_ROOT}\select.m</file>
+			   <file>${PROJECT_ROOT}\simulate.m</file>
+			   <file>${PROJECT_ROOT}\split.m</file>
+			   <file>${PROJECT_ROOT}\validate.m</file>
+        </entity.class>
+      </entity.package>
+    </fileset.classes>
+    <fileset.resources />
+    <fileset.depfun />
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing" name="matlaboptimizer.jar" optional="false">${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing\matlaboptimizer.jar</file>
+      <file location="${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing" name="readme.txt" optional="true">${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing" name="doc" optional="false">${PROJECT_ROOT}\..\lib\matlaboptimizer\for_testing\doc</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2016b</root>
+      <toolboxes>
+        <toolbox name="fixedpoint" />
+        <toolbox name="matlabcoder" />
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="embeddedcoder" />
+      </toolboxes>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>

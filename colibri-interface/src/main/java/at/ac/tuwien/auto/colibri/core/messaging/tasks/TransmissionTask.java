@@ -32,13 +32,16 @@ package at.ac.tuwien.auto.colibri.core.messaging.tasks;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.TransmissionException;
-import at.ac.tuwien.auto.colibri.core.messaging.types.Message;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.TransmissionException;
+import at.ac.tuwien.auto.colibri.messaging.types.Message;
 
 /**
- * This task is used to send a message to its peer.
+ * This task is
+ * import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+ * import at.ac.tuwien.auto.colibri.messaging.exceptions.TransmissionException;
+ * import at.ac.tuwien.auto.colibri.messaging.types.Message; used to send a message to its peer.
  */
 public class TransmissionTask extends TimerTask
 {
@@ -46,11 +49,6 @@ public class TransmissionTask extends TimerTask
 	 * Logger instance
 	 */
 	private static final Logger log = Logger.getLogger(ObservationTask.class.getName());
-
-	/**
-	 * Registry reference
-	 */
-	private Registry registry;
 
 	/**
 	 * Message to be sent
@@ -74,10 +72,9 @@ public class TransmissionTask extends TimerTask
 	 * @param message Message to be sent
 	 * @param maxRetries Max number of retries
 	 */
-	public TransmissionTask(Registry registry, Message message, int maxRetries)
+	public TransmissionTask(Message message, int maxRetries)
 	{
 		this.count = 0;
-		this.registry = registry;
 		this.message = message;
 		this.max = maxRetries;
 	}
@@ -86,8 +83,9 @@ public class TransmissionTask extends TimerTask
 	 * Sending of message to its peer.
 	 * 
 	 * @param message Message
+	 * @throws InterfaceException
 	 */
-	public void send(Message message)
+	public void send(Message message) throws InterfaceException
 	{
 		message.getPeer().send(message);
 	}
@@ -104,10 +102,18 @@ public class TransmissionTask extends TimerTask
 			InterfaceException e = new TransmissionException("Message was not acknowledged by receiver", message);
 
 			// send exception's status
-			this.send(e.getStatus());
+			try
+			{
+				this.send(e.getStatus());
+			}
+			catch (InterfaceException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 
 			// remove this transmission
-			this.registry.removeTransmission(message);
+			Observations.getInstance().removeTransmission(message);
 
 			// end execution
 			return;
@@ -120,7 +126,15 @@ public class TransmissionTask extends TimerTask
 			log.info("Retry message sending (attempt = " + count + ", message-id = " + message.toString() + ")");
 
 		// send message
-		this.send(this.message);
+		try
+		{
+			this.send(this.message);
+		}
+		catch (InterfaceException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// increment count
 		this.count++;

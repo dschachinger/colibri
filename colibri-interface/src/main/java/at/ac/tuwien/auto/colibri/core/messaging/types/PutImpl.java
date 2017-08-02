@@ -29,18 +29,17 @@
 
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.Ontology;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
@@ -48,100 +47,54 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.vocabulary.RDF;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.Reasoner;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.ReasonerLevel;
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InconsistencyException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ProcessingException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
 import at.ac.tuwien.auto.colibri.core.messaging.tasks.Observation;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InconsistencyException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Put;
 
-public class PutImpl extends MessageApprovedImpl implements Put, Message
+public class PutImpl extends Put implements Processible
 {
-	public PutImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "PUT";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
 		// create model for querying
-		Model model = null;
+		Model model = this.getModel();
 
-		// create plain model without reasoner
-		Model plain = ModelFactory.createDefaultModel();
+		// TODO: reasoning bei put wegnehmen!
 
+		// do reasoning
 		if (Config.getInstance().reasoner)
 		{
-			// creating reasoner
-			Reasoner reasoner = ReasonerRegistry.getRDFSReasoner();
-			reasoner = reasoner.bindSchema(registry.getOntology());
+			OntModel ontm = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM, model);
+			Ontology o = ontm.createOntology("http://temp");
+			o.addImport(ontm.createResource(Config.getInstance().ontology));
+			model = ontm;
 
-			// create ontology model specification
-			OntModelSpec ontModelSpec = OntModelSpec.RDFS_MEM_RDFS_INF;
-			ontModelSpec.setReasoner(reasoner);
-
-			// create inferred model with RDFS reasoner
-			model = ModelFactory.createOntologyModel(ontModelSpec);
-		}
-
-		// create input stream
-		InputStream is = new ByteArrayInputStream(this.getContent().getBytes(StandardCharsets.UTF_8));
-
-		try
-		{
-			// read model from content
-			switch (this.getContentType())
+			try
 			{
-				case RDF_XML:
-					plain.read(is, null, "RDF/XML");
-					break;
-				case TURTLE:
-					plain.read(is, null, "TURTLE");
-					break;
-				default:
-					throw new ProcessingException("content type " + this.getContentType() + " is not supported for message type + " + this.getMessageType(), this.getPeer());
+				Reasoner reasoner = new Reasoner(model);
+				Model inferredModel = reasoner.doReasoning(ReasonerLevel.REASONING_MINIMAL, false);
+				model = model.union(inferredModel);
+			}
+			catch (OWLOntologyStorageException | OWLOntologyCreationException | IOException e)
+			{
+				throw new ProcessingException("Internal reasoning error (" + e.getMessage() + ")", this);
 			}
 		}
-		catch (Exception e)
-		{
-			throw new SyntaxException("content cannot be parsed", this);
-		}
-
-		try
-		{
-			// close input stream
-			is.close();
-		}
-		catch (IOException e)
-		{
-			throw new ProcessingException(e.getMessage(), this);
-		}
-
-		// set query model
-		if (Config.getInstance().reasoner)
-			model.add(plain);
-		else
-			model = plain;
 
 		// model to store
 		Model result = ModelFactory.createDefaultModel();
@@ -191,10 +144,8 @@ public class PutImpl extends MessageApprovedImpl implements Put, Message
 			// update models: values
 			for (Resource r : values)
 			{
-				Resource p_v = plain.getResource(r.getURI());
-
-				result.add(p_v.listProperties());
-				temp.add(p_v.listProperties());
+				result.add(r.listProperties());
+				temp.add(r.listProperties());
 
 				result.add(datavalue, pHasValue, r);
 			}
@@ -205,7 +156,6 @@ public class PutImpl extends MessageApprovedImpl implements Put, Message
 			for (int i = 0; i < dataValues.size(); i++)
 			{
 				Resource v = dataValues.get(i);
-				Resource p = plain.getResource(v.getURI());
 
 				// get values to data value
 				List<Resource> values = new ArrayList<Resource>();
@@ -228,18 +178,17 @@ public class PutImpl extends MessageApprovedImpl implements Put, Message
 				Model temp = addedServices.get(service);
 
 				// update models: data value and service
-				result.add(p.listProperties());
-				result.add(result.createResource(service), pHasDataValue, p);
+				result.add(v.listProperties());
+				result.add(result.createResource(service), pHasDataValue, v);
 
-				temp.add(p.listProperties());
-				temp.add(result.createResource(service), pHasDataValue, p);
+				temp.add(v.listProperties());
+				temp.add(result.createResource(service), pHasDataValue, v);
 
 				// update models: values
 				for (Resource r : values)
 				{
-					Resource p_v = plain.getResource(r.getURI());
-					result.add(p_v.listProperties());
-					temp.add(p_v.listProperties());
+					result.add(r.listProperties());
+					temp.add(r.listProperties());
 				}
 			}
 		}
@@ -271,7 +220,7 @@ public class PutImpl extends MessageApprovedImpl implements Put, Message
 
 				List<Observation> observes = null;
 
-				observes = registry.getObservations(new URI(service), false);
+				observes = Observations.getInstance().getObservations(new URI(service), false);
 
 				// write model
 				StringWriter sw = new StringWriter();

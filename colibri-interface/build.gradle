@@ -40,6 +40,8 @@ eclipse
 				def node = it.asNode()
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-messenger', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-reasoner', exported:'true'])
 			}
 		}
 	}
@@ -49,16 +51,21 @@ dependencies
 {	
 	provided project(':colibri-osgi')
 	provided project(':colibri-commons')
+	provided project(':colibri-reasoner')
+	provided project(':colibri-messenger')
 }
 
 jar 
 {
+	baseName = "at.ac.tuwien.auto.colibri.interface.bundle"
+	
 	manifest 
 	{
-		attributes ("Export-Package":
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.interface.bundle",
+					
+					"Export-Package":
 		
 						"at.ac.tuwien.auto.colibri.core.messaging, " +
-						"at.ac.tuwien.auto.colibri.core.messaging.exceptions, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.handling, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.queue, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.tasks, " +
@@ -68,6 +75,13 @@ jar
 																	
 						"at.ac.tuwien.auto.colibri.commons, " +
 						
+						"at.ac.tuwien.auto.colibri.core.datastore.reasoner, " +
+						
+						"at.ac.tuwien.auto.colibri.messaging, " +
+						"at.ac.tuwien.auto.colibri.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.messaging.types, " +
+						
 						"org.apache.jena.rdf.model, " + 
 						"org.apache.jena.update, " +
 						"org.apache.jena.sparql.core, " +
@@ -76,6 +90,8 @@ jar
 						"org.apache.jena.query, " +
 						"org.apache.jena.ontology, " +
 						"org.apache.jena.vocabulary, " +
+						
+						"org.semanticweb.owlapi.model, " +
 											
 						"org.osgi.framework, "+
 						

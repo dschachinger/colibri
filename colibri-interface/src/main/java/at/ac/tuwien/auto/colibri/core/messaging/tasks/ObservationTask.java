@@ -35,11 +35,11 @@ import java.util.TimeZone;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
 import at.ac.tuwien.auto.colibri.core.messaging.types.GetImpl;
-import at.ac.tuwien.auto.colibri.core.messaging.types.Observe;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.SyntaxException;
+import at.ac.tuwien.auto.colibri.messaging.types.Observe;
 
 /**
  * This task is periodically executed to check observed services for updates.

@@ -42,6 +42,7 @@ eclipse
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-datastore', exported:'true'])
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-interface', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-messenger', exported:'true'])
 			}
 		}
 	}
@@ -57,6 +58,7 @@ dependencies
 	provided project(':colibri-osgi')
 	provided project(':colibri-datastore')
 	provided project(':colibri-interface')
+	provided project(':colibri-messenger')
 		
 	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: '8.0.36'
 	compile group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: '8.0.36'
@@ -82,6 +84,8 @@ tasks.eclipse{}.doLast{
 
 jar 
 {
+	baseName = "at.ac.tuwien.auto.colibri.core.bundle"
+		
     into('') 
 	{
         from configurations.libs
@@ -89,18 +93,24 @@ jar
 	
 	manifest 
 	{
-		attributes ("Main-Class": "at.ac.tuwien.auto.colibri.core.server.ColibriCore",
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.core.bundle",
+
+					"Main-Class": "at.ac.tuwien.auto.colibri.core.server.ColibriCore",
 		
 					"Bundle-Activator": "at.ac.tuwien.auto.colibri.core.server.ColibriCoreActivator",
 					
 					"Import-Package":
 											
+						"at.ac.tuwien.auto.colibri.messaging, " +
+						"at.ac.tuwien.auto.colibri.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.messaging.types, " +
+						
 						"at.ac.tuwien.auto.colibri.core.messaging, " +
-						"at.ac.tuwien.auto.colibri.core.messaging.exceptions, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.handling, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.queue, " +
 						"at.ac.tuwien.auto.colibri.core.messaging.tasks, " +
-						"at.ac.tuwien.auto.colibri.core.messaging.types, " +
+						"at.ac.tuwien.auto.colibri.core.messaging.types, " +	
 						
 						"at.ac.tuwien.auto.colibri.core.datastore, " +	
 										

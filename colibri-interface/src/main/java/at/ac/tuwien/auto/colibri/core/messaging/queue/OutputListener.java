@@ -32,10 +32,9 @@ package at.ac.tuwien.auto.colibri.core.messaging.queue;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
-import at.ac.tuwien.auto.colibri.core.messaging.Peer;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.Peer;
 
 /**
  * Queue listener for input messages.
@@ -53,9 +52,9 @@ public class OutputListener extends QueueListenerImpl
 	 * @param store Data store
 	 * @param registry Registry
 	 */
-	public OutputListener(Datastore store, Registry registry)
+	public OutputListener(Datastore store)
 	{
-		super(store, registry, QueueType.OUTPUT, Config.getInstance().output);
+		super(store, QueueType.OUTPUT, Config.getInstance().output);
 	}
 
 	@Override

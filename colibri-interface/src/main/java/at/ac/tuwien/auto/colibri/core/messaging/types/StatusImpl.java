@@ -32,102 +32,15 @@ package at.ac.tuwien.auto.colibri.core.messaging.types;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.types.Status;
 
-public class StatusImpl extends MessageImpl implements Status, Message
+public class StatusImpl extends Status implements Processible
 {
 	private static final Logger log = Logger.getLogger(StatusImpl.class.getName());
 
-	private Code code = null;
-
-	private String text = null;
-
-	public StatusImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		this(Code.OK, "OK");
-	}
-
-	public StatusImpl(Code code, String text)
-	{
-		super();
-
-		this.setContentType(ContentType.PLAIN);
-
-		this.code = code;
-		this.text = text;
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "STA";
-	}
-
-	@Override
-	public Code getCode()
-	{
-		return code;
-	}
-
-	@Override
-	public String getText()
-	{
-		return this.text;
-	}
-
-	@Override
-	public String getContent()
-	{
-		return (this.code.toString() + "  " + this.text).trim();
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		// split content
-		int index = content.indexOf(" ");
-
-		String codeStr = content;
-		if (index >= 0)
-			codeStr = content.substring(0, index);
-
-		// get code
-		Code code = null;
-		try
-		{
-			code = Code.findCode(Integer.parseInt(codeStr));
-		}
-		catch (NumberFormatException e)
-		{
-			throw new SyntaxException("error parsing status message content (" + e.getMessage() + ")", this);
-		}
-
-		if (code == null)
-			throw new SyntaxException("status code not found (" + codeStr + ")", this);
-
-		// set code
-		this.code = code;
-
-		// set text
-		if (index >= 0)
-		{
-			this.text = content.substring(index + 1).trim();
-		}
-		else
-		{
-			this.text = "";
-		}
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		// check content type
-		if (this.getContentType() != ContentType.PLAIN)
-			throw new SyntaxException("content type must be text/plain", this);
-
 		// write log message if status contains error
 		if (this.getCode() != Code.OK)
 		{

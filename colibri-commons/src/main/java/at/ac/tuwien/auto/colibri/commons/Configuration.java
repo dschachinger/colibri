@@ -81,6 +81,10 @@ public abstract class Configuration
 						// string field
 						else if (field.getType().equals(String.class))
 							field.set(this, properties.getProperty(field.getName()));
+						
+						// float field
+						else if (field.getType().equals(Float.class) || field.getType().equals(float.class))
+							field.set(this, Float.valueOf(properties.getProperty(field.getName())));
 
 						// boolean field
 						else if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))

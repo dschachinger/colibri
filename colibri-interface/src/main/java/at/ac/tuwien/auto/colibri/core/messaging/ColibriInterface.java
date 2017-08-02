@@ -45,11 +45,6 @@ public class ColibriInterface
 	private static final Logger log = Logger.getLogger(ColibriInterface.class.getName());
 
 	/**
-	 * Central registry object for observations, connectors, transmissions
-	 */
-	private Registry registry = null;
-
-	/**
 	 * Listener to input queue
 	 */
 	private InputListener inputListener = null;
@@ -66,12 +61,9 @@ public class ColibriInterface
 	{
 		log.info("Initializing Colibri interface");
 
-		// create registry
-		this.registry = new Registry();
-
 		// create listeners
-		this.inputListener = new InputListener(datastore, registry);
-		this.outputListener = new OutputListener(datastore, registry);
+		this.inputListener = new InputListener(datastore);
+		this.outputListener = new OutputListener(datastore);
 	}
 
 	/**
@@ -94,7 +86,7 @@ public class ColibriInterface
 		log.info("Stopping Colibri interface");
 
 		// clear registry
-		this.registry.clean();
+		Observations.getInstance().clean();
 
 		// stop listeners
 		this.inputListener.stop();

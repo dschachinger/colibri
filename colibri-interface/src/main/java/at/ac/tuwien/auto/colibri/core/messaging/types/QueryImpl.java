@@ -34,41 +34,21 @@ import java.util.List;
 
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.types.Query;
 
-public class QueryImpl extends MessageApprovedImpl implements Query, Message
+public class QueryImpl extends Query implements Processible
 {
-	public QueryImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setContentType(ContentType.SPARQL_QUERY);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "QUE";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.SPARQL_QUERY)
-			throw new SyntaxException("content type must be application/sparql-query", this);
-
 		try
 		{
 			// handle ask queries
@@ -119,12 +99,31 @@ public class QueryImpl extends MessageApprovedImpl implements Query, Message
 
 					content += "\"" + var + "\" : { \"type\" : ";
 
-					if (node.isURIResource())
-						content += "\"uri\", \"value\": ";
-					else
-						content += "\"literal\", \"value\": ";
+					if (node != null)
+					{
+						if (node.isURIResource())
+						{
+							content += "\"uri\", \"value\": \"" + node.toString() + "\"} ";
+						}
+						else if (node.isLiteral())
+						{
+							Literal l = node.asLiteral();
 
-					content += "\"" + node.toString() + "\"} ";
+							content += "\"literal\", \"value\": ";
+							content += "\"" + l.getValue().toString() + "\"";
+
+							if (l.getDatatype() != null)
+							{
+								content += ", \"datatype\": \"" + l.getDatatype().getURI() + "\"";
+							}
+
+							content += " } ";
+						}
+					}
+					else
+					{
+						content += "\"literal\",\"value\": \"\" } ";
+					}
 				}
 
 				content += "}\n";

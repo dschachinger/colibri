@@ -31,5 +31,14 @@ description = 'Colibri - OSGi wrapper'
 
 dependencies
 {
-	compile group: 'org.apache.felix', name: 'org.osgi.core', version: '1.4.0'	
+	compile group: 'org.osgi', name: 'org.osgi.core', version: '6.0.0'
+}
+
+jar 
+{
+	baseName = "at.ac.tuwien.auto.colibri.osgi.bundle"
+	manifest 
+	{
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.osgi.bundle")
+	}
 }

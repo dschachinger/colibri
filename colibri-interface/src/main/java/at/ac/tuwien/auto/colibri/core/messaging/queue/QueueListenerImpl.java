@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
 import at.ac.tuwien.auto.colibri.core.messaging.handling.Processor;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 
@@ -65,11 +64,6 @@ public abstract class QueueListenerImpl implements QueueListener
 	private Datastore datastore = null;
 
 	/**
-	 * Registry object
-	 */
-	private Registry registry = null;
-
-	/**
 	 * Queue type
 	 */
 	private QueueType type = null;
@@ -82,12 +76,11 @@ public abstract class QueueListenerImpl implements QueueListener
 	 * @param type Type of queue
 	 * @param log Logging instance
 	 */
-	public QueueListenerImpl(Datastore store, Registry registry, QueueType type, int threads)
+	public QueueListenerImpl(Datastore store, QueueType type, int threads)
 	{
 		log.info("Initializing queue listener (" + type.toString() + ")");
 
 		// set variables
-		this.registry = registry;
 		this.datastore = store;
 		this.type = type;
 		this.threads = threads;
@@ -109,7 +102,7 @@ public abstract class QueueListenerImpl implements QueueListener
 		// create and start threads
 		for (int i = 0; i < this.threads; i++)
 		{
-			Processor h = new Processor(this, i, datastore, registry, type);
+			Processor h = new Processor(this, i, datastore, type);
 			h.start();
 
 			this.messageHandlers.add(h);

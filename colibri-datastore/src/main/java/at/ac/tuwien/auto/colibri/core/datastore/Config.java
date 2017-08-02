@@ -63,12 +63,12 @@ public class Config extends Configuration
 	/**
 	 * URI of data model
 	 */
-	public String dataModelUri = "http://www.auto.tuwien.ac.at/model";
+	public String dataModelUri = "";
 
 	/**
 	 * URI of Colibri ontology model
 	 */
-	public String colibriModelUri = "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl";
+	public String colibriModelUri = "";
 
 	/**
 	 * Directory of triple store
@@ -79,16 +79,6 @@ public class Config extends Configuration
 	 * Path to base file for ontology loading
 	 */
 	public String ontologyFileBase;
-
-	/**
-	 * Path to ontology out file
-	 */
-	public String ontologyFileOut;
-
-	/**
-	 * Path to temporary ontology file
-	 */
-	public String ontologyFileTemp;
 
 	/**
 	 * Path of buffer file

@@ -31,8 +31,8 @@ package at.ac.tuwien.auto.colibri.core.messaging.tasks;
 
 import java.util.Date;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.types.Message;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.types.Message;
 
 /**
  * This class invokes the transmission of a message and starts an optional retry task.
@@ -51,8 +51,9 @@ public class Transmission extends Executable
 	 * @param message Message reference
 	 * @param period Retry period in milliseconds
 	 * @param maxRetries Max number of retries
+	 * @throws InterfaceException
 	 */
-	public Transmission(Registry registry, Message message, long period, int maxRetries)
+	public Transmission(Message message, long period, int maxRetries)
 	{
 		super(new Date(), period);
 
@@ -60,7 +61,7 @@ public class Transmission extends Executable
 		this.message = message;
 
 		// create send task
-		TransmissionTask s = new TransmissionTask(registry, message, maxRetries);
+		TransmissionTask s = new TransmissionTask(message, maxRetries);
 
 		if (this.message.isConfirmable())
 		{
@@ -70,7 +71,15 @@ public class Transmission extends Executable
 		else
 		{
 			// otherwise, send message directly
-			s.send(message);
+			try
+			{
+				s.send(message);
+			}
+			catch (InterfaceException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

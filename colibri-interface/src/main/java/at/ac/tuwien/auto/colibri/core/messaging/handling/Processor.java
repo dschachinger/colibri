@@ -33,13 +33,16 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueListener;
-import at.ac.tuwien.auto.colibri.core.messaging.types.MessageImpl;
+import at.ac.tuwien.auto.colibri.core.messaging.types.Processible;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.PermissionException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.types.Message;
 
 /**
  * A processor is used to read a message from a given queue and processes it.
@@ -62,11 +65,6 @@ public class Processor extends Thread
 	private Datastore datastore = null;
 
 	/**
-	 * Registry reference
-	 */
-	private Registry registry = null;
-
-	/**
 	 * Type of queue that is processed
 	 */
 	private QueueType type = null;
@@ -85,13 +83,12 @@ public class Processor extends Thread
 	 * @param registry Registry reference
 	 * @param type Queue type
 	 */
-	public Processor(QueueListener listener, int id, Datastore datastore, Registry registry, QueueType type)
+	public Processor(QueueListener listener, int id, Datastore datastore, QueueType type)
 	{
 		// set references
 		this.listener = listener;
 		this.id = id;
 		this.datastore = datastore;
-		this.registry = registry;
 		this.type = type;
 	}
 
@@ -151,7 +148,7 @@ public class Processor extends Thread
 			Date now = new Date();
 
 			// read message from buffer
-			MessageImpl m = (MessageImpl) QueueHandler.getInstance().getQueue(this.type).poll();
+			Message m = (Message) QueueHandler.getInstance().getQueue(this.type).poll();
 
 			// run message checks
 			if (m.getExpires() != null && m.getExpires().getTime() < now.getTime())
@@ -159,21 +156,32 @@ public class Processor extends Thread
 			if (m.getDate() != null && m.getDate().getTime() > now.getTime())
 				throw new ProcessingException("message date is in future (date:" + m.getDate().toString() + ", now: " + now.toString(), m);
 
+			// message needs prior registration
+			if (m.isApproved())
+			{
+				// check if peer is registered
+				if (Registry.getInstance().getConnector(m.getPeer()) == null)
+					throw new PermissionException("peer needs to be registered", m);
+			}
+
+			// set log
+			log.info("Process " + m.getMessageType() + " message");
+
 			// input processing
 			if (this.type == QueueType.INPUT)
 			{
 				// acknowledge referenced message
-				registry.removeTransmission(m.getReference());
+				Observations.getInstance().removeTransmission(m.getReference());
 
 				// process message
-				m.process(datastore, registry);
+				((Processible) m).process(datastore);
 			}
 
 			// output processing
 			if (this.type == QueueType.OUTPUT)
 			{
 				// add message to confirmable list
-				registry.addTransmission(m);
+				Observations.getInstance().addTransmission(m);
 			}
 		}
 		catch (InterfaceException e)

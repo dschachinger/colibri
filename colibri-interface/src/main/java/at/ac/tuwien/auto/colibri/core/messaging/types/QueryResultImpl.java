@@ -30,30 +30,14 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InvalidObjectException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InvalidObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.QueryResult;
 
-public class QueryResultImpl extends MessageApprovedImpl implements QueryResult, Message
+public class QueryResultImpl extends QueryResult implements Processible
 {
-	public QueryResultImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setContentType(ContentType.SPARQL_RESULT_JSON);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "QRE";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
 		// end processing
 		throw new InvalidObjectException("query result messages are not accepted.", this);
 	}

@@ -30,39 +30,17 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.types.Update;
 
-public class UpdateImpl extends MessageApprovedImpl implements Update, Message
+public class UpdateImpl extends Update implements Processible
 {
-	public UpdateImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setConfirmable(true);
-		this.setContentType(ContentType.SPARQL_UPDATE);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "UPD";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.SPARQL_UPDATE)
-			throw new SyntaxException("content type must be application/sparql-update", this);
-
 		try
 		{
 			// run query

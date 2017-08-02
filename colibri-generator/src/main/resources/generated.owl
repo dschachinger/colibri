@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY dc "http://purl.org/dc/elements/1.1/" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+    <!ENTITY colibri "https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#" >
+]>
+
+
+<rdf:RDF xmlns="http://www.auto.tuwien.ac.at/example/"
+     xml:base="http://www.auto.tuwien.ac.at/example/"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <owl:Ontology rdf:about="http://www.auto.tuwien.ac.at/example/">
+        <owl:imports rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl"/>
+    </owl:Ontology>
+	
+	<!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+	
+	<!-- http://www.auto.tuwien.ac.at/example/unit_cm -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/unit_cm">
+        <rdf:type rdf:resource="&colibri;Unit"/>
+        <colibri:scaling rdf:datatype="&xsd;float">0.01</colibri:scaling>
+        <colibri:hasBaseUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unit_cm_component"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/unit_cm_component -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/unit_cm_component">
+        <rdf:type rdf:resource="&colibri;UnitComponent"/>
+        <colibri:power rdf:datatype="&xsd;int">1</colibri:power>
+        <colibri:hasUnit rdf:resource="&colibri;Meter"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/unit_celsius -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/unit_celsius">
+	    <rdf:type rdf:resource="&colibri;Unit"/>
+        <colibri:offset rdf:datatype="&xsd;float">-273.15</colibri:offset>
+        <colibri:hasBaseUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unit_celsius_component"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/unit_celsius_component -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/unit_celsius_component">
+        <rdf:type rdf:resource="&colibri;UnitComponent"/>
+        <colibri:power rdf:datatype="&xsd;int">1</colibri:power>
+        <colibri:hasUnit rdf:resource="&colibri;Kelvin"/>
+    </owl:NamedIndividual>
+    
+	
+	
+    <!-- http://www.auto.tuwien.ac.at/example/glass -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/glass">
+        <rdf:type rdf:resource="&colibri;Material"/>
+    </owl:NamedIndividual>
+    
+    
+    
+    <!-- http://www.auto.tuwien.ac.at/example/param_time -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/time_param">
+        <rdf:type rdf:resource="&colibri;Parameter"/>
+        <rdf:type rdf:resource="&colibri;TimeParameter"/>
+    </owl:NamedIndividual>
+	
+	
+		
+[XXX]
+
+
+
+</rdf:RDF>

@@ -41,12 +41,21 @@ subprojects {
 	{
 		mavenCentral()
 		jcenter()
+		
+		//mavenCentral name: "temp", artifactUrls: ["https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/"]
 	}
 	
 	configurations
 	{
 		provided
 	}
+	
+	configurations.all 
+	{
+		exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
+	
+    task listAllDependencies(type: DependencyReportTask) { }
 	
 	sourceSets 
 	{	
@@ -88,7 +97,7 @@ subprojects {
 
 ext {	
 
-	String felixDir = "felix-framework-5.4.0"
+	String felixDir = "felix-framework-5.6.4"
 	
 	felix = file(felixDir)
 	felixConfFile = file(felixDir + '/conf/config.properties')
@@ -119,14 +128,15 @@ task felix {
 	
 	doFirst
 	{
-		println "setting up Felix 5.4.0 at " + felix.absolutePath
+		println "setting up Felix 5.6.4 at " + felix.absolutePath
 		
 		if(!felix.exists())
 		{
-			println "download Felix 5.4.0 distribution"
-			ant.get(src:"https://repo1.maven.org/maven2/org/apache/felix/org.apache.felix.main.distribution/5.4.0/org.apache.felix.main.distribution-5.4.0.zip", dest:"org.apache.felix.main.distribution-5.4.0.zip", verbose:true)
-			ant.unzip(src:"org.apache.felix.main.distribution-5.4.0.zip", dest:file('.').absolutePath)
-			ant.delete(file:"org.apache.felix.main.distribution-5.4.0.zip")
+			println "download Felix 5.6.4 distribution"			
+			ant.get(src:"http://mirror.klaus-uwe.me/apache//felix/org.apache.felix.main.distribution-5.6.4.zip", 			
+			dest:"org.apache.felix.main.distribution-5.6.4.zip", verbose:true)
+			ant.unzip(src:"org.apache.felix.main.distribution-5.6.4.zip", dest:file('.').absolutePath)
+			ant.delete(file:"org.apache.felix.main.distribution-5.6.4.zip")
 		}
 		
 		println "updating Felix config.properties file"			

@@ -30,6 +30,7 @@
 package at.ac.tuwien.auto.colibri.core.datastore;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.atlas.lib.StrUtils;
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -48,7 +50,6 @@ import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.sparql.core.Quad;
 import org.apache.jena.update.UpdateExecutionFactory;
@@ -73,6 +74,18 @@ public class ColibriDatastore implements Datastore
 	public ColibriDatastore(DataSource ds)
 	{
 		log.info("Starting Colibri data store ...");
+
+		// TODO: temp
+		try
+		{
+			File tdbDir = new File(Config.getInstance().tdbDirectory);
+			if (tdbDir.exists())
+				FileUtils.deleteDirectory(tdbDir);
+		}
+		catch (IOException e)
+		{			
+			e.printStackTrace();
+		}
 
 		ontology = new Ontology();
 		database = new DatabasePostgre(ds);
@@ -133,11 +146,11 @@ public class ColibriDatastore implements Datastore
 		ArrayList<DataValue> topDataValues = new ArrayList<DataValue>();
 		ArrayList<String> failedDataValues = new ArrayList<String>();
 		Node nType = NodeFactory.createURI("http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-		Node nDataValue = NodeFactory.createURI("https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DataValue");
-		Node nHasValue = NodeFactory.createURI("https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue");
-		Node nValue = NodeFactory.createURI("https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value");
-		Node nHasParameter = NodeFactory.createURI("https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter");
-		Node nHasDataValue = NodeFactory.createURI("https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasDataValue");
+		Node nDataValue = NodeFactory.createURI(Config.getInstance().colibriModelUri + "#DataValue");
+		Node nHasValue = NodeFactory.createURI(Config.getInstance().colibriModelUri + "#hasValue");
+		Node nValue = NodeFactory.createURI(Config.getInstance().colibriModelUri + "#value");
+		Node nHasParameter = NodeFactory.createURI(Config.getInstance().colibriModelUri + "#hasParameter");
+		Node nHasDataValue = NodeFactory.createURI(Config.getInstance().colibriModelUri + "#hasDataValue");
 
 		// Get instances of type DataValue
 		Iterator<Quad> datavalues = data.asDatasetGraph().find(Node.ANY, Node.ANY, nType, nDataValue);
@@ -330,7 +343,7 @@ public class ColibriDatastore implements Datastore
 		DataConfigurationMapping dcm = null;
 		String sparqlQueryString = StrUtils.strjoinNL(
 				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ",
-				"PREFIX colibri: <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#> ",
+				"PREFIX colibri: <" + Config.getInstance().colibriModelUri + "#> ",
 				"SELECT ?service ?dataconf ?parent ",
 				"WHERE { ?service rdf:type colibri:DataService . ",
 				"?dataconf rdf:type colibri:DataConfiguration . ",
@@ -363,11 +376,11 @@ public class ColibriDatastore implements Datastore
 	/**
 	 * Start reasoning
 	 */
-	public void doReasoning()
+	public void doFullReasoning()
 	{
 		try
 		{
-			ontology.doReasoning();
+			ontology.doFullReasoning();
 		}
 		catch (OWLOntologyCreationException | OWLOntologyStorageException | IOException e)
 		{
@@ -479,58 +492,14 @@ public class ColibriDatastore implements Datastore
 		PGPoolingDataSource source = new PGPoolingDataSource();
 		source.setDataSourceName("jdbc/colibri");
 		source.setServerName("localhost");
-		source.setDatabaseName("colibri");
+		source.setDatabaseName("EnergyBase");
 		source.setUser("postgres");
 		source.setPassword("sa");
 		source.setMaxConnections(10);
 
 		ColibriDatastore ds = new ColibriDatastore(source);
-		ResultSet rs = null;
 
-		String spar = StrUtils.strjoinNL(
-				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-				"PREFIX def: <http://www.auto.tuwien.ac.at/example/>",
-				"PREFIX colibri: <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#>",
-				"SELECT ?unit WHERE {",
-				"?unit rdf:type colibri:Unit . ",
-				"}");
-
-		log.info(Boolean.toString(ds.exists(spar)));
-
-		String spar2 = StrUtils.strjoinNL(
-				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-				"PREFIX def: <http://www.auto.tuwien.ac.at/example/>",
-				"PREFIX colibri: <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#>",
-				"SELECT ?s WHERE {",
-				"?s rdf:type colibri:window . ",
-				"}");
-
-		try
-		{
-			rs = ds.select(spar2);
-			ResultSetFormatter.out(rs);
-		}
-		catch (Exception e2)
-		{
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-
-		String spar3 = StrUtils.strjoinNL(
-				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
-				"PREFIX def: <http://www.auto.tuwien.ac.at/example/>",
-				"PREFIX colibri: <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#>",
-				"ASK { ?x rdf:type colibri:window . }");
-
-		try
-		{
-			log.info(Boolean.toString(ds.ask(spar3)));
-		}
-		catch (Exception e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		ds.doFullReasoning();
 
 		// Long l = Math.round(Math.random() * 100);
 		// String sparqlUpdateString = StrUtils.strjoinNL(
@@ -538,81 +507,73 @@ public class ColibriDatastore implements Datastore
 		// "PREFIX def: <http://www.auto.tuwien.ac.at/example/>",
 		// "PREFIX colibri:
 		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#>",
-		//
 		// "INSERT DATA { ",
 		// "def:dv1 rdf:type colibri:DataValue . ",
 		// "def:dv2 rdf:type colibri:DataValue . ",
 		// "def:v1.1 rdf:type colibri:Value . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.2>
-		// <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>
+		// "<http://www.auto.tuwien.ac.at/example/v1.2><http://www.w3.org/1999/02/22-rdf-syntax-ns#type><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>
 		// . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue>
-		// <http://www.auto.tuwien.ac.at/example/v1.1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue>
-		// <http://www.auto.tuwien.ac.at/example/v1.2> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>
-		// \"2016-10-25T13:00:00Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.2>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>
-		// \"100.0\"^^<http://www.w3.org/2001/XMLSchema#decimal> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter>
-		// <http://www.auto.tuwien.ac.at/example/time_param_1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.2>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter>
-		// <http://www.auto.tuwien.ac.at/example/offer_param_1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1.1>
-		// <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DataValue>
+		// "<http://www.auto.tuwien.ac.at/example/dv1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue><http://www.auto.tuwien.ac.at/example/v1.1>
 		// . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.1>
-		// <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>
+		// "<http://www.auto.tuwien.ac.at/example/dv1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue><http://www.auto.tuwien.ac.at/example/v1.2>
 		// . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.2>
-		// <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>
+		// "<http://www.auto.tuwien.ac.at/example/v1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>\"2016-10-25T13:00:00Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime>
 		// . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue>
-		// <http://www.auto.tuwien.ac.at/example/v1.1.1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue>
-		// <http://www.auto.tuwien.ac.at/example/v1.1.2> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>
-		// \"2016-10-26T13:30:00Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.2>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>
-		// \"30.0\"^^<http://www.w3.org/2001/XMLSchema#decimal> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter>
-		// <http://www.auto.tuwien.ac.at/example/time_param_1_1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/v1.1.2>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter>
-		// <http://www.auto.tuwien.ac.at/example/power_param_1_1> . ",
-		// "<http://www.auto.tuwien.ac.at/example/dv1>
-		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasDataValue>
-		// <http://www.auto.tuwien.ac.at/example/dv1.1> . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.2><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>\"100.0\"^^<http://www.w3.org/2001/XMLSchema#decimal>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter><http://www.auto.tuwien.ac.at/example/time_param_1>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.2><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter><http://www.auto.tuwien.ac.at/example/offer_param_1>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/dv1.1><http://www.w3.org/1999/02/22-rdf-syntax-ns#type><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#DataValue>.
+		// ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.1><http://www.w3.org/1999/02/22-rdf-syntax-ns#type><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>.
+		// ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.2><http://www.w3.org/1999/02/22-rdf-syntax-ns#type><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#Value>.
+		// ",
+		// "<http://www.auto.tuwien.ac.at/example/dv1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue><http://www.auto.tuwien.ac.at/example/v1.1.1>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/dv1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasValue><http://www.auto.tuwien.ac.at/example/v1.1.2>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>\"2016-10-26T13:30:00Z\"^^<http://www.w3.org/2001/XMLSchema#dateTime>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.2><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#value>\"30.0\"^^<http://www.w3.org/2001/XMLSchema#decimal>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter><http://www.auto.tuwien.ac.at/example/time_param_1_1>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/v1.1.2><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasParameter><http://www.auto.tuwien.ac.at/example/power_param_1_1>
+		// . ",
+		// "<http://www.auto.tuwien.ac.at/example/dv1><https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#hasDataValue><http://www.auto.tuwien.ac.at/example/dv1.1>
+		// . ",
 		// "def:test" + l + " rdf:type colibri:window . ",
 		// "}"
 		// );
-
+		//
 		// try {
-		// ds.executeOperation(sparqlUpdateString);
-		// } catch (MalformedQueryException | UnsupportedQueryLanguageException |
-		// InsertDataValueException e1) {
+		// ds.update(sparqlUpdateString);
+		// } catch (InsertDataValueException e2) {
+		// // TODO Auto-generated catch block
+		// e2.printStackTrace();
+		// }
+		//
+		// String query = StrUtils.strjoinNL(
+		// "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>",
+		// "PREFIX def: <http://www.auto.tuwien.ac.at/example/>",
+		// "PREFIX colibri:
+		// <https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#>",
+		// "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>",
+		// "SELECT ?s WHERE {",
+		// "?s a ?test . ",
+		// "?test rdfs:subClassOf colibri:Equipment . ",
+		// "}"
+		// );
+		//
+		// try {
+		// ResultSet test = ds.select(query);
+		// ResultSetFormatter.out(test);
+		// } catch (Exception e1) {
 		// e1.printStackTrace();
 		// }
-
-		// rs = ds.executeSparql(spar2);
-		// ResultSetFormatter.out(rs);
-
-		// ds.doReasoning();
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		try

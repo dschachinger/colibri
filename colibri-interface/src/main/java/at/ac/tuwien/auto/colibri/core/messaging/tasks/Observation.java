@@ -29,7 +29,7 @@
 
 package at.ac.tuwien.auto.colibri.core.messaging.tasks;
 
-import at.ac.tuwien.auto.colibri.core.messaging.types.Observe;
+import at.ac.tuwien.auto.colibri.messaging.types.Observe;
 
 /**
  * An observation hosts the observe (OBS) message and the timer for periodic execution.

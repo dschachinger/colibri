@@ -29,117 +29,65 @@
 
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.Ontology;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.vocabulary.RDF;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.Reasoner;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.ReasonerLevel;
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.IllegalContentException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ProcessingException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.IllegalContentException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.SyntaxException;
+import at.ac.tuwien.auto.colibri.messaging.types.Register;
 
-public class RegisterImpl extends MessageImpl implements Register, Message
+public class RegisterImpl extends Register implements Processible
 {
-	public RegisterImpl()
-	{
-		super();
-
-		this.setConfirmable(true);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "REG";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
+	public void process(Datastore store) throws InterfaceException
 	{
 		// check if peer is already registered
-		if (registry.getConnector(this.getPeer()) != null)
+		if (Registry.getInstance().getConnector(this.getPeer()) != null)
 			throw new ProcessingException("peer is already registered in connector registry", this);
 
 		// create model for querying
-		Model model = null;
+		Model model = this.getModel();
 
-		// create plain model without resoner
-		Model plain = ModelFactory.createDefaultModel();
-
+		// do reasoning
 		if (Config.getInstance().reasoner)
 		{
-			// creating reasoner
-			Reasoner reasoner = ReasonerRegistry.getRDFSReasoner();
-			reasoner = reasoner.bindSchema(registry.getOntology());
+			OntModel ontm = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM, model);
+			Ontology o = ontm.createOntology("http://temp");
+			o.addImport(ontm.createResource(Config.getInstance().ontology));
+			model = ontm;
 
-			// create ontology model specification
-			OntModelSpec ontModelSpec = OntModelSpec.RDFS_MEM_RDFS_INF;
-			ontModelSpec.setReasoner(reasoner);
-
-			// create inferred model with RDFS reasoner
-			model = ModelFactory.createOntologyModel(ontModelSpec);
-		}
-
-		// create input stream
-		InputStream is = new ByteArrayInputStream(this.getContent().getBytes(StandardCharsets.UTF_8));
-
-		try
-		{
-			// read model from content
-			switch (this.getContentType())
+			try
 			{
-				case RDF_XML:
-					plain.read(is, null, "RDF/XML");
-					break;
-				case TURTLE:
-					plain.read(is, null, "TURTLE");
-					break;
-				default:
-					throw new ProcessingException("content type " + this.getContentType() + " is not supported for message type + " + this.getMessageType(), this.getPeer());
+				Reasoner reasoner = new Reasoner(model);
+				Model inferredModel = reasoner.doReasoning(ReasonerLevel.REASONING_MINIMAL, false);
+				model = model.union(inferredModel);
 			}
-		}
-		catch (Exception e)
-		{
-			throw new SyntaxException("content cannot be parsed", this);
-		}
-
-		try
-		{
-			// close input stream
-			is.close();
-		}
-		catch (IOException e)
-		{
-			throw new ProcessingException(e.getMessage(), this);
-		}
-
-		// set query model
-		if (Config.getInstance().reasoner)
-		{
-			model.add(plain);
-		}
-		else
-		{
-			model = plain;
+			catch (OWLOntologyStorageException | OWLOntologyCreationException | IOException e)
+			{
+				throw new ProcessingException("Internal reasoning error (" + e.getMessage() + ")", this);
+			}
 		}
 
 		// technology connector class
@@ -156,20 +104,15 @@ public class RegisterImpl extends MessageImpl implements Register, Message
 		if (iter.hasNext())
 		{
 			Resource i = iter.next();
-			Resource r = plain.getResource(i.getURI());
-
-			// check resource
-			if (r == null)
-				throw new ProcessingException("resource " + i.getURI() + " cannot be found.", this);
 
 			// check URI
 			try
 			{
-				uri = new URI(r.getURI());
+				uri = new URI(i.getURI());
 			}
 			catch (URISyntaxException e)
 			{
-				throw new SyntaxException("URI is not valid (" + r.getURI() + ")", this);
+				throw new SyntaxException("URI is not valid (" + i.getURI() + ")", this);
 			}
 
 			// // do not check if URI exists in ontology as connector can reregister after shutdown
@@ -190,7 +133,7 @@ public class RegisterImpl extends MessageImpl implements Register, Message
 			// throw new ObjectExistsException("URI is already used (" + r.getURI() + ")", this);
 
 			// add technology connector to result model
-			result.add(r.listProperties());
+			result.add(i.listProperties());
 		}
 		else
 		{
@@ -215,7 +158,7 @@ public class RegisterImpl extends MessageImpl implements Register, Message
 		}
 
 		// add connector to registry
-		registry.addConnector(this.getPeer(), uri);
+		Registry.getInstance().addConnector(this.getPeer(), uri);
 
 		// send status message
 		StatusImpl status = new StatusImpl();

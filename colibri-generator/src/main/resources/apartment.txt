@@ -1,0 +1,621 @@
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX] -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]">
+        <rdf:type rdf:resource="&colibri;Apartment"/>
+        <colibri:name rdf:datatype="&xsd;string">Apartment [XXX]</colibri:name>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_bad"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wc"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z1"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z2"/>
+    </owl:NamedIndividual>
+   
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_bad -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_bad">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall10"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall11"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall12"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall13"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr1"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr2"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr3"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr1">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall18"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall19"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall20"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall22"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall25"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr2">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall15"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall17"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall22"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall23"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_vr3">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall12"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall14"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall21"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall23"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall24"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4"/>
+    </owl:NamedIndividual>
+    
+	
+	 <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wc -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wc">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall13"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall14"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall15"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall20"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz1"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz2"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz1">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall11"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall21"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall26"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall27"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall28"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wz2">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall28"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall5"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall7"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall8"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall9"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z1">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall16"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall3"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z2">
+        <rdf:type rdf:resource="&colibri;Zone"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall26"/>
+        <colibri:isInFrontOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall3"/>
+        <colibri:isLeftOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4"/>
+        <colibri:isBehind rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall5"/>
+        <colibri:isRightOf rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2"/>
+		<colibri:isCoveredBy rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2"/>
+    </owl:NamedIndividual>
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+        <colibri:orientation rdf:datatype="&xsd;int">270</colibri:orientation>
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1_length"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall10 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall10">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall11 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall11"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall12 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall12"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall13 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall13"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall14 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall14"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall15 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall15"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall16 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall16">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall17 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall17">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall18 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall18">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall19 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall19">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2">
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2_length"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall20 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall20"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall21 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall21"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall22 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall22"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall23 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall23"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall24 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall24">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+        <colibri:contains rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall25 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall25">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall26 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall26"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall27 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall27">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall28 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall28"/>
+ 
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall3 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall3"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4">
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4_length"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall5 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall5"/>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6_length"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall7 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall7">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall8 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall8">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/outer_thermal_permeability"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall9 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall9">
+        <rdf:type rdf:resource="&colibri;OuterDelimiter"/>
+    </owl:NamedIndividual>   
+	
+	
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1_length -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall1_length">
+        <rdf:type rdf:resource="&colibri;Length"/>
+        <colibri:value rdf:datatype="&xsd;float">390.0</colibri:value>
+        <colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unitCentimeter"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2_length -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall2_length">
+        <rdf:type rdf:resource="&colibri;Length"/>
+        <colibri:value rdf:datatype="&xsd;float">395.0</colibri:value>
+        <colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unitCentimeter"/>
+    </owl:NamedIndividual>
+	    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4_length -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall4_length">
+        <rdf:type rdf:resource="&colibri;Length"/>
+        <colibri:value rdf:datatype="&xsd;float">270.0</colibri:value>
+        <colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unitCentimeter"/>
+    </owl:NamedIndividual>
+	    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6_length -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_wall6_length">
+        <rdf:type rdf:resource="&colibri;Length"/>
+        <colibri:value rdf:datatype="&xsd;float">260.0</colibri:value>
+        <colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unitCentimeter"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1">
+        <rdf:type rdf:resource="&colibri;Window"/>
+        <colibri:hasMaterial rdf:resource="http://www.auto.tuwien.ac.at/example/glass"/>
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_height"/>
+        <colibri:hasConstant rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_length"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_height -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_height">
+        <rdf:type rdf:resource="&colibri;Height"/>
+        <colibri:value rdf:datatype="&xsd;float">1.85</colibri:value>
+        <colibri:hasUnit rdf:resource="&colibri;Meter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_length -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_window_1_length">
+        <rdf:type rdf:resource="&colibri;Length"/>
+        <colibri:value rdf:datatype="&xsd;float">2.0</colibri:value>
+        <colibri:hasUnit rdf:resource="&colibri;Meter"/>
+    </owl:NamedIndividual>
+
+    
+	
+	
+	
+	
+	
+	
+	
+		<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/co2_z1</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z1_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/co2_z2</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_z2_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/humidity_z1</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z1_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/humidity_z2</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_z2_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/temp_z1</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z1_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2">
+        <rdf:type rdf:resource="&colibri;DataService"/>
+        <colibri:serviceAddress rdf:datatype="&xsd;string">/server/apartment_[XXX]/temp_z2</colibri:serviceAddress>
+        <colibri:hasDataConfiguration rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2_configuration"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2_configuration -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_z2_configuration">
+        <rdf:type rdf:resource="&colibri;DataConfiguration"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_param"/>
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/time_param"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_state -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_state">
+        <rdf:type rdf:resource="&colibri;IntervalState"/>
+        <colibri:min rdf:datatype="&xsd;float">10.0</colibri:min>
+        <colibri:max rdf:datatype="&xsd;float">35.0</colibri:max>
+        <colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unit_celsius"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint">
+        <rdf:type rdf:resource="&colibri;ControlService"/>
+        <colibri:hasState rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_state"/>
+        <colibri:hasControlVariation rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_variation"/>
+        <colibri:covers rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z2"/>
+        <colibri:covers rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_z1"/>
+    </owl:NamedIndividual>
+    
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_variation -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_setpoint_variation">
+        <colibri:hasParameter rdf:resource="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_param"/>
+        <colibri:hasOrder rdf:resource="&colibri;HigherValue"/>
+        <colibri:hasTrend rdf:resource="&colibri;UpTrend"/>
+    </owl:NamedIndividual>
+	
+	
+	
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_param -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_co2_param">
+        <rdf:type rdf:resource="&colibri;AirQualityParameter"/>
+    </owl:NamedIndividual>
+	
+	<!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_param -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_humidity_param">
+        <rdf:type rdf:resource="&colibri;HumidityParameter"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_param -->
+
+    <owl:NamedIndividual rdf:about="http://www.auto.tuwien.ac.at/example/apartment_[XXX]_service_temp_param">
+        <rdf:type rdf:resource="&colibri;TemperatureParameter"/>
+		<colibri:hasUnit rdf:resource="http://www.auto.tuwien.ac.at/example/unit_celsius"/>
+    </owl:NamedIndividual>

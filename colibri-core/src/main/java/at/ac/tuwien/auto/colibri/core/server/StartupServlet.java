@@ -92,7 +92,7 @@ public class StartupServlet extends HttpServlet
 		// initialize and start Colibri datastore
 		this.colibriDatastore = new ColibriDatastore(ds);
 		this.colibriDatastore.start();
-		
+
 		// initialize and start Colibri interface
 		this.colibriInterface = new ColibriInterface(this.colibriDatastore);
 		this.colibriInterface.start();

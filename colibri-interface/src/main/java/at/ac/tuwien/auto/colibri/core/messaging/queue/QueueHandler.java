@@ -30,7 +30,6 @@
 package at.ac.tuwien.auto.colibri.core.messaging.queue;
 
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
-import at.ac.tuwien.auto.colibri.core.messaging.types.Message;
 
 /**
  * This static class is used as central message queue and storage.
@@ -53,18 +52,12 @@ public class QueueHandler
 	private MessageQueue outputQueue = null;
 
 	/**
-	 * Central message storage
-	 */
-	private MessageStorage storage = null;
-
-	/**
 	 * Private constructor for initialization
 	 */
 	private QueueHandler()
 	{
-		this.storage = new MessageStorage();
-		this.inputQueue = new MessageQueue(storage, QueueType.INPUT);
-		this.outputQueue = new MessageQueue(storage, QueueType.OUTPUT);
+		this.inputQueue = new MessageQueue(QueueType.INPUT);
+		this.outputQueue = new MessageQueue(QueueType.OUTPUT);
 	}
 
 	/**
@@ -92,16 +85,5 @@ public class QueueHandler
 		if (type == QueueType.OUTPUT)
 			return outputQueue;
 		return null;
-	}
-
-	/**
-	 * Returns a message from the internal message storage.
-	 * 
-	 * @param messageId Message ID of the message
-	 * @return Message
-	 */
-	public Message getMessage(String messageId)
-	{
-		return this.storage.get(messageId);
 	}
 }

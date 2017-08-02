@@ -30,57 +30,34 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.PermissionException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.PermissionException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Deregister;
 
-public class DeregisterImpl extends MessageApprovedImpl implements Deregister, Message
+public class DeregisterImpl extends Deregister implements Processible
 {
-	private URI connector = null;
-
-	public DeregisterImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
+		// get peer's URI
+		URI uri = Registry.getInstance().getConnector(this.getPeer());
 
-		this.setContentType(ContentType.PLAIN);
-		this.setConfirmable(true);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "DRE";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.PLAIN)
-			throw new SyntaxException("content type must be text/plain", this);
-		
 		// check permission
-		URI uri = registry.getConnector(this.getPeer());
-
-		if (!this.connector.toString().toUpperCase().equals(uri.toString().toUpperCase()))
+		if (!this.getConnector().toString().toUpperCase().equals(uri.toString().toUpperCase()))
 			throw new PermissionException("peer is only allowed to delete itself", this);
 
 		// check if URI exists
 		boolean exists = true;
 		try
 		{
-			String query = QueryBuilder.getPrefixedQuery("SELECT ?t WHERE { ?t rdf:type colibri:TechnologyConnector. FILTER (?t = <" + this.connector.toString() + ">)}");
+			String query = QueryBuilder.getPrefixedQuery("SELECT ?t WHERE { ?t rdf:type colibri:TechnologyConnector. FILTER (?t = <" + this.getConnector().toString() + ">)}");
 			exists = store.exists(query);
 		}
 		catch (Exception e)
@@ -89,15 +66,17 @@ public class DeregisterImpl extends MessageApprovedImpl implements Deregister, M
 		}
 
 		if (!exists)
-			throw new UnknownObjectException("connector is not known (" + this.connector.toString() + ")", this);
+			throw new UnknownObjectException("connector is not known (" + this.getConnector().toString() + ")", this);
 
 		// delete connector (only connector, no linked elements)
 		try
 		{
-			// do not delete the connector, but update the resources when connector is newly registered
-			
-			//String delete = "DELETE ?s ?p ?o WHERE { ?s ?p ?o. FILTER (?s = <" + this.connector.toString() + ">)}";
-			//store.update(QueryBuilder.getPrefixedQuery(delete));
+			// do not delete the connector, but update the resources when connector is newly
+			// registered
+
+			// String delete = "DELETE ?s ?p ?o WHERE { ?s ?p ?o. FILTER (?s = <" +
+			// this.connector.toString() + ">)}";
+			// store.update(QueryBuilder.getPrefixedQuery(delete));
 		}
 		catch (Exception e)
 		{
@@ -106,7 +85,7 @@ public class DeregisterImpl extends MessageApprovedImpl implements Deregister, M
 
 		// delete connector and its observations from registry
 		// observations on still existing services of the deleted connector remain
-		registry.removeConnector(this.getPeer());
+		Registry.getInstance().removeConnector(this.getPeer());
 
 		// create status
 		StatusImpl result = new StatusImpl();
@@ -117,40 +96,4 @@ public class DeregisterImpl extends MessageApprovedImpl implements Deregister, M
 		QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(result);
 	}
 
-	public void setContent(URI content)
-	{
-		try
-		{
-			this.setContent(content.toString());
-		}
-		catch (SyntaxException e)
-		{
-			// do nothing
-		}
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		try
-		{
-			this.connector = new URI(content);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new SyntaxException("content is not a valid URI (" + content + ")", this);
-		}
-	}
-
-	@Override
-	public String getContent()
-	{
-		return this.connector.toString();
-	}
-
-	@Override
-	public URI getConnector()
-	{
-		return this.connector;
-	}
 }

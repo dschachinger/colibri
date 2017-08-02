@@ -29,16 +29,15 @@
 
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
+import org.apache.jena.ontology.Ontology;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -47,101 +46,53 @@ import org.apache.jena.rdf.model.ResIterator;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.vocabulary.RDF;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.Reasoner;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.ReasonerLevel;
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.IllegalContentException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InvalidObjectException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ProcessingException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.IllegalContentException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InvalidObjectException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.SyntaxException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Add;
 
-public class AddImpl extends MessageApprovedImpl implements Add, Message
+public class AddImpl extends Add implements Processible
 {
-	public AddImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-		this.setConfirmable(true);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "ADD";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
 		// create model for querying
-		Model model = null;
+		Model model = this.getModel();
 
-		// create plain model without resoner
-		Model plain = ModelFactory.createDefaultModel();
-
+		// do reasoning
 		if (Config.getInstance().reasoner)
 		{
-			// creating reasoner
-			Reasoner reasoner = ReasonerRegistry.getRDFSReasoner();
-			reasoner = reasoner.bindSchema(registry.getOntology());
+			OntModel ontm = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM, model);
+			Ontology o = ontm.createOntology("http://temp");
+			o.addImport(ontm.createResource(Config.getInstance().ontology));
+			model = ontm;
 
-			// create ontology model specification
-			OntModelSpec ontModelSpec = OntModelSpec.RDFS_MEM_RDFS_INF;
-			ontModelSpec.setReasoner(reasoner);
-
-			// create inferred model with RDFS reasoner
-			model = ModelFactory.createOntologyModel(ontModelSpec);
-		}
-
-		// create input stream
-		InputStream is = new ByteArrayInputStream(this.getContent().getBytes(StandardCharsets.UTF_8));
-
-		try
-		{
-			// read model from content
-			switch (this.getContentType())
+			try
 			{
-				case RDF_XML:
-					plain.read(is, null, "RDF/XML");
-					break;
-				case TURTLE:
-					plain.read(is, null, "TURTLE");
-					break;
-				default:
-					throw new ProcessingException("Content type " + this.getContentType() + " is not supported for message type + " + this.getMessageType(), this.getPeer());
+				Reasoner reasoner = new Reasoner(model);
+				Model inferredModel = reasoner.doReasoning(ReasonerLevel.REASONING_MINIMAL, false);
+				model = model.union(inferredModel);
+			}
+			catch (OWLOntologyStorageException | OWLOntologyCreationException | IOException e)
+			{
+				throw new ProcessingException("Internal reasoning error (" + e.getMessage() + ")", this);
 			}
 		}
-		catch (Exception e)
-		{
-			throw new SyntaxException("Content cannot be parsed", this);
-		}
-
-		try
-		{
-			// close input stream
-			is.close();
-		}
-		catch (IOException e)
-		{
-			throw new ProcessingException(e.getMessage(), this);
-		}
-
-		// set query model
-		if (Config.getInstance().reasoner)
-			model.add(plain);
-		else
-			model = plain;
 
 		// technology connector class
 		RDFNode service = model.createResource(Config.getInstance().namespace + "Service");
@@ -154,9 +105,6 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 		// model to store
 		Model result = ModelFactory.createDefaultModel();
 
-		// list of observe message
-		List<Observe> observes = new ArrayList<Observe>();
-
 		if (!iter.hasNext())
 		{
 			// no service was found
@@ -167,21 +115,16 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 		while (iter.hasNext())
 		{
 			Resource i = iter.next();
-			Resource r = plain.getResource(i.getURI());
-
-			// check resource
-			if (r == null)
-				throw new ProcessingException("resource " + i.getURI() + " cannot be found.", this);
 
 			// check URI validity
 			URI uri = null;
 			try
 			{
-				uri = new URI(r.getURI().trim());
+				uri = new URI(i.getURI().trim());
 			}
 			catch (URISyntaxException e)
 			{
-				throw new SyntaxException("URI is not valid (" + r.getURI() + ")", this);
+				throw new SyntaxException("URI is not valid (" + i.getURI() + ")", this);
 			}
 
 			// // do not check if service URI exists in ontology as service can be re-added
@@ -201,7 +144,7 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 			// throw new ObjectExistsException("URI is already used (" + r.getURI() + ")", this);
 
 			// add service to result model
-			result.add(r.listProperties());
+			result.add(i.listProperties());
 
 			// check technology connector
 			StmtIterator tcIter = i.listProperties(hasTechnologyConnector);
@@ -227,11 +170,11 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 					throw new DatastoreException(e, this);
 				}
 
-				if (exists)
+				if (!exists)
 					throw new UnknownObjectException("technology connector URI is not known (" + tc.getURI() + ")", this);
 
 				// check permission
-				URI temp = registry.getConnector(this.getPeer());
+				URI temp = Registry.getInstance().getConnector(this.getPeer());
 
 				if (temp == null || !temp.toString().toUpperCase().equals(tc.getURI().toUpperCase()))
 					throw new InvalidObjectException("peer can only add services to its own technology connector", this);
@@ -265,13 +208,7 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 			// TODO read and store control Variations and states of control services/data services
 			// (state parameter)
 
-			this.addDataConfiguration(configurations, hasConfiguration, plain, store, result);
-
-			// create observe message
-			ObserveImpl observe = new ObserveImpl();
-			observe.setPeer(this.getPeer());
-			observe.setContent(uri.toString());
-			observes.add(observe);
+			this.addDataConfiguration(configurations, hasConfiguration, model, store, result);
 		}
 
 		// add connector to datastore
@@ -291,23 +228,14 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 
 		// send status
 		QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(status);
-
-		// send observe message
-		// for (Observe o : observes)
-		// {
-		// TODO observe only data services, use management tool for specifying observed services
-		// QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(o);
-		// }
 	}
 
-	private void addDataConfiguration(List<Resource> configurations, Property hasConfiguration, Model plain, Datastore store, Model result) throws InterfaceException
+	private void addDataConfiguration(List<Resource> configurations, Property hasConfiguration, Model model, Datastore store, Model result) throws InterfaceException
 	{
-		Property hasParameter = plain.createProperty(Config.getInstance().namespace + "hasParameter");
+		Property hasParameter = model.createProperty(Config.getInstance().namespace + "hasParameter");
 
 		for (Resource c : configurations)
 		{
-			Resource configuration = plain.getResource(c.getURI());
-
 			// // check if data configuration URI exists in ontology
 			// boolean exists = false;
 			// try
@@ -325,7 +253,7 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 			// throw new ObjectExistsException("URI is already used (" + c.getURI() + ")", this);
 
 			// add resource
-			result.add(configuration.listProperties());
+			result.add(c.listProperties());
 
 			// add parameter configuration
 			StmtIterator paramIter = c.listProperties(hasParameter);
@@ -334,7 +262,6 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 			while (paramIter.hasNext())
 			{
 				Resource p = paramIter.nextStatement().getResource();
-				Resource parameter = plain.getResource(p.getURI());
 
 				// // check if parameter URI exists in ontology
 				// exists = false;
@@ -354,7 +281,7 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 				// this);
 
 				// add resource
-				result.add(parameter.listProperties());
+				result.add(p.listProperties());
 
 				count++;
 			}
@@ -377,7 +304,7 @@ public class AddImpl extends MessageApprovedImpl implements Add, Message
 			for (Statement s : c.listProperties(hasConfiguration).toList())
 				subs.add(s.getObject().asResource());
 
-			this.addDataConfiguration(subs, hasConfiguration, plain, store, result);
+			this.addDataConfiguration(subs, hasConfiguration, model, store, result);
 		}
 	}
 }

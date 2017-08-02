@@ -40,6 +40,7 @@ eclipse
 				def node = it.asNode()
 				
 				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
 			}
 		}
 	}
@@ -48,6 +49,7 @@ eclipse
 dependencies
 {
 	provided project(':colibri-osgi')
+	provided project(':colibri-commons')
 	
 	compile group: 'edu.stanford.protege', name: 'org.semanticweb.owl.owlapi', version: '3.4.4' 
 		
@@ -61,16 +63,23 @@ dependencies
 
 jar 
 {
+	baseName = "at.ac.tuwien.auto.colibri.reasoner.bundle"
+	
 	manifest 
 	{
-		attributes ("Export-Package":
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.reasoner.bundle",
 					
-						"at.ac.tuwien.auto.colibri.core.datastore.reasoner " ,
+					"Export-Package":
+					
+						"at.ac.tuwien.auto.colibri.core.datastore.reasoner, " +
+						
+						"org.semanticweb.owlapi.model " ,
 									
 					"Import-Package":
-											
+					
+						"javax.xml.bind, " +
+					
+						"org.apache.jena.rdf.model, " +				
 						"org.osgi.framework" )
 	}
 }
-
-						

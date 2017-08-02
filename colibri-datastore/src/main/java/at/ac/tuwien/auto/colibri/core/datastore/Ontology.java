@@ -29,10 +29,7 @@
 
 package at.ac.tuwien.auto.colibri.core.datastore;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import org.apache.jena.atlas.lib.StrUtils;
@@ -52,6 +49,8 @@ import org.apache.jena.util.FileManager;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.Reasoner;
+import at.ac.tuwien.auto.colibri.core.datastore.reasoner.ReasonerLevel;
 import at.ac.tuwien.auto.colibri.core.datastore.reasoner.ReasonerRunnable;
 import at.ac.tuwien.auto.colibri.core.datastore.reasoner.TaskListener;
 
@@ -61,7 +60,7 @@ public class Ontology implements TaskListener
 	 * Logger instance
 	 */
 	private static final Logger log = Logger.getLogger(Ontology.class.getName());
-	
+
 	private Model dataModel = null;
 	private Model colibriModel = null;
 	private Dataset dataset = null;
@@ -76,6 +75,8 @@ public class Ontology implements TaskListener
 		loadOntology(Config.getInstance().ontologyFileBase);
 
 		buffer = new UpdateBuffer(Config.getInstance().buffer);
+		
+		log.info("Ontology initialized with " + this.getTripleCount(false) + " Triples");
 	}
 
 	/**
@@ -115,21 +116,30 @@ public class Ontology implements TaskListener
 		if (dataset == null || dataModel == null || colibriModel == null)
 			return;
 
-		if (dataModel.isEmpty())
-		{
-			dataset.begin(ReadWrite.WRITE);
-			FileManager.get().readModel(dataModel, filePath);
-			dataset.commit();
-			dataset.end();
-			log.info("Info]: Ontolgy loaded from file: " + filePath);
-		}
-
 		if (colibriModel.isEmpty())
 		{
 			dataset.begin(ReadWrite.WRITE);
 			colibriModel.read(Config.getInstance().colibriModelUri);
 			dataset.commit();
 			dataset.end();
+		}
+		
+		if (dataModel.isEmpty())
+		{
+			dataset.begin(ReadWrite.WRITE);
+			FileManager.get().readModel(dataModel, filePath);
+			dataset.commit();
+			dataset.end();
+			log.info("Ontolgy loaded from file: " + filePath);
+			
+			log.info("Start initial reasoning");
+			try {
+				doReasoningBlocking();
+				log.info("Initial reasoning finished");
+			} catch (OWLOntologyStorageException | OWLOntologyCreationException | IOException e) {
+				e.printStackTrace();
+				log.info("Initial reasoning failed");
+			}
 		}
 	}
 
@@ -174,7 +184,7 @@ public class Ontology implements TaskListener
 		boolean ret;
 
 		dataset.begin(ReadWrite.READ);
-		try (QueryExecution qExec = QueryExecutionFactory.create(query, dataset))
+		try (QueryExecution qExec = QueryExecutionFactory.create(query, dataset.getNamedModel("urn:x-arq:UnionGraph")))
 		{
 			ret = qExec.execAsk();
 		}
@@ -277,7 +287,7 @@ public class Ontology implements TaskListener
 	 *
 	 * @return Number of triples in the TDB
 	 */
-	public int getTripleCount()
+	public int getTripleCount(boolean includeColibriModel)
 	{
 		ResultSet rs = null;
 		int count = 0;
@@ -301,38 +311,62 @@ public class Ontology implements TaskListener
 	}
 
 	/**
-	 * Perform reasoning on the TDB as separate thread.
-	 * Due to lacking interfaces to the current version of Jena, the ontology is first
-	 * written into a file and than read into an OWL API ontology. Reasoning is done
-	 * on that OWL API ontology. Afterwards, the inferred ontology is written to the
-	 * file system.
+	 * Perform full reasoning with SWRL rules on the TDB as separate thread.
 	 */
-	public void doReasoning() throws IOException, OWLOntologyCreationException, OWLOntologyStorageException
+	public void doFullReasoning() throws IOException, OWLOntologyCreationException, OWLOntologyStorageException
 	{
-		if (dataset == null || dataModel == null || colibriModel == null)
-			return;
-
-		updateBufferingEnabled = true;
-
-		FileOutputStream tempoutstrm = new FileOutputStream(Config.getInstance().ontologyFileTemp);
+		if (dataset == null)
+			throw new RuntimeException("Dataset is null");
+		
 		dataset.begin(ReadWrite.READ);
-		loadDefaultModel();
+		boolean modelExists = dataset.containsNamedModel(Config.getInstance().dataModelUri);
 		dataset.end();
-		dataModel.write(tempoutstrm, "RDF/XML");
-		tempoutstrm.close();
-		log.info("Ontology from TDB has been written to file");
+		
+		if (!modelExists)
+			throw new RuntimeException("Model for reasoning does not exist");
+		
+		//updateBufferingEnabled = true;
 
-		ReasonerRunnable reasoner = new ReasonerRunnable();
+		dataset.begin(ReadWrite.READ);
+		ReasonerRunnable reasoner = new ReasonerRunnable(dataset.getNamedModel(Config.getInstance().dataModelUri), ReasonerLevel.REASONING_FULL);
+		dataset.end();
 		reasoner.addListener(this);
-		reasoner.setOntologyFile(Config.getInstance().ontologyFileTemp);
-		reasoner.setOutputFile(Config.getInstance().ontologyFileOut);
 
 		(new Thread(reasoner)).start();
 	}
 
 	/**
+	 * Perform reasoning without swrl rules (blocking)
+	 */
+	public void doReasoningBlocking() throws OWLOntologyStorageException, OWLOntologyCreationException, IOException 
+	{
+		if (dataset == null)
+			throw new RuntimeException("Dataset is null");
+		
+		dataset.begin(ReadWrite.READ);
+		boolean modelExists = dataset.containsNamedModel(Config.getInstance().dataModelUri);
+		dataset.end();
+		
+		if (!modelExists)
+			throw new RuntimeException("Model for reasoning does not exist");
+		
+		dataset.begin(ReadWrite.READ);
+		Reasoner r = new Reasoner(dataset.getNamedModel(Config.getInstance().dataModelUri));
+		dataset.end();
+		Model m = r.doReasoning(ReasonerLevel.REASONING_WITHOUT_SWRL, false);
+		
+		dataset.begin(ReadWrite.WRITE);
+		dataset.getNamedModel(Config.getInstance().dataModelUri).add(m);
+		dataset.commit();
+		dataset.end();
+
+		log.info("Triple count:" + getTripleCount(false));		
+	}
+
+	/**
 	 * Performs all updates stored in the buffer and clear buffer
 	 */
+	@SuppressWarnings("unused")
 	private void doBufferedUpdates()
 	{
 		try
@@ -351,26 +385,18 @@ public class Ontology implements TaskListener
 	}
 
 	@Override
-	public void threadFinished(Runnable r)
+	public void threadFinished(Runnable r, Model model)
 	{
-		clearTDB();
-		loadTDB(Config.getInstance().tdbDirectory);
-		loadDefaultModel();
-		loadOntology(Config.getInstance().ontologyFileOut);
+		dataset.begin(ReadWrite.WRITE);
+		dataset.getNamedModel(Config.getInstance().dataModelUri).add(model);
+		dataset.commit();
+		dataset.end();
 
-		try
-		{
-			Files.deleteIfExists(Paths.get(Config.getInstance().ontologyFileTemp));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
 
-		log.info("Triple count:" + getTripleCount());
+		log.info("Triple count:" + getTripleCount(false));
 
 		updateBufferingEnabled = false;
-		doBufferedUpdates();
+		//doBufferedUpdates();
 	}
 
 	public static String prepareSparqlURI(String uri)

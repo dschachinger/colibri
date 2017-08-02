@@ -29,7 +29,92 @@
  
 description = 'Colibri - Optimization'
 
+eclipse
+{
+	classpath
+	{
+		file 
+		{
+			withXml 
+			{
+				def node = it.asNode()
+				
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-messenger', exported:'true'])
+			}
+		}
+	}
+}
+
+repositories 
+{
+	flatDir { dirs 'lib','lib/matlaboptimizer/for_redistribution_only' }
+}
+
 dependencies
 {
-	// none
+	compile ':javabuilder'
+	compile ':matlaboptimizer'
+}
+
+dependencies
+{
+	compile group: 'org.eclipse.jetty.websocket', name: 'javax-websocket-client-impl', version: '9.4.6.v20170531'
+	compile group: 'javax.websocket', name: 'javax.websocket-client-api', version: '1.1'
+	
+	compile group: 'com.google.code.gson', name: 'gson', version: '2.8.1'
+	
+	provided project(':colibri-osgi')
+	provided project(':colibri-commons')
+    provided project(':colibri-messenger')
+}
+
+jar 
+{
+	baseName = "at.ac.tuwien.auto.colibri.optimization.bundle"
+	
+	manifest 
+	{
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.optimization.bundle",
+		
+					"Main-Class": "at.ac.tuwien.auto.colibri.optimization.ColibriOptimization",
+		
+					"Bundle-Activator": "at.ac.tuwien.auto.colibri.optimization.ColibriOptimizationActivator",
+					
+					"Import-Package":
+								
+						"at.ac.tuwien.auto.colibri.messaging, " +
+						"at.ac.tuwien.auto.colibri.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.messaging.types, " +
+						
+						"at.ac.tuwien.auto.colibri.commons, " +
+						
+						"javax.swing, "+
+						
+						"javax.management, " +
+						"javax.management.modelmbean, " +
+						"javax.naming, " +
+						"javax.naming.spi, " +
+						"javax.net.ssl, " +
+						"javax.sql, " +
+						"javax.xml.parsers, " +
+						"javax.xml.transform, " +
+						"javax.security.auth.login, " + 
+						"javax.security.auth.callback, " +
+						
+						"org.apache.jena.rdf.model, " + 
+						"org.apache.jena.update, " +
+						"org.apache.jena.sparql.core, " +
+						"org.apache.jena.graph, " +
+						"org.apache.jena.query, " +
+												
+						"org.ietf.jgss, " +
+						"org.w3c.dom, " +
+						"org.xml.sax, " +
+						"org.xml.sax.ext, " +
+						"org.xml.sax.helpers, " +	
+						"org.osgi.framework" )
+	}
 }

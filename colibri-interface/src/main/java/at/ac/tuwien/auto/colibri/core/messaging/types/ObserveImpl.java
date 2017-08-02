@@ -30,73 +30,63 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.Duration;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ProcessingException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.core.messaging.tasks.Observation;
+import at.ac.tuwien.auto.colibri.messaging.Peer;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Observe;
 
-public class ObserveImpl extends MessageApprovedImpl implements Observe, Message
+public class ObserveImpl extends Observe implements Processible
 {
-	private Duration duration = null;
-	private Date time = null;
-	private Date start = null;
-	private long period = -1;
-	private URI service = null;
-
-	public ObserveImpl()
-	{
-		super();
-
-		this.setConfirmable(true);
-		this.setContentType(ContentType.PLAIN);
-	}
-
 	@Override
-	public String getMessageType()
+	public void process(Datastore store) throws InterfaceException
 	{
-		return "OBS";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.PLAIN)
-			throw new SyntaxException("content type must be text/plain", this);
-
 		// check if URI exists
-		boolean exists = false;
+		String connectorUri = null;
 		try
 		{
-			String query = "SELECT ?s WHERE { ?s rdf:type colibri:DataService. FILTER (?s = <" + this.getService().toString() + ">)}";
+			String query = "SELECT ?s ?t WHERE { ?s rdf:type colibri:DataService. ?s colibri:hasTechnologyConnector ?t. FILTER (?s = <" + this.getService().toString() + ">)}";
 
-			exists = store.exists(QueryBuilder.getPrefixedQuery(query));
+			ResultSet r = store.select(QueryBuilder.getPrefixedQuery(query));
+
+			if (r.hasNext())
+			{
+				QuerySolution s = r.nextSolution();
+				connectorUri = s.get("t").toString();
+			}
+			else
+			{
+				throw new Exception("No technology connector for the observed service was found");
+			}
+
+			if (r.hasNext())
+			{
+				throw new Exception("More than one technology connector for the observed service was found");
+			}
 		}
 		catch (Exception e)
 		{
 			throw new DatastoreException(e, this);
 		}
 
-		if (!exists)
+		if (connectorUri == null || connectorUri.isEmpty())
 			throw new UnknownObjectException("service is not known (" + this.getService() + ")", this);
 
 		// define start and period
@@ -141,8 +131,44 @@ public class ObserveImpl extends MessageApprovedImpl implements Observe, Message
 			this.period = this.duration.getTimeInMillis(start);
 		}
 
+		// send permanent observation to host of the service
+		try
+		{
+			// get service's host
+			Peer host = Registry.getInstance().getPeer(new URI(connectorUri));
+
+			// check if observe should be sent to host
+			boolean empty = true;
+			boolean hostOnly = true;
+			for (Observation o : Observations.getInstance().getObservations(this.getService(), true))
+			{
+				empty = false;
+
+				if (o.getObserve().getPeer() != host)
+					hostOnly = false;
+			}
+
+			// send observe
+			if (empty || hostOnly)
+			{
+				ObserveImpl obs = new ObserveImpl();
+
+				obs.setPeer(host);
+				obs.setContent(this.getService().toString());
+				obs.setContentType(this.getContentType());
+
+				// do not create observe cycle
+				if (obs.getPeer() != this.getPeer())
+					QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(obs);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new ProcessingException(e.getMessage(), this);
+		}
+
 		// register observation
-		registry.addObservation(this);
+		Observations.getInstance().addObservation(this);
 
 		// create status
 		StatusImpl result = new StatusImpl();
@@ -151,113 +177,6 @@ public class ObserveImpl extends MessageApprovedImpl implements Observe, Message
 
 		// send status
 		QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(result);
-	}
 
-	@Override
-	public String getContent()
-	{
-		String content = this.service.toString();
-
-		if (time != null)
-		{
-			SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss'Z'");
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-			content += "?freq=" + formatter.format(time);
-		}
-		else if (duration != null)
-		{
-			content += "?freq=" + duration.toString();
-		}
-
-		return content;
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		// split content
-		int index = content.indexOf("?");
-
-		// check URI
-		String uri = content;
-		if (index >= 0)
-			uri = content.substring(0, index);
-
-		try
-		{
-			this.service = new URI(uri);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new SyntaxException("URI is not valid (" + uri + ")", this);
-		}
-
-		if (index >= 0)
-		{
-			// check parameter
-			String freq = content.substring(index + 1);
-
-			index = freq.indexOf("=");
-			if (index == -1)
-				throw new SyntaxException("parameter is not well-formed (" + freq + ")", this);
-
-			String value = freq.substring(index + 1);
-
-			if (value.startsWith("-P"))
-			{
-				throw new SyntaxException("negative duration value is not allowed (" + value + ")", this);
-			}
-			else if (value.toUpperCase().startsWith("P"))
-			{
-				try
-				{
-					this.duration = DatatypeFactory.newInstance().newDuration(value);
-				}
-				catch (DatatypeConfigurationException e)
-				{
-					throw new SyntaxException("duration parameter value cannot be parsed (" + value + ")", this);
-				}
-			}
-			else
-			{
-				try
-				{
-					SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss'Z'");
-					formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-					this.time = formatter.parse(value);
-				}
-				catch (ParseException e)
-				{
-					throw new SyntaxException("time parameter value cannot be parsed (" + value + ")", this);
-				}
-			}
-		}
-	}
-
-	@Override
-	public URI getService()
-	{
-		return this.service;
-	}
-
-	@Override
-	public Date getStart()
-	{
-		return this.start;
-	}
-
-	@Override
-	public long getPeriod()
-	{
-		return this.period;
-	}
-
-	@Override
-	public boolean isPeriodic()
-	{
-		if (this.period == -1)
-			return false;
-		return true;
 	}
 }

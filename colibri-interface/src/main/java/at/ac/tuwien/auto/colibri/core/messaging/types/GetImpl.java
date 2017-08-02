@@ -30,12 +30,7 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.StringTokenizer;
 import java.util.TimeZone;
 
 import org.apache.jena.query.QuerySolution;
@@ -46,54 +41,20 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.vocabulary.RDF;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.ObjectExistsException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ObjectExistsException;
+import at.ac.tuwien.auto.colibri.messaging.types.Get;
 
-public class GetImpl extends MessageApprovedImpl implements Get, Message
+public class GetImpl extends Get implements Processible
 {
-	private Observe observe;
-
-	private Date to;
-
-	private Date from;
-
-	private URI service = null;
-
-	public GetImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setContentType(ContentType.PLAIN);
-	}
-
-	public void setObserve(Observe observe)
-	{
-		this.observe = observe;
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "GET";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.PLAIN)
-			throw new SyntaxException("content type must be text/plain", this);
-
 		try
 		{
 			// check if service URI exists in ontology
@@ -224,113 +185,5 @@ public class GetImpl extends MessageApprovedImpl implements Get, Message
 			throw new DatastoreException(e, this);
 		}
 
-	}
-
-	@Override
-	public String getContent()
-	{
-		String content = this.service.toString();
-
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-		if (to != null)
-		{
-			content += "?to=" + formatter.format(to);
-		}
-		if (from != null)
-		{
-			if (to == null)
-				content += "?from=" + formatter.format(from);
-			else
-				content += "&from=" + formatter.format(from);
-
-		}
-
-		return content;
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		// split content
-		int index = content.indexOf("?");
-
-		// check URI
-		String uri = content;
-		if (index >= 0)
-			uri = content.substring(0, index);
-
-		try
-		{
-			this.service = new URI(uri);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new SyntaxException("URI is not valid (" + uri + ")", this);
-		}
-
-		if (index >= 0)
-		{
-			// check parameter
-			String params = content.substring(index + 1);
-
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-			StringTokenizer st = new StringTokenizer(params, "&");
-
-			while (st.hasMoreTokens())
-			{
-				String param = st.nextToken();
-
-				index = param.indexOf("=");
-
-				if (index == -1)
-					throw new SyntaxException("parameter is not well-formed (" + param + ")", this);
-
-				String identifier = param.substring(0, index).trim();
-				String value = param.substring(index + 1).trim();
-
-				try
-				{
-					Date d = formatter.parse(value);
-
-					if (identifier.toUpperCase().equals("TO"))
-						this.to = d;
-					else if (identifier.toUpperCase().equals("FROM"))
-						this.from = d;
-				}
-				catch (ParseException e)
-				{
-					throw new SyntaxException("date parameter value cannot be parsed (" + value + ")", this);
-				}
-
-			}
-		}
-	}
-
-	@Override
-	public Date getTo()
-	{
-		return to;
-	}
-
-	@Override
-	public Date getFrom()
-	{
-		return from;
-	}
-
-	@Override
-	public URI getService()
-	{
-		return service;
-	}
-
-	@Override
-	public Observe getObserve()
-	{
-		return observe;
 	}
 }

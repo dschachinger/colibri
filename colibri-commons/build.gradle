@@ -46,13 +46,29 @@ dependencies
 	compile group: 'org.apache.jena', name: 'jena-core', version: '3.1.0'
 	compile group: 'org.apache.jena', name:'jena-tdb', version:'3.1.0'
 	compile group: 'org.apache.jena', name:'jena-arq', version:'3.1.0'
+	
+	compile('org.apache.jena:jena-core:3.1.0') {
+		exclude group: 'org.slf4j'
+	}
+	
+	compile('org.apache.jena:jena-tdb:3.1.0') {
+		exclude group: 'org.slf4j'
+	}
+	
+	compile('org.apache.jena:jena-arq:3.1.0') {
+		exclude group: 'org.slf4j'
+	}
 }
 
-jar
-{		
+jar 
+{
+	baseName = "at.ac.tuwien.auto.colibri.commons.bundle"
+	
 	manifest 
 	{
-		attributes ("Export-Package":
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.commons.bundle",
+		
+					"Export-Package":
 		 
 						"at.ac.tuwien.auto.colibri.commons, "+
 						

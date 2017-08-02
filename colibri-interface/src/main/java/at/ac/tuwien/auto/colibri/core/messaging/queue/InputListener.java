@@ -32,10 +32,10 @@ package at.ac.tuwien.auto.colibri.core.messaging.queue;
 import java.util.logging.Logger;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.Config;
-import at.ac.tuwien.auto.colibri.core.messaging.Peer;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
+import at.ac.tuwien.auto.colibri.messaging.Config;
+import at.ac.tuwien.auto.colibri.messaging.Peer;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
 
 /**
  * Queue listener for input messages.
@@ -48,22 +48,14 @@ public class InputListener extends QueueListenerImpl
 	private static final Logger log = Logger.getLogger(MessageQueue.class.getName());
 
 	/**
-	 * Registry reference
-	 */
-	private Registry registry = null;
-
-	/**
 	 * Initialization of listener.
 	 * 
 	 * @param store Data store
 	 * @param registry Registry
 	 */
-	public InputListener(Datastore store, Registry registry)
+	public InputListener(Datastore store)
 	{
-		super(store, registry, QueueType.INPUT, Config.getInstance().input);
-
-		// set variables
-		this.registry = registry;
+		super(store, QueueType.INPUT, Config.getInstance().input);
 	}
 
 	@Override
@@ -72,6 +64,6 @@ public class InputListener extends QueueListenerImpl
 		log.info("Clean input listener");
 
 		// remove connector from registry
-		registry.removeConnector(peer);
+		Registry.getInstance().removeConnector(peer);
 	}
 }

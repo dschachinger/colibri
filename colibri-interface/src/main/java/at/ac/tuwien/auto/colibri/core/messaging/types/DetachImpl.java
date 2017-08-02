@@ -32,60 +32,82 @@ package at.ac.tuwien.auto.colibri.core.messaging.types;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.ProcessingException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.SyntaxException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Detach;
 
-public class DetachImpl extends MessageApprovedImpl implements Detach, Message
+public class DetachImpl extends Detach implements Processible
 {
-	private URI service = null;
-
-	public DetachImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setContentType(ContentType.PLAIN);
-		this.setConfirmable(true);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "DET";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
 		// check content type
 		if (this.getContentType() != ContentType.PLAIN)
 			throw new SyntaxException("content type must be text/plain", this);
 
 		// check if URI exists
+		String connectorUri = null;
 		try
 		{
-			String query = "SELECT ?s WHERE { ?s rdf:type colibri:DataService. FILTER (?s = <" + this.getService() + ">)}";
+			String query = "SELECT ?s ?t WHERE { ?s rdf:type colibri:DataService. ?s colibri:hasTechnologyConnector ?t. FILTER (?s = <" + this.getService().toString() + ">)}";
 
-			boolean exists = store.exists(QueryBuilder.getPrefixedQuery(query));
+			ResultSet r = store.select(QueryBuilder.getPrefixedQuery(query));
 
-			if (!exists)
-				throw new UnknownObjectException("service is not known (" + this.getService() + ")", this);
+			if (r.hasNext())
+			{
+				QuerySolution s = r.nextSolution();
+				connectorUri = s.get("t").toString();
+			}
+			else
+			{
+				throw new Exception("No technology connector for the observed service was found");
+			}
+
+			if (r.hasNext())
+			{
+				throw new Exception("More than one technology connector for the observed service was found");
+			}
 		}
 		catch (Exception e)
 		{
 			throw new DatastoreException(e, this);
 		}
 
+		if (connectorUri == null || connectorUri.isEmpty())
+			throw new UnknownObjectException("service is not known (" + this.getService() + ")", this);
+
 		// remove a peer's observation (of its own observations)
-		registry.removeObservation(this.getPeer(), this.service);
+		Observations.getInstance().removeObservation(this.getPeer(), this.getService());
+
+		try
+		{
+			// remove observation of semantic core
+			if (Observations.getInstance().getObservations(this.getService(), true).isEmpty())
+			{
+				DetachImpl det = new DetachImpl();
+				det.setService(this.getService());
+				det.setPeer(Registry.getInstance().getPeer(new URI(connectorUri)));
+
+				// send status
+				QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(det);
+			}
+
+		}
+		catch (URISyntaxException e)
+		{
+			throw new ProcessingException(e.getMessage(), this);
+		}
 
 		// create status
 		StatusImpl result = new StatusImpl();
@@ -95,42 +117,5 @@ public class DetachImpl extends MessageApprovedImpl implements Detach, Message
 		// send status
 		QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(result);
 
-	}
-
-	@Override
-	public String getContent()
-	{
-		return this.service.toString();
-	}
-
-	public void setContent(URI content)
-	{
-		try
-		{
-			this.setContent(content.toString());
-		}
-		catch (SyntaxException e)
-		{
-			// do nothing
-		}
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		try
-		{
-			this.service = new URI(content);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new SyntaxException("content is not a valid URI (" + content + ")", this);
-		}
-	}
-
-	@Override
-	public URI getService()
-	{
-		return this.service;
 	}
 }

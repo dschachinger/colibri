@@ -30,51 +30,29 @@
 package at.ac.tuwien.auto.colibri.core.messaging.types;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.apache.jena.query.ResultSet;
 
 import at.ac.tuwien.auto.colibri.core.messaging.Datastore;
-import at.ac.tuwien.auto.colibri.core.messaging.QueryBuilder;
-import at.ac.tuwien.auto.colibri.core.messaging.Registry;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.DatastoreException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.InterfaceException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.PermissionException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.SyntaxException;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.MessageQueue.QueueType;
 import at.ac.tuwien.auto.colibri.core.messaging.queue.QueueHandler;
+import at.ac.tuwien.auto.colibri.messaging.QueryBuilder;
+import at.ac.tuwien.auto.colibri.messaging.Registry;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.DatastoreException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.InterfaceException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.PermissionException;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.UnknownObjectException;
+import at.ac.tuwien.auto.colibri.messaging.types.Observe;
+import at.ac.tuwien.auto.colibri.messaging.types.Remove;
 
-public class RemoveImpl extends MessageApprovedImpl implements Remove, Message
+public class RemoveImpl extends Remove implements Processible
 {
-	private URI service;
-
-	public RemoveImpl()
+	public void process(Datastore store) throws InterfaceException
 	{
-		super();
-
-		this.setConfirmable(true);
-		this.setContentType(ContentType.PLAIN);
-	}
-
-	@Override
-	public String getMessageType()
-	{
-		return "REM";
-	}
-
-	@Override
-	public void process(Datastore store, Registry registry) throws InterfaceException
-	{
-		super.process(store, registry);
-
-		// check content type
-		if (this.getContentType() != ContentType.PLAIN)
-			throw new SyntaxException("content type must be text/plain", this);
-
 		// get service
-		String query = "SELECT ?s ?t WHERE { ?s rdf:type colibri:Service. ?s colibri:hasTechnologyConnector ?t. FILTER (?s = <" + this.service.toString() + ">)}";
+		String query = "SELECT ?s ?t WHERE { ?s rdf:type colibri:Service. ?s colibri:hasTechnologyConnector ?t. FILTER (?s = <" + this.getService().toString() + ">)}";
 		ResultSet results = null;
 		try
 		{
@@ -87,14 +65,14 @@ public class RemoveImpl extends MessageApprovedImpl implements Remove, Message
 
 		// check if service exists
 		if (results == null || !results.hasNext())
-			throw new UnknownObjectException("service is not known (" + this.service.toString() + ")", this);
+			throw new UnknownObjectException("service is not known (" + this.getService().toString() + ")", this);
 
 		// check permission (connector removes one of his own services)
-		URI connector = registry.getConnector(this.getPeer());
+		URI connector = Registry.getInstance().getConnector(this.getPeer());
 
 		while (results.hasNext())
 		{
-			String t = results.nextSolution().getLiteral("t").getString();
+			String t = results.nextSolution().get("t").toString();
 
 			if (!connector.toString().toUpperCase().equals(t.toUpperCase()))
 				throw new PermissionException("peer is only allowed to delete its own services", this);
@@ -103,7 +81,7 @@ public class RemoveImpl extends MessageApprovedImpl implements Remove, Message
 		// delete service (only service, no linked elements)
 		try
 		{
-			String delete = "DELETE ?s ?p ?o WHERE { ?s ?p ?o. FILTER (?s = <" + this.service.toString() + ">)}";
+			String delete = "DELETE { ?s ?p ?o } WHERE { ?s ?p ?o. FILTER (?s = <" + this.getService().toString() + ">)}";
 			store.update(QueryBuilder.getPrefixedQuery(delete));
 		}
 		catch (Exception e)
@@ -112,7 +90,7 @@ public class RemoveImpl extends MessageApprovedImpl implements Remove, Message
 		}
 
 		// delete all running observations on the removed service
-		List<Observe> observes = registry.removeObservations(this.service);
+		List<Observe> observes = Observations.getInstance().removeObservations(this.getService());
 
 		// notify all observing peers
 		if (observes != null)
@@ -137,30 +115,5 @@ public class RemoveImpl extends MessageApprovedImpl implements Remove, Message
 		// send status
 		QueueHandler.getInstance().getQueue(QueueType.OUTPUT).addInternal(result);
 
-	}
-
-	@Override
-	public String getContent()
-	{
-		return this.service.toString();
-	}
-
-	@Override
-	public void setContent(String content) throws SyntaxException
-	{
-		try
-		{
-			this.service = new URI(content);
-		}
-		catch (URISyntaxException e)
-		{
-			throw new SyntaxException("content is not a valid URI (" + content + ")", this);
-		}
-	}
-
-	@Override
-	public URI getService()
-	{
-		return this.service;
 	}
 }

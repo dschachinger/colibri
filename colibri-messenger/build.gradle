@@ -1,0 +1,92 @@
+/**************************************************************************************************
+ * Copyright (c) 2016, Automation Systems Group, Institute of Computer Aided Automation, TU Wien
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. Neither the name of the Institute nor the names of its contributors
+ *    may be used to endorse or promote products derived from this software
+ *    without specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS "AS IS" AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *************************************************************************************************/
+ 
+description = 'Colibri - Messenger library'
+
+eclipse
+{
+	classpath
+	{
+		file 
+		{
+			withXml 
+			{
+				def node = it.asNode()
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-osgi', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-commons', exported:'true'])
+				node.appendNode('classpathentry', [kind: 'src', path: '/colibri-reasoner', exported:'true'])
+			}
+		}
+	}
+}
+
+dependencies 
+{	
+	provided project(':colibri-osgi')
+	provided project(':colibri-commons')
+	provided project(':colibri-reasoner')
+}
+
+jar 
+{
+	baseName = "at.ac.tuwien.auto.colibri.messenger.bundle"
+	
+	manifest 
+	{
+		attributes ("Bundle-SymbolicName": "at.ac.tuwien.auto.colibri.messenger.bundle",
+		
+					"Export-Package":
+		
+						"at.ac.tuwien.auto.colibri.messaging, " +
+						"at.ac.tuwien.auto.colibri.messaging.exceptions, " +
+						"at.ac.tuwien.auto.colibri.messaging.handling, " +
+						"at.ac.tuwien.auto.colibri.messaging.types ",						
+						
+					"Import-Package":
+																	
+						"at.ac.tuwien.auto.colibri.commons, " +
+						
+						"org.apache.jena.rdf.model, " + 
+						"org.apache.jena.update, " +
+						"org.apache.jena.sparql.core, " +
+						"org.apache.jena.reasoner, " +
+						"org.apache.jena.graph, " +
+						"org.apache.jena.query, " +
+						"org.apache.jena.ontology, " +
+						"org.apache.jena.vocabulary, " +
+						
+						"org.semanticweb.owlapi.model, " +
+											
+						"org.osgi.framework, "+
+						
+						"javax.xml.datatype, " +
+						"javax.management, " +
+						"javax.xml.bind " )						
+	}
+}

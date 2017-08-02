@@ -29,7 +29,7 @@
 
 package at.ac.tuwien.auto.colibri.core.messaging.queue;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Peer;
+import at.ac.tuwien.auto.colibri.messaging.Peer;
 
 /**
  * This interface is used for queue listeners on input or output queue.

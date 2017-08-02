@@ -35,9 +35,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.logging.Logger;
 
-import at.ac.tuwien.auto.colibri.core.messaging.Peer;
-import at.ac.tuwien.auto.colibri.core.messaging.exceptions.AmbiguityException;
-import at.ac.tuwien.auto.colibri.core.messaging.types.Message;
+import at.ac.tuwien.auto.colibri.core.messaging.Observations;
+import at.ac.tuwien.auto.colibri.messaging.Peer;
+import at.ac.tuwien.auto.colibri.messaging.exceptions.AmbiguityException;
+import at.ac.tuwien.auto.colibri.messaging.types.Message;
 
 /**
  * A message queue hosts a message buffer and informs registered listeners about new messages.
@@ -68,11 +69,6 @@ public class MessageQueue
 	private Queue<Message> messages = null;
 
 	/**
-	 * Message storage object
-	 */
-	private MessageStorage storage = null;
-
-	/**
 	 * Queue type
 	 */
 	private QueueType type = null;
@@ -80,10 +76,9 @@ public class MessageQueue
 	/**
 	 * Constructor for initialization
 	 */
-	public MessageQueue(MessageStorage storage, QueueType type)
+	public MessageQueue(QueueType type)
 	{
 		// set references
-		this.storage = storage;
 		this.type = type;
 
 		// create collections
@@ -136,7 +131,7 @@ public class MessageQueue
 		if (!external)
 		{
 			int attempts = 1;
-			while (this.storage.get(message.getMessageId()) != null)
+			while (Observations.getInstance().storage.getMessage(message.getMessageId()) != null)
 			{
 				// write log
 				log.info("Message-Id is not unique (id = " + message.getMessageId() + ", attempt = " + attempts + ")");
@@ -150,7 +145,7 @@ public class MessageQueue
 		}
 
 		// add message to storage
-		this.storage.put(message);
+		Observations.getInstance().storage.addMessage(message);
 
 		// add message to queue
 		this.messages.add(message);
