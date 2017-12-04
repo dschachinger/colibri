@@ -12,6 +12,7 @@ catalog-v001.xml
 /colibri-optimization/res/*.mat
 /colibri-optimization/res/*.csv
 /colibri-optimization/res/*.ser
+/colibri-optimization/res/*.idf
 /colibri-optimization/res/individuals.txt
 /colibri-optimization/lib/matlaboptimizer/for_testing/*
 /colibri-optimization/lib/matlaboptimizer/for_redistribution/*
