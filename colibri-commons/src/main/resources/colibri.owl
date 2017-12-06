@@ -80,7 +80,6 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/ControlService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterTrend"/>
-        <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/comesFrom"/>
         <rdfs:label xml:lang="en">amounts to</rdfs:label>
     </owl:ObjectProperty>
     
