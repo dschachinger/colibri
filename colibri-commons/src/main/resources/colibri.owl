@@ -1157,7 +1157,6 @@
     <!-- http://colibri-suite.org/ontology/value -->
 
     <owl:DatatypeProperty rdf:about="http://colibri-suite.org/ontology/value">
-        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
         <rdfs:comment xml:lang="en">This property is used for various types of numeric values.</rdfs:comment>
         <rdfs:label xml:lang="en">value</rdfs:label>
