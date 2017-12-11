@@ -3052,9 +3052,6 @@
                 <owl:allValuesFrom rdf:resource="http://colibri-suite.org/ontology/GridAction"/>
             </owl:Restriction>
         </rdfs:subClassOf>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ResourceData"/>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/TargetData"/>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WebData"/>
         <rdfs:label xml:lang="en">Grid data</rdfs:label>
     </owl:Class>
     
@@ -4243,8 +4240,6 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DataService"/>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/TargetData"/>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WebData"/>
         <rdfs:label xml:lang="en">Resource data</rdfs:label>
     </owl:Class>
     
@@ -4529,7 +4524,6 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DataService"/>
-        <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WebData"/>
         <rdfs:label xml:lang="en">Target data</rdfs:label>
     </owl:Class>
     
