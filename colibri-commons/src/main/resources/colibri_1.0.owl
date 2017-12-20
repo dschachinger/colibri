@@ -1,38 +1,32 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#"
      xml:base="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl"
-     xmlns:bonsai="http://lpis.csd.auth.gr/ontologies/bonsai/BOnSAI.owl#"
-     xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos"
-     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:cc="http://creativecommons.org/ns#"
      xmlns:colibri="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
-     xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
-     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:bonsai="http://lpis.csd.auth.gr/ontologies/bonsai/BOnSAI.owl#"
+     xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:dcterms="http://purl.org/dc/terms/"
+     xmlns:vann="http://purl.org/vocab/vann#">
     <owl:Ontology rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl">
         <owl:versionIRI rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri_1.0.owl"/>
-        <license xml:lang="en">This work is licensed under a Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/).</license>
-        <rdfs:comment xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</rdfs:comment>
+        <cc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
+        <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1.0</owl:versionInfo>
+        <vann:preferredNamespacePrefix>colibri</vann:preferredNamespacePrefix>
+        <dcterms:description xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</dcterms:description>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-12-20</dcterms:modified>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-07-27</dcterms:issued>
+        <dcterms:title xml:lang="en">Colibri ontology</dcterms:title>
+        <vann:preferredNamespaceUri>http://colibri-suite.org/ontology/</vann:preferredNamespaceUri>
+        <dcterms:rights>Copyright © 2016 Daniel Schachinger, Automation Systems Group (Institute of Computer Aided Automation, TU Wien)</dcterms:rights>
+        <rdfs:comment xml:lang="en">Version 1.0: This version describes the general semantic energy management system information model.</rdfs:comment>
     </owl:Ontology>
-    
-
-
-    <!-- 
-    ///////////////////////////////////////////////////////////////////////////////////////
-    //
-    // Annotation properties
-    //
-    ///////////////////////////////////////////////////////////////////////////////////////
-     -->
-
-    
-
-
-    <!-- https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#license -->
-
-    <owl:AnnotationProperty rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl#license"/>
     
 
 

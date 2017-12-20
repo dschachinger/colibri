@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <rdf:RDF xmlns="http://colibri-suite.org/ontology/"
      xml:base="http://colibri-suite.org/ontology/"
+     xmlns:cc="http://creativecommons.org/ns#"
      xmlns:colibri="http://colibri-suite.org/ontology/"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
      xmlns:swrl="http://www.w3.org/2003/11/swrl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:voaf="http://purl.org/vocommons/voaf#"
      xmlns:dbpedia="http://dbpedia.org/ontology/"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
      xmlns:swrla="http://swrl.stanford.edu/ontologies/3.3/swrla.owl#"
@@ -13,14 +15,24 @@
      xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:dcterms="http://purl.org/dc/terms/"
      xmlns:time="http://www.w3.org/2006/time#"
+     xmlns:vann="http://purl.org/vocab/vann#"
+     xmlns:vs="http://www.w3.org/2003/06/sw-vocab-status/ns#"
      xmlns:foaf="http://xmlns.com/foaf/0.1/">
     <owl:Ontology rdf:about="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri.owl">
         <owl:versionIRI rdf:resource="https://raw.githubusercontent.com/dschachinger/colibri/master/colibri-commons/src/main/resources/colibri_2.0.owl"/>
-        <license xml:lang="en">This work is licensed under a Creative Commons Attribution 4.0 International License (https://creativecommons.org/licenses/by/4.0/).</license>
-        <rdfs:comment xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</rdfs:comment>
-        <owl:versionInfo>2.0</owl:versionInfo>
-        <owl:versionInfo xml:lang="en">This ontology version results from developments made in several research projects and tries to combine all their major findings with version 1.0 of the Colibri ontology.</owl:versionInfo>
+        <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">2.0</owl:versionInfo>
+        <cc:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
+        <vann:preferredNamespacePrefix>colibri</vann:preferredNamespacePrefix>
+        <dcterms:description xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</dcterms:description>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-12-20</dcterms:modified>
+        <rdfs:comment xml:lang="en">Version 1.0: The initial version describes the general semantic energy management system information model.</rdfs:comment>
+        <dcterms:title xml:lang="en">Colibri ontology</dcterms:title>
+        <vann:preferredNamespaceUri>http://colibri-suite.org/ontology/</vann:preferredNamespaceUri>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-12-06</dcterms:issued>
+        <rdfs:comment xml:lang="en">Version 2.0: This ontology version results from developments made in several research projects and tries to combine all their major findings with version 1.0 of the Colibri ontology.</rdfs:comment>
+        <dcterms:rights>Copyright © 2016 Daniel Schachinger, Automation Systems Group (Institute of Computer Aided Automation, TU Wien)</dcterms:rights>
     </owl:Ontology>
     
 
@@ -36,12 +48,9 @@
     
 
 
-    <!-- http://colibri-suite.org/ontology/license -->
+    <!-- http://www.w3.org/2003/06/sw-vocab-status/ns#term_status -->
 
-    <owl:AnnotationProperty rdf:about="http://colibri-suite.org/ontology/license">
-        <rdfs:comment xml:lang="en">This annotation specifies the license of an OWL file.</rdfs:comment>
-        <rdfs:label xml:lang="en">license</rdfs:label>
-    </owl:AnnotationProperty>
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2003/06/sw-vocab-status/ns#term_status"/>
     
 
 
@@ -69,7 +78,9 @@
             </owl:Class>
         </rdfs:domain>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">affects</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -80,7 +91,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/ControlService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterTrend"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">amounts to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -91,7 +104,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/ControlService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterTrend"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">comes from</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -102,7 +117,9 @@
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isConsumedBy"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Consumer"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Service"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">consumes</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -130,7 +147,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">contains</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -140,7 +159,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/controlsParameter">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/ControlService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Parameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">controls parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -158,7 +179,9 @@
             </owl:Class>
         </rdfs:range>
         <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/convertsTo"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">converts from</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -175,7 +198,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">converts to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -193,7 +218,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -203,7 +230,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/coversAreaOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/covers"/>
         <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/coversFlowOf"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers area of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -212,7 +241,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/coversFlowOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/covers"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers flow of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -222,7 +253,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/coversInOutflowOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/coversInflowTo"/>
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/coversOutflowFrom"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers inflow and outflow of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -231,7 +264,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/coversInflowTo">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/coversFlowOf"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers inflow to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -240,7 +275,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/coversOutflowFrom">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/coversFlowOf"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">covers outflow from</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -251,7 +288,9 @@
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/precedes"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Service"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Service"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">follows</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -261,7 +300,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasActualValue">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/hasDataValue"/>
         <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/hasEstimatedValue"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has actual data value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -271,7 +312,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasAdditiveReference">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/hasReference"/>
         <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/hasPercentalReference"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has additive reference</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -281,7 +324,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasCoverage">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Parameter"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterCoverage"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has coverage</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -290,7 +335,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasCurrency">
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Currency"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has currency</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -300,7 +347,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasDataValue">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/DataValue"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has data value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -310,7 +359,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasEnergyType">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/EnergyService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/EnergyType"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -319,7 +370,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasEstimatedValue">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/hasDataValue"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has estimated data value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -329,7 +382,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasGridAction">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/GridData"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/GridAction"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has grid action</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -340,7 +395,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Comparison"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Value"/>
         <owl:propertyDisjointWith rdf:resource="http://colibri-suite.org/ontology/hasRightSide"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has left side</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -349,7 +406,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasPercentalReference">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/hasReference"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has percentual reference</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -359,7 +418,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasRange">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Parameter"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterRange"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has value range</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -369,7 +430,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasReference">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has reference</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -378,7 +441,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasRelationalOperator">
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/RelationalOperator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has relational operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -388,7 +453,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasRightSide">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Comparison"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Value"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has right side</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -397,7 +464,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasUnit">
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Unit"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has unit</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -407,7 +476,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasValidity">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataValue"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Validity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has validity</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -417,7 +488,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasValue">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataValue"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Value"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -427,7 +500,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/hasVariable">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Formula"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Variable"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">has variable</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -444,7 +519,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">implements</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -454,7 +531,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isAbove">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isUnder"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is above</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -462,7 +541,9 @@
     <!-- http://colibri-suite.org/ontology/isAffectedBy -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isAffectedBy">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is affected by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -472,7 +553,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isBehind">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isInFrontOf"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is behind</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -480,7 +563,9 @@
     <!-- http://colibri-suite.org/ontology/isConsumedBy -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isConsumedBy">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is consumed by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -488,7 +573,9 @@
     <!-- http://colibri-suite.org/ontology/isCoveredBy -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isCoveredBy">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is covered by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -512,7 +599,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is directly related to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -522,7 +611,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isGroupedBy">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataValue"/>
         <rdfs:range rdf:resource="http://www.w3.org/2006/time#Instant"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is grouped by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -534,7 +625,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is higher than</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -543,7 +636,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isInFrontOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is in front of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -553,7 +648,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isLeftOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isRightOf"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is left of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -566,7 +663,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/ParameterRange"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/ParameterRange"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is lower than</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -577,7 +676,9 @@
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/manufactures"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Resource"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Manufacturer"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is manufactured by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -588,7 +689,9 @@
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/observes"/>
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Observation"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is observed by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -596,7 +699,9 @@
     <!-- http://colibri-suite.org/ontology/isPartOf -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isPartOf">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is part of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -605,7 +710,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isProvidedBy">
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/provides"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is provided by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -623,7 +730,9 @@
             </owl:Class>
         </rdfs:domain>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/TechnologyConnector"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is registered by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -633,7 +742,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isRestrictedBy">
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/restricts"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Condition"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is restricted by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -642,7 +753,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isRightOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is right of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -660,7 +773,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is set by</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -671,7 +786,9 @@
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyUnder"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively above</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -682,7 +799,9 @@
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyInFrontOf"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively behind</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -692,7 +811,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isTransitivelyInFrontOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively in front of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -703,7 +824,9 @@
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <owl:inverseOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRightOf"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively left of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -727,7 +850,9 @@
                 </owl:unionOf>
             </owl:Class>
         </rdfs:range>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively related to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -737,7 +862,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isTransitivelyRightOf">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively right of</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -747,7 +874,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isTransitivelyUnder">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isTransitivelyRelatedTo"/>
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is transitively under</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -756,7 +885,9 @@
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/isUnder">
         <rdfs:subPropertyOf rdf:resource="http://colibri-suite.org/ontology/isDirectlyRelatedTo"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">is under</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -764,7 +895,9 @@
     <!-- http://colibri-suite.org/ontology/manufactures -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/manufactures">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">manufactures</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -774,7 +907,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/monitorsParameter">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/DataService"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Parameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">monitors parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -782,7 +917,9 @@
     <!-- http://colibri-suite.org/ontology/observes -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/observes">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">observes</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -790,7 +927,9 @@
     <!-- http://colibri-suite.org/ontology/precedes -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/precedes">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">precedes</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -800,7 +939,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/provides">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Provider"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/Service"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">provides</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -810,7 +951,9 @@
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/refersTo">
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Variable"/>
         <rdfs:range rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">refers to</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -818,7 +961,9 @@
     <!-- http://colibri-suite.org/ontology/registers -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/registers">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">registers</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -826,7 +971,9 @@
     <!-- http://colibri-suite.org/ontology/restricts -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/restricts">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">restricts</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -834,7 +981,9 @@
     <!-- http://colibri-suite.org/ontology/sets -->
 
     <owl:ObjectProperty rdf:about="http://colibri-suite.org/ontology/sets">
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">sets</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:ObjectProperty>
     
 
@@ -888,7 +1037,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment xml:lang="en">This property describes either a technology-dependent address of a technology connector (e.g. its IP address) or, for example, the address of a building.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">address</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -900,7 +1051,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Place"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">Altitude gives the meters above mean sea level.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">altitude</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -912,7 +1065,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit ampere in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension ampere</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -924,7 +1079,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit candela in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension candela</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -936,7 +1093,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit kelvin in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension kelvin</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -948,7 +1107,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit kilogram in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension kilogram</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -960,7 +1121,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit meter in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension meter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -972,7 +1135,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit mol in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension mol</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -984,7 +1149,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Unit"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:comment xml:lang="en">Property to express the dimension of SI unit second in a derived unit.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">dimension second</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -996,7 +1163,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/CurrencyExchange"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">A direct quote is a foreign exchange rate given by the units of the domestic currency per one unit of the foreign currency.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">direct quote</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1007,7 +1176,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment xml:lang="en">This property can host formulas with numbers, variables, and operators (e.g. &quot;x+y&quot;, &quot;17&quot;, &quot;(1-x) * z&quot;).</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">formula</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1018,7 +1189,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment xml:lang="en">This property can be used as additional identifier for an individual.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">identifier</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1030,7 +1203,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/CurrencyExchange"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">An indirect quote is a foreign exchange rate given by the units of the foreign currency per one unit of the domestic currency.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">indirect quote</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1042,7 +1217,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Place"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">This property gives the geographic latitude.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">latitude</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1054,7 +1231,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/Place"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">This property gives the geographic longitude.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">longitude</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1066,7 +1245,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">This property specifies the max value, for example, of an interval.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">maximum value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1078,7 +1259,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">This property specifies the min value, for example, of an interval.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">minimum value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1089,7 +1272,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment xml:lang="en">This property gives the human-readable name of an individual.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">name</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1101,7 +1286,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/UnitConversion"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
         <rdfs:comment xml:lang="en">This property indicates the offset of a unit (e.g. offset between Celsius and Kelvin).</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">offset</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1125,7 +1312,9 @@
             </rdfs:Datatype>
         </rdfs:range>
         <rdfs:comment xml:lang="en">This property gives the degree of the geographical orientation.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">orientation</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1137,7 +1326,9 @@
         <rdfs:domain rdf:resource="http://colibri-suite.org/ontology/UnitConversion"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
         <rdfs:comment xml:lang="en">This property is used as scaling factor for the definition of units.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">scale</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1148,7 +1339,9 @@
         <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
         <rdfs:comment xml:lang="en">This property is used for unit symbols or symbols within formulas.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">symbol</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1158,7 +1351,9 @@
     <owl:DatatypeProperty rdf:about="http://colibri-suite.org/ontology/value">
         <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
         <rdfs:comment xml:lang="en">This property is used for various types of numeric values.</rdfs:comment>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:DatatypeProperty>
     
 
@@ -1275,7 +1470,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/AbsoluteInstant">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2006/time#Instant"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/RelativeInstant"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Absolute temporal instant</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1284,7 +1481,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Actuator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/BuildingAutomationDevice"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Actuating device</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1320,7 +1519,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Agent</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1337,7 +1538,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Air pressure</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1353,7 +1556,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Air quality</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1362,7 +1567,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Apartment">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/BuildingPart"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Apartment</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1373,7 +1580,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/ControllableResource"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Component"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Plant"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Appliance</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1384,7 +1593,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/TechnologyConnector"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/EngineeringConnector"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/SystemConnector"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Application connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1408,7 +1619,9 @@
                 <owl:onClass rdf:resource="http://colibri-suite.org/ontology/Condition"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Atomic condition</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1417,7 +1630,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Attic">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Floor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Attic</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1427,7 +1642,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/AutomationProtocol">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/CommunicationProtocol"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WebProtocol"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Automation protocol</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1436,7 +1653,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Availability">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/QualityOfServiceParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Availability</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1445,7 +1664,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Basement">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Floor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Basement</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1454,7 +1675,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Bathroom">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Bathroom</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1469,7 +1692,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Brightness</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1478,7 +1703,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/BrightnessSensor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Sensor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Brightness sensor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1487,7 +1714,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/BrownGoods">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Appliance"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Brown goods</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1497,7 +1726,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Building">
         <owl:equivalentClass rdf:resource="http://dbpedia.org/ontology/Building"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Zone"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Building</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1507,7 +1738,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/BuildingAutomationDevice">
         <owl:equivalentClass rdf:resource="http://lpis.csd.auth.gr/ontologies/bonsai/BOnSAI.owl#Device"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/ControllableResource"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Building automation device</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1516,7 +1749,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/BuildingPart">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Zone"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Building part</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1525,7 +1760,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Cabinet">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Cabinet</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1534,7 +1771,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/CapacityLevel">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Energy"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Actual capacity</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1543,7 +1782,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/ChargingCycles">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Charging cycles</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1552,7 +1793,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/ChargingPower">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Power"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Charging power</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1561,7 +1804,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/CoalFiredPowerPlant">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyGenerator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Coal fired power plant</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1570,7 +1815,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/CommercialBuilding">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Building"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Commercial building</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1607,7 +1854,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Technology communication language</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1643,7 +1892,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Technology communication protocol</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1716,7 +1967,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Comparison</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1732,7 +1985,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Plant"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Component</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1780,7 +2035,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Variable"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Condition</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1797,7 +2054,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/DisjunctiveCondition"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Conjunctive condition</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1833,7 +2092,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Consumer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1947,7 +2208,9 @@
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/DataService"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/EnergyService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Control service</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1966,7 +2229,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Control service consumer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -1985,7 +2250,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Control service provider</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2001,7 +2268,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UncontrollableResource"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Controllable resource</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2047,7 +2316,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Conversion</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2056,7 +2327,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Corridor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Corridor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2066,7 +2339,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/CostParameter">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/MoneyParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/EarningsParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Cost parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2109,7 +2384,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Currency</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2159,7 +2436,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UnitConversion"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Currency exchange</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2241,7 +2520,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/EnergyService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Data service</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2260,7 +2541,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Data service consumer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2279,7 +2562,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Data service provider</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2374,7 +2659,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Data value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2395,7 +2682,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/QualityOfServiceParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Demand parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2404,7 +2693,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/DischargingPower">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Power"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Discharging power</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2420,7 +2711,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/IntervalRange"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Discrete range</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2430,7 +2723,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/DiscretionaryTargetData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/TargetData"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/MandatoryTargetData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Discretionary target</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2446,7 +2741,9 @@
                 <owl:onClass rdf:resource="http://colibri-suite.org/ontology/Condition"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Disjunctive condition</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2456,7 +2753,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/DistributionGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/TransmissionGrid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Distribution grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2465,7 +2764,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/DistributionSystemOperator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridOperator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Distribution system operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2474,7 +2775,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Door">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Equipment"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Door</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2483,7 +2786,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EarningsParameter">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/MoneyParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Earnings parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2515,7 +2820,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/OuterZoneDelimiter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Eastbound delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2530,7 +2837,9 @@
                 <owl:hasValue rdf:resource="http://colibri-suite.org/ontology/EnOcean"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">EnOcean connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2539,7 +2848,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Energy">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DemandParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2555,7 +2866,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy consuming resource</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2564,7 +2877,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyCustomer">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy customer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2573,7 +2888,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyForecastData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy forecast data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2582,7 +2899,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyGenerator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy generator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2591,7 +2910,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyPoolManager">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy pool manager</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2607,7 +2928,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy providing resource</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2616,7 +2939,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyRetailer">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy retailer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2676,7 +3001,9 @@
                 <owl:onClass rdf:resource="http://colibri-suite.org/ontology/Grid"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy service</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2695,7 +3022,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy service consumer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2714,7 +3043,9 @@
                 </owl:intersectionOf>
             </owl:Class>
         </owl:equivalentClass>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy service provider</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2724,7 +3055,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EnergyStorageResource">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyConsumerResource"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyProviderResource"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy storage</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2753,7 +3086,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2763,7 +3098,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/EngineeringConnector">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/TechnologyConnector"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/SystemConnector"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Engineering connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2790,7 +3127,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/QualityOfServiceParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Environmental parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2799,7 +3138,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Equipment">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/UncontrollableResource"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Equipment</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2821,7 +3162,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/RoomTemperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/SupplyAirTemperature"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Exhaust air temperature</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2830,7 +3173,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Factory">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/CommercialBuilding"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Factory</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2839,7 +3184,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/FlexibilityOfferData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Flexibility offer data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2848,7 +3195,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/FlexibilityOperator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridOperator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Flexibility operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2857,7 +3206,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/FlexibilityOrderData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Flexibility order data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2866,7 +3217,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/FlexibilityRequestData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Flexibility request data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2875,7 +3228,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Floor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Zone"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Floor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2896,7 +3251,9 @@
                 <owl:maxCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:maxCardinality>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Formula</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2937,7 +3294,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -2972,7 +3331,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid action</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3001,7 +3362,9 @@
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Agent"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridNode"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid agent</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3018,7 +3381,9 @@
                 <owl:onClass rdf:resource="http://colibri-suite.org/ontology/Grid"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3052,7 +3417,9 @@
                 <owl:allValuesFrom rdf:resource="http://colibri-suite.org/ontology/GridAction"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3062,7 +3429,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/GridInfrastructure">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridNode"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Place"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid infrastructure</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3100,7 +3469,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid node</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3109,7 +3480,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/GridOperator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3118,7 +3491,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/GridRegulationData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Grid regulation data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3127,7 +3502,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/GroundFloor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Floor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Ground floor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3138,7 +3515,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Length"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Width"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Height</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3148,7 +3527,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/HighVoltageGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/LowVoltageGrid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">High voltage grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3157,7 +3538,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Home">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/ResidentialBuilding"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Home</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3171,7 +3554,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Humidity</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3180,7 +3565,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/HumiditySensor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Sensor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Humidity sensor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3189,7 +3576,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Hygiene">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Hygiene</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3198,7 +3587,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/IndustrialCustomer">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyCustomer"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Industrial customer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3260,7 +3651,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/OuterZoneDelimiter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Inner delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3295,7 +3688,9 @@
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Interval range</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3308,7 +3703,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Irradiation</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3317,7 +3714,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Kitchen">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Kitchen</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3332,7 +3731,9 @@
                 <owl:hasValue rdf:resource="http://colibri-suite.org/ontology/Knx"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">KNX connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3341,7 +3742,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Latency">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/QualityOfServiceParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Latency</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3351,7 +3754,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Length">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Width"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Length</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3362,7 +3767,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/NationalGrid"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/RegionalGrid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Local grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3371,7 +3778,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/LowVoltageGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Low voltage grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3380,7 +3789,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/LowVoltageGridController">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridOperator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Low voltage grid controller</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3389,7 +3800,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/MandatoryTargetData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/TargetData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Mandatory target</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3409,7 +3822,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Agent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Manufacturer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3419,7 +3834,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/MeteringDevice">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/ControllableResource"/>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridConnector"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Metering device</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3463,7 +3880,9 @@
             </owl:Restriction>
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/NonmonetaryParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Monetary parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3473,7 +3892,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/NationalGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/RegionalGrid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">National grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3485,7 +3906,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Precipitation"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Noise</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3494,7 +3917,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/NominalCapacity">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Energy"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Nominal capacity</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3513,7 +3938,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/PrimaryEnergyType"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Nonrenewable energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3548,7 +3975,9 @@
                 <owl:onClass rdf:resource="http://colibri-suite.org/ontology/Unit"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Nonmonetary parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3600,7 +4029,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/OuterZoneDelimiter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Northbound delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3615,7 +4046,9 @@
                 <owl:hasValue rdf:resource="http://colibri-suite.org/ontology/OasisEi"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">OASIS Energy Interoperation connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3630,7 +4063,9 @@
                 <owl:hasValue rdf:resource="http://colibri-suite.org/ontology/Obix"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">OBIX connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3687,7 +4122,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Observation</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3696,7 +4133,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Occupancy">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Occupancy</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3705,7 +4144,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Office">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Office</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3725,7 +4166,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/CommercialBuilding"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Office building</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3734,7 +4177,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Offices">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/BuildingPart"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Offices</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3749,7 +4194,9 @@
                 <owl:hasValue rdf:resource="http://colibri-suite.org/ontology/OpenAdr"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">OpenADR connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3765,7 +4212,9 @@
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#int"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Outer delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3795,7 +4244,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3828,7 +4279,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Parameter coverage</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3890,7 +4343,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Parameter value range</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3919,7 +4374,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Parameter value trend</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3955,7 +4412,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Place</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3977,7 +4436,9 @@
                 </owl:allValuesFrom>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Plant</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3986,7 +4447,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Power">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DemandParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Power</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -3997,7 +4460,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnvironmentalParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Precipitation</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4006,7 +4471,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/PriceDistributionData">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridData"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Price distribution data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4023,7 +4490,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyType"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Primary energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4032,7 +4501,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Privacy">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Privacy</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4056,7 +4527,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Provider</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4076,7 +4549,9 @@
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/NonmonetaryParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Quality of service parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4085,7 +4560,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/RegionalGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Regional grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4114,7 +4591,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Relational operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4123,7 +4602,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/RelativeInstant">
         <rdfs:subClassOf rdf:resource="http://www.w3.org/2006/time#Instant"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Relative temporal instant</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4132,7 +4613,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Reliability">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/QualityOfServiceParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Reliability</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4153,7 +4636,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/PrimaryEnergyType"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Renewable energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4162,7 +4647,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/ResidentialBuilding">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Building"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Residential building</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4171,7 +4658,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/ResidentialCustomer">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyCustomer"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Residential customer</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4212,7 +4701,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Resource</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4240,7 +4731,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Resource data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4249,7 +4742,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Room">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Zone"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Room</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4270,7 +4765,9 @@
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/SupplyAirTemperature"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Room temperature</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4288,7 +4785,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyType"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Secondary energy type</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4297,7 +4796,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Sensor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/BuildingAutomationDevice"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Sensing device</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4352,7 +4853,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Service</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4361,7 +4864,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Shade">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Equipment"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Shade</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4370,7 +4875,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Shutter">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Equipment"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Shutter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4392,7 +4899,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Unit"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">SI unit</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4424,7 +4933,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/OuterZoneDelimiter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Southbound delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4433,7 +4944,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Stairway">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Room"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Stairway</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4456,7 +4969,9 @@
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/NonmonetaryParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/UsageParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Structural parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4476,7 +4991,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Temperature"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Supply air temperature</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4485,7 +5002,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/SwitchingActuator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Actuator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Switching actuator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4494,7 +5013,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/SystemConnector">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/TechnologyConnector"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">System connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4524,7 +5045,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Target data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4567,7 +5090,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Technology connector</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4577,7 +5102,9 @@
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Temperature">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnvironmentalParameter"/>
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/WindSpeed"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Temperature</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4586,7 +5113,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/TemperatureSensor">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Sensor"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Temperature sensor</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4595,7 +5124,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/ThermalPermeability">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Thermal permeability</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4604,7 +5135,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/TransmissionGrid">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Grid"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Transmission grid</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4613,7 +5146,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/TransmissionSystemOperator">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/GridOperator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Transmission system operator</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4622,7 +5157,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Transparency">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Transparency</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4631,7 +5168,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/UncontrollableResource">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Resource"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Uncontrollable resource</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4707,7 +5246,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Unit</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4756,7 +5297,9 @@
                 <owl:onDataRange rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Unit conversion</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4773,7 +5316,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/NonmonetaryParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Usage parameter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4795,7 +5340,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Validity</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4814,7 +5361,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Value</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4851,7 +5400,9 @@
         <owl:disjointWith rdf:resource="http://colibri-suite.org/ontology/ZoneDelimiter"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Variable</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4860,7 +5411,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/WeatherDataProvider">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/WebAgent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Weather data provider</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4888,7 +5441,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Agent"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Web agent</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4916,7 +5471,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/DataService"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Web data</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4925,7 +5482,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/WebProtocol">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/CommunicationProtocol"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Web protocol</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4934,7 +5493,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Weight">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Weight</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4966,7 +5527,9 @@
             </owl:Class>
         </owl:equivalentClass>
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/OuterZoneDelimiter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Westbound delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4975,7 +5538,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/WhiteGoods">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Appliance"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">White goods</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4984,7 +5549,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Width">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/StructuralParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Width</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -4993,7 +5560,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/WindFarm">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnergyGenerator"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Wind farm</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -5002,7 +5571,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/WindSpeed">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/EnvironmentalParameter"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Wind speed</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -5011,7 +5582,9 @@
 
     <owl:Class rdf:about="http://colibri-suite.org/ontology/Window">
         <rdfs:subClassOf rdf:resource="http://colibri-suite.org/ontology/Equipment"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Window</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -5113,7 +5686,9 @@
                 </owl:allValuesFrom>
             </owl:Restriction>
         </rdfs:subClassOf>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Building zone</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
@@ -5197,7 +5772,9 @@
         </rdfs:subClassOf>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#DayOfWeek"/>
         <owl:disjointWith rdf:resource="http://www.w3.org/2006/time#TemporalEntity"/>
+        <rdfs:isDefinedBy rdf:resource="http://colibri-suite.org/ontology/"/>
         <rdfs:label xml:lang="en">Zone delimiter</rdfs:label>
+        <vs:term_status>stable</vs:term_status>
     </owl:Class>
     
 
