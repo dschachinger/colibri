@@ -27,11 +27,11 @@
         <vann:preferredNamespacePrefix>colibri</vann:preferredNamespacePrefix>
         <dcterms:description xml:lang="en">This ontology describes the semantic energy management system information model for the Colibri suite.</dcterms:description>
         <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-12-20</dcterms:modified>
-        <rdfs:comment xml:lang="en">Version 1.0: The initial version describes the general semantic energy management system information model.</rdfs:comment>
         <dcterms:title xml:lang="en">Colibri ontology</dcterms:title>
         <vann:preferredNamespaceUri>http://colibri-suite.org/ontology/</vann:preferredNamespaceUri>
         <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-12-06</dcterms:issued>
-        <rdfs:comment xml:lang="en">Version 2.0: This ontology version results from developments made in several research projects and tries to combine all their major findings with version 1.0 of the Colibri ontology.</rdfs:comment>
+        <rdfs:comment xml:lang="en">Version 2.0: This ontology version results from developments made in several research projects and tries to combine all their major findings with version 1.0 of the Colibri ontology.
+		Version 1.0: The initial version describes the general semantic energy management system information model.</rdfs:comment>
         <dcterms:rights>Copyright © 2016 Daniel Schachinger, Automation Systems Group (Institute of Computer Aided Automation, TU Wien)</dcterms:rights>
     </owl:Ontology>
     
