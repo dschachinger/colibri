@@ -33,7 +33,7 @@ task clear(type: Delete) {
 
 	doFirst
 	{
-		delete fileTree(dir: "src/main/resources", exclude: "colibri.owl")
+		delete fileTree(dir: "src/main/resources", exclude: "*.owl")
 	}
 }
 

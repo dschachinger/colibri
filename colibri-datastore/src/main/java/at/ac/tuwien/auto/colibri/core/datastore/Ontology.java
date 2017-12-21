@@ -119,7 +119,7 @@ public class Ontology implements TaskListener
 		if (colibriModel.isEmpty())
 		{
 			dataset.begin(ReadWrite.WRITE);
-			colibriModel.read(Config.getInstance().colibriModelUri);
+			colibriModel.read(Config.getInstance().colibriOntologyFile);
 			dataset.commit();
 			dataset.end();
 		}

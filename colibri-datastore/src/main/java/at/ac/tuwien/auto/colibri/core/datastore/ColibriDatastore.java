@@ -343,7 +343,7 @@ public class ColibriDatastore implements Datastore
 		DataConfigurationMapping dcm = null;
 		String sparqlQueryString = StrUtils.strjoinNL(
 				"PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> ",
-				"PREFIX colibri: <" + Config.getInstance().colibriModelUri + "#> ",
+				"PREFIX colibri: <" + Config.getInstance().colibriOntologyFile + "#> ",
 				"SELECT ?service ?dataconf ?parent ",
 				"WHERE { ?service rdf:type colibri:DataService . ",
 				"?dataconf rdf:type colibri:DataConfiguration . ",

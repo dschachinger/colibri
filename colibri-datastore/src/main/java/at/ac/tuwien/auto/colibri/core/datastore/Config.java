@@ -34,8 +34,7 @@ import at.ac.tuwien.auto.colibri.commons.Configuration;
 /**
  * Configuration file for Colibri datastore
  */
-public class Config extends Configuration
-{
+public class Config extends Configuration {
 	/**
 	 * Singleton member variable
 	 */
@@ -46,10 +45,8 @@ public class Config extends Configuration
 	 * 
 	 * @return instance of configuration
 	 */
-	public static Config getInstance()
-	{
-		if (configuration == null)
-		{
+	public static Config getInstance() {
+		if (configuration == null) {
 			configuration = new Config();
 		}
 		return configuration;
@@ -71,6 +68,11 @@ public class Config extends Configuration
 	public String colibriModelUri = "";
 
 	/**
+	 * File URL of Colibri ontology
+	 */
+	public String colibriOntologyFile = "";
+
+	/**
 	 * Directory of triple store
 	 */
 	public String tdbDirectory;
@@ -86,16 +88,14 @@ public class Config extends Configuration
 	public String buffer;
 
 	@Override
-	public String getResource()
-	{
+	public String getResource() {
 		return "/datastore.properties";
 	}
 
 	/**
 	 * Private constructor
 	 */
-	private Config()
-	{
+	private Config() {
 		this.load();
 	}
 }
